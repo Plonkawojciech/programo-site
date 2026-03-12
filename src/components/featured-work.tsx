@@ -58,7 +58,7 @@ const projects: Project[] = [
     title: "WUP2TCN",
     subtitleKey: "work.wup2tcn.subtitle",
     descKey: "work.wup2tcn.desc",
-    href: "https://baulx.pl",
+    href: "https://baulx.vercel.app",
     bg: "bg-[#1a2e1a]",
     accent: "text-[#6abf69]",
     accentHex: "#6abf69",
