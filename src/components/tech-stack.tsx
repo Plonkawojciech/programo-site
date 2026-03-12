@@ -1,26 +1,31 @@
-const technologies = [
-  { name: "Next.js", description: "Full-stack React framework" },
-  { name: "React Native", description: "Cross-platform mobile apps" },
-  { name: "Supabase", description: "Backend & database" },
-  { name: "Stripe", description: "Payments infrastructure" },
-  { name: "Azure AI", description: "AI & cognitive services" },
-  { name: "Vercel", description: "Deployment & hosting" },
-];
+"use client";
+
+import { useI18n } from "@/lib/i18n";
 
 export default function TechStack() {
+  const { t } = useI18n();
+
+  const technologies = [
+    { name: "Next.js", description: t("stack.nextjs") },
+    { name: "React Native", description: t("stack.rn") },
+    { name: "Supabase", description: t("stack.supabase") },
+    { name: "Stripe", description: t("stack.stripe") },
+    { name: "Azure AI", description: t("stack.azure") },
+    { name: "Vercel", description: t("stack.vercel") },
+  ];
+
   return (
     <section id="stack" className="px-6 py-32 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div>
           <p className="mb-3 text-sm tracking-[0.2em] uppercase text-sage-muted">
-            Our Tools
+            {t("stack.label")}
           </p>
           <h2 className="font-serif text-4xl tracking-tight text-sage md:text-5xl">
-            Tech Stack
+            {t("stack.title")}
           </h2>
           <p className="mt-4 max-w-lg text-sage-muted">
-            We pick tools that let us move fast without sacrificing quality.
-            Battle-tested, well-documented, production-ready.
+            {t("stack.desc")}
           </p>
         </div>
 

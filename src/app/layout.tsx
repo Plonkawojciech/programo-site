@@ -15,9 +15,12 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Programo — Software Studio",
+  title: "Programo — Studio Software",
   description:
-    "We build software that works. A software studio by Wojciech Płonka & Bartosz Kołaj, based in Poznań, Poland.",
+    "Projektujemy i budujemy oprogramowanie. Studio software Wojciecha Płonki i Bartosza Kołaja z Poznania.",
+  icons: {
+    icon: "/favicon.svg",
+  },
   keywords: [
     "software studio",
     "web development",
@@ -38,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="pl" className={`${inter.variable} ${playfair.variable}`}>
       <body className="antialiased">{children}</body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useI18n } from "@/lib/i18n";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -16,6 +17,8 @@ const fadeUp = {
 };
 
 export default function Hero() {
+  const { t } = useI18n();
+
   return (
     <section className="relative flex min-h-[100svh] flex-col justify-center px-6 pt-20 lg:px-8">
       <div className="mx-auto w-full max-w-6xl">
@@ -26,7 +29,7 @@ export default function Hero() {
           animate="visible"
           className="mb-6 text-sm tracking-[0.2em] uppercase text-sage-muted"
         >
-          Software Studio
+          {t("hero.label")}
         </motion.p>
 
         <motion.h1
@@ -46,8 +49,7 @@ export default function Hero() {
           animate="visible"
           className="mt-8 max-w-xl text-lg leading-relaxed text-sage-muted md:text-xl"
         >
-          We design and build software products that solve real problems.
-          From concept to launch, with craft and precision.
+          {t("hero.desc")}
         </motion.p>
 
         <motion.div
@@ -61,7 +63,7 @@ export default function Hero() {
             href="#work"
             className="group inline-flex items-center gap-2 text-sm tracking-wide text-sage transition-opacity hover:opacity-70"
           >
-            <span>Browse our work</span>
+            <span>{t("hero.browse")}</span>
             <svg
               className="h-4 w-4 transition-transform group-hover:translate-x-1"
               fill="none"
@@ -80,18 +82,17 @@ export default function Hero() {
             href="#about"
             className="group inline-flex items-center gap-2 text-sm tracking-wide text-sage-muted transition-colors hover:text-sage"
           >
-            <span>About us</span>
+            <span>{t("hero.about")}</span>
           </a>
           <a
             href="#contact"
             className="group inline-flex items-center gap-2 text-sm tracking-wide text-sage-muted transition-colors hover:text-sage"
           >
-            <span>Get in touch</span>
+            <span>{t("hero.contact")}</span>
           </a>
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

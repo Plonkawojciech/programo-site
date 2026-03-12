@@ -2,17 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const navLinks = [
-  { label: "Work", href: "#work" },
-  { label: "About", href: "#about" },
-  { label: "Stack", href: "#stack" },
-  { label: "Contact", href: "#contact" },
-];
+import { useI18n } from "@/lib/i18n";
 
 export default function Navbar() {
+  const { lang, toggle, t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navLinks = [
+    { label: t("nav.work"), href: "#work" },
+    { label: t("nav.about"), href: "#about" },
+    { label: t("nav.stack"), href: "#stack" },
+    { label: t("nav.contact"), href: "#contact" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -51,11 +53,17 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
+            <button
+              onClick={toggle}
+              className="rounded-full border border-sage/15 px-3 py-1.5 text-xs font-medium tracking-wider text-sage-muted transition-all duration-300 hover:border-sage/30 hover:text-sage"
+            >
+              {lang === "pl" ? "EN" : "PL"}
+            </button>
             <a
               href="mailto:wojciech.plonka@programo.pl"
               className="rounded-full border border-sage/20 px-5 py-2 text-sm text-sage transition-all duration-300 hover:border-sage hover:bg-sage hover:text-beige-light"
             >
-              Get in touch
+              {t("nav.cta")}
             </a>
           </div>
 
@@ -103,18 +111,27 @@ export default function Navbar() {
                   {link.label}
                 </motion.a>
               ))}
+              <motion.button
+                onClick={() => { toggle(); setMobileOpen(false); }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: navLinks.length * 0.08, duration: 0.4 }}
+                className="rounded-full border border-sage/20 px-6 py-2 text-sm tracking-wider text-sage"
+              >
+                {lang === "pl" ? "English" : "Polski"}
+              </motion.button>
               <motion.a
                 href="mailto:wojciech.plonka@programo.pl"
                 onClick={() => setMobileOpen(false)}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  delay: navLinks.length * 0.08,
+                  delay: (navLinks.length + 1) * 0.08,
                   duration: 0.4,
                 }}
                 className="mt-4 rounded-full border border-sage px-8 py-3 text-sm tracking-wide text-sage transition-colors hover:bg-sage hover:text-beige-light"
               >
-                Get in touch
+                {t("nav.cta")}
               </motion.a>
             </nav>
           </motion.div>
