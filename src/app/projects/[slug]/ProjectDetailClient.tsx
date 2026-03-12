@@ -100,6 +100,26 @@ function ProjectContent({ slug }: { slug: string }) {
         </div>
       </section>
 
+      {/* Screenshot showcase — joseocando-style */}
+      {project.screenshot && (
+        <section className="px-6 lg:px-8 -mt-8 md:-mt-12 relative z-10">
+          <div className="mx-auto max-w-6xl">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="overflow-hidden rounded-2xl border border-sage/8 bg-beige shadow-2xl shadow-sage/10"
+            >
+              <img
+                src={project.screenshot}
+                alt={`${project.title} screenshot`}
+                className="w-full h-auto"
+              />
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* Main content */}
       <section className="mx-auto max-w-6xl px-6 py-16 md:py-24 lg:px-8">
         <div className="grid gap-16 md:grid-cols-3">

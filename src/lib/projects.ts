@@ -17,6 +17,7 @@ export interface Project {
   bgColor: string;
   year: string;
   role: { pl: string; en: string };
+  screenshot?: string;
 }
 
 export const projects: Project[] = [
@@ -66,6 +67,7 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
+    screenshot: "/screenshots/estalo-hero.png",
   },
   {
     slug: "baulx",
@@ -83,7 +85,7 @@ export const projects: Project[] = [
       en: "Baulx is an advanced engineering platform built for the timber construction industry. It enables file conversion between CNC formats (WUP, BTLx, TCN, G-code), parametric design of wall, roof, and floor structures, and structural calculations. Built-in 3D visualization allows real-time project preview.",
     },
     status: "live",
-    liveUrl: "https://baulx.pl",
+    liveUrl: "https://btlx-viewer.vercel.app",
     tech: ["Next.js", "TypeScript", "Three.js"],
     features: {
       pl: [
@@ -111,6 +113,7 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
+    screenshot: "/screenshots/baulx-hero.png",
   },
   {
     slug: "sporttrack",
