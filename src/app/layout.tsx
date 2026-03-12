@@ -19,7 +19,11 @@ export const metadata: Metadata = {
   description:
     "Projektujemy i budujemy oprogramowanie. Studio software Wojciecha Płonki i Bartosza Kołaja z Poznania.",
   icons: {
-    icon: "/favicon.svg",
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   keywords: [
     "software studio",
