@@ -76,6 +76,9 @@ const translations = {
   "stack.azure": { pl: "AI i us\u0142ugi kognitywne", en: "AI & cognitive services" },
   "stack.vercel": { pl: "Deployment i hosting", en: "Deployment & hosting" },
 
+  // Work CTA
+  "work.viewProject": { pl: "Zobacz projekt", en: "View project" },
+
   // Contact
   "contact.label": { pl: "Kontakt", en: "Get In Touch" },
   "contact.title1": { pl: "Zbudujmy co\u015b", en: "Let\u2019s build something" },
