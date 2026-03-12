@@ -100,20 +100,20 @@ function ProjectContent({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* Screenshot showcase — joseocando-style */}
-      {project.screenshot && (
-        <section className="px-6 lg:px-8 -mt-8 md:-mt-12 relative z-10">
-          <div className="mx-auto max-w-6xl">
+      {/* Feature image — full-width hero screenshot */}
+      {project.screenshots && project.screenshots.length > 0 && (
+        <section className="px-4 md:px-6 lg:px-8 -mt-10 md:-mt-16 relative z-10">
+          <div className="mx-auto max-w-7xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="overflow-hidden rounded-2xl border border-sage/8 bg-beige shadow-2xl shadow-sage/10"
+              className="overflow-hidden rounded-2xl"
             >
               <img
-                src={project.screenshot}
-                alt={`${project.title} screenshot`}
-                className="w-full h-auto"
+                src={project.screenshots[0]}
+                alt={`${project.title}`}
+                className="w-full h-auto block"
               />
             </motion.div>
           </div>
@@ -240,6 +240,30 @@ function ProjectContent({ slug }: { slug: string }) {
           </motion.aside>
         </div>
       </section>
+
+      {/* Screenshot gallery */}
+      {project.screenshots && project.screenshots.length > 1 && (
+        <section className="px-4 md:px-6 lg:px-8 pb-16 md:pb-24">
+          <div className="mx-auto max-w-7xl space-y-4">
+            {project.screenshots.slice(1).map((src, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="overflow-hidden rounded-2xl"
+              >
+                <img
+                  src={src}
+                  alt={`${project.title} — ${i + 2}`}
+                  className="w-full h-auto block"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* CTA section */}
       <section className="border-t border-sage/8 px-6 py-20 md:py-28 lg:px-8">

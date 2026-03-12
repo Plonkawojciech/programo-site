@@ -17,7 +17,7 @@ export interface Project {
   bgColor: string;
   year: string;
   role: { pl: string; en: string };
-  screenshot?: string;
+  screenshots?: string[];
 }
 
 export const projects: Project[] = [
@@ -67,7 +67,7 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
-    screenshot: "/screenshots/estalo-hero.png",
+    screenshots: ["/screenshots/estalo-1.png", "/screenshots/estalo-2.png"],
   },
   {
     slug: "baulx",
@@ -113,7 +113,7 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
-    screenshot: "/screenshots/baulx-hero.png",
+    screenshots: ["/screenshots/baulx-1.png", "/screenshots/baulx-2.png"],
   },
   {
     slug: "sporttrack",
