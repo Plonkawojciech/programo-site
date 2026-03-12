@@ -1,19 +1,9 @@
-"use client";
-
-import { motion } from "framer-motion";
-
 export default function About() {
   return (
     <section id="about" className="bg-beige px-6 py-32 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-16 md:grid-cols-2 md:gap-20">
-          {/* Left column */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div>
             <p className="mb-3 text-sm tracking-[0.2em] uppercase text-sage-muted">
               Who We Are
             </p>
@@ -22,20 +12,9 @@ export default function About() {
               <br />
               one studio.
             </h2>
-          </motion.div>
+          </div>
 
-          {/* Right column */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.15,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="flex flex-col justify-center"
-          >
+          <div className="flex flex-col justify-center">
             <p className="text-lg leading-relaxed text-sage-light">
               Programo is a software studio founded by{" "}
               <span className="text-sage font-medium">Wojciech P&#322;onka</span>{" "}
@@ -55,17 +34,10 @@ export default function About() {
               management, no handoffs &mdash; just two engineers who care deeply
               about the work.
             </p>
-          </motion.div>
+          </div>
         </div>
 
-        {/* Stats row */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-20 grid grid-cols-2 gap-8 border-t border-sage/10 pt-12 md:grid-cols-4"
-        >
+        <div className="mt-20 grid grid-cols-2 gap-8 border-t border-sage/10 pt-12 md:grid-cols-4">
           {[
             { number: "3+", label: "Products Shipped" },
             { number: "2", label: "Founders" },
@@ -79,7 +51,7 @@ export default function About() {
               <p className="mt-1 text-sm text-sage-muted">{stat.label}</p>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

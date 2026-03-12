@@ -98,52 +98,28 @@ const projects: Project[] = [
   },
 ];
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.15,
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
-};
-
 export default function FeaturedWork() {
   return (
     <section id="work" className="px-6 py-32 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0 }}
-          transition={{ duration: 0.6 }}
-        >
+        <div>
           <p className="mb-3 text-sm tracking-[0.2em] uppercase text-sage-muted">
             Selected Projects
           </p>
           <h2 className="font-serif text-4xl tracking-tight text-sage md:text-5xl">
             Featured Work
           </h2>
-        </motion.div>
+        </div>
 
         <div className="mt-16 space-y-8">
-          {projects.map((project, i) => (
+          {projects.map((project) => (
             <motion.article
               key={project.title}
-              custom={i}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0 }}
+              whileHover={{ scale: 1.01 }}
+              transition={{ duration: 0.3 }}
               className={`group relative overflow-hidden rounded-2xl ${project.bg} p-8 md:p-12 lg:p-16`}
             >
-              {/* Pattern background */}
               {project.pattern}
-
-              {/* Gradient overlay for depth */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
 
               <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
@@ -161,11 +137,8 @@ export default function FeaturedWork() {
                   </p>
                 </div>
 
-                {/* Abstract visual element */}
                 <div className="flex shrink-0 items-end">
-                  <div
-                    className={`flex h-16 w-16 items-center justify-center rounded-full border border-white/10 transition-all duration-500 group-hover:border-white/25 group-hover:scale-110`}
-                  >
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/10 transition-all duration-500 group-hover:border-white/25 group-hover:scale-110">
                     <svg
                       className="h-5 w-5 text-white/40 transition-colors group-hover:text-white/70"
                       fill="none"
@@ -183,7 +156,6 @@ export default function FeaturedWork() {
                 </div>
               </div>
 
-              {/* Decorative shape */}
               <div
                 className={`absolute -bottom-20 -right-20 h-64 w-64 rounded-full opacity-[0.03] blur-3xl ${
                   project.title === "Estalo"

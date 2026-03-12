@@ -6,13 +6,7 @@ export default function Contact() {
   return (
     <section id="contact" className="bg-sage px-6 py-32 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center"
-        >
+        <div className="text-center">
           <p className="mb-3 text-sm tracking-[0.2em] uppercase text-beige-light/50">
             Get In Touch
           </p>
@@ -47,7 +41,7 @@ export default function Contact() {
               />
             </svg>
           </motion.a>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
