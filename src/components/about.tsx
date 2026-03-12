@@ -41,7 +41,7 @@ export default function About() {
           {[
             { number: "3+", label: "Products Shipped" },
             { number: "2", label: "Founders" },
-            { number: "2025", label: "Founded" },
+            { number: "2026", label: "Founded" },
             { number: "Pozna\u0144", label: "Based In" },
           ].map((stat) => (
             <div key={stat.label}>
