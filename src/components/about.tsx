@@ -11,7 +11,7 @@ export default function About() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, amount: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <p className="mb-3 text-sm tracking-[0.2em] uppercase text-sage-muted">
@@ -28,7 +28,7 @@ export default function About() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, amount: 0 }}
             transition={{
               duration: 0.7,
               delay: 0.15,
@@ -62,14 +62,14 @@ export default function About() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
+          viewport={{ once: true, amount: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-20 grid grid-cols-2 gap-8 border-t border-sage/10 pt-12 md:grid-cols-4"
         >
           {[
             { number: "3+", label: "Products Shipped" },
             { number: "2", label: "Founders" },
-            { number: "2024", label: "Founded" },
+            { number: "2025", label: "Founded" },
             { number: "Pozna\u0144", label: "Based In" },
           ].map((stat) => (
             <div key={stat.label}>

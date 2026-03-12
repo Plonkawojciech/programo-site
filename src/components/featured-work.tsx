@@ -99,7 +99,7 @@ const projects: Project[] = [
 ];
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 60 },
+  hidden: { opacity: 0, y: 40 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
@@ -118,7 +118,7 @@ export default function FeaturedWork() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, amount: 0 }}
           transition={{ duration: 0.6 }}
         >
           <p className="mb-3 text-sm tracking-[0.2em] uppercase text-sage-muted">
@@ -137,7 +137,7 @@ export default function FeaturedWork() {
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, amount: 0 }}
               className={`group relative overflow-hidden rounded-2xl ${project.bg} p-8 md:p-12 lg:p-16`}
             >
               {/* Pattern background */}

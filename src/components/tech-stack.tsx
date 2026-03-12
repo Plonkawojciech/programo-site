@@ -49,7 +49,7 @@ export default function TechStack() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, amount: 0 }}
           transition={{ duration: 0.6 }}
         >
           <p className="mb-3 text-sm tracking-[0.2em] uppercase text-sage-muted">
@@ -72,7 +72,7 @@ export default function TechStack() {
               variants={itemVariants}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
+              viewport={{ once: true, amount: 0 }}
               className="group rounded-xl border border-sage/8 bg-beige/60 p-6 transition-all duration-300 hover:border-sage/15 hover:bg-beige lg:p-8"
             >
               <h3 className="font-serif text-xl text-sage transition-colors group-hover:text-sage-light md:text-2xl">
