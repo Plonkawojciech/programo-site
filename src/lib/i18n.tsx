@@ -25,21 +25,9 @@ const translations = {
   // Featured Work
   "work.label": { pl: "Wybrane projekty", en: "Selected Projects" },
   "work.title": { pl: "Nasze realizacje", en: "Featured Work" },
-  "work.estalo.subtitle": { pl: "CRM dla nieruchomo\u015bci", en: "CRM for Real Estate" },
-  "work.estalo.desc": {
-    pl: "Platforma SaaS CRM dla polskich biur nieruchomo\u015bci. Zarz\u0105dzanie ofertami, leadami, SMS-ami oraz integracje z portalami Otodom, NOE 2.0 i Domy.pl. Wspierana przez Azure AI.",
-    en: "SaaS CRM platform for Polish real estate agencies. Manages property listings, leads, SMS communications, and integrations with Otodom, NOE 2.0, and Domy.pl portals. Powered by Azure AI.",
-  },
-  "work.baulx.subtitle": { pl: "In\u017cynieria CNC drewna", en: "CNC Timber Engineering" },
-  "work.baulx.desc": {
-    pl: "Wielofunkcyjna platforma CNC z konwersj\u0105 plik\u00f3w (WUP, BTLx, TCN, G-code), parametrycznymi projektantami \u015bcian, dach\u00f3w i strop\u00f3w, kalkulatorami konstrukcyjnymi i wizualizacj\u0105 3D.",
-    en: "Multi-featured CNC platform with file conversion (WUP, BTLx, TCN, G-code), parametric designers for walls, roofs and floors, structural calculators, and 3D visualization tools.",
-  },
-  "work.wup2tcn.subtitle": { pl: "Konwerter plik\u00f3w CNC", en: "CNC File Converter" },
-  "work.wup2tcn.desc": {
-    pl: "Specjalistyczny konwerter plik\u00f3w dla maszyn CNC Dietrich\u2019s. Konwertuje pliki panelowe WUP/WOP do formatu TCN dla sterownik\u00f3w TPA Compact, z przetwarzaniem wsadowym i generowaniem BOM.",
-    en: "Specialized file converter for Dietrich\u2019s CNC machines. Converts WUP/WOP panel files to TCN format for TPA Compact controllers, with batch processing and BOM generation.",
-  },
+  "work.viewProject": { pl: "Zobacz projekt", en: "View project" },
+  "work.comingSoon": { pl: "Wkr\u00f3tce", en: "Coming Soon" },
+  "work.inDevelopment": { pl: "W realizacji", en: "In Development" },
 
   // About
   "about.label": { pl: "Kim jeste\u015bmy", en: "Who We Are" },
@@ -76,9 +64,6 @@ const translations = {
   "stack.azure": { pl: "AI i us\u0142ugi kognitywne", en: "AI & cognitive services" },
   "stack.vercel": { pl: "Deployment i hosting", en: "Deployment & hosting" },
 
-  // Work CTA
-  "work.viewProject": { pl: "Zobacz projekt", en: "View project" },
-
   // Contact
   "contact.label": { pl: "Kontakt", en: "Get In Touch" },
   "contact.title1": { pl: "Zbudujmy co\u015b", en: "Let\u2019s build something" },
@@ -90,6 +75,26 @@ const translations = {
 
   // Footer
   "footer.location": { pl: "Pozna\u0144, Polska", en: "Pozna\u0144, Poland" },
+
+  // Project Detail Page
+  "project.backToProjects": { pl: "\u2190 Wszystkie projekty", en: "\u2190 All projects" },
+  "project.about": { pl: "O projekcie", en: "About" },
+  "project.whatWeBuilt": { pl: "Co zbudowali\u015bmy", en: "What we built" },
+  "project.role": { pl: "Rola", en: "Role" },
+  "project.status": { pl: "Status", en: "Status" },
+  "project.techStack": { pl: "Technologie", en: "Tech Stack" },
+  "project.year": { pl: "Rok", en: "Year" },
+  "project.visitSite": { pl: "Odwied\u017a stron\u0119", en: "Visit site" },
+  "project.nextProject": { pl: "Nast\u0119pny projekt", en: "Next project" },
+  "project.prevProject": { pl: "Poprzedni projekt", en: "Previous project" },
+  "project.statusLive": { pl: "Na \u017cywo", en: "Live" },
+  "project.statusDev": { pl: "W realizacji", en: "In Development" },
+  "project.statusPlanned": { pl: "Planowany", en: "Planned" },
+  "project.interestedCta": {
+    pl: "Zainteresowany czym\u015b podobnym?",
+    en: "Interested in something similar?",
+  },
+  "project.letsTalk": { pl: "Porozmawiajmy", en: "Let\u2019s talk" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

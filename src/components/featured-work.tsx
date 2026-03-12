@@ -1,120 +1,155 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { projects } from "@/lib/projects";
+import type { Project, ProjectStatus } from "@/lib/projects";
+import type { Lang } from "@/lib/i18n";
 
-interface Project {
-  title: string;
-  subtitleKey: string;
-  descKey: string;
-  href: string;
-  bg: string;
-  accent: string;
-  accentHex: string;
-  pattern: React.ReactNode;
+function getSvgPattern(project: Project): React.ReactNode {
+  switch (project.slug) {
+    case "estalo":
+      return (
+        <svg className="absolute inset-0 h-full w-full opacity-[0.06]" viewBox="0 0 400 300">
+          <defs>
+            <pattern id="grid-estalo" width="40" height="40" patternUnits="userSpaceOnUse">
+              <rect width="40" height="40" fill="none" />
+              <path d="M40 0L0 40" stroke={project.accentColor} strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="400" height="300" fill="url(#grid-estalo)" />
+        </svg>
+      );
+    case "baulx":
+      return (
+        <svg className="absolute inset-0 h-full w-full opacity-[0.07]" viewBox="0 0 400 300">
+          <defs>
+            <pattern id="hex-baulx" width="60" height="52" patternUnits="userSpaceOnUse">
+              <polygon points="30,2 56,15 56,37 30,50 4,37 4,15" fill="none" stroke={project.accentColor} strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="400" height="300" fill="url(#hex-baulx)" />
+        </svg>
+      );
+    case "baulx-sell":
+      return (
+        <svg className="absolute inset-0 h-full w-full opacity-[0.06]" viewBox="0 0 400 300">
+          <defs>
+            <pattern id="cross-baulxsell" width="32" height="32" patternUnits="userSpaceOnUse">
+              <path d="M16 8v16M8 16h16" stroke={project.accentColor} strokeWidth="0.5" fill="none" />
+            </pattern>
+          </defs>
+          <rect width="400" height="300" fill="url(#cross-baulxsell)" />
+        </svg>
+      );
+    case "estalo-portal":
+      return (
+        <svg className="absolute inset-0 h-full w-full opacity-[0.06]" viewBox="0 0 400 300">
+          <defs>
+            <pattern id="diamond-portal" width="36" height="36" patternUnits="userSpaceOnUse">
+              <path d="M18 4L32 18L18 32L4 18Z" stroke={project.accentColor} strokeWidth="0.5" fill="none" />
+            </pattern>
+          </defs>
+          <rect width="400" height="300" fill="url(#diamond-portal)" />
+        </svg>
+      );
+    case "sporttrack":
+      return (
+        <svg className="absolute inset-0 h-full w-full opacity-[0.06]" viewBox="0 0 400 300">
+          <defs>
+            <pattern id="dots-sporttrack" width="24" height="24" patternUnits="userSpaceOnUse">
+              <circle cx="12" cy="12" r="1.5" fill={project.accentColor} />
+            </pattern>
+          </defs>
+          <rect width="400" height="300" fill="url(#dots-sporttrack)" />
+        </svg>
+      );
+    default:
+      return null;
+  }
 }
 
-const projects: Project[] = [
-  {
-    title: "Estalo",
-    subtitleKey: "work.estalo.subtitle",
-    descKey: "work.estalo.desc",
-    href: "https://estalo.pl",
-    bg: "bg-[#1a1a1a]",
-    accent: "text-[#c8a951]",
-    accentHex: "#c8a951",
-    pattern: (
-      <svg className="absolute inset-0 h-full w-full opacity-[0.06]" viewBox="0 0 400 300">
-        <defs>
-          <pattern id="grid-estalo" width="40" height="40" patternUnits="userSpaceOnUse">
-            <rect width="40" height="40" fill="none" />
-            <path d="M40 0L0 40" stroke="#c8a951" strokeWidth="0.5" />
-          </pattern>
-        </defs>
-        <rect width="400" height="300" fill="url(#grid-estalo)" />
-      </svg>
-    ),
-  },
-  {
-    title: "Baulx",
-    subtitleKey: "work.baulx.subtitle",
-    descKey: "work.baulx.desc",
-    href: "https://baulx.pl",
-    bg: "bg-[#0f1b2d]",
-    accent: "text-[#5ba4c9]",
-    accentHex: "#5ba4c9",
-    pattern: (
-      <svg className="absolute inset-0 h-full w-full opacity-[0.07]" viewBox="0 0 400 300">
-        <defs>
-          <pattern id="hex-baulx" width="60" height="52" patternUnits="userSpaceOnUse">
-            <polygon points="30,2 56,15 56,37 30,50 4,37 4,15" fill="none" stroke="#5ba4c9" strokeWidth="0.5" />
-          </pattern>
-        </defs>
-        <rect width="400" height="300" fill="url(#hex-baulx)" />
-      </svg>
-    ),
-  },
-  {
-    title: "WUP2TCN",
-    subtitleKey: "work.wup2tcn.subtitle",
-    descKey: "work.wup2tcn.desc",
-    href: "https://baulx.vercel.app",
-    bg: "bg-[#1a2e1a]",
-    accent: "text-[#6abf69]",
-    accentHex: "#6abf69",
-    pattern: (
-      <svg className="absolute inset-0 h-full w-full opacity-[0.06]" viewBox="0 0 400 300">
-        <defs>
-          <pattern id="dots-wup2tcn" width="24" height="24" patternUnits="userSpaceOnUse">
-            <circle cx="12" cy="12" r="1.5" fill="#6abf69" />
-          </pattern>
-        </defs>
-        <rect width="400" height="300" fill="url(#dots-wup2tcn)" />
-      </svg>
-    ),
-  },
-];
+function getStatusBadge(status: ProjectStatus, t: (key: never) => string) {
+  if (status === "planned") {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-wider uppercase text-white/60 backdrop-blur-sm">
+        <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
+        {t("work.comingSoon" as never)}
+      </span>
+    );
+  }
+  if (status === "development") {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-wider uppercase text-white/60 backdrop-blur-sm">
+        <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70 animate-pulse" />
+        {t("work.inDevelopment" as never)}
+      </span>
+    );
+  }
+  return null;
+}
 
-function ProjectCard({ project, t }: { project: Project; t: (key: never) => string }) {
+function ProjectCard({ project, t, lang }: { project: Project; t: (key: never) => string; lang: Lang }) {
   return (
-    <a
-      key={project.title}
-      href={project.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block"
-    >
+    <Link href={`/projects/${project.slug}`} className="group block">
       <motion.article
         whileHover={{ y: -6 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className={`relative overflow-hidden rounded-2xl ${project.bg} p-8 md:p-12 lg:p-16`}
+        className="relative overflow-hidden rounded-2xl p-8 md:p-12 lg:p-16"
+        style={{ backgroundColor: project.bgColor }}
       >
         {/* Background pattern */}
         <div className="transition-opacity duration-700 group-hover:opacity-150">
-          {project.pattern}
+          {getSvgPattern(project)}
         </div>
         <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
 
         {/* Glow on hover */}
         <div
           className="absolute -bottom-32 -right-32 h-80 w-80 rounded-full opacity-0 blur-[100px] transition-opacity duration-700 group-hover:opacity-[0.08]"
-          style={{ backgroundColor: project.accentHex }}
+          style={{ backgroundColor: project.accentColor }}
         />
 
         <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl">
-            <p className={`mb-2 text-xs tracking-[0.25em] uppercase transition-all duration-500 group-hover:tracking-[0.35em] ${project.accent}`}>
-              {t(project.subtitleKey as never)}
+            {/* Status badge */}
+            {project.status !== "live" && (
+              <div className="mb-4">
+                {getStatusBadge(project.status, t)}
+              </div>
+            )}
+
+            <p
+              className="mb-2 text-xs tracking-[0.25em] uppercase transition-all duration-500 group-hover:tracking-[0.35em]"
+              style={{ color: project.accentColor }}
+            >
+              {project.subtitle[lang]}
             </p>
             <h3 className="font-serif text-4xl text-white transition-transform duration-500 group-hover:translate-x-1 md:text-5xl lg:text-6xl">
               {project.title}
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-white/50 transition-colors duration-500 group-hover:text-white/65 md:text-base">
-              {t(project.descKey as never)}
+              {project.description[lang]}
             </p>
 
+            {/* Tags */}
+            <div className="mt-5 flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-white/10 px-3 py-1 text-[11px] tracking-wider uppercase text-white/40"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
             {/* View project link that appears on hover */}
-            <div className="mt-6 flex items-center gap-2 text-sm opacity-0 transition-all duration-500 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0" style={{ color: project.accentHex }}>
+            <div
+              className="mt-6 flex items-center gap-2 text-sm opacity-0 transition-all duration-500 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
+              style={{ color: project.accentColor }}
+            >
               <span className="tracking-wider uppercase font-medium text-xs">
                 {t("work.viewProject" as never)}
               </span>
@@ -133,18 +168,18 @@ function ProjectCard({ project, t }: { project: Project; t: (key: never) => stri
                 stroke="currentColor"
                 strokeWidth={1.5}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
             </div>
           </div>
         </div>
       </motion.article>
-    </a>
+    </Link>
   );
 }
 
 export default function FeaturedWork() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   return (
     <section id="work" className="px-6 py-32 lg:px-8">
@@ -160,7 +195,7 @@ export default function FeaturedWork() {
 
         <div className="mt-16 space-y-8">
           {projects.map((project) => (
-            <ProjectCard key={project.title} project={project} t={t} />
+            <ProjectCard key={project.slug} project={project} t={t} lang={lang} />
           ))}
         </div>
       </div>
