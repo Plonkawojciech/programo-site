@@ -6,6 +6,7 @@ interface Project {
   title: string;
   subtitle: string;
   description: string;
+  href: string;
   bg: string;
   accent: string;
   pattern: React.ReactNode;
@@ -16,7 +17,8 @@ const projects: Project[] = [
     title: "Estalo",
     subtitle: "CRM for Real Estate",
     description:
-      "AI-powered CRM that automates property listings, client management, and portal integrations for real estate agencies across Poland.",
+      "SaaS CRM platform for Polish real estate agencies. Manages property listings, leads, SMS communications, and integrations with Otodom, NOE 2.0, and Domy.pl portals. Powered by Azure AI.",
+    href: "https://estalo.pl",
     bg: "bg-[#1a1a1a]",
     accent: "text-[#c8a951]",
     pattern: (
@@ -41,9 +43,10 @@ const projects: Project[] = [
   },
   {
     title: "Baulx",
-    subtitle: "CNC & Woodworking Suite",
+    subtitle: "CNC Timber Engineering",
     description:
-      "Studio, Convert, and Flow \u2014 three tools that streamline design-to-production workflows for CNC manufacturers and custom furniture makers.",
+      "Multi-featured CNC platform with file conversion (WUP, BTLx, TCN, G-code), parametric designers for walls, roofs and floors, structural calculators, and 3D visualization tools.",
+    href: "https://baulx.vercel.app",
     bg: "bg-[#0f1b2d]",
     accent: "text-[#5ba4c9]",
     pattern: (
@@ -71,10 +74,11 @@ const projects: Project[] = [
     ),
   },
   {
-    title: "Athlix",
-    subtitle: "Sports & Health Platform",
+    title: "WUP2TCN",
+    subtitle: "CNC File Converter",
     description:
-      "Pilot and TrainMate \u2014 athlete performance tracking and AI-powered training plans for coaches and athletes.",
+      "Specialized file converter for Dietrich\u2019s CNC machines. Converts WUP/WOP panel files to TCN format for TPA Compact controllers, with batch processing and BOM generation.",
+    href: "https://baulx.vercel.app",
     bg: "bg-[#1a2e1a]",
     accent: "text-[#6abf69]",
     pattern: (
@@ -84,7 +88,7 @@ const projects: Project[] = [
       >
         <defs>
           <pattern
-            id="dots-athlix"
+            id="dots-wup2tcn"
             width="24"
             height="24"
             patternUnits="userSpaceOnUse"
@@ -92,7 +96,7 @@ const projects: Project[] = [
             <circle cx="12" cy="12" r="1.5" fill="#6abf69" />
           </pattern>
         </defs>
-        <rect width="400" height="300" fill="url(#dots-athlix)" />
+        <rect width="400" height="300" fill="url(#dots-wup2tcn)" />
       </svg>
     ),
   },
@@ -113,59 +117,65 @@ export default function FeaturedWork() {
 
         <div className="mt-16 space-y-8">
           {projects.map((project) => (
-            <motion.article
+            <a
               key={project.title}
-              whileHover={{ scale: 1.01 }}
-              transition={{ duration: 0.3 }}
-              className={`group relative overflow-hidden rounded-2xl ${project.bg} p-8 md:p-12 lg:p-16`}
+              href={project.href}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              {project.pattern}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
+              <motion.article
+                whileHover={{ scale: 1.01 }}
+                transition={{ duration: 0.3 }}
+                className={`group relative overflow-hidden rounded-2xl ${project.bg} p-8 md:p-12 lg:p-16`}
+              >
+                {project.pattern}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
 
-              <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-                <div className="max-w-xl">
-                  <p
-                    className={`mb-2 text-xs tracking-[0.25em] uppercase ${project.accent}`}
-                  >
-                    {project.subtitle}
-                  </p>
-                  <h3 className="font-serif text-4xl text-white md:text-5xl lg:text-6xl">
-                    {project.title}
-                  </h3>
-                  <p className="mt-4 text-sm leading-relaxed text-white/50 md:text-base">
-                    {project.description}
-                  </p>
-                </div>
-
-                <div className="flex shrink-0 items-end">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/10 transition-all duration-500 group-hover:border-white/25 group-hover:scale-110">
-                    <svg
-                      className="h-5 w-5 text-white/40 transition-colors group-hover:text-white/70"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
+                <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+                  <div className="max-w-xl">
+                    <p
+                      className={`mb-2 text-xs tracking-[0.25em] uppercase ${project.accent}`}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-                      />
-                    </svg>
+                      {project.subtitle}
+                    </p>
+                    <h3 className="font-serif text-4xl text-white md:text-5xl lg:text-6xl">
+                      {project.title}
+                    </h3>
+                    <p className="mt-4 text-sm leading-relaxed text-white/50 md:text-base">
+                      {project.description}
+                    </p>
+                  </div>
+
+                  <div className="flex shrink-0 items-end">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/10 transition-all duration-500 group-hover:border-white/25 group-hover:scale-110">
+                      <svg
+                        className="h-5 w-5 text-white/40 transition-colors group-hover:text-white/70"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div
-                className={`absolute -bottom-20 -right-20 h-64 w-64 rounded-full opacity-[0.03] blur-3xl ${
-                  project.title === "Estalo"
-                    ? "bg-[#c8a951]"
-                    : project.title === "Baulx"
-                      ? "bg-[#5ba4c9]"
-                      : "bg-[#6abf69]"
-                }`}
-              />
-            </motion.article>
+                <div
+                  className={`absolute -bottom-20 -right-20 h-64 w-64 rounded-full opacity-[0.03] blur-3xl ${
+                    project.title === "Estalo"
+                      ? "bg-[#c8a951]"
+                      : project.title === "Baulx"
+                        ? "bg-[#5ba4c9]"
+                        : "bg-[#6abf69]"
+                  }`}
+                />
+              </motion.article>
+            </a>
           ))}
         </div>
       </div>
