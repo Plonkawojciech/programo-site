@@ -135,7 +135,7 @@ function ProjectContent({ slug }: { slug: string }) {
               <h2 className="mb-4 text-xs font-semibold tracking-[0.2em] uppercase text-sage-muted">
                 {t("project.about")}
               </h2>
-              <p className="text-lg leading-relaxed text-sage/80 md:text-xl md:leading-relaxed">
+              <p className="whitespace-pre-line text-lg leading-relaxed text-sage/80 md:text-xl md:leading-relaxed">
                 {project.longDescription[lang]}
               </p>
             </div>
