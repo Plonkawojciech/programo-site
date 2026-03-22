@@ -166,7 +166,7 @@ export default function About() {
     {
       key: "founded",
       label: t("about.stat.founded"),
-      render: <AnimatedCounter from={2020} to={2024} />,
+      render: <AnimatedCounter from={2020} to={2026} />,
     },
     {
       key: "location",
