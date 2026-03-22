@@ -141,22 +141,22 @@ export default function Navbar() {
               : "border-white/10 bg-white/50 shadow-none backdrop-blur-xl"
           }`}
         >
-          <div className="flex justify-between items-center px-10 py-4">
+          <div className="flex justify-between items-center px-8 py-3">
             <Link
               href="/"
-              className="font-headline text-3xl font-medium text-on-surface"
+              className="font-headline text-xl font-semibold tracking-tight text-on-surface"
             >
               Programo
             </Link>
 
-            <div className="flex items-center gap-12">
+            <div className="flex items-center gap-8">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.section;
                 return (
                   <a
                     key={link.href}
                     href={link.href}
-                    className={`relative text-sm tracking-tight uppercase font-semibold transition-colors ${
+                    className={`relative text-[13px] uppercase font-medium transition-colors ${
                       isActive
                         ? "text-primary"
                         : "text-on-surface-variant/70 hover:text-primary"
@@ -182,11 +182,11 @@ export default function Navbar() {
               })}
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
               <button
                 onClick={toggle}
                 aria-label={t("a11y.langToggle")}
-                className="text-sm tracking-tight uppercase text-on-surface-variant/50 cursor-pointer hover:text-primary transition-colors"
+                className="text-[13px] uppercase font-medium text-on-surface-variant/50 cursor-pointer hover:text-primary transition-colors"
                 style={{
                   transitionDuration: `${durationFast * 1000}ms`,
                   transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
@@ -197,7 +197,7 @@ export default function Navbar() {
               <MagneticWrapper>
                 <a
                   href="#contact"
-                  className="bg-primary px-6 py-3 rounded-full text-on-primary text-xs uppercase tracking-widest font-semibold hover:bg-primary-container transition-all"
+                  className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all"
                   style={{
                     transitionDuration: `${durationFast * 1000}ms`,
                     transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
@@ -227,7 +227,7 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 md:hidden flex justify-center"
       >
         <div
-          className={`bg-white/70 backdrop-blur-xl rounded-full mt-6 mx-auto max-w-fit px-6 py-2 border border-outline-variant/20 shadow-[0_20px_40px_rgba(26,28,28,0.04)] flex items-center gap-8 transition-all duration-500 ${
+          className={`bg-white/70 backdrop-blur-xl rounded-full mt-6 mx-auto max-w-fit px-5 py-2 border border-outline-variant/20 shadow-[0_20px_40px_rgba(26,28,28,0.04)] flex items-center gap-6 transition-all duration-500 ${
             scrolled ? "shadow-[0_20px_40px_rgba(26,28,28,0.08)]" : ""
           }`}
         >
@@ -250,7 +250,7 @@ export default function Navbar() {
 
           <Link
             href="/"
-            className="text-2xl font-headline font-bold tracking-tighter text-on-surface"
+            className="text-lg font-headline font-semibold tracking-tight text-on-surface"
           >
             Programo
           </Link>
@@ -258,7 +258,7 @@ export default function Navbar() {
           <button
             onClick={toggle}
             aria-label={t("a11y.langToggle")}
-            className="text-xs uppercase tracking-widest text-primary font-medium cursor-pointer"
+            className="text-[13px] uppercase text-primary font-medium cursor-pointer"
           >
             {lang === "pl" ? "EN" : "PL"}
           </button>
@@ -292,7 +292,7 @@ export default function Navbar() {
                     duration: durationMedium,
                     ease: easeEntry,
                   }}
-                  className="font-headline text-3xl text-on-surface min-h-[44px] flex items-center"
+                  className="font-headline text-2xl font-normal text-on-surface min-h-[44px] flex items-center"
                 >
                   {link.label}
                 </motion.a>
@@ -308,7 +308,7 @@ export default function Navbar() {
                   duration: durationMedium,
                   ease: easeEntry,
                 }}
-                className="mt-4 bg-primary px-8 py-3 rounded-full text-on-primary text-sm tracking-wide font-semibold min-h-[44px] flex items-center"
+                className="mt-4 bg-primary px-8 py-3 rounded-full text-on-primary text-sm tracking-wide font-medium min-h-[44px] flex items-center"
               >
                 {t("nav.cta")}
               </motion.a>

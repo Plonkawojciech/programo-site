@@ -125,19 +125,19 @@ export default function Contact() {
     }`;
 
   return (
-    <section id="contact" className="py-40 px-8 md:px-24 max-w-[1920px] mx-auto">
-      <div className="bg-on-surface text-surface rounded-[40px] px-8 md:px-24 py-32 relative overflow-hidden">
+    <section id="contact" className="py-20 md:py-28 lg:py-32 px-8 md:px-24 max-w-[1920px] mx-auto">
+      <div className="bg-on-surface text-surface rounded-[32px] px-8 md:px-16 py-20 md:py-24 relative overflow-hidden">
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-5">
-            <p className="mb-3 text-xs tracking-[0.2em] uppercase text-primary-container">
+            <p className="mb-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-container">
               {t("contact.label")}
             </p>
-            <h2 className="font-headline text-5xl md:text-7xl lg:text-8xl tracking-tighter leading-none mb-12 text-inverse-on-surface">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tighter leading-none mb-12 text-inverse-on-surface">
               {t("contact.title1")}
               <br />
               {t("contact.title2")}
             </h2>
-            <p className="text-surface-container-high/80 max-w-md mb-12">
+            <p className="text-base font-normal leading-relaxed text-surface-container-high/80 max-w-md mb-12">
               {t("contact.desc")}
             </p>
 
@@ -151,7 +151,7 @@ export default function Contact() {
               <div className="flex flex-col md:flex-row gap-6">
                 <a
                   href="mailto:wojciech.plonka@programo.pl"
-                  className="font-headline text-xl md:text-2xl text-inverse-on-surface hover:text-primary-container transition-colors"
+                  className="text-lg md:text-xl font-normal text-inverse-on-surface hover:text-primary-container transition-colors"
                 >
                   wojciech.plonka@programo.pl
                 </a>
@@ -159,7 +159,7 @@ export default function Contact() {
               <div>
                 <a
                   href="mailto:bartosz.kolaj@programo.pl"
-                  className="font-headline text-xl md:text-2xl text-inverse-on-surface hover:text-primary-container transition-colors"
+                  className="text-lg md:text-xl font-normal text-inverse-on-surface hover:text-primary-container transition-colors"
                 >
                   bartosz.kolaj@programo.pl
                 </a>
@@ -179,7 +179,7 @@ export default function Contact() {
               <div>
                 <label
                   htmlFor="contact-name"
-                  className="mb-2 block text-xs font-medium tracking-wider uppercase text-inverse-on-surface/60"
+                  className="mb-2 block text-[11px] font-medium tracking-wider uppercase text-inverse-on-surface/60"
                 >
                   {t("contact.form.name")} *
                 </label>
@@ -213,7 +213,7 @@ export default function Contact() {
               <div>
                 <label
                   htmlFor="contact-email"
-                  className="mb-2 block text-xs font-medium tracking-wider uppercase text-inverse-on-surface/60"
+                  className="mb-2 block text-[11px] font-medium tracking-wider uppercase text-inverse-on-surface/60"
                 >
                   {t("contact.form.email")} *
                 </label>
@@ -247,7 +247,7 @@ export default function Contact() {
               <div>
                 <label
                   htmlFor="contact-subject"
-                  className="mb-2 block text-xs font-medium tracking-wider uppercase text-inverse-on-surface/60"
+                  className="mb-2 block text-[11px] font-medium tracking-wider uppercase text-inverse-on-surface/60"
                 >
                   {t("contact.form.subject")} *
                 </label>
@@ -289,7 +289,7 @@ export default function Contact() {
               <div>
                 <label
                   htmlFor="contact-message"
-                  className="mb-2 block text-xs font-medium tracking-wider uppercase text-inverse-on-surface/60"
+                  className="mb-2 block text-[11px] font-medium tracking-wider uppercase text-inverse-on-surface/60"
                 >
                   {t("contact.form.message")} *
                 </label>
@@ -327,7 +327,7 @@ export default function Contact() {
                   scale: formState === "submitting" ? 1 : 1.02,
                 }}
                 whileTap={{ scale: formState === "submitting" ? 1 : 0.98 }}
-                className={`w-full rounded-full px-8 py-4 text-sm font-semibold tracking-wider uppercase transition-all duration-300 min-h-[44px] ${
+                className={`w-full rounded-full px-8 py-4 text-sm font-medium tracking-wider uppercase transition-all duration-300 min-h-[44px] ${
                   formState === "success"
                     ? "bg-emerald-500 text-white"
                     : "bg-inverse-on-surface text-inverse-surface hover:bg-primary-container hover:text-on-primary-container"

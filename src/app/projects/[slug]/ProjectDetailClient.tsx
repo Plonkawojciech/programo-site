@@ -109,19 +109,19 @@ function ProjectContent({ slug }: { slug: string }) {
       {/* Feature image */}
       {project.screenshots && project.screenshots.length > 0 && (
         <section className="px-4 md:px-6 lg:px-8 -mt-10 md:-mt-16 relative z-10">
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-5xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="overflow-hidden rounded-2xl"
+              className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-outline-variant/10 bg-surface-container-low"
             >
               <Image
                 src={project.screenshots[0]}
                 alt={`${project.title} — ${project.subtitle[lang]}`}
-                width={1920}
-                height={1080}
-                className="w-full h-auto block"
+                fill
+                className="object-contain"
+                sizes="(max-width: 1280px) 100vw, 1280px"
                 priority
               />
             </motion.div>
@@ -246,7 +246,7 @@ function ProjectContent({ slug }: { slug: string }) {
       {/* Screenshot gallery */}
       {project.screenshots && project.screenshots.length > 1 && (
         <section className="px-4 md:px-6 lg:px-8 pb-16 md:pb-24">
-          <div className="mx-auto max-w-7xl space-y-4">
+          <div className="mx-auto max-w-5xl space-y-4">
             {project.screenshots.slice(1).map((src, i) => (
               <motion.div
                 key={i}
@@ -254,14 +254,14 @@ function ProjectContent({ slug }: { slug: string }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="overflow-hidden rounded-2xl"
+                className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-outline-variant/10 bg-surface-container-low"
               >
                 <Image
                   src={src}
                   alt={`${project.title} — ${lang === "pl" ? "zrzut ekranu" : "screenshot"} ${i + 2}`}
-                  width={1920}
-                  height={1080}
-                  className="w-full h-auto block"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1280px) 100vw, 1280px"
                 />
               </motion.div>
             ))}

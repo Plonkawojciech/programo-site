@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 
 export type Lang = "pl" | "en";
 
@@ -28,6 +28,7 @@ const translations = {
   "work.viewProject": { pl: "Zobacz projekt", en: "View project" },
   "work.comingSoon": { pl: "Wkr\u00f3tce", en: "Coming Soon" },
   "work.inDevelopment": { pl: "W realizacji", en: "In Development" },
+  "work.live": { pl: "Na żywo", en: "Live" },
 
   // About
   "about.label": { pl: "Kim jeste\u015bmy", en: "Who We Are" },
@@ -58,11 +59,20 @@ const translations = {
     en: "We pick tools that let us move fast without sacrificing quality. Battle-tested, well-documented, production-ready.",
   },
   "stack.nextjs": { pl: "Full-stack framework React", en: "Full-stack React framework" },
-  "stack.rn": { pl: "Aplikacje mobilne cross-platform", en: "Cross-platform mobile apps" },
+  "stack.react": { pl: "Biblioteka UI", en: "UI library" },
+  "stack.typescript": { pl: "Typowany JavaScript", en: "Typed JavaScript" },
+  "stack.tailwind": { pl: "Utility-first CSS", en: "Utility-first CSS" },
   "stack.supabase": { pl: "Backend i baza danych", en: "Backend & database" },
-  "stack.stripe": { pl: "Infrastruktura p\u0142atno\u015bci", en: "Payments infrastructure" },
-  "stack.azure": { pl: "AI i us\u0142ugi kognitywne", en: "AI & cognitive services" },
+  "stack.neon": { pl: "Serverless PostgreSQL", en: "Serverless PostgreSQL" },
+  "stack.drizzle": { pl: "TypeScript ORM", en: "TypeScript ORM" },
   "stack.vercel": { pl: "Deployment i hosting", en: "Deployment & hosting" },
+  "stack.capacitor": { pl: "Aplikacje mobilne natywne", en: "Native mobile apps" },
+  "stack.azure": { pl: "AI i us\u0142ugi kognitywne", en: "AI & cognitive services" },
+  "stack.anthropic": { pl: "LLM i agenty AI", en: "LLMs & AI agents" },
+  "stack.stripe": { pl: "Infrastruktura p\u0142atno\u015bci", en: "Payments infrastructure" },
+  "stack.resend": { pl: "Transakcyjne emaile", en: "Transactional emails" },
+  "stack.threejs": { pl: "Grafika 3D w przegl\u0105darce", en: "3D graphics in browser" },
+  "stack.konvajs": { pl: "Canvas 2D framework", en: "2D canvas framework" },
 
   // Contact
   "contact.label": { pl: "Kontakt", en: "Get In Touch" },
@@ -73,8 +83,43 @@ const translations = {
     en: "Have a project in mind? We\u2019d love to hear about it. Drop us a line and we\u2019ll get back to you within 24 hours.",
   },
 
+  // Contact Form
+  "contact.form.name": { pl: "Imi\u0119", en: "Name" },
+  "contact.form.namePlaceholder": { pl: "Twoje imi\u0119", en: "Your name" },
+  "contact.form.email": { pl: "Email", en: "Email" },
+  "contact.form.emailPlaceholder": { pl: "twoj@email.pl", en: "your@email.com" },
+  "contact.form.subject": { pl: "Temat", en: "Subject" },
+  "contact.form.subjectPlaceholder": { pl: "Wybierz temat", en: "Choose a subject" },
+  "contact.form.subjectCollab": { pl: "Wsp\u00f3\u0142praca", en: "Collaboration" },
+  "contact.form.subjectQuote": { pl: "Wycena projektu", en: "Project quote" },
+  "contact.form.subjectTech": { pl: "Pytanie techniczne", en: "Technical question" },
+  "contact.form.subjectOther": { pl: "Inne", en: "Other" },
+  "contact.form.message": { pl: "Wiadomo\u015b\u0107", en: "Message" },
+  "contact.form.messagePlaceholder": { pl: "Opisz sw\u00f3j projekt lub pytanie (min. 20 znak\u00f3w)", en: "Describe your project or question (min. 20 characters)" },
+  "contact.form.submit": { pl: "Wy\u015blij", en: "Send" },
+  "contact.form.submitting": { pl: "Wysy\u0142anie...", en: "Sending..." },
+  "contact.form.submitted": { pl: "Wys\u0142ano!", en: "Sent!" },
+  "contact.form.errorRequired": { pl: "To pole jest wymagane", en: "This field is required" },
+  "contact.form.errorEmail": { pl: "Nieprawid\u0142owy adres email", en: "Invalid email address" },
+  "contact.form.errorMinLength": { pl: "Minimum 20 znak\u00f3w", en: "Minimum 20 characters" },
+  "contact.form.errorMaxLength": { pl: "Maksimum 2000 znak\u00f3w", en: "Maximum 2000 characters" },
+  "contact.form.successToast": { pl: "Wiadomo\u015b\u0107 wys\u0142ana!", en: "Message sent!" },
+  "contact.form.errorToast": { pl: "Co\u015b posz\u0142o nie tak", en: "Something went wrong" },
+  "contact.form.rateLimitToast": { pl: "Zbyt wiele wiadomo\u015bci. Spr\u00f3buj p\u00f3\u017aniej.", en: "Too many messages. Try again later." },
+
   // Footer
   "footer.location": { pl: "Pozna\u0144, Polska", en: "Pozna\u0144, Poland" },
+  "footer.copyright": { pl: "Programo", en: "Programo" },
+
+  // 404
+  "notFound.title": { pl: "Nie znaleziono strony", en: "Page not found" },
+  "notFound.desc": { pl: "Strona, kt\u00f3rej szukasz, nie istnieje.", en: "The page you are looking for does not exist." },
+  "notFound.back": { pl: "Wr\u00f3\u0107 na stron\u0119 g\u0142\u00f3wn\u0105", en: "Back to homepage" },
+
+  // Accessibility
+  "a11y.skipToContent": { pl: "Przejd\u017a do tre\u015bci", en: "Skip to content" },
+  "a11y.langToggle": { pl: "Zmie\u0144 j\u0119zyk", en: "Change language" },
+  "a11y.mainNav": { pl: "Nawigacja g\u0142\u00f3wna", en: "Main navigation" },
 
   // Project Detail Page
   "project.backToProjects": { pl: "\u2190 Wszystkie projekty", en: "\u2190 All projects" },
@@ -97,7 +142,8 @@ const translations = {
   "project.letsTalk": { pl: "Porozmawiajmy", en: "Let\u2019s talk" },
 } as const;
 
-type TranslationKey = keyof typeof translations;
+export type TranslationKey = keyof typeof translations;
+export { translations };
 
 interface I18nContextType {
   lang: Lang;
@@ -108,7 +154,18 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>("pl");
+  const [lang, setLang] = useState<Lang>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("programo-lang");
+      if (saved === "en" || saved === "pl") return saved;
+    }
+    return "pl";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("programo-lang", lang);
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const toggle = useCallback(() => {
     setLang((prev) => (prev === "pl" ? "en" : "pl"));

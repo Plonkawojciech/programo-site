@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { projects } from "@/lib/projects";
@@ -69,7 +70,7 @@ function ProjectCard({
           delay: index * staggerItem,
           ease: easeDefault,
         }}
-        className={isOdd ? "mt-0 md:mt-24" : ""}
+        className={isOdd ? "mt-0 md:mt-16" : ""}
       >
         {/* Image area with clip-path reveal */}
         <motion.div
@@ -81,29 +82,45 @@ function ProjectCard({
             delay: index * staggerItem + 0.15,
             ease: easeEntry,
           }}
-          className="aspect-[16/10] rounded-xl overflow-hidden mb-8 bg-surface-container-low"
+          className="aspect-[16/10] rounded-xl overflow-hidden mb-6 bg-surface-container-low"
         >
-          <motion.div
-            className="w-full h-full bg-gradient-to-br from-surface-container to-surface-container-high flex items-center justify-center relative"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: durationMedium, ease: easeDefault }}
-          >
-            <span className="font-headline text-6xl text-outline-variant/30 select-none">
-              {project.title[0]}
-            </span>
-
-            {/* Hover overlay with large initial letter */}
+          {project.screenshots && project.screenshots.length > 0 ? (
             <motion.div
-              className="absolute inset-0 bg-primary/10 flex items-center justify-center pointer-events-none"
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 1 }}
-              transition={{ duration: 0.35, ease: easeEntry }}
+              className="w-full h-full relative"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: durationMedium, ease: easeDefault }}
             >
-              <span className="font-headline text-[120px] text-primary/20 select-none">
+              <Image
+                src={project.screenshots[0]}
+                alt={project.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              className="w-full h-full bg-gradient-to-br from-surface-container to-surface-container-high flex items-center justify-center relative"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: durationMedium, ease: easeDefault }}
+            >
+              <span className="font-headline text-6xl text-outline-variant/30 select-none">
                 {project.title[0]}
               </span>
+
+              {/* Hover overlay with large initial letter */}
+              <motion.div
+                className="absolute inset-0 bg-primary/10 flex items-center justify-center pointer-events-none"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.35, ease: easeEntry }}
+              >
+                <span className="font-headline text-[120px] text-primary/20 select-none">
+                  {project.title[0]}
+                </span>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          )}
         </motion.div>
 
         {/* Content */}
@@ -112,13 +129,13 @@ function ProjectCard({
             <div className="mb-3">
               {getStatusBadge(project.status, t)}
             </div>
-            <span className="text-[10px] uppercase tracking-widest text-primary font-bold mb-2 block">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-primary mb-2 block">
               {project.tags.join(" / ")}
             </span>
-            <h3 className="font-headline text-4xl text-on-surface mb-2">
+            <h3 className="font-headline text-2xl md:text-3xl font-medium text-on-surface mb-2">
               {project.title}
             </h3>
-            <p className="text-sm text-on-surface-variant max-w-sm leading-relaxed">
+            <p className="text-sm font-normal text-on-surface-variant max-w-sm leading-relaxed">
               {project.description[lang]}
             </p>
           </div>
@@ -145,23 +162,23 @@ export default function FeaturedWork() {
   const { t, lang } = useI18n();
 
   return (
-    <section id="work" className="py-32 px-8 md:px-24 max-w-[1920px] mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-baseline mb-24">
+    <section id="work" className="py-20 md:py-28 lg:py-32 px-8 md:px-24 max-w-[1920px] mx-auto">
+      <div className="flex flex-col md:flex-row justify-between items-baseline mb-16">
         <motion.h2
           variants={clipRevealUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="font-headline text-5xl md:text-7xl text-on-surface"
+          className="font-headline text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight text-on-surface"
         >
           {t("work.title")}
         </motion.h2>
-        <p className="text-xs uppercase tracking-widest text-on-surface-variant mt-4 md:mt-0">
+        <p className="text-[11px] font-medium uppercase tracking-widest text-on-surface-variant mt-4 md:mt-0">
           {t("work.label")}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-32">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-20 md:gap-x-10 md:gap-y-24">
         {projects.map((project, index) => (
           <ProjectCard
             key={project.slug}

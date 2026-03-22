@@ -67,7 +67,7 @@ function MarqueeRow({
             key={`${tech.name}-${i}`}
             className="rounded-xl border border-outline-variant/10 bg-surface-container-lowest px-6 py-4 flex-shrink-0 min-w-[180px] md:min-w-[220px]"
           >
-            <span className="font-bold text-on-surface text-sm md:text-base block">
+            <span className="font-medium text-on-surface text-sm md:text-base block">
               {tech.name}
             </span>
             <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mt-1.5">
@@ -106,10 +106,10 @@ export default function TechStack() {
   const row2 = technologies.slice(8);
 
   return (
-    <section id="stack" className="py-40 max-w-[1920px] mx-auto">
-      <div className="text-center mb-32 px-8 md:px-24">
+    <section id="stack" className="py-20 md:py-28 lg:py-32 max-w-[1920px] mx-auto">
+      <div className="text-center mb-16 md:mb-20 px-8 md:px-24">
         <motion.span
-          className="text-xs uppercase tracking-widest text-primary font-bold inline-block"
+          className="text-[11px] font-medium uppercase tracking-widest text-primary inline-block"
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
@@ -118,7 +118,7 @@ export default function TechStack() {
           {t("stack.label")}
         </motion.span>
         <motion.h2
-          className="font-headline text-5xl md:text-7xl text-on-surface mt-6"
+          className="font-headline text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight text-on-surface mt-4"
           variants={clipRevealUp}
           initial="hidden"
           whileInView="visible"
@@ -127,7 +127,7 @@ export default function TechStack() {
           {t("stack.title")}
         </motion.h2>
         <motion.p
-          className="mx-auto mt-6 max-w-lg text-on-surface-variant"
+          className="mx-auto mt-6 max-w-lg text-base md:text-lg font-normal text-on-surface-variant"
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
@@ -138,7 +138,7 @@ export default function TechStack() {
       </div>
 
       <motion.div
-        className="flex flex-col gap-4 overflow-hidden"
+        className="flex flex-col gap-3 overflow-hidden"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}

@@ -77,7 +77,7 @@ function SplitHeading({ text, reduced }: { text: string; reduced: boolean }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
-        className="font-headline text-7xl md:text-9xl lg:text-[10rem] leading-[0.9] tracking-tighter text-on-surface"
+        className="font-headline text-5xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] tracking-tight text-on-surface"
       >
         {text}
       </motion.h1>
@@ -87,7 +87,7 @@ function SplitHeading({ text, reduced }: { text: string; reduced: boolean }) {
   return (
     <h1
       aria-label={text}
-      className="font-headline text-7xl md:text-9xl lg:text-[10rem] leading-[0.9] tracking-tighter text-on-surface"
+      className="font-headline text-5xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] tracking-tight text-on-surface"
     >
       {chars.map((char, i) => (
         <span
@@ -125,7 +125,7 @@ function SplitDescription({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.2 }}
-        className="mt-8 max-w-xl text-xl md:text-2xl leading-relaxed text-on-surface-variant"
+        className="mt-6 max-w-2xl text-base md:text-lg font-normal leading-relaxed text-on-surface-variant"
       >
         {text}
       </motion.p>
@@ -133,7 +133,7 @@ function SplitDescription({
   }
 
   return (
-    <p className="mt-8 max-w-xl text-xl md:text-2xl leading-relaxed text-on-surface-variant">
+    <p className="mt-6 max-w-2xl text-base md:text-lg font-normal leading-relaxed text-on-surface-variant">
       {words.map((word, i) => (
         <motion.span
           key={i}
@@ -184,67 +184,69 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-[100svh] flex-col justify-center px-8 pt-28 pb-32 md:px-24 max-w-[1920px] mx-auto"
+      className="relative flex min-h-[100svh] flex-col justify-center px-6 pt-24 pb-20 md:px-12 md:pt-32 md:pb-28 lg:px-16 lg:pt-40 lg:pb-32 max-w-[1920px] mx-auto"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
-        <div className="lg:col-span-8">
-          {/* Label */}
-          <motion.p
-            custom={0}
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            className="mb-6 text-xs tracking-[0.2em] uppercase text-primary font-bold"
-          >
-            {t("hero.label")}
-          </motion.p>
-
-          {/* Heading — split-text char reveal + parallax */}
-          <motion.div style={{ y: safeHeadingY }}>
-            <SplitHeading text="Programo" reduced={reduced} />
-          </motion.div>
-
-          {/* Description — word-by-word reveal + parallax */}
-          <motion.div style={{ y: safeDescY }}>
-            <SplitDescription text={t("hero.desc")} reduced={reduced} />
-          </motion.div>
-
-          {/* CTA buttons */}
-          <motion.div
-            custom={3}
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            className="mt-12 flex flex-wrap gap-6"
-          >
-            <MagneticWrapper>
-              <a
-                href="#work"
-                className="group flex items-center gap-3 border border-primary/20 px-8 py-4 rounded-full text-primary text-sm uppercase tracking-widest font-bold hover:bg-primary hover:text-on-primary transition-all duration-500"
-              >
-                <span>{t("hero.browse")}</span>
-                <svg
-                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-                  />
-                </svg>
-              </a>
-            </MagneticWrapper>
-            <a
-              href="#about"
-              className="flex items-center gap-3 px-8 py-4 text-on-surface-variant text-sm uppercase tracking-widest font-bold hover:text-primary transition-colors"
+      <div className="max-w-7xl mx-auto w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+          <div className="lg:col-span-8">
+            {/* Label */}
+            <motion.p
+              custom={0}
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              className="mb-6 text-xs font-medium uppercase tracking-widest text-primary"
             >
-              <span>{t("hero.about")}</span>
-            </a>
-          </motion.div>
+              {t("hero.label")}
+            </motion.p>
+
+            {/* Heading — split-text char reveal + parallax */}
+            <motion.div style={{ y: safeHeadingY }}>
+              <SplitHeading text="Programo" reduced={reduced} />
+            </motion.div>
+
+            {/* Description — word-by-word reveal + parallax */}
+            <motion.div style={{ y: safeDescY }}>
+              <SplitDescription text={t("hero.desc")} reduced={reduced} />
+            </motion.div>
+
+            {/* CTA buttons */}
+            <motion.div
+              custom={3}
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              className="mt-10 flex flex-wrap gap-6"
+            >
+              <MagneticWrapper>
+                <a
+                  href="#work"
+                  className="group flex items-center gap-3 border border-primary/20 px-6 py-3 rounded-full text-primary text-sm font-medium uppercase tracking-wide hover:bg-primary hover:text-on-primary transition-all duration-500"
+                >
+                  <span>{t("hero.browse")}</span>
+                  <svg
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+                    />
+                  </svg>
+                </a>
+              </MagneticWrapper>
+              <a
+                href="#about"
+                className="flex items-center gap-3 px-6 py-3 text-on-surface-variant text-sm font-normal uppercase tracking-wide hover:text-primary transition-colors"
+              >
+                <span>{t("hero.about")}</span>
+              </a>
+            </motion.div>
+          </div>
         </div>
       </div>
 

@@ -178,13 +178,13 @@ export default function About() {
   return (
     <section
       id="about"
-      className="py-40 px-8 md:px-24 max-w-[1920px] mx-auto bg-surface-container-low rounded-t-[40px]"
+      className="py-24 md:py-32 lg:py-40 px-8 md:px-24 max-w-[1920px] mx-auto bg-surface-container-low rounded-t-[40px]"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
         <div>
           {/* Word-by-word heading reveal */}
           <motion.h2
-            className="font-headline text-5xl md:text-7xl text-on-surface leading-tight mb-12"
+            className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight text-on-surface mb-8"
             variants={wordRevealContainer}
             initial="hidden"
             whileInView="visible"
@@ -205,7 +205,7 @@ export default function About() {
 
           {/* Paragraphs fade in */}
           <motion.p
-            className="text-lg text-on-surface-variant leading-relaxed mb-8 max-w-lg"
+            className="text-base md:text-lg font-normal leading-relaxed text-on-surface-variant mb-8 max-w-xl"
             variants={paragraphVariants}
             initial="hidden"
             whileInView="visible"
@@ -221,7 +221,7 @@ export default function About() {
           </motion.p>
 
           <motion.p
-            className="text-on-surface-variant leading-relaxed max-w-lg mb-6"
+            className="text-base md:text-lg font-normal leading-relaxed text-on-surface-variant max-w-xl mb-6"
             variants={paragraphVariants}
             initial="hidden"
             whileInView="visible"
@@ -232,7 +232,7 @@ export default function About() {
           </motion.p>
 
           <motion.p
-            className="text-on-surface-variant leading-relaxed max-w-lg"
+            className="text-base md:text-lg font-normal leading-relaxed text-on-surface-variant max-w-xl"
             variants={paragraphVariants}
             initial="hidden"
             whileInView="visible"
@@ -243,7 +243,7 @@ export default function About() {
           </motion.p>
 
           {/* Founders – staggered */}
-          <div className="grid grid-cols-2 gap-x-12 gap-y-12 mt-16 border-t border-outline-variant/20 pt-12">
+          <div className="grid grid-cols-2 gap-x-12 gap-y-12 mt-12 border-t border-outline-variant/20 pt-8">
             {[
               {
                 name: "Wojciech P\u0142onka",
@@ -262,10 +262,10 @@ export default function About() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-40px" }}
               >
-                <h4 className="font-headline text-3xl md:text-4xl text-on-surface">
+                <h4 className="text-2xl md:text-3xl font-medium text-on-surface">
                   {founder.name}
                 </h4>
-                <p className="text-xs uppercase tracking-widest text-primary mt-2">
+                <p className="text-[11px] font-medium uppercase tracking-widest text-primary mt-2">
                   {founder.role}
                 </p>
               </motion.div>
@@ -285,12 +285,12 @@ export default function About() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
-                className="bg-surface-container-lowest p-12 rounded-xl editorial-shadow"
+                className="bg-surface-container-lowest p-8 md:p-10 rounded-xl editorial-shadow"
               >
-                <p className="font-headline text-5xl text-primary mb-2">
+                <p className="text-4xl font-semibold text-primary mb-2">
                   {stat.render}
                 </p>
-                <p className="text-xs uppercase tracking-widest text-on-surface-variant">
+                <p className="text-[11px] font-medium uppercase tracking-widest text-on-surface-variant">
                   {stat.label}
                 </p>
               </motion.div>
@@ -307,9 +307,9 @@ export default function About() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
-                className="bg-surface-container-lowest p-12 rounded-xl editorial-shadow"
+                className="bg-surface-container-lowest p-8 md:p-10 rounded-xl editorial-shadow"
               >
-                <p className="font-headline text-5xl text-primary mb-2">
+                <p className="text-4xl font-semibold text-primary mb-2">
                   {stat.render !== null ? (
                     stat.render
                   ) : (
@@ -324,7 +324,7 @@ export default function About() {
                     </motion.span>
                   )}
                 </p>
-                <p className="text-xs uppercase tracking-widest text-on-surface-variant">
+                <p className="text-[11px] font-medium uppercase tracking-widest text-on-surface-variant">
                   {stat.label}
                 </p>
               </motion.div>
