@@ -1,31 +1,87 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #f5f3ef;
-  --color-foreground: #2d3a2e;
-  --color-beige: #e8e4de;
-  --color-beige-light: #f5f3ef;
-  --color-sage: #2d3a2e;
-  --color-sage-light: #4a5e4c;
-  --color-sage-muted: #7a8f7c;
-  --color-warm: #c9c1b6;
-  --color-warm-dark: #a89e93;
-  --color-accent: #8b7355;
-  --font-serif: var(--font-playfair);
-  --font-sans: var(--font-inter);
+  --color-surface: #f9f9f9;
+  --color-surface-dim: #dadada;
+  --color-surface-container: #eeeeee;
+  --color-surface-container-low: #f4f3f3;
+  --color-surface-container-high: #e8e8e8;
+  --color-surface-container-highest: #e2e2e2;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface: #1a1c1c;
+  --color-on-surface-variant: #4e4639;
+  --color-primary: #775a19;
+  --color-primary-container: #c5a059;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #4e3700;
+  --color-outline: #7f7667;
+  --color-outline-variant: #d1c5b4;
+  --color-secondary: #5d5e61;
+  --color-tertiary: #476462;
+  --color-inverse-surface: #2f3131;
+  --color-inverse-on-surface: #f1f1f1;
+  --color-inverse-primary: #e9c176;
+  --font-headline: var(--font-newsreader);
+  --font-body: var(--font-jakarta);
 }
 
-* {
+html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: #2d3a2e;
-  color: #f5f3ef;
+  background: rgba(119, 90, 25, 0.2);
+  color: #775a19;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.editorial-shadow {
+  box-shadow: 0 20px 40px rgba(26, 28, 28, 0.04);
+}
+
+@media (pointer: fine) {
+  * { cursor: none !important; }
+}
+
+.hover-underline {
+  position: relative;
+}
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }

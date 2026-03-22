@@ -1,23 +1,26 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin", "latin-ext"],
   display: "swap",
+  preload: true,
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin", "latin-ext"],
   display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
-  title: "Programo — Studio Software",
+  title: "Programo — Studio Software z Poznania",
   description:
-    "Projektujemy i budujemy oprogramowanie. Studio software Wojciecha Płonki i Bartosza Kołaja z Poznania.",
+    "Projektujemy i budujemy oprogramowanie. Studio software Wojciecha Płonki i Bartosza Kolaja z Poznania.",
+  metadataBase: new URL("https://programo.pl"),
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "32x32" },
@@ -29,14 +32,51 @@ export const metadata: Metadata = {
     "software studio",
     "web development",
     "Next.js",
-    "React Native",
+    "React",
+    "TypeScript",
     "Poznań",
     "Poland",
+    "Programo",
   ],
   authors: [
     { name: "Wojciech Płonka" },
-    { name: "Bartosz Kołaj" },
+    { name: "Bartosz Kolaj" },
   ],
+  openGraph: {
+    title: "Programo — Studio Software z Poznania",
+    description:
+      "Projektujemy i budujemy oprogramowanie. Studio software Wojciecha Płonki i Bartosza Kolaja z Poznania.",
+    url: "https://programo.pl",
+    siteName: "Programo",
+    locale: "pl_PL",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Programo — Studio Software z Poznania",
+    description:
+      "Projektujemy i budujemy oprogramowanie. Studio software z Poznania.",
+  },
+  alternates: {
+    canonical: "https://programo.pl",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Programo",
+  url: "https://programo.pl",
+  founders: [
+    { "@type": "Person", name: "Wojciech Płonka" },
+    { "@type": "Person", name: "Bartosz Kolaj" },
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Poznań",
+    addressCountry: "PL",
+  },
+  sameAs: ["https://github.com/programo"],
 };
 
 export default function RootLayout({
@@ -45,7 +85,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="pl" className={`${newsreader.variable} ${jakarta.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="antialiased">{children}</body>
     </html>
   );
