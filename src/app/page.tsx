@@ -8,7 +8,6 @@ import About from "@/components/about";
 import TechStack from "@/components/tech-stack";
 import Contact from "@/components/contact";
 import Footer from "@/components/footer";
-import CustomCursor from "@/components/custom-cursor";
 import Preloader from "@/components/preloader";
 import PageTransition from "@/components/page-transition";
 
@@ -41,7 +40,6 @@ export default function Home() {
   return (
     <I18nProvider>
       <Preloader />
-      <CustomCursor />
       <HomeContent />
     </I18nProvider>
   );
