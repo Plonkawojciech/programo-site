@@ -3,6 +3,12 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
+import {
+  easeEntry,
+  durationMedium,
+  durationSlow,
+  staggerItem,
+} from "@/lib/motion";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -12,6 +18,62 @@ interface FormErrors {
   subject?: string;
   message?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Scroll-reveal variants
+// ---------------------------------------------------------------------------
+
+const cardReveal = {
+  hidden: { clipPath: "inset(10% 5% 10% 5% round 32px)" },
+  visible: {
+    clipPath: "inset(0% 0% 0% 0% round 32px)",
+    transition: { duration: 0.8, ease: easeEntry },
+  },
+};
+
+const leftContentItem = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: durationMedium, ease: easeEntry },
+  },
+};
+
+const leftStaggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: staggerItem,
+    },
+  },
+};
+
+const formReveal = {
+  hidden: { opacity: 0, x: 40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      delay: 0.3,
+      duration: durationMedium,
+      ease: easeEntry,
+    },
+  },
+};
+
+const gradientReveal = {
+  hidden: { scale: 0.5, opacity: 0 },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: { duration: durationSlow, ease: easeEntry },
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export default function Contact() {
   const { t } = useI18n();
@@ -126,23 +188,46 @@ export default function Contact() {
 
   return (
     <section id="contact" className="py-20 md:py-28 lg:py-32 px-8 md:px-24 max-w-[1920px] mx-auto">
-      <div className="bg-on-surface text-surface rounded-[32px] px-8 md:px-16 py-20 md:py-24 relative overflow-hidden">
+      {/* Clip-path card reveal */}
+      <motion.div
+        className="bg-on-surface text-surface rounded-[32px] px-8 md:px-16 py-20 md:py-24 relative overflow-hidden"
+        variants={cardReveal}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          <div className="lg:col-span-5">
-            <p className="mb-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-container">
+          {/* Left column — staggered content */}
+          <motion.div
+            className="lg:col-span-5"
+            variants={leftStaggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <motion.p
+              variants={leftContentItem}
+              className="mb-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-container"
+            >
               {t("contact.label")}
-            </p>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tighter leading-none mb-12 text-inverse-on-surface">
+            </motion.p>
+            <motion.h2
+              variants={leftContentItem}
+              className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tighter leading-none mb-12 text-inverse-on-surface"
+            >
               {t("contact.title1")}
               <br />
               {t("contact.title2")}
-            </h2>
-            <p className="text-base font-normal leading-relaxed text-surface-container-high/80 max-w-md mb-12">
+            </motion.h2>
+            <motion.p
+              variants={leftContentItem}
+              className="text-base font-normal leading-relaxed text-surface-container-high/80 max-w-md mb-12"
+            >
               {t("contact.desc")}
-            </p>
+            </motion.p>
 
             {/* Email links */}
-            <div className="flex flex-col gap-6">
+            <motion.div variants={leftContentItem} className="flex flex-col gap-6">
               <div>
                 <p className="text-xs uppercase tracking-widest text-primary-container mb-2">
                   kontakt@programo.pl
@@ -164,11 +249,17 @@ export default function Contact() {
                   bartosz.kolaj@programo.pl
                 </a>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          {/* Contact form */}
-          <div className="lg:col-span-7 lg:pl-12">
+          {/* Contact form — slides in from right */}
+          <motion.div
+            className="lg:col-span-7 lg:pl-12"
+            variants={formReveal}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             <form
               ref={formRef}
               onSubmit={handleSubmit}
@@ -340,12 +431,18 @@ export default function Contact() {
                     : t("contact.form.submit")}
               </motion.button>
             </form>
-          </div>
+          </motion.div>
         </div>
 
-        {/* Background gradient */}
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
-      </div>
+        {/* Background gradient — scales in */}
+        <motion.div
+          className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/10 to-transparent pointer-events-none"
+          variants={gradientReveal}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        />
+      </motion.div>
 
       {/* Toast */}
       <AnimatePresence>

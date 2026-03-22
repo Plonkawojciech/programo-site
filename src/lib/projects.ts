@@ -87,7 +87,7 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
-    screenshots: ["/screenshots/estalo-pipeline.png", "/screenshots/estalo-quick-note.png", "/screenshots/estalo-email-gen.png", "/screenshots/estalo-search.png", "/screenshots/estalo-knowledge.png", "/screenshots/estalo-leads.png"],
+    screenshots: ["/screenshots/estalo-1.png", "/screenshots/estalo-pipeline.png", "/screenshots/estalo-quick-note.png", "/screenshots/estalo-search.png", "/screenshots/estalo-knowledge.png", "/screenshots/estalo-leads.png"],
   },
   {
     slug: "baulx",

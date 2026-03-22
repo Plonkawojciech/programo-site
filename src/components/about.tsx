@@ -18,7 +18,7 @@ import {
 } from "@/lib/motion";
 
 // ---------------------------------------------------------------------------
-// Animated counter – small inline helper
+// Animated counter -- small inline helper
 // ---------------------------------------------------------------------------
 
 function AnimatedCounter({
@@ -60,11 +60,20 @@ function AnimatedCounter({
 // Reusable variants
 // ---------------------------------------------------------------------------
 
+const sectionReveal = {
+  hidden: { clipPath: "inset(3% 2% 0% 2% round 40px)" },
+  visible: {
+    clipPath: "inset(0% 0% 0% 0% round 40px)",
+    transition: { duration: durationSlow, ease: easeEntry },
+  },
+};
+
 const statBoxVariants = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 32, scale: 0.9 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: {
       delay: i * 0.1,
       duration: durationMedium,
@@ -171,14 +180,18 @@ export default function About() {
     {
       key: "location",
       label: t("about.stat.location"),
-      render: null, // Poznań uses clip-path fade
+      render: null, // Poznan uses clip-path fade
     },
   ];
 
   return (
-    <section
+    <motion.section
       id="about"
       className="py-24 md:py-32 lg:py-40 px-8 md:px-24 max-w-[1920px] mx-auto bg-surface-container-low rounded-t-[40px]"
+      variants={sectionReveal}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.15 }}
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
         <div>
@@ -242,7 +255,7 @@ export default function About() {
             {t("about.p2")}
           </motion.p>
 
-          {/* Founders – staggered */}
+          {/* Founders -- staggered */}
           <div className="grid grid-cols-2 gap-x-12 gap-y-12 mt-12 border-t border-outline-variant/20 pt-8">
             {[
               {
@@ -332,6 +345,6 @@ export default function About() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

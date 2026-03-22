@@ -109,18 +109,18 @@ function ProjectContent({ slug }: { slug: string }) {
       {/* Feature image */}
       {project.screenshots && project.screenshots.length > 0 && (
         <section className="px-4 md:px-6 lg:px-8 -mt-10 md:-mt-16 relative z-10">
-          <div className="mx-auto max-w-5xl">
+          <div className="mx-auto max-w-6xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-outline-variant/10 bg-surface-container-low"
+              className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-surface-container-low"
             >
               <Image
                 src={project.screenshots[0]}
                 alt={`${project.title} — ${project.subtitle[lang]}`}
                 fill
-                className="object-contain"
+                className="object-cover"
                 sizes="(max-width: 1280px) 100vw, 1280px"
                 priority
               />
@@ -246,7 +246,7 @@ function ProjectContent({ slug }: { slug: string }) {
       {/* Screenshot gallery */}
       {project.screenshots && project.screenshots.length > 1 && (
         <section className="px-4 md:px-6 lg:px-8 pb-16 md:pb-24">
-          <div className="mx-auto max-w-5xl space-y-4">
+          <div className="mx-auto max-w-6xl flex flex-col gap-6">
             {project.screenshots.slice(1).map((src, i) => (
               <motion.div
                 key={i}
@@ -254,13 +254,13 @@ function ProjectContent({ slug }: { slug: string }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-outline-variant/10 bg-surface-container-low"
+                className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-surface-container-low"
               >
                 <Image
                   src={src}
                   alt={`${project.title} — ${lang === "pl" ? "zrzut ekranu" : "screenshot"} ${i + 2}`}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                   sizes="(max-width: 1280px) 100vw, 1280px"
                 />
               </motion.div>

@@ -2,27 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { easeEntry, easePageTransition, durationMedium } from "@/lib/motion";
-
-const BRAND_TEXT = "Programo";
-const CHAR_STAGGER = 0.04;
-const HOLD_DELAY = 0.3;
-const CURTAIN_DURATION = 0.7;
+import { easeEntry, easePageTransition } from "@/lib/motion";
 
 export default function Preloader() {
   const [loading, setLoading] = useState(true);
 
-  // Total time: chars animation + hold + curtain slide
-  const charsAnimDuration = BRAND_TEXT.length * CHAR_STAGGER + durationMedium;
-  const totalDuration = charsAnimDuration + HOLD_DELAY + CURTAIN_DURATION;
-
   useEffect(() => {
+    // 500ms fade-in + 300ms hold = 800ms before exit
     const timer = setTimeout(() => {
       setLoading(false);
-    }, totalDuration * 1000);
+    }, 800);
 
     return () => clearTimeout(timer);
-  }, [totalDuration]);
+  }, []);
 
   return (
     <AnimatePresence mode="wait">
@@ -32,28 +24,21 @@ export default function Preloader() {
           className="fixed inset-0 z-[9998] flex items-center justify-center bg-on-surface"
           exit={{ y: "-100%" }}
           transition={{
-            duration: CURTAIN_DURATION,
+            duration: 0.5,
             ease: easePageTransition as [number, number, number, number],
-            delay: 0,
           }}
         >
-          <div className="flex overflow-hidden" aria-hidden="true">
-            {BRAND_TEXT.split("").map((char, i) => (
-              <motion.span
-                key={i}
-                className="font-headline text-5xl tracking-tight text-inverse-on-surface sm:text-7xl md:text-8xl"
-                initial={{ y: "100%" }}
-                animate={{ y: "0%" }}
-                transition={{
-                  duration: durationMedium,
-                  ease: easeEntry as [number, number, number, number],
-                  delay: i * CHAR_STAGGER,
-                }}
-              >
-                {char}
-              </motion.span>
-            ))}
-          </div>
+          <motion.span
+            className="font-headline text-3xl font-semibold tracking-tight text-inverse-on-surface"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: 0.4,
+              ease: easeEntry as [number, number, number, number],
+            }}
+          >
+            Programo
+          </motion.span>
         </motion.div>
       )}
     </AnimatePresence>
