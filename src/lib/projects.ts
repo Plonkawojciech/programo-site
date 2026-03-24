@@ -98,7 +98,7 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
-    screenshots: ["/PLACEHOLDER_ESTALO_HERO.png", "/PLACEHOLDER_ESTALO_DASHBOARD.png", "/PLACEHOLDER_ESTALO_MATCHMAKING.png", "/PLACEHOLDER_ESTALO_PORTAL.png"],
+    screenshots: ["/screenshots/estalo-hero.png", "/screenshots/estalo-otodom.png", "/screenshots/estalo-portal.png"],
   },
   {
     slug: "baulx",
@@ -160,18 +160,18 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
-    screenshots: ["/PLACEHOLDER_BAULX_HERO.png", "/PLACEHOLDER_BAULX_3D_VIEWER.png", "/PLACEHOLDER_BAULX_NESTING.png", "/PLACEHOLDER_BAULX_WALL_DESIGNER.png"],
+    screenshots: ["/screenshots/baulx-hero.png", "/screenshots/baulx-products.png", "/screenshots/baulx-workflow.png"],
   },
   {
     slug: "athlix",
     title: "Athlix",
     subtitle: {
-      pl: "Ekosystem dla sportowców — TrainPilot + TrainMate + Health",
-      en: "Athlete Ecosystem — TrainPilot + TrainMate + Health",
+      pl: "Ekosystem dla sportowców",
+      en: "Athlete Ecosystem",
     },
     description: {
-      pl: "Trzy aplikacje, jeden cel — lepszy trening. TrainPilot synchronizuje Garmin i planuje posiłki ze zdjęć. TrainMate łączy sportowców w okolicy i organizuje wspólne sesje. Health monitoruje tętno przez Bluetooth i ocenia regenerację — za darmo.",
-      en: "Three apps, one goal — better training. TrainPilot syncs your Garmin and plans meals from photos. TrainMate connects nearby athletes and organizes group sessions. Health monitors heart rate via Bluetooth and scores recovery — for free.",
+      pl: "Trzy aplikacje sportowe, które razem tworzą kompletny ekosystem treningowy. TrainPilot to osobisty hub — synchronizacja z Garmin, AI trener i śledzenie żywienia. TrainMate łączy sportowców — znajdź partnera, dołącz do sesji, rywalizuj. Health analizuje regenerację — monitoring tętna, sen i gotowość do treningu.",
+      en: "Three sport apps that together create a complete training ecosystem. TrainPilot is a personal hub — Garmin sync, AI coach, and nutrition tracking. TrainMate connects athletes — find a partner, join sessions, compete. Health analyzes recovery — heart rate monitoring, sleep, and training readiness.",
     },
     longDescription: {
       pl: "Athlix to ekosystem 3 aplikacji sportowych dla poważnych sportowców.\n\nTrainPilot — Twój osobisty hub treningowy. Synchronizacja z Garmin Connect, codzienny briefing AI z rekomendacjami, śledzenie posiłków ze zdjęć i kodów kreskowych, wykres formy PMC, profil mocy, suplementacja sezonowa i eksport do Google Calendar.\n\nTrainMate — społeczność sportowców. Swipe i dopasowywanie partnerów treningowych, czat w czasie rzeczywistym, integracja ze Stravą, moduł siłowni z rekordami, organizacja sesji treningowych, forum i rankingi.\n\nHealth — darmowa analityka zdrowia i regeneracji. Monitoring tętna przez Bluetooth (Polar, Garmin, Wahoo, Coospo), 20+ algorytmów analizy zmienności rytmu serca, scoring regeneracji i obciążenia treningowego, analiza snu z fazami, AI coach zdrowotny i wykrywanie przeciążenia.",
@@ -243,8 +243,6 @@ export const projects: Project[] = [
         icon: "/screenshots/athlix-trainpilot-icon.png",
         screenshots: [
           "/screenshots/athlix-trainpilot-1.png",
-          "/screenshots/athlix-trainpilot-2.png",
-          "/screenshots/athlix-trainpilot-3.png",
         ],
         liveUrl: "https://athlix-trainpilot.vercel.app",
         accentColor: "#6366f1",
@@ -263,7 +261,6 @@ export const projects: Project[] = [
         screenshots: [
           "/screenshots/athlix-trainmate-1.png",
           "/screenshots/athlix-trainmate-2.png",
-          "/screenshots/athlix-trainmate-3.png",
         ],
         liveUrl: "https://athlix-trainmate.vercel.app",
         accentColor: "#F97316",
@@ -333,6 +330,7 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
+    screenshots: ["/screenshots/learnai-hero.png", "/screenshots/learnai-levels.png"],
   },
 ];
 
