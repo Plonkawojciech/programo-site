@@ -228,7 +228,7 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
-    screenshots: [],
+    screenshots: ["/screenshots/athlix-trainpilot-1.png"],
     subProducts: [
       {
         name: "TrainPilot",
