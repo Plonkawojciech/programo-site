@@ -245,66 +245,163 @@ function ProjectContent({ slug }: { slug: string }) {
 
         {/* Sub-Products Ecosystem */}
         {project.subProducts && project.subProducts.length > 0 && (
-          <section className="bg-on-surface py-32 md:py-48 px-6 md:px-24 2xl:px-40">
-            <div className="mx-auto max-w-[2560px]">
-              {project.subProducts.map((sub, idx) => (
-                <div key={sub.name} className={`${idx > 0 ? 'mt-32 md:mt-48 pt-32 md:pt-48 border-t border-surface/10' : ''}`}>
-                  {/* Product header */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 1 }}
-                    className="mb-16 md:mb-24"
-                  >
-                    <div className="flex items-center gap-6 mb-8">
-                      {sub.icon && (
-                        <div className="relative w-14 h-14 md:w-18 md:h-18 rounded-2xl overflow-hidden ring-1 ring-surface/10">
-                          <Image src={sub.icon} alt={sub.name} fill className="object-cover" />
+          <>
+            {/* Ecosystem intro */}
+            <section className="bg-on-surface py-24 md:py-40 px-6 md:px-24 2xl:px-40 overflow-hidden">
+              <div className="mx-auto max-w-[2560px]">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="text-center mb-8"
+                >
+                  <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-surface/30 block mb-8">
+                    {lang === "pl" ? "Ekosystem" : "Ecosystem"}
+                  </span>
+                  <h2 className="font-headline text-5xl md:text-8xl 2xl:text-[9vw] font-bold tracking-tighter text-surface leading-[0.9]">
+                    {lang === "pl" ? "Trzy produkty." : "Three products."}
+                    <br />
+                    <span className="italic font-light" style={{ color: project.accentColor }}>
+                      {lang === "pl" ? "Jeden cel." : "One goal."}
+                    </span>
+                  </h2>
+                </motion.div>
+              </div>
+            </section>
+
+            {/* Individual products */}
+            {project.subProducts.map((sub, idx) => {
+              const isReversed = idx % 2 !== 0;
+              const accent = sub.accentColor || project.accentColor;
+
+              return (
+                <section key={sub.name} className="bg-on-surface overflow-hidden">
+                  {/* Full-bleed hero screenshot */}
+                  {sub.screenshots[0] && (
+                    <motion.div
+                      initial={{ opacity: 0, clipPath: "inset(8% 4% 8% 4% round 24px)" }}
+                      whileInView={{ opacity: 1, clipPath: "inset(0% 0% 0% 0% round 0px)" }}
+                      viewport={{ once: true, margin: "-100px" }}
+                      transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+                      className="relative w-full h-[50vh] md:h-[85vh] overflow-hidden"
+                    >
+                      <Image src={sub.screenshots[0]} alt={`${sub.name} hero`} fill className="object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-60" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-transparent to-transparent opacity-30" />
+                      {/* Floating product badge */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.5, duration: 0.8 }}
+                        className="absolute bottom-8 left-8 md:bottom-16 md:left-16 flex items-center gap-4"
+                      >
+                        {sub.icon && (
+                          <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl overflow-hidden ring-1 ring-white/20 backdrop-blur-sm" style={{ boxShadow: `0 0 40px ${accent}30` }}>
+                            <Image src={sub.icon} alt="" fill className="object-cover" />
+                          </div>
+                        )}
+                        <div>
+                          <h3 className="font-headline text-2xl md:text-4xl font-bold text-white">{sub.name}</h3>
+                          <span className="text-xs md:text-sm font-light text-white/50">{sub.tagline[lang]}</span>
                         </div>
-                      )}
-                      <div>
-                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-surface/40 block mb-2">{(idx + 1).toString().padStart(2, '0')} / {project.subProducts!.length.toString().padStart(2, '0')}</span>
-                        <h3 className="font-headline text-4xl md:text-6xl 2xl:text-7xl font-bold tracking-tight text-surface">
+                      </motion.div>
+                    </motion.div>
+                  )}
+
+                  {/* Product info + additional screenshots */}
+                  <div className={`px-6 md:px-24 2xl:px-40 py-20 md:py-32`}>
+                    <div className={`mx-auto max-w-[2560px] grid grid-cols-1 ${sub.screenshots.length > 1 ? 'lg:grid-cols-12' : ''} gap-16 md:gap-24 items-start`}>
+                      {/* Text column */}
+                      <motion.div
+                        initial={{ opacity: 0, x: isReversed ? 40 : -40 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, margin: "-80px" }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        className={`${sub.screenshots.length > 1 ? 'lg:col-span-5' : ''} ${isReversed && sub.screenshots.length > 1 ? 'lg:order-2' : ''}`}
+                      >
+                        <motion.div
+                          initial={{ scaleX: 0 }}
+                          whileInView={{ scaleX: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                          className="w-16 h-[2px] mb-10 origin-left"
+                          style={{ backgroundColor: accent }}
+                        />
+                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-surface/30 block mb-4">
+                          {(idx + 1).toString().padStart(2, '0')}
+                        </span>
+                        <h3 className="font-headline text-4xl md:text-5xl 2xl:text-6xl font-bold tracking-tight text-surface mb-4 leading-[1.05]">
                           {sub.name}
                         </h3>
-                      </div>
-                    </div>
-                    <p className="font-headline text-2xl md:text-3xl 2xl:text-4xl font-light text-surface/60 mb-6" style={{ color: sub.accentColor || project.accentColor }}>
-                      {sub.tagline[lang]}
-                    </p>
-                    <p className="text-lg md:text-xl 2xl:text-2xl font-light leading-relaxed text-surface/50 max-w-3xl">
-                      {sub.description[lang]}
-                    </p>
-                    {sub.liveUrl && (
-                      <a href={sub.liveUrl} target="_blank" className="inline-flex items-center gap-3 mt-8 text-sm font-bold uppercase tracking-[0.3em] transition-colors hover:opacity-80" style={{ color: sub.accentColor || project.accentColor }}>
-                        <span>Otwórz</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="currentColor" strokeWidth="2" strokeLinecap="square"/></svg>
-                      </a>
-                    )}
-                  </motion.div>
+                        <p className="font-headline text-xl md:text-2xl font-light mb-8" style={{ color: accent }}>
+                          {sub.tagline[lang]}
+                        </p>
+                        <p className="text-base md:text-lg 2xl:text-xl font-light leading-relaxed text-surface/45 mb-10">
+                          {sub.description[lang]}
+                        </p>
+                        {sub.liveUrl && (
+                          <a
+                            href={sub.liveUrl}
+                            target="_blank"
+                            className="group inline-flex items-center gap-4"
+                          >
+                            <span className="relative flex h-12 w-12 items-center justify-center rounded-full transition-transform duration-500 group-hover:scale-110" style={{ backgroundColor: accent }}>
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#000" strokeWidth="2.5" strokeLinecap="square"/></svg>
+                            </span>
+                            <span className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] text-surface/60 group-hover:text-surface transition-colors">
+                              {lang === "pl" ? "Otwórz aplikację" : "Launch app"}
+                            </span>
+                          </a>
+                        )}
+                      </motion.div>
 
-                  {/* Product screenshots */}
-                  {sub.screenshots.length > 0 && (
-                    <div className={`grid gap-6 md:gap-10 ${sub.screenshots.length === 1 ? 'grid-cols-1' : sub.screenshots.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-2'}`}>
-                      {sub.screenshots.map((s, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, y: 40 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, margin: "-50px" }}
-                          transition={{ duration: 1, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                          className={`relative overflow-hidden rounded-2xl md:rounded-3xl ring-1 ring-surface/5 ${i === 0 && sub.screenshots.length === 3 ? 'md:col-span-2 aspect-[16/9]' : 'aspect-[4/3]'}`}
-                        >
-                          <Image src={s} alt={`${sub.name} — ${i + 1}`} fill className="object-cover" />
-                        </motion.div>
-                      ))}
+                      {/* Screenshots column */}
+                      {sub.screenshots.length > 1 && (
+                        <div className={`lg:col-span-7 flex flex-col gap-6 md:gap-8 ${isReversed ? 'lg:order-1' : ''}`}>
+                          {sub.screenshots.slice(1).map((s, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ opacity: 0, y: 50, scale: 0.96 }}
+                              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                              viewport={{ once: true, margin: "-50px" }}
+                              transition={{ duration: 1.2, delay: i * 0.2, ease: [0.16, 1, 0.3, 1] }}
+                              className="group relative overflow-hidden rounded-2xl md:rounded-3xl"
+                              style={{ boxShadow: `0 0 0 1px rgba(255,255,255,0.05), 0 30px 60px -20px ${accent}15` }}
+                            >
+                              <div className="relative aspect-[16/10] overflow-hidden">
+                                <Image
+                                  src={s}
+                                  alt={`${sub.name} — ${i + 2}`}
+                                  fill
+                                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                                />
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `linear-gradient(135deg, ${accent}10 0%, transparent 60%)` }} />
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Divider between products */}
+                  {idx < project.subProducts!.length - 1 && (
+                    <div className="px-6 md:px-24 2xl:px-40">
+                      <motion.div
+                        initial={{ scaleX: 0 }}
+                        whileInView={{ scaleX: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                        className="mx-auto max-w-[2560px] h-px bg-surface/8 origin-left"
+                      />
                     </div>
                   )}
-                </div>
-              ))}
-            </div>
-          </section>
+                </section>
+              );
+            })}
+          </>
         )}
 
         {/* Elegant Capabilities (Bento/Editorial Style) */}
