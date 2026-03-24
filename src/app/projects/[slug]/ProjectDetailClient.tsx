@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { I18nProvider, useI18n } from "@/lib/i18n";
-import { getProjectBySlug, getAdjacentProjects, type Project } from "@/lib/projects";
+import { getProjectBySlug, getAdjacentProjects, type Project, type SubProduct } from "@/lib/projects";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
@@ -93,31 +93,30 @@ function ProjectContent({ slug }: { slug: string }) {
         {/* Cinematic Hero */}
         <section ref={headerRef} className="relative h-screen w-full overflow-hidden bg-on-surface">
           <motion.div style={{ scale: imageScale }} className="absolute inset-0 h-full w-full">
-             {hasIconScreenshots && project.screenshots ? (
+             {project.subProducts && project.subProducts.length > 0 ? (
                <motion.div style={headerY ? { y: headerY } : {}} className="absolute inset-0">
                  <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 50% 40%, ${project.accentColor}15 0%, #0a0a0a 65%)` }} />
                  <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `radial-gradient(${project.accentColor} 1px, transparent 1px)`, backgroundSize: '32px 32px' }} />
                  <div className="absolute inset-0 flex items-center justify-center">
                    <div className="flex items-center gap-8 md:gap-16 2xl:gap-24">
-                     {project.screenshots.map((s, i) => {
-                       const labels = { pl: ["TrainPilot", "TrainMate", "Health"], en: ["TrainPilot", "TrainMate", "Health"] };
-                       return (
-                         <motion.div
-                           key={i}
-                           initial={{ opacity: 0, y: 30 }}
-                           animate={{ opacity: 1, y: 0 }}
-                           transition={{ delay: 0.4 + i * 0.15, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                           className="flex flex-col items-center gap-4 md:gap-6"
-                         >
-                           <div className="relative w-20 h-20 md:w-32 md:h-32 2xl:w-40 2xl:h-40 rounded-2xl md:rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ boxShadow: `0 0 60px ${project.accentColor}25, 0 20px 40px rgba(0,0,0,0.4)` }}>
-                             <Image src={s} alt={labels[lang]?.[i] ?? ""} fill priority className="object-cover" />
+                     {project.subProducts.map((sub, i) => (
+                       <motion.div
+                         key={sub.name}
+                         initial={{ opacity: 0, y: 30 }}
+                         animate={{ opacity: 1, y: 0 }}
+                         transition={{ delay: 0.4 + i * 0.15, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                         className="flex flex-col items-center gap-4 md:gap-6"
+                       >
+                         {sub.icon && (
+                           <div className="relative w-20 h-20 md:w-32 md:h-32 2xl:w-40 2xl:h-40 rounded-2xl md:rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ boxShadow: `0 0 60px ${sub.accentColor || project.accentColor}25, 0 20px 40px rgba(0,0,0,0.4)` }}>
+                             <Image src={sub.icon} alt={sub.name} fill priority className="object-cover" />
                            </div>
-                           <span className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.3em] text-white/25">
-                             {labels[lang]?.[i] ?? ""}
-                           </span>
-                         </motion.div>
-                       );
-                     })}
+                         )}
+                         <span className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.3em] text-white/25">
+                           {sub.name}
+                         </span>
+                       </motion.div>
+                     ))}
                    </div>
                  </div>
                </motion.div>
@@ -229,8 +228,8 @@ function ProjectContent({ slug }: { slug: string }) {
           </div>
         </section>
 
-        {/* Majestic Edge-to-Edge Image (skip for icon-based screenshots) */}
-        {project.screenshots && project.screenshots.length > 1 && !hasIconScreenshots && (
+        {/* Majestic Edge-to-Edge Image (skip for projects with sub-products) */}
+        {project.screenshots && project.screenshots.length > 1 && !hasIconScreenshots && !project.subProducts?.length && (
           <section className="w-full pb-32 md:pb-48">
             <motion.div
               initial={{ opacity: 0, clipPath: "inset(10% 0 10% 0)" }}
@@ -241,6 +240,70 @@ function ProjectContent({ slug }: { slug: string }) {
             >
               <ProjectImage src={project.screenshots[1]} alt={`${project.title} detailed view 1`} accentColor={project.accentColor} />
             </motion.div>
+          </section>
+        )}
+
+        {/* Sub-Products Ecosystem */}
+        {project.subProducts && project.subProducts.length > 0 && (
+          <section className="bg-on-surface py-32 md:py-48 px-6 md:px-24 2xl:px-40">
+            <div className="mx-auto max-w-[2560px]">
+              {project.subProducts.map((sub, idx) => (
+                <div key={sub.name} className={`${idx > 0 ? 'mt-32 md:mt-48 pt-32 md:pt-48 border-t border-surface/10' : ''}`}>
+                  {/* Product header */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 1 }}
+                    className="mb-16 md:mb-24"
+                  >
+                    <div className="flex items-center gap-6 mb-8">
+                      {sub.icon && (
+                        <div className="relative w-14 h-14 md:w-18 md:h-18 rounded-2xl overflow-hidden ring-1 ring-surface/10">
+                          <Image src={sub.icon} alt={sub.name} fill className="object-cover" />
+                        </div>
+                      )}
+                      <div>
+                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-surface/40 block mb-2">{(idx + 1).toString().padStart(2, '0')} / {project.subProducts!.length.toString().padStart(2, '0')}</span>
+                        <h3 className="font-headline text-4xl md:text-6xl 2xl:text-7xl font-bold tracking-tight text-surface">
+                          {sub.name}
+                        </h3>
+                      </div>
+                    </div>
+                    <p className="font-headline text-2xl md:text-3xl 2xl:text-4xl font-light text-surface/60 mb-6" style={{ color: sub.accentColor || project.accentColor }}>
+                      {sub.tagline[lang]}
+                    </p>
+                    <p className="text-lg md:text-xl 2xl:text-2xl font-light leading-relaxed text-surface/50 max-w-3xl">
+                      {sub.description[lang]}
+                    </p>
+                    {sub.liveUrl && (
+                      <a href={sub.liveUrl} target="_blank" className="inline-flex items-center gap-3 mt-8 text-sm font-bold uppercase tracking-[0.3em] transition-colors hover:opacity-80" style={{ color: sub.accentColor || project.accentColor }}>
+                        <span>Otwórz</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="currentColor" strokeWidth="2" strokeLinecap="square"/></svg>
+                      </a>
+                    )}
+                  </motion.div>
+
+                  {/* Product screenshots */}
+                  {sub.screenshots.length > 0 && (
+                    <div className={`grid gap-6 md:gap-10 ${sub.screenshots.length === 1 ? 'grid-cols-1' : sub.screenshots.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-2'}`}>
+                      {sub.screenshots.map((s, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, y: 40 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, margin: "-50px" }}
+                          transition={{ duration: 1, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                          className={`relative overflow-hidden rounded-2xl md:rounded-3xl ring-1 ring-surface/5 ${i === 0 && sub.screenshots.length === 3 ? 'md:col-span-2 aspect-[16/9]' : 'aspect-[4/3]'}`}
+                        >
+                          <Image src={s} alt={`${sub.name} — ${i + 1}`} fill className="object-cover" />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </section>
         )}
 
@@ -293,8 +356,8 @@ function ProjectContent({ slug }: { slug: string }) {
           </div>
         </section>
 
-        {/* Additional Screens if available (skip for icon-based screenshots) */}
-        {project.screenshots && project.screenshots.length > 2 && !hasIconScreenshots && (
+        {/* Additional Screens if available (skip for sub-products) */}
+        {project.screenshots && project.screenshots.length > 2 && !hasIconScreenshots && !project.subProducts?.length && (
           <section className="w-full pb-32 md:pb-48 px-6 md:px-24 2xl:px-40">
              <div className="mx-auto max-w-[2560px] grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
                {project.screenshots.slice(2, 4).map((s, i) => (

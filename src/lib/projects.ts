@@ -1,5 +1,15 @@
 export type ProjectStatus = "live" | "development" | "planned";
 
+export interface SubProduct {
+  name: string;
+  tagline: { pl: string; en: string };
+  description: { pl: string; en: string };
+  icon?: string;
+  screenshots: string[];
+  liveUrl?: string;
+  accentColor?: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -16,6 +26,7 @@ export interface Project {
   year: string;
   role: { pl: string; en: string };
   screenshots?: string[];
+  subProducts?: SubProduct[];
 }
 
 export const projects: Project[] = [
@@ -217,7 +228,65 @@ export const projects: Project[] = [
       pl: "Projektowanie i development full-stack",
       en: "Full-stack Design & Development",
     },
-    screenshots: ["/screenshots/athlix-trainpilot-1.png", "/screenshots/athlix-health-1.png", "/screenshots/athlix-trainmate-1.png", "/screenshots/athlix-health-1.png"],
+    screenshots: [],
+    subProducts: [
+      {
+        name: "TrainPilot",
+        tagline: {
+          pl: "Osobisty hub treningowy",
+          en: "Personal Training Hub",
+        },
+        description: {
+          pl: "Synchronizacja z Garmin Connect, codzienny briefing AI, śledzenie posiłków ze zdjęć i kodów kreskowych, wykres formy, profil mocy, suplementacja sezonowa i eksport do Google Calendar.",
+          en: "Garmin Connect sync, daily AI briefing, meal tracking from photos and barcodes, fitness chart, power profile, seasonal supplements, and Google Calendar export.",
+        },
+        icon: "/screenshots/athlix-trainpilot-icon.png",
+        screenshots: [
+          "/screenshots/athlix-trainpilot-1.png",
+          "/screenshots/athlix-trainpilot-2.png",
+          "/screenshots/athlix-trainpilot-3.png",
+        ],
+        liveUrl: "https://trainpilot.vercel.app",
+        accentColor: "#6366f1",
+      },
+      {
+        name: "TrainMate",
+        tagline: {
+          pl: "Społeczność sportowców",
+          en: "Athlete Community",
+        },
+        description: {
+          pl: "Swipe i dopasowywanie partnerów treningowych, czat w czasie rzeczywistym, integracja ze Stravą, moduł siłowni z rekordami, organizacja sesji treningowych, forum i rankingi.",
+          en: "Swipe and match training partners, real-time chat, Strava integration, gym module with personal records, training session organizer, forum and leaderboards.",
+        },
+        icon: "/screenshots/athlix-trainmate-icon.png",
+        screenshots: [
+          "/screenshots/athlix-trainmate-1.png",
+          "/screenshots/athlix-trainmate-2.png",
+          "/screenshots/athlix-trainmate-3.png",
+        ],
+        liveUrl: "https://athlix-trainmate.vercel.app",
+        accentColor: "#7c3aed",
+      },
+      {
+        name: "Health",
+        tagline: {
+          pl: "Darmowa alternatywa WHOOP",
+          en: "Free WHOOP Alternative",
+        },
+        description: {
+          pl: "Monitoring tętna przez Bluetooth, 20+ algorytmów analizy zmienności rytmu serca, scoring regeneracji i obciążenia treningowego, analiza snu z fazami, AI coach zdrowotny i wykrywanie przeciążenia.",
+          en: "Bluetooth heart rate monitoring, 20+ heart rate variability algorithms, recovery and training load scoring, sleep analysis with stages, AI health coach, and overtraining detection.",
+        },
+        icon: "/screenshots/athlix-health-icon.png",
+        screenshots: [
+          "/screenshots/athlix-health-1.png",
+          "/screenshots/athlix-health-2.png",
+        ],
+        liveUrl: "https://athlix-health.vercel.app",
+        accentColor: "#00e676",
+      },
+    ],
   },
   {
     slug: "learnai",
