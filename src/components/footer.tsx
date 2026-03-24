@@ -24,7 +24,7 @@ export default function Footer() {
     >
       <motion.div
         style={{ y: contentY }}
-        className="flex flex-col gap-10 px-8 md:px-24 py-12 md:py-16 w-full max-w-[1920px] mx-auto"
+        className="flex flex-col gap-10 px-6 md:px-24 2xl:px-40 py-12 md:py-16 2xl:py-24 w-full max-w-[2560px] mx-auto will-change-transform transform-gpu"
       >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
           <div>
@@ -63,7 +63,7 @@ export default function Footer() {
           className="border-t border-outline-variant/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-6"
         >
           <p className="text-xs font-normal text-on-surface-variant">
-            &copy; 2024&ndash;{currentYear} Programo
+            &copy; 2026&ndash;{currentYear} Programo
           </p>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />

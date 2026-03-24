@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { LenisProvider } from "@/components/ui/lenis-provider";
 
 const newsreader = Newsreader({
   variable: "--font-newsreader",
@@ -87,14 +88,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${newsreader.variable} ${jakarta.variable}`}>
+    <html lang="pl" className={`${newsreader.variable} ${jakarta.variable} selection:bg-primary/20 selection:text-primary`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased bg-surface text-on-surface overflow-x-hidden">
+        <LenisProvider>
+          <div className="noise" />
+          {children}
+        </LenisProvider>
+      </body>
     </html>
   );
 }

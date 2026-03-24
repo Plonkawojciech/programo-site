@@ -1,350 +1,138 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import {
-  motion,
-  useInView,
-  useMotionValue,
-  useTransform,
-  animate,
-} from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import {
-  easeEntry,
-  durationMedium,
-  durationSlow,
-  staggerItem,
-  fadeInUp,
-} from "@/lib/motion";
 
-// ---------------------------------------------------------------------------
-// Animated counter -- small inline helper
-// ---------------------------------------------------------------------------
+function RollingText({ text }: { text: string }) {
+  const container = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ["start end", "end start"],
+  });
 
-function AnimatedCounter({
-  from,
-  to,
-  suffix = "",
-  duration = 1.5,
-}: {
-  from: number;
-  to: number;
-  suffix?: string;
-  duration?: number;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const motionVal = useMotionValue(from);
-  const rounded = useTransform(motionVal, (v) => Math.round(v));
+  const x = useTransform(scrollYProgress, [0, 1], [0, -500]);
 
-  useEffect(() => {
-    if (!inView) return;
-    const controls = animate(motionVal, to, {
-      duration,
-      ease: [0.16, 1, 0.3, 1],
-    });
-    return () => controls.stop();
-  }, [inView, motionVal, to, duration]);
-
-  useEffect(() => {
-    const unsub = rounded.on("change", (v) => {
-      if (ref.current) ref.current.textContent = `${v}${suffix}`;
-    });
-    return unsub;
-  }, [rounded, suffix]);
-
-  return <span ref={ref}>{`${from}${suffix}`}</span>;
+  return (
+    <div ref={container} className="whitespace-nowrap font-headline text-[15vw] font-bold uppercase tracking-tighter text-on-surface/10">
+      <motion.div style={{ x }}>
+        {text} {text} {text}
+      </motion.div>
+    </div>
+  );
 }
 
-// ---------------------------------------------------------------------------
-// Reusable variants
-// ---------------------------------------------------------------------------
+function FadeInText({ text }: { text: string }) {
+  const container = useRef<HTMLParagraphElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ["start 0.9", "start 0.6"],
+  });
 
-const sectionReveal = {
-  hidden: { clipPath: "inset(3% 2% 0% 2% round 40px)" },
-  visible: {
-    clipPath: "inset(0% 0% 0% 0% round 40px)",
-    transition: { duration: durationSlow, ease: easeEntry },
-  },
-};
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.1, 1]);
 
-const statBoxVariants = {
-  hidden: { opacity: 0, y: 32, scale: 0.9 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      delay: i * 0.1,
-      duration: durationMedium,
-      ease: easeEntry,
-    },
-  }),
-};
-
-const wordRevealContainer = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.06,
-    },
-  },
-};
-
-const wordRevealChild = {
-  hidden: { opacity: 0, y: 24, filter: "blur(4px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: durationMedium, ease: easeEntry },
-  },
-};
-
-const paragraphVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: durationMedium, ease: easeEntry },
-  },
-};
-
-const founderVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * staggerItem,
-      duration: durationMedium,
-      ease: easeEntry,
-    },
-  }),
-};
-
-const clipRevealText = {
-  hidden: { opacity: 0, clipPath: "inset(0 100% 0 0)" },
-  visible: {
-    opacity: 1,
-    clipPath: "inset(0 0% 0 0)",
-    transition: { duration: durationSlow, ease: easeEntry },
-  },
-};
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+  return (
+    <motion.p
+      ref={container}
+      style={{ opacity }}
+      className="mb-12 text-3xl font-light leading-tight text-on-surface md:text-5xl lg:text-6xl"
+    >
+      {text}
+    </motion.p>
+  );
+}
 
 export default function About() {
   const { t } = useI18n();
 
-  const introText = t("about.intro");
-  const parts = introText.split(/\{w\}|\{b\}/);
-
-  // Heading words for word-by-word reveal
-  const headingLine1 = t("about.title1");
-  const headingLine2 = t("about.title2");
-  const headingWords = [
-    ...headingLine1.split(" ").map((w) => ({ word: w, lineBreakAfter: false })),
-  ];
-  // Mark the last word of line 1 for a line break
-  if (headingWords.length > 0) {
-    headingWords[headingWords.length - 1].lineBreakAfter = true;
-  }
-  const line2Words = headingLine2
-    .split(" ")
-    .map((w) => ({ word: w, lineBreakAfter: false }));
-  const allWords = [...headingWords, ...line2Words];
-
-  // Stats data
-  const leftStats = [
-    {
-      key: "products",
-      label: t("about.stat.products"),
-      render: <AnimatedCounter from={0} to={4} suffix="+" />,
-    },
-    {
-      key: "founders",
-      label: t("about.stat.founders"),
-      render: <AnimatedCounter from={0} to={2} />,
-    },
-  ];
-
-  const rightStats = [
-    {
-      key: "founded",
-      label: t("about.stat.founded"),
-      render: <AnimatedCounter from={2020} to={2026} />,
-    },
-    {
-      key: "location",
-      label: t("about.stat.location"),
-      render: null, // Poznan uses clip-path fade
-    },
-  ];
-
   return (
-    <motion.section
-      id="about"
-      className="py-24 md:py-32 lg:py-40 px-8 md:px-24 max-w-[1920px] mx-auto bg-surface-container-low rounded-t-[40px]"
-      variants={sectionReveal}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.15 }}
-    >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
-        <div>
-          {/* Word-by-word heading reveal */}
-          <motion.h2
-            className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight text-on-surface mb-8"
-            variants={wordRevealContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-          >
-            {allWords.map((item, i) => (
-              <span key={i} className="inline-block overflow-hidden">
-                <motion.span
-                  className="inline-block"
-                  variants={wordRevealChild}
-                >
-                  {item.word}
-                </motion.span>
-                {item.lineBreakAfter ? <br /> : " "}
-              </span>
-            ))}
-          </motion.h2>
+    <section id="about" className="relative overflow-hidden bg-surface-container py-24 md:py-32 lg:py-56 rounded-t-[32px] 2xl:rounded-t-[64px]">
+      <RollingText text="STRATEGY • DESIGN • CODE • " />
 
-          {/* Paragraphs fade in */}
-          <motion.p
-            className="text-base md:text-lg font-normal leading-relaxed text-on-surface-variant mb-8 max-w-xl"
-            variants={paragraphVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
+      <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
+        <div className="mb-20 md:mb-32 flex flex-col gap-4">
+          <motion.span
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary"
           >
-            {parts[0]}
-            <span className="text-on-surface font-medium">
-              Wojciech P&#322;onka
-            </span>
-            {parts[1]}
-            <span className="text-on-surface font-medium">Bartosz Kolaj</span>
-            {parts[2]}
-          </motion.p>
-
-          <motion.p
-            className="text-base md:text-lg font-normal leading-relaxed text-on-surface-variant max-w-xl mb-6"
-            variants={paragraphVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ delay: 0.15 }}
-          >
-            {t("about.p1")}
-          </motion.p>
-
-          <motion.p
-            className="text-base md:text-lg font-normal leading-relaxed text-on-surface-variant max-w-xl"
-            variants={paragraphVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ delay: 0.3 }}
-          >
-            {t("about.p2")}
-          </motion.p>
-
-          {/* Founders -- staggered */}
-          <div className="grid grid-cols-2 gap-x-12 gap-y-12 mt-12 border-t border-outline-variant/20 pt-8">
-            {[
-              {
-                name: "Wojciech P\u0142onka",
-                role: "Design & Strategy",
-              },
-              {
-                name: "Bartosz Kolaj",
-                role: "Engineering Lead",
-              },
-            ].map((founder, i) => (
-              <motion.div
-                key={founder.name}
-                custom={i}
-                variants={founderVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-40px" }}
-              >
-                <h4 className="text-2xl md:text-3xl font-medium text-on-surface">
-                  {founder.name}
-                </h4>
-                <p className="text-[11px] font-medium uppercase tracking-widest text-primary mt-2">
-                  {founder.role}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+            {t("about.title1")}
+          </motion.span>
+          <h2 className="font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]">
+            {t("about.title2")}
+          </h2>
         </div>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-2 gap-6">
-          {/* Left column */}
-          <div className="space-y-6">
-            {leftStats.map((stat, i) => (
-              <motion.div
-                key={stat.key}
-                custom={i}
-                variants={statBoxVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                className="bg-surface-container-lowest p-8 md:p-10 rounded-xl editorial-shadow"
-              >
-                <p className="text-4xl font-semibold text-primary mb-2">
-                  {stat.render}
-                </p>
-                <p className="text-[11px] font-medium uppercase tracking-widest text-on-surface-variant">
-                  {stat.label}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+        <div className="flex flex-col gap-8 md:gap-16 2xl:gap-24 max-w-full md:max-w-4xl 2xl:max-w-6xl">
+          <FadeInText text={t("about.p1")} />
+          <FadeInText text={t("about.p2")} />
+        </div>
 
-          {/* Right column (offset with mt-12) */}
-          <div className="space-y-6 mt-12">
-            {rightStats.map((stat, i) => (
+        <div className="mt-24 md:mt-32 2xl:mt-48 grid grid-cols-2 gap-x-8 gap-y-16 md:gap-20 md:grid-cols-2 lg:grid-cols-4">
+          {[
+            { label: t("about.stat.products"), value: "04+" },
+            { label: t("about.stat.founders"), value: "02" },
+            { label: t("about.stat.founded"), value: "2026" },
+            { label: t("about.stat.location"), value: "Poznań" },
+          ].map((stat, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="flex flex-col gap-2 md:gap-4 border-l border-on-surface/10 pl-6 md:pl-8"
+            >
+              <span className="text-[10px] 2xl:text-xs font-bold uppercase tracking-[0.3em] text-on-surface-variant">
+                {stat.label}
+              </span>
+              <span className="font-headline text-4xl md:text-5xl 2xl:text-[5vw] font-bold italic tracking-tighter text-primary">
+                {stat.value}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-32 md:mt-56 flex flex-col items-start md:items-center justify-between gap-16 md:gap-20 md:flex-row">
+          <div className="flex flex-col gap-10 md:gap-10 2xl:gap-16">
+            {[
+              { name: "Wojciech Płonka", role: "Design & Product" },
+              { name: "Bartosz Kolaj", role: "Engineering Lead" },
+            ].map((f, i) => (
               <motion.div
-                key={stat.key}
-                custom={i + 2}
-                variants={statBoxVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                className="bg-surface-container-lowest p-8 md:p-10 rounded-xl editorial-shadow"
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2 }}
               >
-                <p className="text-4xl font-semibold text-primary mb-2">
-                  {stat.render !== null ? (
-                    stat.render
-                  ) : (
-                    <motion.span
-                      variants={clipRevealText}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true }}
-                      className="inline-block"
-                    >
-                      Pozna&#324;
-                    </motion.span>
-                  )}
-                </p>
-                <p className="text-[11px] font-medium uppercase tracking-widest text-on-surface-variant">
-                  {stat.label}
-                </p>
+                <h3 className="font-headline text-3xl font-bold tracking-tighter text-on-surface md:text-6xl 2xl:text-8xl">
+                  {f.name}
+                </h3>
+                <span className="mt-2 md:mt-4 block text-[10px] 2xl:text-xs font-bold uppercase tracking-[0.4em] text-primary">
+                  {f.role}
+                </span>
               </motion.div>
             ))}
           </div>
+          
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            className="relative h-64 w-64 md:h-96 md:w-96"
+          >
+            <div className="absolute inset-0 animate-pulse rounded-full border border-primary/20" />
+            <div className="absolute inset-10 animate-pulse rounded-full border border-primary/10 transition-transform duration-1000" style={{ animationDelay: "1s" }} />
+            <div className="flex h-full w-full items-center justify-center">
+              <span className="text-center font-headline text-xl italic tracking-tighter text-on-surface-variant">
+                Independent <br /> Studio
+              </span>
+            </div>
+          </motion.div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

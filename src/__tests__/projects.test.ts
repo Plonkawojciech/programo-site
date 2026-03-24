@@ -51,9 +51,9 @@ describe("projects data", () => {
     expect(baulx?.liveUrl).toBeTruthy();
   });
 
-  it("development projects (athlix) have correct status", () => {
+  it("live projects (athlix) have correct status", () => {
     const athlix = getProjectBySlug("athlix");
-    expect(athlix?.status).toBe("development");
+    expect(athlix?.status).toBe("live");
   });
 
   it("planned projects (learnai) have no liveUrl", () => {

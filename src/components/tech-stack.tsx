@@ -1,82 +1,43 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useAnimationControls } from "framer-motion";
+import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import {
-  clipRevealUp,
-  fadeInUp,
-  durationMedium,
-  easeEntry,
-} from "@/lib/motion";
 
 interface TechItem {
   name: string;
   description: string;
 }
 
-function MarqueeRow({
-  items,
-  direction = "left",
-  duration = 30,
-}: {
-  items: TechItem[];
-  direction?: "left" | "right";
-  duration?: number;
-}) {
-  const controls = useAnimationControls();
-  const [isPaused, setIsPaused] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Triplicate items for seamless loop
-  const repeated = [...items, ...items, ...items];
-
-  const isLeft = direction === "left";
-  const oneSetPercent = 100 / 3;
-
-  useEffect(() => {
-    if (isPaused) {
-      controls.stop();
-    } else {
-      controls.start({
-        x: isLeft
-          ? [`0%`, `-${oneSetPercent}%`]
-          : [`-${oneSetPercent}%`, `0%`],
-        transition: {
-          x: {
-            duration,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "linear",
-          },
-        },
-      });
-    }
-  }, [isPaused, controls, isLeft, oneSetPercent, duration]);
-
+function TechCard({ item, index }: { item: TechItem; index: number }) {
   return (
-    <div
-      ref={containerRef}
-      className="overflow-hidden"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.02, duration: 0.8 }}
+      whileHover={{ y: -10, rotateX: 5, rotateY: 5 }}
+      className="group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] border border-outline-variant/10 bg-surface p-8 shadow-sm transition-all hover:border-primary/20 hover:shadow-2xl md:min-w-[320px]"
     >
-      <motion.div className="flex gap-4" animate={controls}>
-        {repeated.map((tech, i) => (
-          <div
-            key={`${tech.name}-${i}`}
-            className="rounded-xl border border-outline-variant/10 bg-surface-container-lowest px-6 py-4 flex-shrink-0 min-w-[180px] md:min-w-[220px]"
-          >
-            <span className="font-medium text-on-surface text-sm md:text-base block">
-              {tech.name}
-            </span>
-            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mt-1.5">
-              {tech.description}
-            </p>
-          </div>
-        ))}
-      </motion.div>
-    </div>
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-500">
+        <span className="font-headline text-2xl font-bold tracking-tighter">
+          {item.name[0]}
+        </span>
+      </div>
+      <div>
+        <h3 className="font-headline text-2xl font-bold tracking-tighter text-on-surface">
+          {item.name}
+        </h3>
+        <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/40">
+          Expertise Layer
+        </p>
+      </div>
+      <p className="text-sm font-light leading-relaxed text-on-surface-variant">
+        {item.description}
+      </p>
+      
+      {/* Decorative dot */}
+      <div className="absolute right-8 top-8 h-2 w-2 rounded-full bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+    </motion.div>
   );
 }
 
@@ -101,52 +62,52 @@ export default function TechStack() {
     { name: "Konva.js", description: t("stack.konvajs") },
   ];
 
-  // Split into two rows: 8 and 7
-  const row1 = technologies.slice(0, 8);
-  const row2 = technologies.slice(8);
-
   return (
-    <section id="stack" className="py-20 md:py-28 lg:py-32 max-w-[1920px] mx-auto">
-      <div className="text-center mb-16 md:mb-20 px-8 md:px-24">
-        <motion.span
-          className="text-[11px] font-medium uppercase tracking-widest text-primary inline-block"
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          {t("stack.label")}
-        </motion.span>
-        <motion.h2
-          className="font-headline text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight text-on-surface mt-4"
-          variants={clipRevealUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          {t("stack.title")}
-        </motion.h2>
-        <motion.p
-          className="mx-auto mt-6 max-w-lg text-base md:text-lg font-normal text-on-surface-variant"
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          {t("stack.desc")}
-        </motion.p>
-      </div>
+    <section id="stack" className="relative overflow-hidden py-24 md:py-32 lg:py-56">
+      {/* Background decoration */}
+      <div className="absolute left-1/2 top-1/2 -z-10 h-[400px] w-[400px] md:h-[800px] md:w-[800px] 2xl:h-[1200px] 2xl:w-[1200px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[80px] md:blur-[120px]" />
+      
+      <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
+        <div className="mb-20 md:mb-32 2xl:mb-48 flex flex-col items-end text-right">
+          <motion.span
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary"
+          >
+            {t("stack.label")}
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]"
+          >
+            {t("stack.title")}
+          </motion.h2>
+        </div>
 
-      <motion.div
-        className="flex flex-col gap-3 overflow-hidden"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: durationMedium, ease: easeEntry }}
-      >
-        <MarqueeRow items={row1} direction="left" duration={30} />
-        <MarqueeRow items={row2} direction="right" duration={30} />
-      </motion.div>
+        {/* Marquee Rows */}
+        <div className="flex flex-col gap-8 md:gap-12">
+          {/* Row 1 */}
+          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
+            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-left w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
+              {[...technologies, ...technologies, ...technologies].map((tech, i) => (
+                <TechCard key={`r1-${i}`} item={tech} index={i} />
+              ))}
+            </div>
+          </div>
+
+          {/* Row 2 (Reverse) */}
+          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
+            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-right w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
+              {[...technologies, ...technologies, ...technologies].reverse().map((tech, i) => (
+                <TechCard key={`r2-${i}`} item={tech} index={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

@@ -1,32 +1,33 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-surface: #f9f9f9;
-  --color-surface-dim: #dadada;
-  --color-surface-container: #eeeeee;
-  --color-surface-container-low: #f4f3f3;
-  --color-surface-container-high: #e8e8e8;
-  --color-surface-container-highest: #e2e2e2;
-  --color-surface-container-lowest: #ffffff;
-  --color-on-surface: #1a1c1c;
-  --color-on-surface-variant: #4e4639;
-  --color-primary: #775a19;
-  --color-primary-container: #c5a059;
-  --color-on-primary: #ffffff;
-  --color-on-primary-container: #4e3700;
-  --color-outline: #7f7667;
-  --color-outline-variant: #d1c5b4;
-  --color-secondary: #5d5e61;
-  --color-tertiary: #476462;
-  --color-inverse-surface: #2f3131;
-  --color-inverse-on-surface: #f1f1f1;
-  --color-inverse-primary: #e9c176;
+  --color-surface: #FCFCFA; /* Ciepły Alabaster */
+  --color-surface-dim: #F2F1EC;
+  --color-surface-container: #F6F5F0;
+  --color-surface-container-low: #F9F8F4;
+  --color-surface-container-high: #EBEAE4;
+  --color-surface-container-highest: #E2E1DB;
+  --color-surface-container-lowest: #FFFFFF;
+  --color-on-surface: #131312; /* Głęboki Onyks */
+  --color-on-surface-variant: #5A5853;
+  --color-primary: #A48650; /* Zgaszone, eleganckie złoto/brąz */
+  --color-primary-container: #EAE3D5;
+  --color-on-primary: #FFFFFF;
+  --color-on-primary-container: #2A2110;
+  --color-outline: #A19F98;
+  --color-outline-variant: #D6D4CD;
+  --color-secondary: #6B6964;
+  --color-tertiary: #525E54;
+  --color-inverse-surface: #222221;
+  --color-inverse-on-surface: #F2F1EC;
+  --color-inverse-primary: #DBC8A6;
   --font-headline: var(--font-newsreader);
   --font-body: var(--font-jakarta);
 }
 
 html {
   scroll-behavior: smooth;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -38,11 +39,12 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none; /* Zapobiega efektowi bounce na macOS dla lepszego feelingu appki */
 }
 
 ::selection {
-  background: rgba(119, 90, 25, 0.2);
-  color: #775a19;
+  background: rgba(228, 228, 231, 0.2);
+  color: #ffffff;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -63,7 +65,7 @@ body {
 }
 
 .editorial-shadow {
-  box-shadow: 0 20px 40px rgba(26, 28, 28, 0.04);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .hover-underline {
@@ -80,8 +82,62 @@ body {
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 .hover-underline:hover::after {
   transform: scaleX(1);
   transform-origin: left;
 }
+
+/* Noise Grain Effect - zoptymalizowany dla GPU */
+.noise {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+/* Kinetic Typography Utility */
+.split-text span {
+  display: inline-block;
+  white-space: pre;
+  will-change: transform, opacity;
+}
+
+/* Hardware Accelerated Marquee */
+@keyframes slideLeft {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes slideRight {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+.animate-slide-left {
+  animation: slideLeft 40s linear infinite;
+  will-change: transform;
+}
+
+.animate-slide-right {
+  animation: slideRight 50s linear infinite;
+  will-change: transform;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(20, 20, 20, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transform: translateZ(0);
+}
+
