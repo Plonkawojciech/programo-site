@@ -15,16 +15,15 @@ export default function Contact() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormState("submitting");
-    // Simulate submit for visual polish
     setTimeout(() => setFormState("success"), 2000);
     setTimeout(() => setFormState("idle"), 5000);
   }
 
   return (
-    <section id="contact" className="relative min-h-screen bg-surface py-24 md:py-32 lg:py-56 border-t border-outline-variant/20 overflow-hidden">
+    <section id="contact" className="relative min-h-screen bg-surface py-24 md:py-32 lg:py-56 overflow-hidden">
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
         <div className="grid grid-cols-1 gap-20 md:gap-32 lg:grid-cols-12">
-          
+
           {/* Left: Info */}
           <div className="lg:col-span-5">
             <motion.span
@@ -43,7 +42,7 @@ export default function Contact() {
             >
               Let&apos;s <br /> <span className="italic text-primary">Connect.</span>
             </motion.h2>
-            
+
             <div className="mt-16 md:mt-20 flex flex-col gap-8 md:gap-12 2xl:gap-16">
               <div className="group cursor-pointer">
                 <span className="text-[10px] 2xl:text-xs font-bold uppercase tracking-widest text-on-surface-variant">Email us</span>
@@ -51,7 +50,7 @@ export default function Contact() {
                   kontakt@programo.pl
                 </a>
               </div>
-              
+
               <div className="flex flex-col md:flex-row gap-8 md:gap-20 2xl:gap-32">
                 <div className="group cursor-pointer">
                   <span className="text-[10px] 2xl:text-xs font-bold uppercase tracking-widest text-on-surface-variant">Wojciech</span>
@@ -69,10 +68,10 @@ export default function Contact() {
             </div>
 
             <div className="mt-20 md:mt-32 2xl:mt-48">
-              <p className="max-w-[250px] md:max-w-xs 2xl:max-w-md text-xs md:text-sm 2xl:text-base font-light leading-relaxed text-on-surface-variant">
-                Located in Poznań, Poland. <br /> 
+              <p className="max-w-[250px] md:max-w-xs 2xl:max-w-md text-xs md:text-sm 2xl:text-base font-light leading-relaxed text-on-surface-variant/60">
+                Located in Poznan, Poland. <br />
                 Working worldwide. <br />
-                © 2026 Programo Studio.
+                &copy; 2026 Programo Studio.
               </p>
             </div>
           </div>
@@ -81,37 +80,37 @@ export default function Contact() {
           <div className="lg:col-span-7 lg:pl-20">
             <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-12">
               <div className="group relative">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant transition-colors group-focus-within:text-primary">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60 transition-colors group-focus-within:text-primary">
                   01. What&apos;s your name?
                 </label>
                 <input
                   type="text"
                   placeholder="John Doe *"
-                  className="mt-4 w-full bg-transparent py-4 font-headline text-2xl font-light tracking-tight text-on-surface outline-none border-b border-on-surface/10 focus:border-primary transition-colors md:text-4xl"
+                  className="mt-4 w-full bg-transparent py-4 font-headline text-2xl font-light tracking-tight text-on-surface outline-none border-b border-white/10 focus:border-primary transition-colors placeholder:text-on-surface-variant/20 md:text-4xl"
                   required
                 />
               </div>
 
               <div className="group relative">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant transition-colors group-focus-within:text-primary">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60 transition-colors group-focus-within:text-primary">
                   02. What&apos;s your email?
                 </label>
                 <input
                   type="email"
                   placeholder="john@example.com *"
-                  className="mt-4 w-full bg-transparent py-4 font-headline text-2xl font-light tracking-tight text-on-surface outline-none border-b border-on-surface/10 focus:border-primary transition-colors md:text-4xl"
+                  className="mt-4 w-full bg-transparent py-4 font-headline text-2xl font-light tracking-tight text-on-surface outline-none border-b border-white/10 focus:border-primary transition-colors placeholder:text-on-surface-variant/20 md:text-4xl"
                   required
                 />
               </div>
 
               <div className="group relative">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant transition-colors group-focus-within:text-primary">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60 transition-colors group-focus-within:text-primary">
                   03. Tell us about your project
                 </label>
                 <textarea
                   rows={4}
                   placeholder="Hello, I'm looking for... *"
-                  className="mt-4 w-full bg-transparent py-4 font-headline text-2xl font-light tracking-tight text-on-surface outline-none border-b border-on-surface/10 focus:border-primary transition-colors md:text-4xl resize-none"
+                  className="mt-4 w-full bg-transparent py-4 font-headline text-2xl font-light tracking-tight text-on-surface outline-none border-b border-white/10 focus:border-primary transition-colors placeholder:text-on-surface-variant/20 md:text-4xl resize-none"
                   required
                 />
               </div>
@@ -121,7 +120,7 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={formState === "submitting"}
-                    className="group relative flex h-40 w-40 items-center justify-center rounded-full bg-primary text-sm font-bold uppercase tracking-widest text-on-primary transition-transform hover:scale-110 active:scale-95 disabled:opacity-50"
+                    className="group relative flex h-40 w-40 items-center justify-center rounded-full border-2 border-primary/40 text-sm font-bold uppercase tracking-widest text-primary transition-all duration-500 hover:bg-primary hover:text-surface hover:border-primary disabled:opacity-50"
                   >
                     <AnimatePresence mode="wait">
                       {formState === "submitting" ? (
@@ -140,20 +139,13 @@ export default function Contact() {
                     </AnimatePresence>
                   </button>
                 </MagneticWrapper>
-                
-                <p className="max-w-[200px] text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+
+                <p className="max-w-[200px] text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/40">
                   By clicking send you agree to our privacy policy.
                 </p>
               </div>
             </form>
           </div>
-        </div>
-      </div>
-
-      {/* Background Kinetic Text */}
-      <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-full overflow-hidden opacity-[0.03]">
-        <div className="whitespace-nowrap font-headline text-[10vw] font-bold uppercase text-on-surface animate-slide-left w-max will-change-transform transform-gpu">
-          CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US
         </div>
       </div>
     </section>

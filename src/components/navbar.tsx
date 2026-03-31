@@ -37,11 +37,9 @@ export default function Navbar() {
     { label: t("nav.contact"), href: `${prefix}#contact`, section: "contact" },
   ];
 
-  // --- Hide on scroll down, show on scroll up ---
   const handleScroll = useCallback(() => {
     const currentY = window.scrollY;
 
-    // Always show at top of page
     if (currentY < 100) {
       setHidden(false);
       setScrolled(currentY > 40);
@@ -54,12 +52,9 @@ export default function Navbar() {
 
     const delta = currentY - lastScrollY.current;
 
-    // Only trigger hide/show with a minimum delta to avoid jitter
     if (delta > 8) {
-      // Scrolling DOWN
       setHidden(true);
     } else if (delta < -5) {
-      // Scrolling UP
       setHidden(false);
     }
 
@@ -78,7 +73,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [handleScroll]);
 
-  // --- Active section IntersectionObserver ---
   useEffect(() => {
     if (!isHome) return;
 
@@ -102,7 +96,6 @@ export default function Navbar() {
     return () => observers.forEach((o) => o.disconnect());
   }, [isHome]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // --- Lock body scroll when mobile menu open ---
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
@@ -114,12 +107,11 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  // Don't hide nav when mobile menu is open
   const isNavHidden = hidden && !mobileOpen;
 
   return (
     <>
-      {/* Desktop floating pill nav */}
+      {/* Desktop floating dark glass pill nav */}
       <motion.nav
         role="navigation"
         aria-label={t("a11y.mainNav")}
@@ -137,8 +129,8 @@ export default function Navbar() {
         <div
           className={`rounded-full border transition-all duration-500 ${
             scrolled
-              ? "border-white/20 bg-white/80 shadow-[0_20px_40px_rgba(26,28,28,0.08)] backdrop-blur-2xl"
-              : "border-white/10 bg-white/50 shadow-none backdrop-blur-xl"
+              ? "border-white/[0.08] bg-black/60 shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
+              : "border-white/[0.04] bg-black/40 shadow-none backdrop-blur-xl"
           }`}
         >
           <div className="flex justify-between items-center px-8 py-3">
@@ -197,7 +189,7 @@ export default function Navbar() {
               <MagneticWrapper>
                 <a
                   href="#contact"
-                  className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all"
+                  className="border border-primary/40 px-5 py-2.5 rounded-full text-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary hover:text-surface transition-all"
                   style={{
                     transitionDuration: `${durationFast * 1000}ms`,
                     transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
@@ -211,7 +203,7 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Mobile navbar */}
+      {/* Mobile navbar — dark glass pill */}
       <motion.nav
         role="navigation"
         aria-label={t("a11y.mainNav")}
@@ -227,9 +219,7 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 md:hidden flex justify-center"
       >
         <div
-          className={`bg-white/70 backdrop-blur-xl rounded-full mt-6 mx-auto max-w-fit px-5 py-2 border border-outline-variant/20 shadow-[0_20px_40px_rgba(26,28,28,0.04)] flex items-center gap-6 transition-all duration-500 ${
-            scrolled ? "shadow-[0_20px_40px_rgba(26,28,28,0.08)]" : ""
-          }`}
+          className={`bg-black/60 backdrop-blur-2xl rounded-full mt-6 mx-auto max-w-fit px-5 py-2 border border-white/[0.08] shadow-[0_20px_60px_rgba(0,0,0,0.5)] flex items-center gap-6 transition-all duration-500`}
         >
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -265,7 +255,7 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu overlay — dark */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -276,7 +266,7 @@ export default function Navbar() {
               duration: 0.6,
               ease: easeEntry,
             }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/98 backdrop-blur-lg md:hidden"
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/[0.98] backdrop-blur-lg md:hidden"
           >
             <nav className="flex flex-col items-center gap-8">
               {navLinks.map((link, i) => (
@@ -308,7 +298,7 @@ export default function Navbar() {
                   duration: durationMedium,
                   ease: easeEntry,
                 }}
-                className="mt-4 bg-primary px-8 py-3 rounded-full text-on-primary text-sm tracking-wide font-medium min-h-[44px] flex items-center"
+                className="mt-4 border border-primary/40 px-8 py-3 rounded-full text-primary text-sm tracking-wide font-medium min-h-[44px] flex items-center hover:bg-primary hover:text-surface transition-all"
               >
                 {t("nav.cta")}
               </motion.a>

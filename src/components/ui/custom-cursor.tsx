@@ -6,10 +6,10 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motio
 export function CustomCursor() {
   const [cursorType, setCursorType] = useState<"default" | "pointer" | "view">("default");
   const [isVisible, setIsVisible] = useState(false);
-  
+
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  
+
   const springConfig = { damping: 25, stiffness: 250, mass: 0.5 };
   const springX = useSpring(cursorX, springConfig);
   const springY = useSpring(cursorY, springConfig);
@@ -25,7 +25,7 @@ export function CustomCursor() {
       const target = e.target as HTMLElement;
       const isPointer = window.getComputedStyle(target).cursor === "pointer";
       const isView = target.closest("[data-cursor='view']");
-      
+
       if (isView) {
         setCursorType("view");
       } else if (isPointer) {
@@ -61,9 +61,10 @@ export function CustomCursor() {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
         >
-          {/* Main Dot */}
+          {/* Cyan-tinted dot */}
           <motion.div
-            className="rounded-full bg-white"
+            className="rounded-full"
+            style={{ backgroundColor: "rgba(0, 229, 255, 0.85)" }}
             animate={{
               width: cursorType === "default" ? 8 : cursorType === "view" ? 80 : 40,
               height: cursorType === "default" ? 8 : cursorType === "view" ? 80 : 40,

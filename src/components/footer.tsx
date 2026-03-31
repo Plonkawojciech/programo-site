@@ -20,7 +20,7 @@ export default function Footer() {
   return (
     <footer
       ref={footerRef}
-      className="w-full rounded-t-[32px] mt-12 bg-surface-container-low overflow-hidden"
+      className="w-full mt-12 bg-surface-container overflow-hidden"
     >
       <motion.div
         style={{ y: contentY }}
@@ -31,7 +31,7 @@ export default function Footer() {
             <span className="text-2xl font-semibold text-on-surface">
               Programo
             </span>
-            <p className="text-sm text-on-surface-variant mt-6 max-w-xs leading-relaxed">
+            <p className="text-sm text-on-surface-variant/60 mt-6 max-w-xs leading-relaxed">
               {t("hero.desc")}
             </p>
           </div>
@@ -60,14 +60,14 @@ export default function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="border-t border-outline-variant/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-6"
+          className="border-t border-white/[0.06] pt-8 flex flex-col md:flex-row justify-between items-center gap-6"
         >
-          <p className="text-xs font-normal text-on-surface-variant">
+          <p className="text-xs font-normal text-on-surface-variant/50">
             &copy; 2026&ndash;{currentYear} Programo
           </p>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">
+            <span className="w-2 h-2 rounded-full bg-primary/60" />
+            <span className="text-[10px] font-medium text-on-surface-variant/40 uppercase tracking-widest">
               {t("footer.location")}
             </span>
           </div>

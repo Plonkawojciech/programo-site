@@ -1,26 +1,28 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-surface: #FCFCFA; /* Ciepły Alabaster */
-  --color-surface-dim: #F2F1EC;
-  --color-surface-container: #F6F5F0;
-  --color-surface-container-low: #F9F8F4;
-  --color-surface-container-high: #EBEAE4;
-  --color-surface-container-highest: #E2E1DB;
-  --color-surface-container-lowest: #FFFFFF;
-  --color-on-surface: #131312; /* Głęboki Onyks */
-  --color-on-surface-variant: #5A5853;
-  --color-primary: #A48650; /* Zgaszone, eleganckie złoto/brąz */
-  --color-primary-container: #EAE3D5;
-  --color-on-primary: #FFFFFF;
-  --color-on-primary-container: #2A2110;
-  --color-outline: #A19F98;
-  --color-outline-variant: #D6D4CD;
-  --color-secondary: #6B6964;
-  --color-tertiary: #525E54;
-  --color-inverse-surface: #222221;
-  --color-inverse-on-surface: #F2F1EC;
-  --color-inverse-primary: #DBC8A6;
+  /* Dark Cinema color system */
+  --color-surface: #050505;
+  --color-surface-dim: #0a0a0a;
+  --color-surface-container: #0d0d0d;
+  --color-surface-container-low: #111111;
+  --color-surface-container-high: #1a1a1a;
+  --color-surface-container-highest: #222222;
+  --color-surface-container-lowest: #030303;
+  --color-on-surface: #f0f0f0;
+  --color-on-surface-variant: #888888;
+  --color-primary: #00E5FF; /* Electric Cyan */
+  --color-primary-container: #003844;
+  --color-on-primary: #050505;
+  --color-on-primary-container: #80F2FF;
+  --color-accent: #FFB800; /* Warm Amber */
+  --color-outline: #333333;
+  --color-outline-variant: #1a1a1a;
+  --color-secondary: #666666;
+  --color-tertiary: #444444;
+  --color-inverse-surface: #f0f0f0;
+  --color-inverse-on-surface: #050505;
+  --color-inverse-primary: #006B7A;
   --font-headline: var(--font-newsreader);
   --font-body: var(--font-jakarta);
 }
@@ -39,11 +41,11 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: none; /* Zapobiega efektowi bounce na macOS dla lepszego feelingu appki */
+  overscroll-behavior-y: none;
 }
 
 ::selection {
-  background: rgba(228, 228, 231, 0.2);
+  background: rgba(0, 229, 255, 0.2);
   color: #ffffff;
 }
 
@@ -65,7 +67,7 @@ body {
 }
 
 .editorial-shadow {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
 }
 
 .hover-underline {
@@ -78,7 +80,7 @@ body {
   left: 0;
   width: 100%;
   height: 1px;
-  background: currentColor;
+  background: var(--color-primary);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -89,7 +91,7 @@ body {
   transform-origin: left;
 }
 
-/* Noise Grain Effect - zoptymalizowany dla GPU */
+/* Noise Grain Effect */
 .noise {
   position: fixed;
   top: 0;
@@ -98,7 +100,7 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.03;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   transform: translateZ(0);
   will-change: opacity;
@@ -132,12 +134,51 @@ body {
   will-change: transform;
 }
 
-/* Glassmorphism utility */
+/* Glassmorphism utility — dark variant */
 .glass {
-  background: rgba(20, 20, 20, 0.4);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(5, 5, 5, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   transform: translateZ(0);
 }
 
+/* Gradient Mesh Orbs */
+@keyframes meshFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+@keyframes meshFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-40px, 30px) scale(0.95); }
+  66% { transform: translate(25px, -35px) scale(1.05); }
+}
+
+@keyframes meshFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, 25px) scale(1.08); }
+}
+
+.mesh-orb-1 {
+  animation: meshFloat1 12s ease-in-out infinite;
+}
+
+.mesh-orb-2 {
+  animation: meshFloat2 15s ease-in-out infinite;
+}
+
+.mesh-orb-3 {
+  animation: meshFloat3 10s ease-in-out infinite;
+}
+
+/* Scroll indicator pulse */
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; height: 48px; }
+  50% { opacity: 1; height: 64px; }
+}
+
+.scroll-indicator {
+  animation: scrollPulse 2s ease-in-out infinite;
+}

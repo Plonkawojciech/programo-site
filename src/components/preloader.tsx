@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const words = ["STRATEGIA", "KREACJA", "INŻYNIERIA", "STUDIO", "PROGRAMO"];
+const words = ["STRATEGIA", "KREACJA", "INŻYNIERIA", "PROGRAMO"];
 
 export default function Preloader() {
   const [index, setIndex] = useState(0);
@@ -11,12 +11,11 @@ export default function Preloader() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Płynny, ekskluzywny postęp
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setTimeout(() => setLoading(false), 500); // Dłuższa pauza na 100% dla efektu "zawieszenia"
+          setTimeout(() => setLoading(false), 500);
           return 100;
         }
         return prev + 2;
@@ -25,7 +24,7 @@ export default function Preloader() {
 
     const wordInterval = setInterval(() => {
       setIndex((prev) => (prev + 1) % words.length);
-    }, 300);
+    }, 350);
 
     return () => {
       clearInterval(interval);
@@ -39,9 +38,9 @@ export default function Preloader() {
         <motion.div
           key="preloader"
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-surface text-on-surface"
-          exit={{ 
+          exit={{
             clipPath: "inset(0 0 100% 0)",
-            transition: { duration: 1, ease: [0.76, 0, 0.24, 1] } 
+            transition: { duration: 1, ease: [0.76, 0, 0.24, 1] },
           }}
         >
           {/* Centered Word Cycle */}
@@ -60,16 +59,19 @@ export default function Preloader() {
             </AnimatePresence>
           </div>
 
-          {/* Progress Number - bardzo czytelny */}
+          {/* Progress Number — translucent in corner */}
           <div className="absolute bottom-12 right-12 flex items-baseline gap-2">
-            <span className="text-[100px] font-bold leading-none tracking-tighter md:text-[180px] text-on-surface/10">
+            <span className="text-[100px] font-bold leading-none tracking-tighter md:text-[180px] text-on-surface/[0.06]">
               {progress}
             </span>
-            <span className="text-xl font-medium text-primary md:text-3xl">%</span>
+            <span className="text-xl font-medium text-primary/60 md:text-3xl">%</span>
           </div>
 
-          {/* Bottom Bar */}
-          <div className="absolute bottom-0 left-0 h-[2px] bg-primary transition-all duration-300 ease-out" style={{ width: `${progress}%` }} />
+          {/* Thin cyan progress bar at bottom */}
+          <div
+            className="absolute bottom-0 left-0 h-[2px] bg-primary transition-all duration-300 ease-out"
+            style={{ width: `${progress}%` }}
+          />
         </motion.div>
       )}
     </AnimatePresence>
