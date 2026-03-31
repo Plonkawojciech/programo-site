@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 
 interface TechItem {
@@ -8,41 +9,98 @@ interface TechItem {
   description: string;
 }
 
-function TechCard({ item, index }: { item: TechItem; index: number }) {
+function GlassCard({
+  item,
+  index,
+  mouseX,
+  mouseY,
+  depthFactor,
+}: {
+  item: TechItem;
+  index: number;
+  mouseX: ReturnType<typeof useMotionValue<number>>;
+  mouseY: ReturnType<typeof useMotionValue<number>>;
+  depthFactor: number;
+}) {
+  const x = useSpring(useMotionValue(0), { damping: 30, stiffness: 100 });
+  const y = useSpring(useMotionValue(0), { damping: 30, stiffness: 100 });
+
+  useEffect(() => {
+    const unsubX = mouseX.on("change", (v) => {
+      x.set(v * depthFactor);
+    });
+    const unsubY = mouseY.on("change", (v) => {
+      y.set(v * depthFactor);
+    });
+    return () => {
+      unsubX();
+      unsubY();
+    };
+  }, [mouseX, mouseY, depthFactor, x, y]);
+
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.02, duration: 0.8 }}
-      whileHover={{ y: -10, rotateX: 5, rotateY: 5 }}
-      className="group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] border border-outline-variant/10 bg-surface p-8 shadow-sm transition-all hover:border-primary/20 hover:shadow-2xl md:min-w-[320px]"
+      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ delay: index * 0.04, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -10, borderColor: "rgba(255, 255, 255, 0.12)" }}
+      style={{ x, y }}
+      className="group relative flex flex-col gap-4 rounded-2xl md:rounded-3xl p-6 md:p-8
+        bg-white/[0.03] backdrop-blur-xl border border-white/[0.06]
+        transition-all duration-500 hover:shadow-[0_0_60px_rgba(255,61,0,0.05)]
+        will-change-transform"
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-500">
-        <span className="font-headline text-2xl font-bold tracking-tighter">
+      {/* Initial circle */}
+      <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-coral/10 text-coral group-hover:bg-coral group-hover:text-dark transition-colors duration-500">
+        <span className="font-headline text-xl md:text-2xl font-bold tracking-tighter">
           {item.name[0]}
         </span>
       </div>
+
       <div>
-        <h3 className="font-headline text-2xl font-bold tracking-tighter text-on-surface">
+        <h3 className="font-headline text-xl md:text-2xl font-bold tracking-tight text-text">
           {item.name}
         </h3>
-        <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/40">
-          Expertise Layer
-        </p>
       </div>
-      <p className="text-sm font-light leading-relaxed text-on-surface-variant">
+
+      <p className="text-xs md:text-sm font-light leading-relaxed text-text-muted">
         {item.description}
       </p>
-      
+
       {/* Decorative dot */}
-      <div className="absolute right-8 top-8 h-2 w-2 rounded-full bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
+      <div className="absolute right-6 top-6 md:right-8 md:top-8 h-1.5 w-1.5 rounded-full bg-coral/20 group-hover:bg-coral transition-colors duration-500" />
     </motion.div>
   );
 }
 
 export default function TechStack() {
   const { t } = useI18n();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      mouseX.set((e.clientX - centerX) * 0.01);
+      mouseY.set((e.clientY - centerY) * 0.01);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [isMounted, mouseX, mouseY]);
 
   const technologies: TechItem[] = [
     { name: "Next.js", description: t("stack.nextjs") },
@@ -62,18 +120,49 @@ export default function TechStack() {
     { name: "Konva.js", description: t("stack.konvajs") },
   ];
 
+  // Depth factors for parallax — spread randomly across cards
+  const depthFactors = [1.2, 0.8, 1.5, 0.6, 1.0, 1.3, 0.7, 1.4, 0.9, 1.1, 0.5, 1.2, 0.8, 1.3, 0.6];
+
+  // Tech names for background marquee
+  const marqueeText = technologies.map((t) => t.name).join(" \u2022 ");
+
   return (
-    <section id="stack" className="relative overflow-hidden py-24 md:py-32 lg:py-56">
-      {/* Background decoration */}
-      <div className="absolute left-1/2 top-1/2 -z-10 h-[400px] w-[400px] md:h-[800px] md:w-[800px] 2xl:h-[1200px] 2xl:w-[1200px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[80px] md:blur-[120px]" />
-      
-      <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
-        <div className="mb-20 md:mb-32 2xl:mb-48 flex flex-col items-end text-right">
+    <section id="stack" className="relative overflow-hidden py-32 md:py-48 lg:py-64 bg-dark">
+      {/* Section number */}
+      <span className="absolute top-8 left-8 text-[11px] font-medium tracking-[0.2em] text-coral z-20">
+        04
+      </span>
+
+      {/* Background blurred orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div
+          className="orb-coral absolute top-[30%] left-[20%] w-[500px] h-[500px] rounded-full opacity-[0.03]"
+          style={{ background: "radial-gradient(circle, #FF3D00 0%, transparent 70%)" }}
+        />
+        <div
+          className="orb-blue absolute bottom-[20%] right-[15%] w-[400px] h-[400px] rounded-full opacity-[0.03]"
+          style={{ background: "radial-gradient(circle, #3D5AFE 0%, transparent 70%)" }}
+        />
+      </div>
+
+      {/* Background marquee — giant text, very low opacity */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden flex flex-col justify-center gap-8 opacity-[0.02]">
+        <div className="whitespace-nowrap font-headline text-[15vw] font-bold uppercase tracking-tighter w-max animate-slide-left will-change-transform transform-gpu">
+          {marqueeText} {marqueeText} {marqueeText}
+        </div>
+        <div className="whitespace-nowrap font-headline text-[15vw] font-bold uppercase tracking-tighter w-max animate-slide-right will-change-transform transform-gpu">
+          {marqueeText} {marqueeText} {marqueeText}
+        </div>
+      </div>
+
+      <div ref={containerRef} className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40 relative z-10">
+        {/* Section title */}
+        <div className="mb-20 md:mb-32 2xl:mb-48">
           <motion.span
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary"
+            className="text-[10px] md:text-xs font-medium uppercase tracking-[0.4em] text-coral"
           >
             {t("stack.label")}
           </motion.span>
@@ -81,31 +170,24 @@ export default function TechStack() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]"
+            className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-text md:text-8xl 2xl:text-[8vw]"
           >
             {t("stack.title")}
           </motion.h2>
         </div>
 
-        {/* Marquee Rows */}
-        <div className="flex flex-col gap-8 md:gap-12">
-          {/* Row 1 */}
-          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-left w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
-              {[...technologies, ...technologies, ...technologies].map((tech, i) => (
-                <TechCard key={`r1-${i}`} item={tech} index={i} />
-              ))}
-            </div>
-          </div>
-
-          {/* Row 2 (Reverse) */}
-          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-right w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
-              {[...technologies, ...technologies, ...technologies].reverse().map((tech, i) => (
-                <TechCard key={`r2-${i}`} item={tech} index={i} />
-              ))}
-            </div>
-          </div>
+        {/* Glass cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6">
+          {technologies.map((tech, i) => (
+            <GlassCard
+              key={tech.name}
+              item={tech}
+              index={i}
+              mouseX={mouseX}
+              mouseY={mouseY}
+              depthFactor={depthFactors[i % depthFactors.length]}
+            />
+          ))}
         </div>
       </div>
     </section>

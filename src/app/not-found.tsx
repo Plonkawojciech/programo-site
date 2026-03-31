@@ -7,13 +7,13 @@ function NotFoundContent() {
   const { t } = useI18n();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-surface px-6">
-      <h1 className="font-headline text-6xl text-on-surface md:text-8xl">404</h1>
-      <p className="mt-4 text-lg text-on-surface-variant">{t("notFound.title")}</p>
-      <p className="mt-2 text-sm text-on-surface-variant/70">{t("notFound.desc")}</p>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-dark px-6">
+      <h1 className="font-headline text-6xl text-text md:text-8xl">404</h1>
+      <p className="mt-4 text-lg text-text-muted">{t("notFound.title")}</p>
+      <p className="mt-2 text-sm text-text-muted/70">{t("notFound.desc")}</p>
       <Link
         href="/"
-        className="mt-8 inline-flex items-center gap-2 rounded-full border border-primary/20 px-6 py-3 text-sm font-medium tracking-wide text-primary transition-all duration-300 hover:bg-primary hover:text-on-primary min-h-[44px]"
+        className="mt-8 inline-flex items-center gap-2 rounded-full border border-coral/20 px-6 py-3 text-sm font-medium tracking-wide text-coral transition-all duration-300 hover:bg-coral hover:text-dark min-h-[44px]"
       >
         {t("notFound.back")}
       </Link>
