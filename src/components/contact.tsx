@@ -15,145 +15,169 @@ export default function Contact() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormState("submitting");
-    // Simulate submit for visual polish
     setTimeout(() => setFormState("success"), 2000);
     setTimeout(() => setFormState("idle"), 5000);
   }
 
   return (
-    <section id="contact" className="relative min-h-screen bg-surface py-24 md:py-32 lg:py-56 border-t border-outline-variant/20 overflow-hidden">
-      <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
-        <div className="grid grid-cols-1 gap-20 md:gap-32 lg:grid-cols-12">
-          
-          {/* Left: Info */}
-          <div className="lg:col-span-5">
-            <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+    <section
+      id="contact"
+      className="relative min-h-screen overflow-hidden bg-[#0A0A0A] py-32 md:py-48 lg:py-64"
+    >
+      <div className="mx-auto max-w-[2560px] px-6 md:px-16 lg:px-24 2xl:px-40">
+        <div className="grid grid-cols-1 gap-20 md:gap-32 lg:grid-cols-2">
+          {/* Left: massive typography */}
+          <div className="flex flex-col justify-between">
+            <div>
+              <motion.span
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="mb-8 block text-[11px] font-bold uppercase tracking-[0.5em] text-primary"
+              >
+                {t("contact.label")}
+              </motion.span>
+
+              <div className="overflow-hidden">
+                <motion.h2
+                  initial={{ y: "100%" }}
+                  whileInView={{ y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                  className="font-headline text-[15vw] font-bold leading-[0.9] tracking-tighter text-[#F0F0EC] md:text-[12vw] lg:text-[10vw]"
+                >
+                  LET&apos;S
+                </motion.h2>
+              </div>
+              <div className="overflow-hidden">
+                <motion.h2
+                  initial={{ y: "100%" }}
+                  whileInView={{ y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                  className="font-headline text-[15vw] font-bold italic leading-[0.9] tracking-tighter text-[#F0F0EC] md:text-[12vw] lg:text-[10vw]"
+                >
+                  TALK<span className="text-primary">.</span>
+                </motion.h2>
+              </div>
+            </div>
+
+            {/* Email addresses */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary"
+              transition={{ delay: 0.5 }}
+              className="mt-16 flex flex-col gap-6 md:mt-24"
             >
-              {t("contact.label")}
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mt-6 md:mt-8 font-headline text-5xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]"
-            >
-              Let&apos;s <br /> <span className="italic text-primary">Connect.</span>
-            </motion.h2>
-            
-            <div className="mt-16 md:mt-20 flex flex-col gap-8 md:gap-12 2xl:gap-16">
-              <div className="group cursor-pointer">
-                <span className="text-[10px] 2xl:text-xs font-bold uppercase tracking-widest text-on-surface-variant">Email us</span>
-                <a href="mailto:kontakt@programo.pl" className="mt-2 md:mt-4 block font-headline text-xl md:text-2xl 2xl:text-5xl font-medium tracking-tight text-on-surface transition-colors group-hover:text-primary break-all md:break-normal">
-                  kontakt@programo.pl
+              <a
+                href="mailto:kontakt@programo.pl"
+                className="font-headline text-xl font-light italic tracking-tight text-[#F0F0EC]/70 transition-colors hover:text-primary md:text-2xl"
+              >
+                kontakt@programo.pl
+              </a>
+              <div className="flex flex-col gap-3 md:flex-row md:gap-12">
+                <a
+                  href="mailto:wojciech.plonka@programo.pl"
+                  className="text-sm font-light text-[#F0F0EC]/40 transition-colors hover:text-primary"
+                >
+                  wojciech.plonka@programo.pl
+                </a>
+                <a
+                  href="mailto:bartosz.kolaj@programo.pl"
+                  className="text-sm font-light text-[#F0F0EC]/40 transition-colors hover:text-primary"
+                >
+                  bartosz.kolaj@programo.pl
                 </a>
               </div>
-              
-              <div className="flex flex-col md:flex-row gap-8 md:gap-20 2xl:gap-32">
-                <div className="group cursor-pointer">
-                  <span className="text-[10px] 2xl:text-xs font-bold uppercase tracking-widest text-on-surface-variant">Wojciech</span>
-                  <a href="mailto:wojciech.plonka@programo.pl" className="mt-2 block text-sm 2xl:text-lg font-light text-on-surface-variant transition-colors group-hover:text-primary break-all md:break-normal">
-                    wojciech.plonka@programo.pl
-                  </a>
-                </div>
-                <div className="group cursor-pointer">
-                  <span className="text-[10px] 2xl:text-xs font-bold uppercase tracking-widest text-on-surface-variant">Bartosz</span>
-                  <a href="mailto:bartosz.kolaj@programo.pl" className="mt-2 block text-sm 2xl:text-lg font-light text-on-surface-variant transition-colors group-hover:text-primary break-all md:break-normal">
-                    bartosz.kolaj@programo.pl
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-20 md:mt-32 2xl:mt-48">
-              <p className="max-w-[250px] md:max-w-xs 2xl:max-w-md text-xs md:text-sm 2xl:text-base font-light leading-relaxed text-on-surface-variant">
-                Located in Poznań, Poland. <br /> 
-                Working worldwide. <br />
-                © 2026 Programo Studio.
-              </p>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Right: Form */}
-          <div className="lg:col-span-7 lg:pl-20">
-            <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-12">
+          {/* Right: minimal form */}
+          <div className="flex items-center">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className="flex w-full flex-col gap-12"
+            >
               <div className="group relative">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant transition-colors group-focus-within:text-primary">
-                  01. What&apos;s your name?
+                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#F0F0EC]/40 transition-colors group-focus-within:text-primary">
+                  {t("contact.form.name")}
                 </label>
                 <input
                   type="text"
-                  placeholder="John Doe *"
-                  className="mt-4 w-full bg-transparent py-4 font-headline text-2xl font-light tracking-tight text-on-surface outline-none border-b border-on-surface/10 focus:border-primary transition-colors md:text-4xl"
+                  placeholder={t("contact.form.namePlaceholder")}
+                  className="mt-4 w-full border-b border-[#F0F0EC]/20 bg-transparent py-4 font-headline text-xl font-light italic tracking-tight text-[#F0F0EC] outline-none transition-colors placeholder:text-[#F0F0EC]/15 focus:border-primary md:text-2xl"
                   required
                 />
               </div>
 
               <div className="group relative">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant transition-colors group-focus-within:text-primary">
-                  02. What&apos;s your email?
+                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#F0F0EC]/40 transition-colors group-focus-within:text-primary">
+                  {t("contact.form.email")}
                 </label>
                 <input
                   type="email"
-                  placeholder="john@example.com *"
-                  className="mt-4 w-full bg-transparent py-4 font-headline text-2xl font-light tracking-tight text-on-surface outline-none border-b border-on-surface/10 focus:border-primary transition-colors md:text-4xl"
+                  placeholder={t("contact.form.emailPlaceholder")}
+                  className="mt-4 w-full border-b border-[#F0F0EC]/20 bg-transparent py-4 font-headline text-xl font-light italic tracking-tight text-[#F0F0EC] outline-none transition-colors placeholder:text-[#F0F0EC]/15 focus:border-primary md:text-2xl"
                   required
                 />
               </div>
 
               <div className="group relative">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant transition-colors group-focus-within:text-primary">
-                  03. Tell us about your project
+                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#F0F0EC]/40 transition-colors group-focus-within:text-primary">
+                  {t("contact.form.message")}
                 </label>
                 <textarea
-                  rows={4}
-                  placeholder="Hello, I'm looking for... *"
-                  className="mt-4 w-full bg-transparent py-4 font-headline text-2xl font-light tracking-tight text-on-surface outline-none border-b border-on-surface/10 focus:border-primary transition-colors md:text-4xl resize-none"
+                  rows={3}
+                  placeholder={t("contact.form.messagePlaceholder")}
+                  className="mt-4 w-full resize-none border-b border-[#F0F0EC]/20 bg-transparent py-4 font-headline text-xl font-light italic tracking-tight text-[#F0F0EC] outline-none transition-colors placeholder:text-[#F0F0EC]/15 focus:border-primary md:text-2xl"
                   required
                 />
               </div>
 
-              <div className="mt-12 flex items-center gap-12">
+              <div className="mt-8 flex items-center gap-8">
                 <MagneticWrapper strength={0.4}>
                   <button
                     type="submit"
                     disabled={formState === "submitting"}
-                    className="group relative flex h-40 w-40 items-center justify-center rounded-full bg-primary text-sm font-bold uppercase tracking-widest text-on-primary transition-transform hover:scale-110 active:scale-95 disabled:opacity-50"
+                    className="group relative flex h-32 w-32 items-center justify-center rounded-full border border-primary text-[11px] font-bold uppercase tracking-[0.3em] text-primary transition-all hover:bg-primary hover:text-white active:scale-95 disabled:opacity-50 md:h-36 md:w-36"
                   >
                     <AnimatePresence mode="wait">
                       {formState === "submitting" ? (
-                        <motion.span key="sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                          Sending...
+                        <motion.span
+                          key="sub"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          {t("contact.form.submitting")}
                         </motion.span>
                       ) : formState === "success" ? (
-                        <motion.span key="success" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                          Sent!
+                        <motion.span
+                          key="success"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          {t("contact.form.submitted")}
                         </motion.span>
                       ) : (
-                        <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                          Send it
+                        <motion.span
+                          key="idle"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          {t("contact.form.submit")}
                         </motion.span>
                       )}
                     </AnimatePresence>
                   </button>
                 </MagneticWrapper>
-                
-                <p className="max-w-[200px] text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                  By clicking send you agree to our privacy policy.
-                </p>
               </div>
             </form>
           </div>
-        </div>
-      </div>
-
-      {/* Background Kinetic Text */}
-      <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-full overflow-hidden opacity-[0.03]">
-        <div className="whitespace-nowrap font-headline text-[10vw] font-bold uppercase text-on-surface animate-slide-left w-max will-change-transform transform-gpu">
-          CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US
         </div>
       </div>
     </section>

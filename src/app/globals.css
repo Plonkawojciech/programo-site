@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-surface: #FCFCFA; /* Ciepły Alabaster */
-  --color-surface-dim: #F2F1EC;
-  --color-surface-container: #F6F5F0;
-  --color-surface-container-low: #F9F8F4;
-  --color-surface-container-high: #EBEAE4;
-  --color-surface-container-highest: #E2E1DB;
+  /* Bold Agency palette */
+  --color-surface: #F0F0EC;
+  --color-surface-dim: #E8E8E3;
+  --color-surface-container: #0A0A0A;
+  --color-surface-container-low: #F0F0EC;
+  --color-surface-container-high: #E2E1DB;
+  --color-surface-container-highest: #D6D4CD;
   --color-surface-container-lowest: #FFFFFF;
-  --color-on-surface: #131312; /* Głęboki Onyks */
+  --color-on-surface: #0A0A0A;
   --color-on-surface-variant: #5A5853;
-  --color-primary: #A48650; /* Zgaszone, eleganckie złoto/brąz */
-  --color-primary-container: #EAE3D5;
+  --color-primary: #FF3D00;
+  --color-primary-container: #FFE0D6;
   --color-on-primary: #FFFFFF;
-  --color-on-primary-container: #2A2110;
+  --color-on-primary-container: #3D0E00;
   --color-outline: #A19F98;
   --color-outline-variant: #D6D4CD;
   --color-secondary: #6B6964;
   --color-tertiary: #525E54;
-  --color-inverse-surface: #222221;
-  --color-inverse-on-surface: #F2F1EC;
-  --color-inverse-primary: #DBC8A6;
+  --color-inverse-surface: #0A0A0A;
+  --color-inverse-on-surface: #F0F0EC;
+  --color-inverse-primary: #FF6E40;
   --font-headline: var(--font-newsreader);
   --font-body: var(--font-jakarta);
 }
@@ -39,12 +40,13 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: none; /* Zapobiega efektowi bounce na macOS dla lepszego feelingu appki */
+  overscroll-behavior-y: none;
+  cursor: none;
 }
 
 ::selection {
-  background: rgba(228, 228, 231, 0.2);
-  color: #ffffff;
+  background: rgba(255, 61, 0, 0.15);
+  color: #0A0A0A;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -89,7 +91,7 @@ body {
   transform-origin: left;
 }
 
-/* Noise Grain Effect - zoptymalizowany dla GPU */
+/* Noise Grain Effect */
 .noise {
   position: fixed;
   top: 0;
@@ -123,21 +125,38 @@ body {
 }
 
 .animate-slide-left {
-  animation: slideLeft 40s linear infinite;
+  animation: slideLeft 30s linear infinite;
   will-change: transform;
 }
 
 .animate-slide-right {
-  animation: slideRight 50s linear infinite;
+  animation: slideRight 35s linear infinite;
   will-change: transform;
 }
 
-/* Glassmorphism utility */
-.glass {
-  background: rgba(20, 20, 20, 0.4);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transform: translateZ(0);
+/* Rotating badge animation */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* Scroll indicator bounce */
+@keyframes bounce-arrow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+.animate-bounce-arrow {
+  animation: bounce-arrow 2s ease-in-out infinite;
+}
+
+/* Mobile cursor restore */
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { LenisProvider } from "@/components/ui/lenis-provider";
+import { CustomCursor } from "@/components/ui/custom-cursor";
 
 const newsreader = Newsreader({
   variable: "--font-newsreader",
@@ -98,6 +99,7 @@ export default function RootLayout({
       <body className="antialiased bg-surface text-on-surface overflow-x-hidden">
         <LenisProvider>
           <div className="noise" />
+          <CustomCursor />
           {children}
         </LenisProvider>
       </body>

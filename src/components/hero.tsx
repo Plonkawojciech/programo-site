@@ -2,13 +2,8 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import dynamic from "next/dynamic";
 import { useI18n } from "@/lib/i18n";
 import MagneticWrapper from "@/components/magnetic";
-
-const HeroBackground3D = dynamic(() => import("@/components/ui/hero-background-3d"), {
-  ssr: false,
-});
 
 export default function Hero() {
   const { t } = useI18n();
@@ -19,75 +14,86 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 400]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
 
   const smoothY = useSpring(y, { damping: 20, stiffness: 100 });
+
+  // Individual letter animation delays
+  const programoLetters = ["P", "R", "O", "G", "R", "A"];
+  const moLetters = ["M", "O"];
 
   return (
     <section
       ref={container}
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-20 bg-transparent"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#F0F0EC] px-6 pt-20"
     >
-      <HeroBackground3D />
-
       <motion.div
-        style={{ y: smoothY, scale, opacity, rotateX: rotate }}
-        className="relative z-10 flex flex-col items-center text-center w-full max-w-[2560px] px-6"
+        style={{ y: smoothY, opacity }}
+        className="relative z-10 flex flex-col items-center text-center w-full"
       >
-        <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="mb-6 text-xs 2xl:text-sm font-bold uppercase tracking-[0.4em] text-primary"
-        >
-          {t("hero.label")}
-        </motion.span>
-
-        <h1 className="relative flex flex-col items-center font-headline text-[18vw] font-bold leading-[0.8] tracking-tighter text-on-surface md:text-[13vw] lg:text-[11vw] 2xl:text-[9vw] min-[2560px]:text-[220px]">
-          <span className="overflow-hidden w-full text-center">
-            <motion.span
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
-              className="block"
-            >
-              PROGRA
-            </motion.span>
+        {/* Massive headline */}
+        <h1 className="relative flex flex-col items-center font-headline leading-[0.85] tracking-tighter text-[#0A0A0A]">
+          {/* PROGRA */}
+          <span className="flex overflow-hidden">
+            {programoLetters.map((letter, i) => (
+              <motion.span
+                key={`p-${i}`}
+                initial={{ y: "110%" }}
+                animate={{ y: 0 }}
+                transition={{
+                  duration: 1.2,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: 0.6 + i * 0.04,
+                }}
+                className="block text-[20vw] font-bold md:text-[18vw] lg:text-[16vw]"
+              >
+                {letter}
+              </motion.span>
+            ))}
           </span>
-          <span className="overflow-hidden w-full text-center md:text-right md:pr-[10%] 2xl:pr-[15%]">
-            <motion.span
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
-              className="block italic text-primary"
-            >
-              MO
-            </motion.span>
+
+          {/* MO — italic coral */}
+          <span className="flex overflow-hidden">
+            {moLetters.map((letter, i) => (
+              <motion.span
+                key={`m-${i}`}
+                initial={{ y: "110%" }}
+                animate={{ y: 0 }}
+                transition={{
+                  duration: 1.2,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: 0.6 + (programoLetters.length + i) * 0.04,
+                }}
+                className="block text-[20vw] font-bold italic text-primary md:text-[18vw] lg:text-[16vw]"
+              >
+                {letter}
+              </motion.span>
+            ))}
           </span>
         </h1>
 
+        {/* Description — small, wide tracking */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, delay: 1.2 }}
-          className="mt-12 md:mt-16 max-w-[90vw] md:max-w-lg 2xl:max-w-2xl text-base font-light leading-relaxed text-on-surface-variant md:text-xl 2xl:text-2xl"
+          transition={{ duration: 1.5, delay: 1.4 }}
+          className="mt-12 max-w-md text-[13px] font-light uppercase leading-relaxed tracking-[0.3em] text-on-surface-variant md:mt-16 md:text-sm"
         >
           {t("hero.desc")}
         </motion.p>
 
+        {/* CTA circle button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.5 }}
-          className="mt-16 2xl:mt-24 flex flex-wrap justify-center gap-8"
+          transition={{ duration: 0.8, delay: 1.8 }}
+          className="mt-16"
         >
           <MagneticWrapper strength={0.5}>
             <a
               href="#work"
-              className="group relative flex h-40 w-40 2xl:h-48 2xl:w-48 items-center justify-center rounded-full border border-primary/40 text-sm 2xl:text-base font-bold uppercase tracking-widest text-on-surface transition-colors hover:bg-primary hover:text-white"
+              className="group relative flex h-36 w-36 items-center justify-center rounded-full border border-on-surface/20 text-[11px] font-bold uppercase tracking-[0.3em] text-on-surface transition-all duration-500 hover:border-primary hover:text-primary md:h-44 md:w-44"
             >
               <span className="relative z-10">{t("hero.browse")}</span>
             </a>
@@ -95,22 +101,47 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Scroll Hint */}
+      {/* Rotating circular badge */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, delay: 2 }}
+        className="absolute bottom-20 right-8 md:bottom-16 md:right-16 lg:right-24"
+      >
+        <svg
+          className="h-24 w-24 animate-spin-slow md:h-32 md:w-32"
+          viewBox="0 0 200 200"
+        >
+          <defs>
+            <path
+              id="circlePath"
+              d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0"
+            />
+          </defs>
+          <text className="fill-on-surface/40 text-[15px] font-medium uppercase tracking-[0.4em]">
+            <textPath href="#circlePath">
+              Software Studio &bull; Poznan &bull; Est. 2026 &bull;&nbsp;
+            </textPath>
+          </text>
+        </svg>
+      </motion.div>
+
+      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.5, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2"
       >
-        <div className="flex flex-col items-center gap-4">
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/60">
+        <div className="flex flex-col items-center gap-3">
+          <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/50">
             Scroll
           </span>
-          <motion.div
-            animate={{ y: [0, 20, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="h-12 w-[1px] bg-gradient-to-b from-primary/80 to-transparent"
-          />
+          <motion.span
+            className="block text-on-surface-variant/50 text-lg animate-bounce-arrow"
+          >
+            &darr;
+          </motion.span>
         </div>
       </motion.div>
     </section>

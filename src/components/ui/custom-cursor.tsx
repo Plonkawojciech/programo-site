@@ -6,15 +6,22 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motio
 export function CustomCursor() {
   const [cursorType, setCursorType] = useState<"default" | "pointer" | "view">("default");
   const [isVisible, setIsVisible] = useState(false);
-  
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  
+
   const springConfig = { damping: 25, stiffness: 250, mass: 0.5 };
   const springX = useSpring(cursorX, springConfig);
   const springY = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    // Detect touch devices
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      setIsTouchDevice(true);
+      return;
+    }
+
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
@@ -25,7 +32,7 @@ export function CustomCursor() {
       const target = e.target as HTMLElement;
       const isPointer = window.getComputedStyle(target).cursor === "pointer";
       const isView = target.closest("[data-cursor='view']");
-      
+
       if (isView) {
         setCursorType("view");
       } else if (isPointer) {
@@ -46,11 +53,13 @@ export function CustomCursor() {
     };
   }, [cursorX, cursorY, isVisible]);
 
+  if (isTouchDevice) return null;
+
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="pointer-events-none fixed left-0 top-0 z-[9999] flex items-center justify-center mix-blend-difference"
+          className="pointer-events-none fixed left-0 top-0 z-[9998] flex items-center justify-center mix-blend-difference"
           style={{
             x: springX,
             y: springY,
