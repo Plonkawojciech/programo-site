@@ -6,10 +6,10 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motio
 export function CustomCursor() {
   const [cursorType, setCursorType] = useState<"default" | "pointer" | "view">("default");
   const [isVisible, setIsVisible] = useState(false);
-  
+
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  
+
   const springConfig = { damping: 25, stiffness: 250, mass: 0.5 };
   const springX = useSpring(cursorX, springConfig);
   const springY = useSpring(cursorY, springConfig);
@@ -25,7 +25,7 @@ export function CustomCursor() {
       const target = e.target as HTMLElement;
       const isPointer = window.getComputedStyle(target).cursor === "pointer";
       const isView = target.closest("[data-cursor='view']");
-      
+
       if (isView) {
         setCursorType("view");
       } else if (isPointer) {
@@ -50,7 +50,7 @@ export function CustomCursor() {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="pointer-events-none fixed left-0 top-0 z-[9999] flex items-center justify-center mix-blend-difference"
+          className="pointer-events-none fixed left-0 top-0 z-[9998] flex items-center justify-center"
           style={{
             x: springX,
             y: springY,
@@ -61,12 +61,19 @@ export function CustomCursor() {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
         >
-          {/* Main Dot */}
+          {/* Main dot with purple glow */}
           <motion.div
-            className="rounded-full bg-white"
+            className="rounded-full"
             animate={{
-              width: cursorType === "default" ? 8 : cursorType === "view" ? 80 : 40,
-              height: cursorType === "default" ? 8 : cursorType === "view" ? 80 : 40,
+              width: cursorType === "default" ? 8 : cursorType === "view" ? 80 : 36,
+              height: cursorType === "default" ? 8 : cursorType === "view" ? 80 : 36,
+              backgroundColor: cursorType === "default" ? "#ffffff" : cursorType === "view" ? "rgba(139, 92, 246, 0.2)" : "rgba(139, 92, 246, 0.15)",
+              boxShadow:
+                cursorType === "default"
+                  ? "0 0 8px 2px rgba(139, 92, 246, 0.3)"
+                  : cursorType === "view"
+                  ? "0 0 30px 5px rgba(139, 92, 246, 0.2)"
+                  : "0 0 15px 3px rgba(139, 92, 246, 0.2)",
             }}
             transition={{ type: "spring", damping: 30, stiffness: 200 }}
           />
@@ -76,7 +83,7 @@ export function CustomCursor() {
             <motion.span
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="absolute text-[10px] font-bold uppercase tracking-widest text-black"
+              className="absolute text-[10px] font-bold uppercase tracking-widest text-white"
             >
               View
             </motion.span>

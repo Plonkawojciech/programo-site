@@ -15,32 +15,33 @@ export default function Footer() {
     offset: ["start end", "end end"],
   });
 
-  const contentY = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [40, 0]);
 
   return (
     <footer
       ref={footerRef}
-      className="w-full rounded-t-[32px] mt-12 bg-surface-container-low overflow-hidden"
+      className="w-full bg-zinc-950 border-t border-outline-variant overflow-hidden"
     >
       <motion.div
         style={{ y: contentY }}
-        className="flex flex-col gap-10 px-6 md:px-24 2xl:px-40 py-12 md:py-16 2xl:py-24 w-full max-w-[2560px] mx-auto will-change-transform transform-gpu"
+        className="flex flex-col gap-10 px-6 md:px-12 py-12 md:py-16 w-full max-w-7xl mx-auto will-change-transform transform-gpu"
       >
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
           <div>
-            <span className="text-2xl font-semibold text-on-surface">
+            <span className="text-xl font-semibold gradient-text">
               Programo
             </span>
-            <p className="text-sm text-on-surface-variant mt-6 max-w-xs leading-relaxed">
+            <p className="text-sm text-on-surface-variant mt-4 max-w-xs leading-relaxed">
               {t("hero.desc")}
             </p>
           </div>
-          <div className="flex flex-wrap gap-8 md:gap-16">
+          <div className="flex flex-wrap gap-8 md:gap-12">
             <a
               href="https://github.com/programo"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
+              aria-label="GitHub"
+              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300 hover:text-on-surface"
             >
               GitHub
             </a>
@@ -48,7 +49,8 @@ export default function Footer() {
               href="https://linkedin.com/company/programo"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
+              aria-label="LinkedIn"
+              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300 hover:text-on-surface"
             >
               LinkedIn
             </a>
@@ -60,13 +62,13 @@ export default function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="border-t border-outline-variant/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-6"
+          className="border-t border-outline-variant pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
         >
           <p className="text-xs font-normal text-on-surface-variant">
-            &copy; 2026&ndash;{currentYear} Programo
+            &copy; 2024&ndash;{currentYear} {t("footer.copyright")}
           </p>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">
               {t("footer.location")}
             </span>

@@ -8,36 +8,16 @@ interface TechItem {
   description: string;
 }
 
-function TechCard({ item, index }: { item: TechItem; index: number }) {
+function TechPill({ item }: { item: TechItem }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.02, duration: 0.8 }}
-      whileHover={{ y: -10, rotateX: 5, rotateY: 5 }}
-      className="group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] border border-outline-variant/10 bg-surface p-8 shadow-sm transition-all hover:border-primary/20 hover:shadow-2xl md:min-w-[320px]"
-    >
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-500">
-        <span className="font-headline text-2xl font-bold tracking-tighter">
-          {item.name[0]}
-        </span>
-      </div>
-      <div>
-        <h3 className="font-headline text-2xl font-bold tracking-tighter text-on-surface">
-          {item.name}
-        </h3>
-        <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/40">
-          Expertise Layer
-        </p>
-      </div>
-      <p className="text-sm font-light leading-relaxed text-on-surface-variant">
-        {item.description}
-      </p>
-      
-      {/* Decorative dot */}
-      <div className="absolute right-8 top-8 h-2 w-2 rounded-full bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
-    </motion.div>
+    <div className="group flex items-center gap-3 rounded-full border border-outline-variant bg-surface px-4 py-2 transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_20px_-5px_rgba(139,92,246,0.2)] whitespace-nowrap shrink-0">
+      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-container-high text-xs font-bold text-on-surface-variant group-hover:text-primary transition-colors">
+        {item.name[0]}
+      </span>
+      <span className="text-sm font-medium text-on-surface">
+        {item.name}
+      </span>
+    </div>
   );
 }
 
@@ -63,17 +43,18 @@ export default function TechStack() {
   ];
 
   return (
-    <section id="stack" className="relative overflow-hidden py-24 md:py-32 lg:py-56">
-      {/* Background decoration */}
-      <div className="absolute left-1/2 top-1/2 -z-10 h-[400px] w-[400px] md:h-[800px] md:w-[800px] 2xl:h-[1200px] 2xl:w-[1200px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[80px] md:blur-[120px]" />
-      
-      <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
-        <div className="mb-20 md:mb-32 2xl:mb-48 flex flex-col items-end text-right">
+    <section id="stack" className="relative overflow-hidden py-24 md:py-32 lg:py-40">
+      {/* Background radial glow */}
+      <div className="absolute left-1/2 top-1/2 -z-10 h-[500px] w-[500px] md:h-[800px] md:w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/[0.03] blur-[100px]" />
+
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
+        {/* Section header */}
+        <div className="mb-16 md:mb-20">
           <motion.span
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary"
+            className="text-xs font-semibold uppercase tracking-[0.3em] text-on-surface-variant mb-4 block"
           >
             {t("stack.label")}
           </motion.span>
@@ -81,28 +62,37 @@ export default function TechStack() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]"
+            className="text-4xl font-bold tracking-tight md:text-6xl"
           >
-            {t("stack.title")}
+            <span className="gradient-text">{t("stack.title")}</span>
           </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mt-4 max-w-xl text-base text-on-surface-variant"
+          >
+            {t("stack.desc")}
+          </motion.p>
         </div>
 
         {/* Marquee Rows */}
-        <div className="flex flex-col gap-8 md:gap-12">
+        <div className="flex flex-col gap-4 md:gap-5">
           {/* Row 1 */}
-          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-left w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
+          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            <div className="flex gap-3 md:gap-4 pr-3 md:pr-4 animate-slide-left w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
               {[...technologies, ...technologies, ...technologies].map((tech, i) => (
-                <TechCard key={`r1-${i}`} item={tech} index={i} />
+                <TechPill key={`r1-${i}`} item={tech} />
               ))}
             </div>
           </div>
 
           {/* Row 2 (Reverse) */}
-          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-right w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
+          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            <div className="flex gap-3 md:gap-4 pr-3 md:pr-4 animate-slide-right w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
               {[...technologies, ...technologies, ...technologies].reverse().map((tech, i) => (
-                <TechCard key={`r2-${i}`} item={tech} index={i} />
+                <TechPill key={`r2-${i}`} item={tech} />
               ))}
             </div>
           </div>
