@@ -1,26 +1,13 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-surface: #FCFCFA; /* Ciepły Alabaster */
-  --color-surface-dim: #F2F1EC;
-  --color-surface-container: #F6F5F0;
-  --color-surface-container-low: #F9F8F4;
-  --color-surface-container-high: #EBEAE4;
-  --color-surface-container-highest: #E2E1DB;
-  --color-surface-container-lowest: #FFFFFF;
-  --color-on-surface: #131312; /* Głęboki Onyks */
-  --color-on-surface-variant: #5A5853;
-  --color-primary: #A48650; /* Zgaszone, eleganckie złoto/brąz */
-  --color-primary-container: #EAE3D5;
-  --color-on-primary: #FFFFFF;
-  --color-on-primary-container: #2A2110;
-  --color-outline: #A19F98;
-  --color-outline-variant: #D6D4CD;
-  --color-secondary: #6B6964;
-  --color-tertiary: #525E54;
-  --color-inverse-surface: #222221;
-  --color-inverse-on-surface: #F2F1EC;
-  --color-inverse-primary: #DBC8A6;
+  --color-luxury-black: #0A0808;
+  --color-luxury-gold: #C8A44E;
+  --color-luxury-cream: #E8E0D0;
+  --color-luxury-muted: #8A8278;
+  --color-luxury-border: #1f1a15;
+  --color-luxury-surface: #100E0C;
+  --color-luxury-surface-light: #161310;
   --font-headline: var(--font-newsreader);
   --font-body: var(--font-jakarta);
 }
@@ -31,20 +18,27 @@ html {
 }
 
 body {
-  background: var(--color-surface);
-  color: var(--color-on-surface);
+  background: var(--color-luxury-black);
+  color: var(--color-luxury-cream);
   font-family: var(--font-body), system-ui, sans-serif;
   font-weight: 300;
   letter-spacing: -0.01em;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: none; /* Zapobiega efektowi bounce na macOS dla lepszego feelingu appki */
+  overscroll-behavior-y: none;
+  cursor: none;
+}
+
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
 }
 
 ::selection {
-  background: rgba(228, 228, 231, 0.2);
-  color: #ffffff;
+  background: rgba(200, 164, 78, 0.25);
+  color: #E8E0D0;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -59,15 +53,12 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-luxury-gold);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-.editorial-shadow {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-}
-
+/* Animated underline — gold line from right, out to left */
 .hover-underline {
   position: relative;
 }
@@ -78,7 +69,7 @@ body {
   left: 0;
   width: 100%;
   height: 1px;
-  background: currentColor;
+  background: var(--color-luxury-gold);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -89,7 +80,7 @@ body {
   transform-origin: left;
 }
 
-/* Noise Grain Effect - zoptymalizowany dla GPU */
+/* Noise Grain Effect — warm tinted */
 .noise {
   position: fixed;
   top: 0;
@@ -100,44 +91,63 @@ body {
   z-index: 9999;
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
   transform: translateZ(0);
   will-change: opacity;
 }
 
-/* Kinetic Typography Utility */
+/* Scroll progress bar at top */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 1px;
+  background: var(--color-luxury-gold);
+  z-index: 9998;
+  transform-origin: left;
+  will-change: transform;
+}
+
+/* Section divider line — grows from center */
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--color-luxury-gold);
+  opacity: 0.08;
+  transform: scaleX(0);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.section-divider.visible {
+  transform: scaleX(1);
+}
+
+/* Split text utility */
 .split-text span {
   display: inline-block;
   white-space: pre;
   will-change: transform, opacity;
 }
 
-/* Hardware Accelerated Marquee */
-@keyframes slideLeft {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-50%, 0, 0); }
+/* Keyframe for floating gradient orbs */
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 15px) scale(0.95); }
 }
 
-@keyframes slideRight {
-  from { transform: translate3d(-50%, 0, 0); }
-  to { transform: translate3d(0, 0, 0); }
+@keyframes float-slow-reverse {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-25px, 15px) scale(0.95); }
+  66% { transform: translate(15px, -25px) scale(1.05); }
 }
 
-.animate-slide-left {
-  animation: slideLeft 40s linear infinite;
+.animate-float-slow {
+  animation: float-slow 20s ease-in-out infinite;
   will-change: transform;
 }
 
-.animate-slide-right {
-  animation: slideRight 50s linear infinite;
+.animate-float-slow-reverse {
+  animation: float-slow-reverse 25s ease-in-out infinite;
   will-change: transform;
 }
-
-/* Glassmorphism utility */
-.glass {
-  background: rgba(20, 20, 20, 0.4);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transform: translateZ(0);
-}
-

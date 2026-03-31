@@ -1,20 +1,23 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 
 export function CustomCursor() {
   const [cursorType, setCursorType] = useState<"default" | "pointer" | "view">("default");
   const [isVisible, setIsVisible] = useState(false);
-  
+
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  
+
   const springConfig = { damping: 25, stiffness: 250, mass: 0.5 };
   const springX = useSpring(cursorX, springConfig);
   const springY = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    // Don't show custom cursor on touch devices
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
@@ -25,7 +28,7 @@ export function CustomCursor() {
       const target = e.target as HTMLElement;
       const isPointer = window.getComputedStyle(target).cursor === "pointer";
       const isView = target.closest("[data-cursor='view']");
-      
+
       if (isView) {
         setCursorType("view");
       } else if (isPointer) {
@@ -61,9 +64,15 @@ export function CustomCursor() {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
         >
-          {/* Main Dot */}
+          {/* Main Dot — warm white default, gold-tinted on hover */}
           <motion.div
-            className="rounded-full bg-white"
+            className="rounded-full"
+            style={{
+              backgroundColor:
+                cursorType === "default"
+                  ? "#E8E0D0"
+                  : "#C8A44E",
+            }}
             animate={{
               width: cursorType === "default" ? 8 : cursorType === "view" ? 80 : 40,
               height: cursorType === "default" ? 8 : cursorType === "view" ? 80 : 40,
@@ -76,7 +85,8 @@ export function CustomCursor() {
             <motion.span
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="absolute text-[10px] font-bold uppercase tracking-widest text-black"
+              className="absolute text-[10px] font-bold uppercase tracking-widest"
+              style={{ color: "#0A0808" }}
             >
               View
             </motion.span>

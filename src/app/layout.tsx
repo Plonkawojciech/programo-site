@@ -88,14 +88,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${newsreader.variable} ${jakarta.variable} selection:bg-primary/20 selection:text-primary`}>
+    <html lang="pl" className={`${newsreader.variable} ${jakarta.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="antialiased bg-surface text-on-surface overflow-x-hidden">
+      <body className="antialiased bg-luxury-black text-luxury-cream overflow-x-hidden">
         <LenisProvider>
           <div className="noise" />
           {children}

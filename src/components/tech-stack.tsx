@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 
 interface TechItem {
@@ -8,41 +9,65 @@ interface TechItem {
   description: string;
 }
 
-function TechCard({ item, index }: { item: TechItem; index: number }) {
+/**
+ * Two-column layout:
+ * - Left column is sticky, shows current highlighted tech name in large serif
+ * - Right column scrolls through all tech items as cards
+ * - As each card enters center of viewport, the left column updates
+ */
+
+function TechCard({
+  item,
+  index,
+  isActive,
+}: {
+  item: TechItem;
+  index: number;
+  isActive: boolean;
+}) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.02, duration: 0.8 }}
-      whileHover={{ y: -10, rotateX: 5, rotateY: 5 }}
-      className="group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] border border-outline-variant/10 bg-surface p-8 shadow-sm transition-all hover:border-primary/20 hover:shadow-2xl md:min-w-[320px]"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-20%" }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="py-8 border-b transition-all duration-500"
+      style={{
+        borderColor: isActive ? "rgba(200, 164, 78, 0.2)" : "rgba(200, 164, 78, 0.05)",
+      }}
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-500">
-        <span className="font-headline text-2xl font-bold tracking-tighter">
-          {item.name[0]}
+      <div className="flex items-baseline justify-between gap-4">
+        <span
+          className="text-[10px] font-medium"
+          style={{ color: "#8A8278", letterSpacing: "0.2em" }}
+        >
+          {String(index + 1).padStart(2, "0")}
         </span>
-      </div>
-      <div>
-        <h3 className="font-headline text-2xl font-bold tracking-tighter text-on-surface">
+        <h3
+          className="font-headline text-2xl md:text-3xl font-medium italic tracking-tight flex-1"
+          style={{ color: isActive ? "#C8A44E" : "#E8E0D0" }}
+        >
           {item.name}
         </h3>
-        <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/40">
-          Expertise Layer
-        </p>
       </div>
-      <p className="text-sm font-light leading-relaxed text-on-surface-variant">
+      <p
+        className="mt-3 text-sm font-light leading-relaxed pl-10 md:pl-12"
+        style={{ color: "#8A8278" }}
+      >
         {item.description}
       </p>
-      
-      {/* Decorative dot */}
-      <div className="absolute right-8 top-8 h-2 w-2 rounded-full bg-primary/20 group-hover:bg-primary transition-colors duration-500" />
     </motion.div>
   );
 }
 
 export default function TechStack() {
   const { t } = useI18n();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
 
   const technologies: TechItem[] = [
     { name: "Next.js", description: t("stack.nextjs") },
@@ -62,18 +87,53 @@ export default function TechStack() {
     { name: "Konva.js", description: t("stack.konvajs") },
   ];
 
+  // Determine active index based on scroll progress
+  const activeIndex = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, technologies.length - 1]
+  );
+
+  // Progress bar scaleY
+  const progressScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
   return (
-    <section id="stack" className="relative overflow-hidden py-24 md:py-32 lg:py-56">
-      {/* Background decoration */}
-      <div className="absolute left-1/2 top-1/2 -z-10 h-[400px] w-[400px] md:h-[800px] md:w-[800px] 2xl:h-[1200px] 2xl:w-[1200px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[80px] md:blur-[120px]" />
-      
+    <section
+      id="stack"
+      ref={sectionRef}
+      className="relative py-32 md:py-48 lg:py-64"
+      style={{ backgroundColor: "#0A0808" }}
+    >
+      {/* Section marker */}
+      <motion.span
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="absolute top-8 left-6 md:left-10 font-headline text-xs italic z-10"
+        style={{ color: "#C8A44E", letterSpacing: "0.3em" }}
+      >
+        IV
+      </motion.span>
+
+      {/* Section divider line at top */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute top-0 left-[5%] right-[5%] h-[1px]"
+        style={{ backgroundColor: "rgba(200, 164, 78, 0.08)", transformOrigin: "center" }}
+      />
+
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
-        <div className="mb-20 md:mb-32 2xl:mb-48 flex flex-col items-end text-right">
+        {/* Header */}
+        <div className="mb-20 md:mb-32">
           <motion.span
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary"
+            className="text-[10px] md:text-xs font-medium uppercase"
+            style={{ color: "#C8A44E", letterSpacing: "0.5em" }}
           >
             {t("stack.label")}
           </motion.span>
@@ -81,33 +141,164 @@ export default function TechStack() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]"
+            className="mt-4 font-headline text-5xl md:text-7xl lg:text-8xl 2xl:text-[8vw] font-bold italic tracking-tighter"
+            style={{ color: "#E8E0D0" }}
           >
             {t("stack.title")}
           </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mt-6 max-w-xl text-sm md:text-base font-light leading-relaxed"
+            style={{ color: "#8A8278" }}
+          >
+            {t("stack.desc")}
+          </motion.p>
         </div>
 
-        {/* Marquee Rows */}
-        <div className="flex flex-col gap-8 md:gap-12">
-          {/* Row 1 */}
-          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-left w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
-              {[...technologies, ...technologies, ...technologies].map((tech, i) => (
-                <TechCard key={`r1-${i}`} item={tech} index={i} />
-              ))}
+        {/* Two-column layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+          {/* Left: Sticky large tech name */}
+          <div className="hidden lg:block lg:col-span-5">
+            <div className="sticky top-[40vh]">
+              <ActiveTechDisplay
+                technologies={technologies}
+                scrollYProgress={scrollYProgress}
+              />
+
+              {/* Gold progress bar */}
+              <div className="mt-12 w-[1px] h-48 relative" style={{ backgroundColor: "rgba(200, 164, 78, 0.1)" }}>
+                <motion.div
+                  className="absolute top-0 left-0 w-full origin-top"
+                  style={{
+                    backgroundColor: "#C8A44E",
+                    scaleY: progressScale,
+                    height: "100%",
+                  }}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Row 2 (Reverse) */}
-          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-right w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
-              {[...technologies, ...technologies, ...technologies].reverse().map((tech, i) => (
-                <TechCard key={`r2-${i}`} item={tech} index={i} />
-              ))}
-            </div>
+          {/* Right: Scrolling tech cards */}
+          <div className="lg:col-span-7">
+            {technologies.map((tech, i) => (
+              <ScrollTechCard
+                key={tech.name}
+                item={tech}
+                index={i}
+                total={technologies.length}
+                scrollYProgress={scrollYProgress}
+              />
+            ))}
           </div>
         </div>
       </div>
+
+      {/* Warm gradient orb background */}
+      <div
+        className="pointer-events-none absolute top-1/3 right-0 h-[600px] w-[600px] md:h-[900px] md:w-[900px]"
+        style={{
+          background: "radial-gradient(circle, rgba(200,164,78,0.04) 0%, transparent 70%)",
+        }}
+      />
     </section>
+  );
+}
+
+/** The large tech name on the left that updates based on scroll position */
+function ActiveTechDisplay({
+  technologies,
+  scrollYProgress,
+}: {
+  technologies: TechItem[];
+  scrollYProgress: MotionValue<number>;
+}) {
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on("change", (v) => {
+      const idx = Math.min(
+        Math.max(0, Math.floor(v * technologies.length)),
+        technologies.length - 1
+      );
+      setActiveIdx(idx);
+    });
+    return unsubscribe;
+  }, [scrollYProgress, technologies.length]);
+
+  const tech = technologies[activeIdx];
+
+  return (
+    <div>
+      <h3
+        className="font-headline text-5xl xl:text-7xl font-bold italic tracking-tighter leading-none"
+        style={{ color: "#C8A44E" }}
+      >
+        {tech?.name}
+      </h3>
+      <p
+        className="mt-4 text-sm font-light"
+        style={{ color: "#8A8278" }}
+      >
+        {tech?.description}
+      </p>
+    </div>
+  );
+}
+
+/** Individual tech card in the right column */
+function ScrollTechCard({
+  item,
+  index,
+  total,
+  scrollYProgress,
+}: {
+  item: TechItem;
+  index: number;
+  total: number;
+  scrollYProgress: MotionValue<number>;
+}) {
+  const segmentSize = 1 / total;
+  const start = index * segmentSize;
+  const end = start + segmentSize;
+
+  const cardOpacity = useTransform(scrollYProgress, (v) =>
+    v >= start && v < end ? 1 : 0.5
+  );
+
+  return (
+    <motion.div
+      className="py-8 border-b transition-all duration-500"
+      style={{
+        borderColor: "rgba(200, 164, 78, 0.05)",
+        opacity: cardOpacity,
+      }}
+    >
+      <div className="flex items-baseline gap-4">
+        <span
+          className="text-[10px] font-medium"
+          style={{ color: "#8A8278", letterSpacing: "0.2em" }}
+        >
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <div className="flex-1">
+          <h3
+            className="font-headline text-xl md:text-2xl font-medium italic tracking-tight"
+            style={{ color: "#E8E0D0" }}
+          >
+            {item.name}
+          </h3>
+          <p
+            className="mt-2 text-sm font-light leading-relaxed"
+            style={{ color: "#8A8278" }}
+          >
+            {item.description}
+          </p>
+        </div>
+      </div>
+    </motion.div>
   );
 }
