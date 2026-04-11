@@ -27,11 +27,10 @@ function ProjectCell({ project, lang, index, isMobile }: { project: Project; lan
 
   return (
     <motion.div
-      layout="position"
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`relative bg-[#051F20] overflow-hidden group min-h-[350px] ${spanClass} transform-gpu will-change-transform`}
@@ -74,14 +73,14 @@ function ProjectCell({ project, lang, index, isMobile }: { project: Project; lan
         {/* Text overlay - always visible minimal, fully revealed on hover */}
         <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between z-30 pointer-events-none transform-gpu">
           <div className="flex justify-between items-start">
-            <span className={`text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest bg-[#051F20]/80 px-2 py-1 border border-[#163832] ${isMobile ? '' : 'backdrop-blur-sm'}`}>
+            <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest bg-[#051F20]/90 px-2 py-1 border border-[#163832]">
               {project.category} // {String(index + 1).padStart(2, '0')}
             </span>
             <div className="w-2 h-2 rounded-full bg-[#163832] group-hover:bg-[#DAF1DE] transition-colors group-hover:animate-ping shadow-[0_0_10px_#DAF1DE] group-hover:shadow-[0_0_10px_#DAF1DE]" />
           </div>
 
           <motion.div 
-            className={`flex flex-col gap-2 bg-[#051F20]/95 p-4 border border-[#163832] ${isMobile ? '' : 'backdrop-blur-md'} transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out will-change-transform`}
+            className="flex flex-col gap-2 bg-[#051F20]/95 p-4 border border-[#163832] transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out will-change-transform"
           >
             <h3 className="text-[#DAF1DE] text-2xl md:text-3xl font-sans font-light tracking-tight truncate">
               {project.title}
@@ -168,7 +167,7 @@ export default function FeaturedWork() {
         </div>
 
         {/* The Bento Grid of Projects */}
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait">
           {filteredProjects.map((project, idx) => (
             <ProjectCell key={project.slug} project={project} lang={lang} index={idx} isMobile={isMobile} />
           ))}

@@ -12,8 +12,12 @@ const qrPattern = [
 ];
 
 function AIScannerCell() {
+  const lastMoveTime = useRef(0);
   const [scannerPos, setScannerPos] = useState({ x: 50, y: 50 });
   const handleScannerMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const now = Date.now();
+    if (now - lastMoveTime.current < 32) return; // ~30fps throttle
+    lastMoveTime.current = now;
     const rect = e.currentTarget.getBoundingClientRect();
     setScannerPos({
       x: e.clientX - rect.left,
@@ -22,22 +26,22 @@ function AIScannerCell() {
   };
 
   return (
-    <div 
+    <div
       className="col-span-1 row-span-2 bg-[#051F20] relative overflow-hidden cursor-crosshair group transform-gpu will-change-transform"
       onMouseMove={handleScannerMove}
     >
       {/* Interactive Scanner Line */}
-      <motion.div 
+      <motion.div
         className="absolute left-0 right-0 top-0 h-[1px] bg-[#DAF1DE] shadow-[0_0_10px_#DAF1DE] z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity transform-gpu will-change-transform"
         animate={{ y: scannerPos.y }}
-        transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.5 }}
+        transition={{ type: "spring", stiffness: 200, damping: 30, mass: 0.5 }}
       />
-      <motion.div 
+      <motion.div
         className="absolute top-0 bottom-0 left-0 w-[1px] bg-[#DAF1DE] shadow-[0_0_10px_#DAF1DE] z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity transform-gpu will-change-transform"
         animate={{ x: scannerPos.x }}
-        transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.5 }}
+        transition={{ type: "spring", stiffness: 200, damping: 30, mass: 0.5 }}
       />
-      
+
       <div className="absolute top-4 left-4 text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest z-10 mix-blend-difference">
         AI_SCANNER
       </div>
@@ -46,12 +50,10 @@ function AIScannerCell() {
           <div key={i} className="h-1 md:h-2 w-full bg-[#163832] rounded" style={{ width: `${30 + (i * 23) % 70}%` }} />
         ))}
       </div>
-      
-      {/* Ambient auto scanner */}
-      <motion.div 
-        className="absolute left-0 right-0 top-0 h-16 bg-gradient-to-b from-transparent via-[#8EB69B]/10 to-transparent pointer-events-none z-10 transform-gpu will-change-transform"
-        animate={{ y: ["-100%", "600%", "-100%"] }}
-        transition={{ duration: 4, ease: "linear", repeat: Infinity }}
+
+      {/* Ambient auto scanner - CSS animation instead of framer-motion */}
+      <div
+        className="absolute left-0 right-0 top-0 h-16 bg-gradient-to-b from-transparent via-[#8EB69B]/10 to-transparent pointer-events-none z-10 transform-gpu animate-scanner-sweep"
       />
     </div>
   );
@@ -134,11 +136,14 @@ export default function Hero() {
             <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest z-10">SYS.LOAD_METRICS</span>
             <div className="flex gap-1 items-end h-24 md:h-32 z-10 mt-8">
               {[40, 70, 45, 90, 60, 85].map((h, i) => (
-                <motion.div 
-                  key={i} 
-                  className="w-full bg-[#163832] group-hover:bg-[#8EB69B]/50 transition-colors transform-gpu will-change-[height]" 
-                  animate={{ height: [`${h}%`, `${(h * 1.5) % 100}%`, `${h}%`] }} 
-                  transition={{ duration: 1.5 + (i * 0.1), repeat: Infinity }} 
+                <div
+                  key={i}
+                  className="w-full bg-[#163832] group-hover:bg-[#8EB69B]/50 transition-colors transform-gpu animate-bar-pulse"
+                  style={{
+                    height: `${h}%`,
+                    animationDelay: `${i * 0.15}s`,
+                    animationDuration: `${1.5 + i * 0.1}s`,
+                  }}
                 />
               ))}
             </div>
@@ -164,11 +169,10 @@ export default function Hero() {
           >
             <div className="grid grid-cols-5 grid-rows-5 gap-[2px] w-12 h-12 md:w-16 md:h-16 bg-[#051F20] border border-[#163832] p-1 group-hover:border-[#8EB69B] transition-colors">
               {qrPattern.map((isActive, i) => (
-                <motion.div 
-                  key={i} 
-                  className={`w-full h-full transform-gpu will-change-opacity ${isActive ? 'bg-[#8EB69B]' : 'bg-[#163832]'}`} 
-                  animate={isActive ? { opacity: [1, 0.5, 1] } : {}}
-                  transition={{ duration: 2, repeat: Infinity, delay: (i * 13) % 7 * 0.1 }}
+                <div
+                  key={i}
+                  className={`w-full h-full ${isActive ? 'bg-[#8EB69B] animate-qr-blink' : 'bg-[#163832]'}`}
+                  style={isActive ? { animationDelay: `${((i * 13) % 7) * 0.1}s` } : undefined}
                 />
               ))}
             </div>

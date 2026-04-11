@@ -148,3 +148,34 @@ body {
   }
 }
 
+/* GPU-accelerated CSS animations for hero bento cells */
+@keyframes scanner-sweep {
+  0%, 100% { transform: translate3d(0, -100%, 0); }
+  50% { transform: translate3d(0, 600%, 0); }
+}
+
+@keyframes bar-pulse {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.4); }
+}
+
+@keyframes qr-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-scanner-sweep {
+  animation: scanner-sweep 5s linear infinite;
+  will-change: transform;
+}
+
+.animate-bar-pulse {
+  animation: bar-pulse 2s ease-in-out infinite;
+  transform-origin: bottom;
+  will-change: transform;
+}
+
+.animate-qr-blink {
+  animation: qr-blink 2s ease-in-out infinite;
+}
+
