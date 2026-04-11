@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,9 +9,9 @@ import { projects } from "@/lib/projects";
 import type { Project } from "@/lib/projects";
 import type { Lang } from "@/lib/i18n";
 
-function ProjectCell({ project, lang, index, isMobile }: { project: Project; lang: Lang; index: number; isMobile: boolean }) {
+function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; index: number }) {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   const spans = [
     "md:col-span-2 md:row-span-2",
     "md:col-span-1 md:row-span-1",
@@ -22,7 +22,7 @@ function ProjectCell({ project, lang, index, isMobile }: { project: Project; lan
     "md:col-span-2 md:row-span-2",
     "md:col-span-1 md:row-span-1",
   ];
-  
+
   const spanClass = spans[index % spans.length];
 
   return (
@@ -37,29 +37,33 @@ function ProjectCell({ project, lang, index, isMobile }: { project: Project; lan
     >
       <Link href={`/projects/${project.slug}`} className="block w-full h-full">
         {project.screenshots?.[0] ? (
-          <motion.div 
+          <motion.div
             className="absolute inset-0 w-full h-full origin-center transform-gpu will-change-transform"
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Image 
-              src={project.screenshots[0]} 
-              alt={project.title} 
-              fill 
-              className="object-cover opacity-40 group-hover:opacity-100 transition-opacity duration-700 ease-out grayscale group-hover:grayscale-0" 
+            <Image
+              src={project.screenshots[0]}
+              alt={project.title}
+              fill
+              className="object-cover opacity-50 group-hover:opacity-100 transition-opacity duration-700 ease-out"
             />
-            {/* Dark mechanical overlay */}
-            <div className="absolute inset-0 bg-[#051F20] mix-blend-color opacity-80 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none" />
-            
-            {/* Scanning line effect on hover */}
+            {/* Dark overlay that lifts on hover */}
+            <div className="absolute inset-0 bg-[#051F20]/60 group-hover:bg-[#051F20]/10 transition-all duration-700 pointer-events-none" />
+
+            {/* Scanning line effect on hover — uses project accent color */}
             <AnimatePresence>
-              {isHovered && !isMobile && (
-                <motion.div 
+              {isHovered && (
+                <motion.div
                   initial={{ top: "-10%" }}
                   animate={{ top: "110%" }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 1.5, ease: "linear", repeat: Infinity }}
-                  className="absolute left-0 right-0 h-[2px] bg-[#DAF1DE] shadow-[0_0_15px_#DAF1DE] z-20 pointer-events-none opacity-50 transform-gpu"
+                  className="absolute left-0 right-0 h-[2px] z-20 pointer-events-none opacity-60 transform-gpu hidden md:block"
+                  style={{
+                    backgroundColor: project.accentColor,
+                    boxShadow: `0 0 15px ${project.accentColor}`,
+                  }}
                 />
               )}
             </AnimatePresence>
@@ -70,23 +74,34 @@ function ProjectCell({ project, lang, index, isMobile }: { project: Project; lan
           </div>
         )}
 
-        {/* Text overlay - always visible minimal, fully revealed on hover */}
+        {/* Text overlay */}
         <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between z-30 pointer-events-none transform-gpu">
           <div className="flex justify-between items-start">
             <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest bg-[#051F20]/90 px-2 py-1 border border-[#163832]">
               {project.category} // {String(index + 1).padStart(2, '0')}
             </span>
-            <div className="w-2 h-2 rounded-full bg-[#163832] group-hover:bg-[#DAF1DE] transition-colors group-hover:animate-ping shadow-[0_0_10px_#DAF1DE] group-hover:shadow-[0_0_10px_#DAF1DE]" />
+            {/* Status dot — glows with accent color on hover */}
+            <div
+              className="w-2 h-2 rounded-full bg-[#163832] transition-colors duration-300"
+              style={{
+                backgroundColor: isHovered ? project.accentColor : undefined,
+                boxShadow: isHovered ? `0 0 12px ${project.accentColor}, 0 0 4px ${project.accentColor}` : "none",
+              }}
+            />
           </div>
 
-          <motion.div 
-            className="flex flex-col gap-2 bg-[#051F20]/95 p-4 border border-[#163832] transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out will-change-transform"
+          <motion.div
+            className="flex flex-col gap-2 bg-[#051F20]/95 p-4 border border-[#163832] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 ease-out will-change-transform"
+            style={{
+              borderLeftColor: isHovered ? project.accentColor : undefined,
+              borderLeftWidth: isHovered ? "3px" : undefined,
+            }}
           >
             <h3 className="text-[#DAF1DE] text-2xl md:text-3xl 2xl:text-4xl font-sans font-light tracking-tight truncate">
               {project.title}
             </h3>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: isHovered ? "auto" : 0, opacity: isHovered ? 1 : 0 }}
               transition={{ duration: 0.3 }}
@@ -97,7 +112,11 @@ function ProjectCell({ project, lang, index, isMobile }: { project: Project; lan
               </p>
               <div className="flex flex-wrap gap-2 mt-3">
                 {project.tags.slice(0, 3).map(tag => (
-                  <span key={tag} className="text-[#051F20] bg-[#8EB69B] text-[8px] md:text-[10px] font-mono uppercase px-1.5 py-0.5 tracking-wider">
+                  <span
+                    key={tag}
+                    className="text-[#051F20] text-[8px] md:text-[10px] font-mono uppercase px-1.5 py-0.5 tracking-wider transition-colors duration-300"
+                    style={{ backgroundColor: isHovered ? project.accentColor : "#8EB69B" }}
+                  >
                     {tag}
                   </span>
                 ))}
@@ -114,24 +133,16 @@ export default function FeaturedWork() {
   const { lang } = useI18n();
   const containerRef = useRef<HTMLElement>(null);
   const [filter, setFilter] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-  
   const allProjects = projects;
   const filteredProjects = filter ? allProjects.filter(p => p.category === filter) : allProjects;
 
   return (
     <section ref={containerRef} id="work" className="relative bg-[#051F20] w-full min-h-screen z-10">
-      
+
       {/* Category Header as a Bento Cell across the top */}
       <div className="w-full bg-[#163832] p-[1px] grid grid-cols-1 md:grid-cols-4 gap-[1px]">
-        
+
         {/* Header Cell with Filter */}
         <div className="col-span-1 md:col-span-4 bg-[#0A2A28] p-8 md:p-12 flex flex-col items-start justify-between border-b border-[#163832] transform-gpu">
            <div className="flex w-full flex-col md:flex-row justify-between items-start md:items-end mb-12">
@@ -148,14 +159,14 @@ export default function FeaturedWork() {
 
            {/* Filter controls */}
            <div className="flex flex-wrap gap-2">
-             <button 
+             <button
                onClick={() => setFilter(null)}
                className={`px-4 py-2 font-mono text-[10px] uppercase tracking-widest border transition-colors ${filter === null ? 'bg-[#DAF1DE] text-[#051F20] border-[#DAF1DE]' : 'bg-[#051F20] text-[#8EB69B] border-[#163832] hover:border-[#8EB69B]'}`}
              >
                ALL_SYSTEMS
              </button>
              {Array.from(new Set(allProjects.map(p => p.category))).map(cat => (
-               <button 
+               <button
                  key={cat}
                  onClick={() => setFilter(cat)}
                  className={`px-4 py-2 font-mono text-[10px] uppercase tracking-widest border transition-colors ${filter === cat ? 'bg-[#DAF1DE] text-[#051F20] border-[#DAF1DE]' : 'bg-[#051F20] text-[#8EB69B] border-[#163832] hover:border-[#8EB69B]'}`}
@@ -169,10 +180,10 @@ export default function FeaturedWork() {
         {/* The Bento Grid of Projects */}
         <AnimatePresence mode="wait">
           {filteredProjects.map((project, idx) => (
-            <ProjectCell key={project.slug} project={project} lang={lang} index={idx} isMobile={isMobile} />
+            <ProjectCell key={project.slug} project={project} lang={lang} index={idx} />
           ))}
         </AnimatePresence>
-        
+
         {/* Footer Cell */}
         <div className="col-span-1 md:col-span-4 bg-[#051F20] p-12 flex items-center justify-center transform-gpu">
           <div className="flex items-center gap-4 text-[#8EB69B] font-mono text-xs uppercase tracking-[0.3em]">

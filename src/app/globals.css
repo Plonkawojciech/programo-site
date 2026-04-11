@@ -187,12 +187,68 @@ body {
   left: 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  background: linear-gradient(90deg, transparent, var(--tech-color, var(--color-primary)), transparent);
   transform: translateX(-100%);
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tech-card-line:hover::before {
   transform: translateX(0%);
+}
+
+/* Hero bento cell staggered entrance */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-fadeSlideIn {
+  animation: fadeSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* Logo subtle glow pulse */
+@keyframes logoGlow {
+  0%, 100% { text-shadow: 0 0 15px rgba(218, 241, 222, 0.2); }
+  50% { text-shadow: 0 0 30px rgba(218, 241, 222, 0.35), 0 0 60px rgba(142, 182, 155, 0.15); }
+}
+
+.animate-logo-glow {
+  animation: logoGlow 4s ease-in-out infinite;
+}
+
+/* Shimmer diagonal sweep for "digital craftsmanship" */
+@keyframes shimmerSweep {
+  0% { transform: translateX(-100%) rotate(-25deg); }
+  100% { transform: translateX(200%) rotate(-25deg); }
+}
+
+.animate-shimmer-sweep {
+  background: linear-gradient(90deg, transparent 30%, rgba(218, 241, 222, 0.15) 50%, transparent 70%);
+  width: 200%;
+  height: 200%;
+  animation: shimmerSweep 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Horizontal intro — letter reveal typing effect */
+@keyframes letterReveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-letterReveal {
+  animation: letterReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* Ticker energy pulse */
+@keyframes tickerPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+.animate-tickerPulse {
+  animation: tickerPulse 2s ease-in-out infinite;
 }
 

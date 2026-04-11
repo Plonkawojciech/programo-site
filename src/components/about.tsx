@@ -57,12 +57,12 @@ function FadeInText({ text }: { text: string }) {
 export default function About() {
   const { t, lang } = useI18n();
 
-  const revealTextContent = lang === "pl" 
-    ? "Dwóch builderów. Jedno studio. Budujemy cyfrową przyszłość." 
+  const revealTextContent = lang === "pl"
+    ? "Dwoch builderow. Jedno studio. Budujemy cyfrowa przyszlosc."
     : "Two builders. One studio. Building the digital future.";
 
   return (
-    <section id="about" className="relative overflow-hidden bg-surface-container py-24 md:py-32 lg:py-56 rounded-t-[32px] 2xl:rounded-t-[64px]">
+    <section id="about" className="relative overflow-hidden bg-[#0A2A28] py-24 md:py-32 lg:py-56 rounded-t-[32px] 2xl:rounded-t-[64px]">
       <RevealText text={revealTextContent} />
 
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
@@ -90,7 +90,7 @@ export default function About() {
             { label: t("about.stat.products"), value: "04+" },
             { label: t("about.stat.founders"), value: "02" },
             { label: t("about.stat.founded"), value: "2026" },
-            { label: t("about.stat.location"), value: "Poznań" },
+            { label: t("about.stat.location"), value: "Poznan" },
           ].map((stat, i) => (
             <motion.div
               key={i}
@@ -123,8 +123,8 @@ export default function About() {
           </motion.div>
           <div className="relative z-10 max-w-5xl mx-auto text-center">
             <h3 className="text-2xl md:text-5xl font-serif italic text-on-surface font-light leading-relaxed">
-              {lang === "pl" 
-                ? `"Planujemy ogromny rozwój. Nowe systemy SaaS, międzynarodowa ekspansja oraz wyznaczanie nowych standardów w cyfrowym designie. To dopiero początek naszej drogi."`
+              {lang === "pl"
+                ? `"Planujemy ogromny rozwoj. Nowe systemy SaaS, miedzynarodowa ekspansja oraz wyznaczanie nowych standardow w cyfrowym designie. To dopiero poczatek naszej drogi."`
                 : `"We are planning massive growth. New SaaS systems, international expansion, and setting new standards in digital design. This is just the beginning of our journey."`}
             </h3>
           </div>
@@ -133,8 +133,8 @@ export default function About() {
         <div className="mt-32 md:mt-48 flex flex-col items-start md:items-center justify-between gap-16 md:gap-20 md:flex-row">
           <div className="flex flex-col gap-16 md:gap-24 w-full md:w-1/2">
             {[
-              { name: "Wojciech Płonka", role: "Design & Product", desc: lang === "pl" ? "Odpowiada za wizję, interfejsy i doświadczenia użytkownika." : "Responsible for vision, interfaces, and user experience." },
-              { name: "Bartosz Kolaj", role: "Engineering Lead", desc: lang === "pl" ? "Architekt systemów, dbający o perfekcję kodu i wydajność." : "Systems architect ensuring code perfection and performance." },
+              { name: "Wojciech Plonka", role: "Design & Product", desc: lang === "pl" ? "Odpowiada za wizje, interfejsy i doswiadczenia uzytkownika." : "Responsible for vision, interfaces, and user experience." },
+              { name: "Bartosz Kolaj", role: "Engineering Lead", desc: lang === "pl" ? "Architekt systemow, dbajacy o perfekcje kodu i wydajnosc." : "Systems architect ensuring code perfection and performance." },
             ].map((f, i) => (
               <motion.div
                 key={i}
@@ -159,7 +159,7 @@ export default function About() {
               </motion.div>
             ))}
           </div>
-          
+
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}

@@ -21,9 +21,12 @@ export default function Contact() {
 
   return (
     <section id="contact" className="relative min-h-screen bg-surface py-24 md:py-32 lg:py-56 border-t border-outline-variant/20 overflow-hidden">
+      {/* Top accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#8EB69B] to-transparent opacity-40" />
+
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
         <div className="grid grid-cols-1 gap-20 md:gap-32 lg:grid-cols-12">
-          
+
           {/* Left: Info */}
           <div className="lg:col-span-5">
             <motion.span
@@ -42,7 +45,7 @@ export default function Contact() {
             >
               Let&apos;s <br /> <span className="italic text-primary">Connect.</span>
             </motion.h2>
-            
+
             <div className="mt-16 md:mt-20 flex flex-col gap-8 md:gap-12 2xl:gap-16">
               <div className="group cursor-pointer">
                 <span className="text-[10px] 2xl:text-xs font-bold uppercase tracking-widest text-on-surface-variant">Email us</span>
@@ -50,7 +53,7 @@ export default function Contact() {
                   kontakt@programo.pl
                 </a>
               </div>
-              
+
               <div className="flex flex-col md:flex-row gap-8 md:gap-20 2xl:gap-32">
                 <div className="group cursor-pointer">
                   <span className="text-[10px] 2xl:text-xs font-bold uppercase tracking-widest text-on-surface-variant">Wojciech</span>
@@ -69,9 +72,9 @@ export default function Contact() {
 
             <div className="mt-20 md:mt-32 2xl:mt-48">
               <p className="max-w-[250px] md:max-w-xs 2xl:max-w-md text-xs md:text-sm 2xl:text-base font-light leading-relaxed text-on-surface-variant">
-                Located in Poznań, Poland. <br /> 
+                Located in Poznan, Poland. <br />
                 Working worldwide. <br />
-                © 2026 Programo Studio.
+                &copy; 2026 Programo Studio.
               </p>
             </div>
           </div>
@@ -139,7 +142,7 @@ export default function Contact() {
                     </AnimatePresence>
                   </button>
                 </div>
-                
+
                 <p className="max-w-[200px] text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                   By clicking send you agree to our privacy policy.
                 </p>
