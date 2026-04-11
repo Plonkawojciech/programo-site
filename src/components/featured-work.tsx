@@ -24,26 +24,26 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
   return (
     <motion.div
       ref={ref}
-      className={`relative w-full flex flex-col md:flex-row items-center gap-12 md:gap-32 mb-40 md:mb-64 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+      className={`relative w-full flex flex-col md:flex-row items-center gap-12 md:gap-32 mb-40 md:mb-64 transform-gpu will-change-transform ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
     >
       <motion.div 
         style={{ y: useTransform(scrollYProgress, [0, 1], [300, -300]) }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40vw] font-serif italic text-[#051F20]/5 pointer-events-none select-none z-0"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40vw] font-serif italic text-[#051F20]/5 pointer-events-none select-none z-0 transform-gpu will-change-transform"
       >
         0{index + 1}
       </motion.div>
 
-      <Link href={`/projects/${project.slug}`} className="relative z-10 w-full md:w-[55%] aspect-[4/5] md:aspect-[16/10] overflow-hidden group rounded-2xl">
+      <Link href={`/projects/${project.slug}`} className="relative z-10 w-full md:w-[55%] aspect-[4/5] md:aspect-[16/10] overflow-hidden group rounded-2xl transform-gpu">
         <motion.div style={{ y: yImage, scale: smoothScale }} className="w-full h-full transform-gpu will-change-transform">
           {project.screenshots?.[0] ? (
             <Image 
               src={project.screenshots[0]} 
               alt={project.title} 
               fill 
-              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out" 
+              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out transform-gpu" 
             />
           ) : (
-            <div className="w-full h-full bg-[#051F20] flex items-center justify-center">
+            <div className="w-full h-full bg-[#051F20] flex items-center justify-center transform-gpu">
               <span className="text-[#DAF1DE] font-serif text-8xl italic opacity-20">{project.title[0]}</span>
             </div>
           )}
@@ -53,7 +53,7 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
 
       <motion.div 
         style={{ y: yText }} 
-        className={`relative z-20 w-full md:w-[45%] flex flex-col ${isEven ? 'items-start text-left' : 'items-end text-right'}`}
+        className={`relative z-20 w-full md:w-[45%] flex flex-col transform-gpu will-change-transform ${isEven ? 'items-start text-left' : 'items-end text-right'}`}
       >
         <span className="text-[#163832] font-mono text-[10px] uppercase tracking-[0.4em] mb-6">
           {project.tags.slice(0,3).join(" // ")}
@@ -89,16 +89,16 @@ const CategoryTitle = ({ title, index }: { title: string, index: number }) => {
   const x = useTransform(scrollYProgress, [0, 1], [index % 2 === 0 ? -600 : 600, index % 2 === 0 ? 600 : -600]);
 
   return (
-    <div ref={ref} className="relative py-32 md:py-56 overflow-hidden flex items-center justify-center">
+    <div ref={ref} className="relative py-32 md:py-56 overflow-hidden flex items-center justify-center transform-gpu">
       <motion.h2 
         style={{ x }}
-        className="text-[15vw] font-sans font-black uppercase tracking-tighter text-[#051F20]/5 whitespace-nowrap select-none"
+        className="text-[15vw] font-sans font-black uppercase tracking-tighter text-[#051F20]/5 whitespace-nowrap select-none transform-gpu will-change-transform"
       >
         {title} — {title} — {title}
       </motion.h2>
       
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="bg-[#FCFCFA] px-12 py-6 border border-[#051F20]/10 shadow-sm rounded-full">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none transform-gpu">
+        <div className="bg-[#FCFCFA] px-12 py-6 border border-[#051F20]/10 shadow-sm rounded-full transform-gpu">
           <h3 className="text-2xl md:text-4xl font-serif italic text-[#051F20] tracking-tight">
             {title}
           </h3>
@@ -111,6 +111,7 @@ const CategoryTitle = ({ title, index }: { title: string, index: number }) => {
 export default function FeaturedWork() {
   const { lang } = useI18n();
   const [activeSection, setActiveSection] = useState<string>("nasze-systemy");
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
   
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
@@ -119,7 +120,7 @@ export default function FeaturedWork() {
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
-  const skew = useTransform(smoothVelocity, [-1000, 1000], [-3, 3]);
+  const skew = useTransform(smoothVelocity, [-1000, 1000], isMobile ? [0, 0] : [-3, 3]);
 
   const bgY1 = useTransform(scrollYProgress, [0, 1], [0, 800]);
   const bgY2 = useTransform(scrollYProgress, [0, 1], [0, -800]);
@@ -137,6 +138,10 @@ export default function FeaturedWork() {
   ].filter(c => c.count > 0);
 
   useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    
     const handleScroll = () => {
       const sections = categories.map(c => document.getElementById(`category-${c.id}`));
       const scrollPosition = window.scrollY + window.innerHeight / 2;
@@ -151,7 +156,10 @@ export default function FeaturedWork() {
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [categories]);
 
   return (
@@ -166,13 +174,15 @@ export default function FeaturedWork() {
       />
 
       {/* Moving Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <motion.div style={{ y: bgY1, rotate: bgRotate1 }} className="absolute top-[10%] left-[5%] w-[1px] h-[50vh] bg-[#051F20]/10" />
-        <motion.div style={{ y: bgY2, rotate: bgRotate2 }} className="absolute top-[30%] right-[10%] w-[30vw] h-[30vw] border border-[#051F20]/5 rounded-3xl" />
-        <motion.div style={{ y: bgY1, rotate: bgRotate2 }} className="absolute top-[60%] left-[15%] w-[40vw] h-[1px] bg-[#051F20]/10" />
-        <motion.div style={{ y: bgY2, rotate: bgRotate1 }} className="absolute bottom-[20%] right-[5%] w-[40vw] h-[40vw] border border-[#051F20]/5 rounded-full" />
-        <motion.div style={{ y: bgY1, scale: useTransform(scrollYProgress, [0, 1], [1, 1.5]) }} className="absolute top-[40%] left-[40%] w-[20vw] h-[20vw] bg-gradient-to-tr from-[#8EB69B]/5 to-transparent rounded-full blur-3xl" />
-      </div>
+      {!isMobile && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <motion.div style={{ y: bgY1, rotate: bgRotate1 }} className="absolute top-[10%] left-[5%] w-[1px] h-[50vh] bg-[#051F20]/10 transform-gpu will-change-transform" />
+          <motion.div style={{ y: bgY2, rotate: bgRotate2 }} className="absolute top-[30%] right-[10%] w-[30vw] h-[30vw] border border-[#051F20]/5 rounded-3xl transform-gpu will-change-transform" />
+          <motion.div style={{ y: bgY1, rotate: bgRotate2 }} className="absolute top-[60%] left-[15%] w-[40vw] h-[1px] bg-[#051F20]/10 transform-gpu will-change-transform" />
+          <motion.div style={{ y: bgY2, rotate: bgRotate1 }} className="absolute bottom-[20%] right-[5%] w-[40vw] h-[40vw] border border-[#051F20]/5 rounded-full transform-gpu will-change-transform" />
+          <motion.div style={{ y: bgY1, scale: useTransform(scrollYProgress, [0, 1], [1, 1.5]) }} className="absolute top-[40%] left-[40%] w-[20vw] h-[20vw] bg-gradient-to-tr from-[#8EB69B]/5 to-transparent rounded-full blur-3xl transform-gpu will-change-transform" />
+        </div>
+      )}
 
       {/* Sticky Sidebar Indicator */}
       <div className="hidden lg:flex fixed left-8 top-1/2 -translate-y-1/2 z-50 flex-col gap-8 mix-blend-difference text-white">

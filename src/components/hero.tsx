@@ -14,9 +14,14 @@ const qrPattern = [
 export default function Hero() {
   const container = useRef<HTMLElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -28,6 +33,7 @@ export default function Hero() {
   const mouseY = useMotionValue(0);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (isMobile) return;
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
     const x = (clientX / innerWidth - 0.5) * 2; 
@@ -47,20 +53,20 @@ export default function Hero() {
   // Scroll animations mapped continuously
   // 0.0 - 0.2: Card flips
   // 0.2 - 0.5: Card scales up massively
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.5], [1, 1.2, 60]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.5], [1, 1.2, isMobile ? 40 : 60]);
   const smoothScale = useSpring(scale, { stiffness: 80, damping: 20 });
   
   const flipProgress = useTransform(scrollYProgress, [0.0, 0.2], [0, 180]);
   
   const rotateX = useTransform(() => {
     const scroll = scrollYProgress.get();
-    const tilt = tiltX.get();
+    const tilt = isMobile ? 0 : tiltX.get();
     return scroll > 0.1 ? 0 : tilt * (1 - scroll * 10);
   });
   
   const rotateY = useTransform(() => {
     const scroll = scrollYProgress.get();
-    const tilt = tiltY.get();
+    const tilt = isMobile ? 0 : tiltY.get();
     const flip = flipProgress.get();
     return flip + (scroll > 0.1 ? 0 : tilt * (1 - scroll * 10));
   });
@@ -129,17 +135,17 @@ export default function Hero() {
         {/* Floating background elements for "crazy" vibe */}
         <motion.div 
            style={{ y: bg1Y, rotate: bg1Rotate }}
-           className="absolute top-[10%] right-[10%] w-64 h-64 border border-[#051F20]/5 rounded-full pointer-events-none z-0"
+           className="absolute top-[10%] right-[10%] w-64 h-64 border border-[#051F20]/5 rounded-full pointer-events-none z-0 transform-gpu will-change-transform"
         />
         <motion.div 
            style={{ y: bg2Y, rotate: bg2Rotate }}
-           className="absolute bottom-[20%] left-[5%] w-32 h-32 bg-[#051F20]/5 pointer-events-none z-0"
+           className="absolute bottom-[20%] left-[5%] w-32 h-32 bg-[#051F20]/5 pointer-events-none z-0 transform-gpu will-change-transform"
         />
 
         {/* Giant floating background text */}
         <motion.div 
           style={{ opacity: textOpacity, y: bgTextY }}
-          className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 transform-gpu will-change-transform"
         >
           <h1 className="text-[15vw] font-serif font-light text-[#051F20]/5 tracking-tighter italic whitespace-nowrap select-none">
             digital craftsmanship
@@ -147,7 +153,7 @@ export default function Hero() {
         </motion.div>
 
         {/* Foreground Title */}
-        <motion.div style={{ opacity: textOpacity }} className="absolute z-10 top-[15%] md:top-[15%] flex flex-col items-center pointer-events-none">
+        <motion.div style={{ opacity: textOpacity }} className="absolute z-10 top-[15%] md:top-[15%] flex flex-col items-center pointer-events-none transform-gpu will-change-opacity">
           <h1 className="text-[14vw] md:text-[9vw] font-sans font-light text-[#051F20] tracking-tighter leading-none mb-2">
             programo
           </h1>
@@ -170,7 +176,7 @@ export default function Hero() {
           >
             {/* BACK OF CARD (Initially Visible) */}
             <div 
-              className="absolute inset-0 bg-[#051F20] rounded-2xl shadow-2xl border border-[#163832]/50 overflow-hidden"
+              className="absolute inset-0 bg-[#051F20] rounded-2xl shadow-2xl border border-[#163832]/50 overflow-hidden transform-gpu"
               style={{
                 backfaceVisibility: "hidden",
                 transform: "rotateY(0deg)",
@@ -187,13 +193,13 @@ export default function Hero() {
 
             {/* FRONT OF CARD (Revealed on flip) */}
             <div 
-              className="absolute inset-0 bg-[#DAF1DE] rounded-2xl shadow-2xl border border-[#163832]/20 overflow-hidden"
+              className="absolute inset-0 bg-[#DAF1DE] rounded-2xl shadow-2xl border border-[#163832]/20 overflow-hidden transform-gpu"
               style={{
                 backfaceVisibility: "hidden",
                 transform: "rotateY(180deg)"
               }}
             >
-              <motion.div style={{ opacity: cardContentOpacity }} className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
+              <motion.div style={{ opacity: cardContentOpacity }} className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between transform-gpu will-change-opacity">
                 <div className="flex justify-between items-start">
                   <div className="max-w-[70%]">
                     <h2 className="text-[#051F20] text-lg md:text-xl font-bold font-sans tracking-tight leading-tight uppercase">Programo</h2>
@@ -231,7 +237,7 @@ export default function Hero() {
             display: useTransform(techOverlayOpacity, v => v > 0 ? 'flex' : 'none'),
             perspective: "1200px"
           }}
-          className="absolute inset-0 z-30 flex items-center justify-center p-4 md:p-8 xl:p-16 bg-[#051F20]"
+          className="absolute inset-0 z-30 flex items-center justify-center p-4 md:p-8 xl:p-16 bg-[#051F20] transform-gpu will-change-opacity"
         >
           <motion.div 
             style={{ 
@@ -239,48 +245,48 @@ export default function Hero() {
               scale: techGridScale,
               transformStyle: "preserve-3d"
             }}
-            className="w-full max-w-6xl aspect-video grid grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-3 gap-px bg-[#163832]/30"
+            className="w-full max-w-6xl aspect-video grid grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-3 gap-px bg-[#163832]/30 transform-gpu will-change-transform"
           >
             
-            <motion.div style={{ x: m1X, y: m1Y, z: m1Z }} className="col-span-2 row-span-2 bg-[#051F20] p-8 flex flex-col justify-end relative overflow-hidden group hover:bg-[#0A2A28] transition-colors shadow-2xl">
+            <motion.div style={{ x: m1X, y: m1Y, z: m1Z }} className="col-span-2 row-span-2 bg-[#051F20] p-8 flex flex-col justify-end relative overflow-hidden group hover:bg-[#0A2A28] transition-colors shadow-2xl transform-gpu will-change-transform">
               <motion.div 
                 animate={{ y: ["-100%", "100%"] }} 
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#8EB69B]/40 to-transparent" 
+                className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#8EB69B]/40 to-transparent transform-gpu" 
               />
               <span className="text-[#8EB69B] font-mono text-[10px] md:text-xs mb-4 uppercase tracking-[0.3em]">Module // 01</span>
               <h3 className="text-[#DAF1DE] text-4xl md:text-6xl font-serif italic tracking-tighter">Artificial<br/>Intelligence</h3>
             </motion.div>
             
-            <motion.div style={{ x: m2X, y: m2Y, z: m2Z }} className="bg-[#051F20] p-6 flex flex-col justify-between hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl">
+            <motion.div style={{ x: m2X, y: m2Y, z: m2Z }} className="bg-[#051F20] p-6 flex flex-col justify-between hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl transform-gpu will-change-transform">
                <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">SYS.STATUS</span>
                <div className="flex gap-1 items-end h-16">
                   {[40, 70, 45, 90, 60, 85, 30, 80].map((h, i) => (
-                    <motion.div key={i} className="w-full bg-[#163832]" animate={{ height: [`${h}%`, `${(h * 1.5) % 100}%`, `${h}%`] }} transition={{ duration: 1.5, repeat: Infinity, delay: i*0.1 }} />
+                    <motion.div key={i} className="w-full bg-[#163832] transform-gpu" animate={{ height: [`${h}%`, `${(h * 1.5) % 100}%`, `${h}%`] }} transition={{ duration: 1.5, repeat: Infinity, delay: i*0.1 }} />
                   ))}
                </div>
             </motion.div>
             
-            <motion.div style={{ x: m3X, y: m3Y, z: m3Z }} className="bg-[#051F20] p-6 flex flex-col items-center justify-center relative hover:bg-[#0A2A28] transition-colors shadow-2xl">
-               <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-20 h-20 rounded-full border border-dashed border-[#8EB69B]/50 absolute" />
-               <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="w-16 h-16 rounded-full border border-dotted border-[#8EB69B] absolute" />
+            <motion.div style={{ x: m3X, y: m3Y, z: m3Z }} className="bg-[#051F20] p-6 flex flex-col items-center justify-center relative hover:bg-[#0A2A28] transition-colors shadow-2xl transform-gpu will-change-transform">
+               <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-20 h-20 rounded-full border border-dashed border-[#8EB69B]/50 absolute transform-gpu" />
+               <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="w-16 h-16 rounded-full border border-dotted border-[#8EB69B] absolute transform-gpu" />
                <div className="text-[#DAF1DE] font-mono text-[10px] z-10">ML/OP</div>
             </motion.div>
 
-            <motion.div style={{ x: m4X, y: m4Y, z: m4Z }} className="row-span-2 bg-[#051F20] p-6 flex flex-col justify-end hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl">
+            <motion.div style={{ x: m4X, y: m4Y, z: m4Z }} className="row-span-2 bg-[#051F20] p-6 flex flex-col justify-end hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl transform-gpu will-change-transform">
               <span className="text-[#8EB69B] font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">Module // 02</span>
               <h3 className="text-[#DAF1DE] text-2xl md:text-3xl font-sans font-light tracking-tight">Hardware<br/>Integration</h3>
               <div className="mt-8 w-full h-1 bg-[#163832] rounded-full overflow-hidden">
-                <motion.div className="h-full bg-[#8EB69B]" animate={{ x: ["-100%", "100%"] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+                <motion.div className="h-full bg-[#8EB69B] transform-gpu" animate={{ x: ["-100%", "100%"] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
               </div>
             </motion.div>
             
-            <motion.div style={{ x: m5X, y: m5Y, z: m5Z }} className="col-span-2 bg-[#051F20] p-6 flex items-end justify-between hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl">
+            <motion.div style={{ x: m5X, y: m5Y, z: m5Z }} className="col-span-2 bg-[#051F20] p-6 flex items-end justify-between hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl transform-gpu will-change-transform">
                <div className="text-[#DAF1DE]/50 text-xs font-mono">PROCESSING DATA_STREAM...</div>
                <span className="text-[#DAF1DE] bg-[#163832] px-2 py-1 rounded font-mono text-[10px] animate-pulse">ACTIVE</span>
             </motion.div>
             
-            <motion.div style={{ x: m6X, y: m6Y, z: m6Z }} className="col-span-3 bg-[#051F20] p-6 flex items-center gap-6 hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl">
+            <motion.div style={{ x: m6X, y: m6Y, z: m6Z }} className="col-span-3 bg-[#051F20] p-6 flex items-center gap-6 hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl transform-gpu will-change-transform">
                <div className="w-4 h-4 rounded-full bg-[#DAF1DE] animate-ping" />
                <div className="text-[#8EB69B] text-xs font-mono flex flex-col gap-1">
                  <span>Neural Net Cluster Online.</span>
@@ -293,7 +299,7 @@ export default function Hero() {
         {/* Scroll Hint */}
         <motion.div
           style={{ opacity: textOpacity }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 pointer-events-none transform-gpu will-change-opacity"
         >
           <div className="flex flex-col items-center gap-4">
             <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#051F20]/50">
@@ -302,7 +308,7 @@ export default function Hero() {
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="h-10 w-px bg-[#051F20]/20"
+              className="h-10 w-px bg-[#051F20]/20 transform-gpu"
             />
           </div>
         </motion.div>
