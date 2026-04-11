@@ -51,8 +51,17 @@ export default function Hero() {
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.5], [1, 1.2, 60]);
   const smoothScale = useSpring(scale, { stiffness: 80, damping: 20 });
   
-  const rotateX = useTransform(scrollYProgress, [0, 0.3], [tiltX.get(), 0]); 
-  const rotateY = useTransform(scrollYProgress, [0, 0.3], [tiltY.get(), 0]);
+  const rotateX = useTransform(() => {
+    const scroll = scrollYProgress.get();
+    const tilt = tiltX.get();
+    return scroll > 0.1 ? 0 : tilt * (1 - scroll * 10);
+  });
+  
+  const rotateY = useTransform(() => {
+    const scroll = scrollYProgress.get();
+    const tilt = tiltY.get();
+    return scroll > 0.1 ? 0 : tilt * (1 - scroll * 10);
+  });
   
   const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const cardContentOpacity = useTransform(scrollYProgress, [0.15, 0.25], [1, 0]);
@@ -102,8 +111,8 @@ export default function Hero() {
             className="relative w-full max-w-[340px] md:max-w-[480px] aspect-[1.6/1] z-20 will-change-transform transform-gpu pointer-events-none"
             style={{ 
               scale: smoothScale, 
-              rotateX: useTransform(scrollYProgress, v => v > 0.1 ? 0 : tiltX.get()), 
-              rotateY: useTransform(scrollYProgress, v => v > 0.1 ? 0 : tiltY.get()), 
+              rotateX, 
+              rotateY, 
               transformStyle: "preserve-3d" 
             }}
             initial={{ scale: 0.8, opacity: 0, y: 100 }}
@@ -165,7 +174,7 @@ export default function Hero() {
                <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">SYS.STATUS</span>
                <div className="flex gap-1 items-end h-16">
                   {[40, 70, 45, 90, 60, 85, 30, 80].map((h, i) => (
-                    <motion.div key={i} className="w-full bg-[#163832]" animate={{ height: [`${h}%`, `${Math.random()*100}%`, `${h}%`] }} transition={{ duration: 1.5, repeat: Infinity, delay: i*0.1 }} />
+                    <motion.div key={i} className="w-full bg-[#163832]" animate={{ height: [`${h}%`, `${(h * 1.5) % 100}%`, `${h}%`] }} transition={{ duration: 1.5, repeat: Infinity, delay: i*0.1 }} />
                   ))}
                </div>
             </div>
