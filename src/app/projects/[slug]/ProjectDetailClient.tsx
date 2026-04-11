@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
@@ -9,15 +9,28 @@ import { getProjectBySlug, getAdjacentProjects, type Project, type SubProduct } 
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
-// Pomocniczy komponent do renderowania obrazu z obsługą placeholderów i ikon
-function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor }: { src: string, alt: string, priority?: boolean, parallaxY?: any, accentColor?: string }) {
+function ParallaxImage({ src, alt, speed = 0.5, className = "" }: { src: string, alt: string, speed?: number, className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [-100 * speed, 100 * speed]);
+  
+  return (
+    <div ref={ref} className={`relative overflow-hidden ${className}`}>
+      <motion.div style={{ y, scale: 1.15 }} className="absolute inset-0 w-full h-full origin-center">
+        <Image src={src} alt={alt} fill className="object-cover" />
+      </motion.div>
+    </div>
+  );
+}
+
+function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor, scale = 1 }: { src: string, alt: string, priority?: boolean, parallaxY?: any, accentColor?: string, scale?: any }) {
   const isPlaceholder = src.includes("PLACEHOLDER");
   const isIcon = src.includes("-icon.");
 
   if (isPlaceholder) {
     const placeholderText = src.replace("/", "").replace(".png", "").replace(/_/g, " ");
     return (
-      <motion.div style={parallaxY ? { y: parallaxY } : {}} className="absolute inset-0 flex items-center justify-center bg-surface-container-high border border-outline-variant/10">
+      <motion.div style={parallaxY ? { y: parallaxY, scale: scale || 1 } : { scale: scale || 1 }} className="absolute inset-0 flex items-center justify-center bg-surface-container-high border border-outline-variant/10">
         <span className="text-on-surface-variant/40 font-headline text-2xl uppercase tracking-widest font-bold text-center px-6">
           [Wstaw zdjęcie: {placeholderText}]
         </span>
@@ -28,7 +41,7 @@ function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor }
   if (isIcon) {
     const accent = accentColor || "#6abf69";
     return (
-      <motion.div style={parallaxY ? { y: parallaxY } : {}} className="absolute inset-0 flex items-center justify-center overflow-hidden">
+      <motion.div style={parallaxY ? { y: parallaxY, scale: scale || 1 } : { scale: scale || 1 }} className="absolute inset-0 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at center, ${accent}18 0%, #0a0a0a 70%)` }} />
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(${accent} 1px, transparent 1px)`, backgroundSize: '24px 24px' }} />
         <div className="relative z-10 flex flex-col items-center gap-8">
@@ -41,22 +54,19 @@ function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor }
               className="object-cover"
             />
           </div>
-          <span className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-white/30">
-            {alt}
-          </span>
         </div>
       </motion.div>
     );
   }
 
   return (
-    <motion.div style={parallaxY ? { y: parallaxY } : {}} className="absolute inset-0 h-[120%] -top-[10%] w-full">
+    <motion.div style={parallaxY ? { y: parallaxY, scale: scale || 1 } : { scale: scale || 1 }} className="absolute inset-0 h-[120%] -top-[10%] w-full transform-gpu will-change-transform">
       <Image
         src={src}
         alt={alt}
         fill
         priority={priority}
-        className="object-cover opacity-90 transition-all duration-1000"
+        className="object-cover opacity-90"
       />
     </motion.div>
   );
@@ -73,110 +83,117 @@ function ProjectContent({ slug }: { slug: string }) {
     offset: ["start start", "end start"],
   });
 
-  const headerY = useTransform(scrollYProgress, [0, 1], [0, 300]);
-  const headerOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const headerY = useTransform(scrollYProgress, [0, 1], [0, 400]);
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const smoothImageScale = useSpring(imageScale, { stiffness: 100, damping: 30 });
 
   if (!project) return null;
 
-  // Czyszczenie opisów z pozostałości list (bullety usunęliśmy w bazie, ale usuwamy je też w locie dla bezpieczeństwa)
   const formattedDescription = project.longDescription[lang].split('\n').filter(line => line.trim() !== '');
-
-  // Detect if project uses icon-based screenshots (ecosystem hero)
   const hasIconScreenshots = project.screenshots?.some(s => s.includes("-icon.")) ?? false;
 
   return (
-    <div className="min-h-screen bg-surface selection:bg-primary/20 selection:text-primary">
+    <div className="min-h-screen bg-[#FDFDFD] text-[#0A0A0A] selection:bg-primary/20 selection:text-primary overflow-x-hidden">
       <Navbar />
 
       <main>
-        {/* Cinematic Hero */}
-        <section ref={headerRef} className="relative h-screen w-full overflow-hidden bg-on-surface">
-          <motion.div style={{ scale: imageScale }} className="absolute inset-0 h-full w-full">
+        {/* Cinematic Hero - Massive Typography Overlap */}
+        <section ref={headerRef} className="relative h-screen w-full overflow-hidden bg-[#0A0A0A]">
+          <motion.div className="absolute inset-0 h-full w-full">
              {project.subProducts && project.subProducts.length > 0 ? (
-               <motion.div style={headerY ? { y: headerY } : {}} className="absolute inset-0">
+               <motion.div style={{ y: headerY }} className="absolute inset-0">
                  <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 50% 40%, ${project.accentColor}15 0%, #0a0a0a 65%)` }} />
-                 <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `radial-gradient(${project.accentColor} 1px, transparent 1px)`, backgroundSize: '32px 32px' }} />
                  <div className="absolute inset-0 flex items-center justify-center">
-                   <div className="flex items-center gap-8 md:gap-16 2xl:gap-24">
+                   <div className="flex items-center gap-8 md:gap-16">
                      {project.subProducts.map((sub, i) => (
-                       <motion.div
-                         key={sub.name}
-                         initial={{ opacity: 0, y: 30 }}
-                         animate={{ opacity: 1, y: 0 }}
-                         transition={{ delay: 0.4 + i * 0.15, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                         className="flex flex-col items-center gap-4 md:gap-6"
-                       >
-                         {sub.icon && (
-                           <div className="relative w-20 h-20 md:w-32 md:h-32 2xl:w-40 2xl:h-40 rounded-2xl md:rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ boxShadow: `0 0 60px ${sub.accentColor || project.accentColor}25, 0 20px 40px rgba(0,0,0,0.4)` }}>
-                             <Image src={sub.icon} alt={sub.name} fill priority className="object-cover" />
-                           </div>
-                         )}
-                         <span className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.3em] text-white/25">
-                           {sub.name}
-                         </span>
-                       </motion.div>
+                       <div key={sub.name} className="relative w-24 h-24 md:w-40 md:h-40 rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ boxShadow: `0 0 60px ${sub.accentColor || project.accentColor}25` }}>
+                         {sub.icon && <Image src={sub.icon} alt={sub.name} fill priority className="object-cover" />}
+                       </div>
                      ))}
                    </div>
                  </div>
                </motion.div>
              ) : project.screenshots?.[0] ? (
-               <ProjectImage src={project.screenshots[0]} alt={project.title} priority={true} parallaxY={headerY} accentColor={project.accentColor} />
+               <ProjectImage src={project.screenshots[0]} alt={project.title} priority={true} parallaxY={headerY} accentColor={project.accentColor} scale={smoothImageScale} />
              ) : (
-               <div className="h-full w-full bg-on-surface" />
+               <div className="h-full w-full bg-[#0A0A0A]" />
              )}
-            <div className="absolute inset-0 bg-gradient-to-t from-on-surface via-transparent to-transparent opacity-80" />
-            <div className="absolute inset-0 bg-black/10" />
+            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-90" />
           </motion.div>
 
-          <div className="relative flex h-full flex-col justify-end px-6 pb-24 md:px-24 2xl:px-40 text-surface mx-auto max-w-[2560px]">
+          <div className="relative flex h-full flex-col justify-center items-center px-6 md:px-24 text-white mx-auto max-w-[2560px] text-center pointer-events-none">
             <motion.div
               style={{ opacity: headerOpacity }}
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              className="flex flex-col items-center"
             >
               <div className="flex items-center gap-6 mb-8 overflow-hidden">
-                <motion.span initial={{x: -50}} animate={{x: 0}} transition={{delay: 0.8, duration: 1}} className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary">
-                  {project.year}
-                </motion.span>
-                <motion.span initial={{scaleX: 0}} animate={{scaleX: 1}} transition={{delay: 1, duration: 1}} className="w-16 h-px bg-primary/50 origin-left" />
-                <motion.span initial={{x: 50}} animate={{x: 0}} transition={{delay: 0.8, duration: 1}} className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-surface/70">
-                  {project.tags[0]}
-                </motion.span>
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-white/50">{project.year}</span>
+                <span className="w-16 h-px bg-white/30" />
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-white/50">{project.tags[0]}</span>
               </div>
-              <h1 className="font-headline text-[15vw] md:text-[12vw] 2xl:text-[10vw] font-bold leading-[0.85] tracking-tighter">
+              <h1 className="font-serif italic text-[18vw] md:text-[14vw] font-light leading-[0.8] tracking-tighter mix-blend-overlay opacity-90 whitespace-nowrap">
+                {project.title}
+              </h1>
+              <h1 className="font-sans text-[15vw] md:text-[12vw] font-black uppercase leading-[0.8] tracking-tighter absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mix-blend-plus-lighter whitespace-nowrap text-white/80">
                 {project.title}
               </h1>
             </motion.div>
           </div>
         </section>
 
-        {/* The Story / Overview */}
-        <section className="relative z-10 bg-surface px-6 py-32 md:px-24 2xl:px-40 md:py-48">
+        {/* The Story / Editorial Overview */}
+        <section className="relative z-10 bg-[#FDFDFD] px-6 py-32 md:px-12 lg:px-24 md:py-56">
           <div className="mx-auto max-w-[2560px]">
             <motion.div 
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1 }}
               className="grid grid-cols-1 lg:grid-cols-12 gap-20 md:gap-32"
             >
-              
-              {/* Left Column: Vision & Narrative */}
-              <div className="lg:col-span-8 flex flex-col gap-12">
-                <h2 className="font-headline text-5xl md:text-7xl 2xl:text-8xl font-medium tracking-tight text-on-surface leading-[1.1] mb-12">
-                  {project.subtitle[lang]}
-                </h2>
-                
+              {/* Massive Pull Quote on Left */}
+              <div className="lg:col-span-5 flex flex-col justify-start">
+                <div className="sticky top-40">
+                  <h2 className="font-serif text-5xl md:text-7xl lg:text-[5rem] font-light italic tracking-tight text-[#0A0A0A] leading-[1.1] mb-12">
+                    "{project.subtitle[lang]}"
+                  </h2>
+                  <div className="flex flex-wrap gap-4 mt-8">
+                     {project.tech.map((t) => (
+                      <span key={t} className="px-4 py-2 rounded-full border border-[#0A0A0A]/10 text-xs font-mono uppercase tracking-widest text-[#0A0A0A]/60">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Description Paragraphs on Right */}
+              <div className="lg:col-span-7 flex flex-col gap-12 pt-12 lg:pt-0">
+                <div className="grid grid-cols-2 gap-8 border-b border-[#0A0A0A]/10 pb-12 mb-12">
+                   <div>
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#0A0A0A]/40 mb-2">Role</h3>
+                      <p className="font-sans text-xl md:text-2xl text-[#0A0A0A]">{project.role[lang]}</p>
+                   </div>
+                   {project.liveUrl && (
+                     <div className="flex items-end justify-end">
+                       <a href={project.liveUrl} target="_blank" className="group inline-flex items-center gap-4 border-b border-[#0A0A0A] pb-1">
+                          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0A0A0A]">Live Site</span>
+                          <span className="transform transition-transform group-hover:translate-x-2 group-hover:-translate-y-2">↗</span>
+                       </a>
+                     </div>
+                   )}
+                </div>
+
                 <div className="flex flex-col gap-10">
                   {formattedDescription.map((paragraph, idx) => {
-                    const isFeatureList = paragraph.includes('•') || paragraph.startsWith('Darmowe:') || paragraph.startsWith('Płatne:');
-                    if (isFeatureList) {
-                      return null; // Pomijamy bullety tutaj, przeniesiemy je niżej
-                    }
+                    if (paragraph.includes('•') || paragraph.startsWith('Darmowe:') || paragraph.startsWith('Płatne:')) return null;
                     return (
-                      <p key={idx} className="text-xl md:text-2xl 2xl:text-4xl font-light leading-relaxed text-on-surface-variant max-w-4xl">
+                      <p key={idx} className="text-xl md:text-3xl font-light leading-relaxed text-[#0A0A0A]/70">
                         {paragraph}
                       </p>
                     );
@@ -184,274 +201,126 @@ function ProjectContent({ slug }: { slug: string }) {
                 </div>
               </div>
 
-              {/* Right Column: Metadata */}
-              <div className="lg:col-span-4 flex flex-col gap-16 lg:pl-16 lg:border-l border-outline-variant/30">
-                <div>
-                  <span className="block w-4 h-px bg-primary mb-6" />
-                  <h3 className="text-[10px] 2xl:text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Role</h3>
-                  <p className="font-headline text-3xl 2xl:text-4xl text-on-surface">{project.role[lang]}</p>
-                </div>
-                
-                <div>
-                  <span className="block w-4 h-px bg-primary mb-6" />
-                  <h3 className="text-[10px] 2xl:text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-6">Technologies</h3>
-                  <div className="flex flex-col gap-3">
-                    {project.tech.map((t) => (
-                      <span key={t} className="text-base 2xl:text-xl font-light text-on-surface border-b border-outline-variant/10 pb-3">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {project.liveUrl && (
-                  <div className="pt-8">
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      className="group inline-flex items-center gap-6"
-                    >
-                      <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-primary text-on-primary transition-transform duration-500 group-hover:scale-110">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M7 17L17 7M17 7H9M17 7V15" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"/>
-                        </svg>
-                      </span>
-                      <span className="text-sm 2xl:text-lg font-bold uppercase tracking-[0.3em] text-on-surface group-hover:text-primary transition-colors">
-                        Launch Experience
-                      </span>
-                    </a>
-                  </div>
-                )}
-              </div>
-
             </motion.div>
           </div>
         </section>
 
-        {/* Majestic Edge-to-Edge Image (skip for projects with sub-products) */}
+        {/* Asymmetric Grids for Screenshots */}
         {project.screenshots && project.screenshots.length > 1 && !hasIconScreenshots && !project.subProducts?.length && (
-          <section className="w-full pb-32 md:pb-48">
-            <motion.div
-              initial={{ opacity: 0, clipPath: "inset(10% 0 10% 0)" }}
-              whileInView={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full h-[60vh] md:h-[120vh] overflow-hidden"
-            >
-              <ProjectImage src={project.screenshots[1]} alt={`${project.title} detailed view 1`} accentColor={project.accentColor} />
-            </motion.div>
+          <section className="w-full pb-32 md:pb-56 px-6 md:px-12 lg:px-24">
+            <div className="mx-auto max-w-[2560px] grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
+              <motion.div
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 1.2 }}
+                className="md:col-span-8 relative aspect-[16/10] overflow-hidden rounded-3xl"
+              >
+                <ParallaxImage src={project.screenshots[1]} alt="Detail 1" className="w-full h-full" speed={0.2} />
+              </motion.div>
+
+              {project.screenshots[2] && (
+                <motion.div
+                  initial={{ opacity: 0, y: 100 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 1.2, delay: 0.2 }}
+                  className="md:col-span-4 relative aspect-[4/5] overflow-hidden rounded-3xl mt-12 md:mt-48"
+                >
+                  <ParallaxImage src={project.screenshots[2]} alt="Detail 2" className="w-full h-full" speed={0.3} />
+                </motion.div>
+              )}
+            </div>
           </section>
         )}
 
         {/* Sub-Products Ecosystem */}
         {project.subProducts && project.subProducts.length > 0 && (
-          <>
-            {/* Ecosystem intro */}
-            <section className="bg-on-surface py-24 md:py-40 px-6 md:px-24 2xl:px-40 overflow-hidden">
-              <div className="mx-auto max-w-[2560px]">
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-center mb-8"
-                >
-                  <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-surface/30 block mb-8">
-                    {lang === "pl" ? "Ekosystem" : "Ecosystem"}
-                  </span>
-                  <h2 className="font-headline text-5xl md:text-8xl 2xl:text-[9vw] font-bold tracking-tighter text-surface leading-[0.9]">
-                    {lang === "pl" ? "Trzy produkty." : "Three products."}
-                    <br />
-                    <span className="italic font-light" style={{ color: project.accentColor }}>
-                      {lang === "pl" ? "Jeden cel." : "One goal."}
-                    </span>
-                  </h2>
-                </motion.div>
+          <section className="bg-[#0A0A0A] text-white py-32 md:py-56 px-6 md:px-12 lg:px-24 rounded-t-[3rem] md:rounded-t-[5rem]">
+            <div className="mx-auto max-w-[2560px]">
+              <div className="text-center mb-32">
+                <h2 className="font-serif italic text-6xl md:text-[8rem] font-light tracking-tighter leading-none mb-8 text-[#FDFDFD]">
+                  {lang === "pl" ? "Ekosystem" : "Ecosystem"}
+                </h2>
+                <p className="font-sans text-xl md:text-3xl font-light text-[#FDFDFD]/50 max-w-2xl mx-auto">
+                  {lang === "pl" ? "Zintegrowane rozwiązania dla jednego celu." : "Integrated solutions for one goal."}
+                </p>
               </div>
-            </section>
 
-            {/* Individual products */}
-            {project.subProducts.map((sub, idx) => {
-              const isReversed = idx % 2 !== 0;
-              const accent = sub.accentColor || project.accentColor;
-
-              return (
-                <section key={sub.name} className="bg-on-surface overflow-hidden px-6 md:px-24 2xl:px-40 py-20 md:py-28">
-                  <div className={`mx-auto max-w-[2560px] grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center`}>
-                    {/* Text */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-80px" }}
-                      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                      className={isReversed ? 'lg:order-2' : ''}
-                    >
-                      <div className="flex items-center gap-4 mb-8">
-                        {sub.icon && (
-                          <div className="relative w-12 h-12 rounded-xl overflow-hidden ring-1 ring-surface/10" style={{ boxShadow: `0 0 30px ${accent}20` }}>
-                            <Image src={sub.icon} alt="" fill className="object-cover" />
-                          </div>
-                        )}
-                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-surface/30">
-                          {(idx + 1).toString().padStart(2, '0')} / {project.subProducts!.length.toString().padStart(2, '0')}
-                        </span>
-                      </div>
-                      <h3 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-surface mb-3 leading-[1.05]">
-                        {sub.name}
-                      </h3>
-                      <p className="font-headline text-xl md:text-2xl font-light mb-6" style={{ color: accent }}>
-                        {sub.tagline[lang]}
-                      </p>
-                      <p className="text-base md:text-lg font-light leading-relaxed text-surface/45 mb-8 max-w-lg">
-                        {sub.description[lang]}
-                      </p>
-                      {sub.liveUrl && (
-                        <a href={sub.liveUrl} target="_blank" className="group inline-flex items-center gap-4">
-                          <span className="relative flex h-11 w-11 items-center justify-center rounded-full transition-transform duration-500 group-hover:scale-110" style={{ backgroundColor: accent }}>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#000" strokeWidth="2.5" strokeLinecap="square"/></svg>
-                          </span>
-                          <span className="text-xs font-bold uppercase tracking-[0.3em] text-surface/50 group-hover:text-surface transition-colors">
-                            {lang === "pl" ? "Otwórz" : "Launch"}
-                          </span>
-                        </a>
-                      )}
-                    </motion.div>
-
-                    {/* Screenshots */}
-                    <div className={`flex flex-col gap-4 md:gap-5 ${isReversed ? 'lg:order-1' : ''}`}>
-                      {sub.screenshots.slice(0, 2).map((s, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, y: 30 + i * 10, scale: 0.97 }}
-                          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                          viewport={{ once: true, margin: "-60px" }}
-                          transition={{ duration: 1, delay: i * 0.2, ease: [0.16, 1, 0.3, 1] }}
-                          className="group relative overflow-hidden rounded-xl md:rounded-2xl"
-                          style={{ boxShadow: `0 0 0 1px rgba(255,255,255,0.05), 0 20px 40px -12px ${accent}12` }}
-                        >
-                          <div className="relative aspect-[16/9] overflow-hidden">
-                            <Image
-                              src={s}
-                              alt={`${sub.name} — ${i + 1}`}
-                              fill
-                              className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                            />
-                          </div>
-                        </motion.div>
-                      ))}
+              {project.subProducts.map((sub, idx) => {
+                const isReversed = idx % 2 !== 0;
+                return (
+                  <div key={sub.name} className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 md:gap-32 items-center mb-32 md:mb-56`}>
+                    <div className="lg:w-1/2">
+                       <h3 className="font-sans text-5xl md:text-7xl font-bold tracking-tighter mb-6">{sub.name}</h3>
+                       <p className="font-serif italic text-2xl md:text-4xl text-white/70 mb-8">{sub.tagline[lang]}</p>
+                       <p className="text-lg md:text-xl font-light text-white/50 leading-relaxed mb-12">{sub.description[lang]}</p>
+                    </div>
+                    <div className="lg:w-1/2 flex flex-col gap-8 w-full">
+                       {sub.screenshots.slice(0,2).map((s, i) => (
+                         <div key={i} className={`relative aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl ${i === 1 ? 'w-4/5 ml-auto -mt-20 z-10' : 'w-full z-0'}`}>
+                           <Image src={s} alt={sub.name} fill className="object-cover" />
+                         </div>
+                       ))}
                     </div>
                   </div>
-
-                  {/* Divider */}
-                  {idx < project.subProducts!.length - 1 && (
-                    <motion.div
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                      className="mx-auto max-w-[2560px] h-px bg-surface/8 origin-left mt-20 md:mt-28"
-                    />
-                  )}
-                </section>
-              );
-            })}
-          </>
+                );
+              })}
+            </div>
+          </section>
         )}
 
-        {/* Elegant Capabilities (Bento/Editorial Style) */}
-        <section className="bg-surface py-24 md:py-32 px-6 md:px-24 2xl:px-40 border-t border-outline-variant/20">
+        {/* Capabilities Editorial View */}
+        <section className="bg-[#FDFDFD] py-32 md:py-48 px-6 md:px-12 lg:px-24 border-t border-[#0A0A0A]/10">
           <div className="mx-auto max-w-[2560px]">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mb-24 md:mb-40 text-center"
-            >
-               <h2 className="font-headline text-5xl md:text-8xl 2xl:text-[8vw] font-bold tracking-tighter text-on-surface">
-                Platform <span className="italic text-primary font-light">Capabilities.</span>
-              </h2>
-            </motion.div>
+            <h2 className="font-sans text-6xl md:text-[8rem] font-black uppercase tracking-tighter text-[#0A0A0A] mb-24 md:mb-40">
+              Capabilities<span className="text-primary">.</span>
+            </h2>
             
-            <div className="grid gap-x-16 gap-y-20 md:gap-y-32 md:grid-cols-2">
+            <div className="grid md:grid-cols-2 gap-x-24 gap-y-16">
               {project.features[lang].map((f, i) => {
                 const cleanF = f.replace(/•/g, '').trim();
                 const parts = cleanF.split('—');
                 const hasTitle = parts.length > 1;
 
                 return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: (i % 2) * 0.1, duration: 1 }}
-                    className="flex flex-col gap-6 md:gap-10 border-t border-on-surface/10 pt-8"
-                  >
-                    <span className="font-headline text-2xl italic text-primary/40">{(i + 1).toString().padStart(2, '0')}</span>
-                    {hasTitle ? (
-                      <div>
-                        <h4 className="font-headline text-3xl 2xl:text-5xl font-medium text-on-surface mb-4 leading-tight">{parts[0].trim()}</h4>
-                        <p className="text-lg 2xl:text-2xl font-light leading-relaxed text-on-surface-variant">
-                          {parts[1].trim()}
-                        </p>
-                      </div>
-                    ) : (
-                      <h4 className="font-headline text-3xl 2xl:text-5xl font-medium text-on-surface leading-tight">
-                        {cleanF}
-                      </h4>
-                    )}
-                  </motion.div>
+                  <div key={i} className="group border-t-2 border-[#0A0A0A] pt-8 flex gap-8">
+                    <span className="font-serif italic text-3xl text-[#0A0A0A]/30 group-hover:text-primary transition-colors">
+                      0{i + 1}
+                    </span>
+                    <div>
+                      {hasTitle ? (
+                        <>
+                          <h4 className="font-sans text-3xl md:text-4xl font-bold text-[#0A0A0A] mb-4">{parts[0].trim()}</h4>
+                          <p className="font-serif text-xl font-light text-[#0A0A0A]/70 leading-relaxed">{parts[1].trim()}</p>
+                        </>
+                      ) : (
+                        <h4 className="font-sans text-3xl md:text-4xl font-bold text-[#0A0A0A]">{cleanF}</h4>
+                      )}
+                    </div>
+                  </div>
                 );
               })}
             </div>
           </div>
         </section>
 
-        {/* Additional Screens if available (skip for sub-products) */}
-        {project.screenshots && project.screenshots.length > 2 && !hasIconScreenshots && !project.subProducts?.length && (
-          <section className="w-full pb-32 md:pb-48 px-6 md:px-24 2xl:px-40">
-             <div className="mx-auto max-w-[2560px] grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
-               {project.screenshots.slice(2, 4).map((s, i) => (
-                 <motion.div
-                   key={i}
-                   initial={{ opacity: 0, y: 50 }}
-                   whileInView={{ opacity: 1, y: 0 }}
-                   viewport={{ once: true }}
-                   transition={{ duration: 1.2, delay: i * 0.2, ease: [0.16, 1, 0.3, 1] }}
-                   className="relative w-full aspect-[4/5] overflow-hidden rounded-[2rem] 2xl:rounded-[4rem]"
-                 >
-                    <ProjectImage src={s} alt={`${project.title} supplementary view ${i}`} accentColor={project.accentColor} />
-                 </motion.div>
-               ))}
-             </div>
-          </section>
-        )}
-
-        {/* Next Project Cinematic Footer */}
+        {/* Next Project Footer */}
         {next && (
-          <section className="relative h-screen w-full overflow-hidden bg-on-surface">
+          <section className="relative h-screen w-full overflow-hidden bg-[#0A0A0A]">
             <Link href={`/projects/${next.slug}`} className="group flex h-full w-full items-center justify-center">
               <div className="absolute inset-0 z-0">
                 {next.screenshots?.[0] && !next.screenshots[0].includes("-icon.") && (
-                  <ProjectImage src={next.screenshots[0]} alt={next.title} accentColor={next.accentColor} />
+                  <Image src={next.screenshots[0]} alt={next.title} fill className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-[2s] ease-out" />
                 )}
-                <div className="absolute inset-0 bg-black/60 transition-opacity duration-1000 group-hover:bg-black/30" />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-1000" />
               </div>
               
-              <div className="relative z-10 text-center flex flex-col items-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1 }}
-                >
-                  <span className="mb-8 block text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-surface/50 group-hover:text-primary transition-colors">
-                    Next Project
-                  </span>
-                  <h2 className="font-headline text-[15vw] font-bold leading-none tracking-tighter text-surface md:text-[10vw]">
-                    {next.title}
-                  </h2>
-                </motion.div>
+              <div className="relative z-10 text-center flex flex-col items-center pointer-events-none">
+                <span className="mb-6 font-mono text-xs uppercase tracking-[0.5em] text-white/50 group-hover:text-white transition-colors">Next Project</span>
+                <h2 className="font-serif italic text-[12vw] md:text-[10vw] font-light leading-none tracking-tighter text-white">
+                  {next.title}
+                </h2>
               </div>
             </Link>
           </section>

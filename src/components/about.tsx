@@ -4,20 +4,32 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 
-function RollingText({ text }: { text: string }) {
+function RevealText({ text }: { text: string }) {
   const container = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: container,
-    offset: ["start end", "end start"],
+    offset: ["start 0.8", "end 0.4"],
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], [0, -500]);
+  const words = text.split(" ");
 
   return (
-    <div ref={container} className="whitespace-nowrap font-headline text-[15vw] font-bold uppercase tracking-tighter text-on-surface/10">
-      <motion.div style={{ x }}>
-        {text} {text} {text}
-      </motion.div>
+    <div ref={container} className="flex flex-wrap justify-center gap-x-[3vw] gap-y-[1vw] px-6 py-24 md:py-40">
+      {words.map((word, i) => {
+        const start = i / words.length;
+        const end = start + 1 / words.length;
+        const opacity = useTransform(scrollYProgress, [start, end], [0.1, 1]);
+        const y = useTransform(scrollYProgress, [start, end], [50, 0]);
+        return (
+          <motion.span
+            key={i}
+            style={{ opacity, y }}
+            className="font-headline text-[8vw] md:text-[10vw] font-bold uppercase tracking-tighter text-on-surface"
+          >
+            {word}
+          </motion.span>
+        );
+      })}
     </div>
   );
 }
@@ -43,11 +55,15 @@ function FadeInText({ text }: { text: string }) {
 }
 
 export default function About() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+
+  const revealTextContent = lang === "pl" 
+    ? "Dwóch builderów. Jedno studio. Budujemy cyfrową przyszłość." 
+    : "Two builders. One studio. Building the digital future.";
 
   return (
     <section id="about" className="relative overflow-hidden bg-surface-container py-24 md:py-32 lg:py-56 rounded-t-[32px] 2xl:rounded-t-[64px]">
-      <RollingText text="STRATEGY • DESIGN • CODE • " />
+      <RevealText text={revealTextContent} />
 
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
         <div className="mb-20 md:mb-32 flex flex-col gap-4">
@@ -94,11 +110,31 @@ export default function About() {
           ))}
         </div>
 
-        <div className="mt-32 md:mt-56 flex flex-col items-start md:items-center justify-between gap-16 md:gap-20 md:flex-row">
-          <div className="flex flex-col gap-10 md:gap-10 2xl:gap-16">
+        {/* Future Vision Section */}
+        <div className="mt-32 md:mt-48 py-20 border-y border-on-surface/10 relative">
+          <motion.div
+             initial={{ opacity: 0, scale: 0.9 }}
+             whileInView={{ opacity: 1, scale: 1 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.8 }}
+             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] font-headline font-black text-on-surface/5 pointer-events-none select-none"
+          >
+            FUTURE
+          </motion.div>
+          <div className="relative z-10 max-w-5xl mx-auto text-center">
+            <h3 className="text-2xl md:text-5xl font-serif italic text-on-surface font-light leading-relaxed">
+              {lang === "pl" 
+                ? `"Planujemy ogromny rozwój. Nowe systemy SaaS, międzynarodowa ekspansja oraz wyznaczanie nowych standardów w cyfrowym designie. To dopiero początek naszej drogi."`
+                : `"We are planning massive growth. New SaaS systems, international expansion, and setting new standards in digital design. This is just the beginning of our journey."`}
+            </h3>
+          </div>
+        </div>
+
+        <div className="mt-32 md:mt-48 flex flex-col items-start md:items-center justify-between gap-16 md:gap-20 md:flex-row">
+          <div className="flex flex-col gap-16 md:gap-24 w-full md:w-1/2">
             {[
-              { name: "Wojciech Płonka", role: "Design & Product" },
-              { name: "Bartosz Kolaj", role: "Engineering Lead" },
+              { name: "Wojciech Płonka", role: "Design & Product", desc: lang === "pl" ? "Odpowiada za wizję, interfejsy i doświadczenia użytkownika." : "Responsible for vision, interfaces, and user experience." },
+              { name: "Bartosz Kolaj", role: "Engineering Lead", desc: lang === "pl" ? "Architekt systemów, dbający o perfekcję kodu i wydajność." : "Systems architect ensuring code perfection and performance." },
             ].map((f, i) => (
               <motion.div
                 key={i}
@@ -106,13 +142,20 @@ export default function About() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.2 }}
+                className="group relative"
               >
-                <h3 className="font-headline text-3xl font-bold tracking-tighter text-on-surface md:text-6xl 2xl:text-8xl">
-                  {f.name}
-                </h3>
-                <span className="mt-2 md:mt-4 block text-[10px] 2xl:text-xs font-bold uppercase tracking-[0.4em] text-primary">
-                  {f.role}
-                </span>
+                <div className="absolute -inset-8 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-500 rounded-3xl z-0" />
+                <div className="relative z-10">
+                  <span className="mb-4 block text-[10px] 2xl:text-xs font-bold uppercase tracking-[0.4em] text-primary">
+                    {f.role}
+                  </span>
+                  <h3 className="font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl mb-4">
+                    {f.name}
+                  </h3>
+                  <p className="text-lg md:text-xl font-light text-on-surface-variant max-w-sm">
+                    {f.desc}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -121,14 +164,19 @@ export default function About() {
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
-            className="relative h-64 w-64 md:h-96 md:w-96"
+            className="relative h-[400px] w-full md:w-1/2 rounded-[2rem] overflow-hidden bg-on-surface/5"
           >
-            <div className="absolute inset-0 animate-pulse rounded-full border border-primary/20" />
-            <div className="absolute inset-10 animate-pulse rounded-full border border-primary/10 transition-transform duration-1000" style={{ animationDelay: "1s" }} />
-            <div className="flex h-full w-full items-center justify-center">
-              <span className="text-center font-headline text-xl italic tracking-tighter text-on-surface-variant">
-                Independent <br /> Studio
-              </span>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent mix-blend-overlay" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative w-64 h-64">
+                <div className="absolute inset-0 animate-[spin_10s_linear_infinite] rounded-full border border-primary/30 border-t-primary" />
+                <div className="absolute inset-4 animate-[spin_15s_linear_infinite_reverse] rounded-full border border-primary/20 border-b-primary" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-center font-serif text-3xl italic tracking-tighter text-on-surface">
+                    Premium <br /> Agency
+                  </span>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
