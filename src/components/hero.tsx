@@ -21,12 +21,13 @@ export default function Hero() {
     offset: ["start start", "end end"],
   });
 
-  const smoothProgress = useSpring(scrollYProgress, { damping: 20, stiffness: 100 });
+  const smoothProgress = useSpring(scrollYProgress, { damping: 40, stiffness: 80 });
 
   const xMain = useTransform(smoothProgress, [0, 1], ["0vw", isMobile ? "-450vw" : "-250vw"]);
   const xBg = useTransform(smoothProgress, [0, 1], ["0vw", "-100vw"]);
   const xFg = useTransform(smoothProgress, [0, 1], ["0vw", "-400vw"]);
 
+  const bgCardY = useTransform(smoothProgress, [0, 1], [-100, 200]);
   const cardRotate = useTransform(smoothProgress, [0, 1], [10, -30]);
   const cardY = useTransform(smoothProgress, [0, 1], [0, 300]);
   
@@ -38,7 +39,7 @@ export default function Hero() {
       ref={container}
       className="relative h-[400vh] bg-[#051F20] cursor-default text-[#DAF1DE]"
     >
-      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden">
+      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden" style={{ contain: 'layout style paint' }}>
         
         {/* Massive Background Text */}
         <motion.div 
@@ -69,7 +70,7 @@ export default function Hero() {
           <div className="relative shrink-0 w-[60vw] h-[60vh] flex items-center justify-center transform-gpu will-change-transform">
             
             <motion.div 
-              style={{ y: isMobile ? 0 : useTransform(smoothProgress, [0, 1], [-100, 200]), rotate: isMobile ? 0 : 5 }}
+              style={{ y: isMobile ? 0 : bgCardY, rotate: isMobile ? 0 : 5 }}
               className="absolute w-[40vw] h-[50vh] bg-[#0A2A28] border border-[#163832] right-0 top-0 opacity-80 z-0 flex items-end p-8 transform-gpu will-change-[transform,opacity]"
             >
               <h3 className="text-[#8EB69B] font-serif text-[8vw] italic leading-none opacity-50">engineering</h3>
@@ -133,7 +134,7 @@ export default function Hero() {
           style={{ x: xFg }}
           className="absolute bottom-12 left-0 flex whitespace-nowrap z-30 opacity-60 text-[#8EB69B] font-mono text-2xl tracking-[0.5em] transform-gpu will-change-transform"
         >
-           {[...Array(10)].map((_, i) => (
+           {[...Array(5)].map((_, i) => (
              <span key={i} className="mx-12">SCROLL TO EXPLORE // INIT.SEQUENCE // HORIZONTAL_TRACK_ACTIVE //</span>
            ))}
         </motion.div>

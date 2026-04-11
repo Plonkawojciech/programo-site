@@ -16,16 +16,16 @@ function HorizontalProject({ project, index, progress, lang, totalProjects, isMo
   const end = Math.min(1, center + 0.2);
 
   // Inner image parallax (moves inside its container boundaries)
-  const imageX = useTransform(progress, [start, end], isMobile ? ["0%", "0%"] : ["-30%", "30%"]);
-  
+  const imageX = useTransform(progress, [start, end], ["-30%", "30%"]);
+
   // Project text moving at a different speed (offset relative to the main container)
-  const textX = useTransform(progress, [start, end], isMobile ? ["0vw", "0vw"] : ["15vw", "-15vw"]);
+  const textX = useTransform(progress, [start, end], ["15vw", "-15vw"]);
 
   return (
     <div className="w-[80vw] h-[80vh] flex-shrink-0 flex items-center justify-center relative mx-[5vw] transform-gpu will-change-transform">
       
       {/* Text layer with separate parallax speed */}
-      <motion.div style={{ x: textX }} className="absolute z-30 left-[5vw] top-1/4 max-w-3xl pointer-events-none transform-gpu will-change-[transform,opacity]">
+      <motion.div style={isMobile ? undefined : { x: textX }} className="absolute z-30 left-[5vw] top-1/4 max-w-3xl pointer-events-none transform-gpu will-change-[transform,opacity]">
         <h3 className="text-[6vw] font-sans font-black tracking-tighter leading-[0.8] text-[#DAF1DE] uppercase mix-blend-difference drop-shadow-2xl">
           {project.title}
         </h3>
@@ -36,14 +36,14 @@ function HorizontalProject({ project, index, progress, lang, totalProjects, isMo
 
       {/* Image layer */}
       <Link href={`/projects/${project.slug}`} className="relative z-20 w-[60vw] md:w-[45vw] aspect-[16/10] overflow-hidden group rounded-xl shadow-2xl border border-[#163832]/50 block cursor-pointer transform-gpu hover:scale-[1.02] transition-transform duration-500 will-change-transform">
-        <motion.div style={{ x: imageX, width: isMobile ? "100%" : "160%", left: isMobile ? "0%" : "-30%" }} className="relative h-full transform-gpu will-change-transform">
+        <motion.div style={isMobile ? { width: "100%", left: "0%" } : { x: imageX, width: "160%", left: "-30%" }} className="relative h-full transform-gpu will-change-transform">
           {project.screenshots?.[0] ? (
             <Image 
               src={project.screenshots[0]} 
               alt={project.title} 
               fill 
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out opacity-80 group-hover:opacity-100 transform-gpu" 
+              className="object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500 ease-out transform-gpu" 
             />
           ) : (
              <div className="w-full h-full bg-[#0A2A28] flex items-center justify-center transform-gpu">
@@ -75,7 +75,7 @@ export default function FeaturedWork() {
     offset: ["start start", "end end"] 
   });
   
-  const smoothProgress = useSpring(scrollYProgress, { damping: 20, stiffness: 100 });
+  const smoothProgress = useSpring(scrollYProgress, { damping: 40, stiffness: 80 });
   const { lang } = useI18n();
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function FeaturedWork() {
         {/* BIG NUMBERS BACKGROUND TRACK (Slower) */}
         <motion.div 
           style={{ x: xBgNumbers }}
-          className="absolute top-1/2 -translate-y-1/2 flex items-center h-full pointer-events-none z-0 whitespace-nowrap transform-gpu will-change-transform"
+          className="absolute top-1/2 -translate-y-1/2 flex items-center h-full pointer-events-none z-0 whitespace-nowrap transform-gpu will-change-transform opacity-0 md:opacity-100"
         >
            {allProjects.map((p, i) => (
              <div key={`bg-${i}`} className="w-[80vw] mx-[5vw] flex-shrink-0 flex justify-center text-[40vw] font-serif italic text-[#DAF1DE]/5 leading-none select-none">
