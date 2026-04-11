@@ -97,7 +97,7 @@ export default function Hero() {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-[#0A2A28] to-[#051F20] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="relative text-[#DAF1DE] font-bold text-7xl md:text-[10vw] tracking-tighter drop-shadow-[0_0_15px_rgba(218,241,222,0.2)] flex items-center gap-4">
+            <div className="relative text-[#DAF1DE] font-bold text-7xl md:text-[10vw] 2xl:text-[12vw] tracking-tighter drop-shadow-[0_0_15px_rgba(218,241,222,0.2)] flex items-center gap-4">
               <span className="w-4 h-4 md:w-6 md:h-6 rounded-full bg-[#8EB69B] inline-block animate-pulse shadow-[0_0_10px_#8EB69B]" />
               pr.
             </div>
@@ -109,7 +109,7 @@ export default function Hero() {
 
           {/* Cell 3: NIP/KRS */}
           <motion.div 
-            className="col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 flex flex-col justify-between group transform-gpu will-change-transform"
+            className="col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform"
             whileHover={{ backgroundColor: "#0A2A28" }}
           >
             <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">ENTITY_DATA</span>
@@ -121,7 +121,7 @@ export default function Hero() {
 
           {/* Cell 4: Contact */}
           <motion.div 
-            className="col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 flex flex-col justify-between group transform-gpu will-change-transform" 
+            className="col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform"
             whileHover={{ backgroundColor: "#0A2A28" }}
           >
             <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">COMMS_LINK</span>
@@ -130,7 +130,7 @@ export default function Hero() {
 
           {/* Cell 5: Abstract Tech / Stats */}
           <motion.div 
-            className="col-span-1 md:col-span-1 row-span-2 bg-[#051F20] p-4 md:p-6 flex flex-col justify-between overflow-hidden relative group transform-gpu will-change-transform" 
+            className="col-span-1 md:col-span-1 row-span-2 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex flex-col justify-between overflow-hidden relative group transform-gpu will-change-transform"
             whileHover={{ scale: 0.98 }}
           >
             <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest z-10">SYS.LOAD_METRICS</span>
@@ -150,8 +150,8 @@ export default function Hero() {
           </motion.div>
 
           {/* Cell 6: Digital Craftsmanship */}
-          <motion.div className="col-span-2 md:col-span-2 row-span-1 bg-[#051F20] p-4 md:p-8 flex items-center justify-center relative overflow-hidden group cursor-default transform-gpu will-change-transform">
-            <h2 className="text-[#DAF1DE] text-2xl md:text-4xl lg:text-5xl font-serif italic tracking-tighter mix-blend-difference z-10 pointer-events-none">
+          <motion.div className="col-span-2 md:col-span-2 row-span-1 bg-[#051F20] p-4 md:p-8 2xl:p-10 flex items-center justify-center relative overflow-hidden group cursor-default transform-gpu will-change-transform">
+            <h2 className="text-[#DAF1DE] text-2xl md:text-4xl lg:text-5xl 2xl:text-7xl font-serif italic tracking-tighter mix-blend-difference z-10 pointer-events-none">
               digital craftsmanship
             </h2>
             <motion.div 
@@ -164,7 +164,7 @@ export default function Hero() {
 
           {/* Cell 7: QR Pattern / Matrix */}
           <motion.div 
-            className="col-span-1 md:col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 flex items-center justify-center group transform-gpu will-change-transform" 
+            className="col-span-1 md:col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex items-center justify-center group transform-gpu will-change-transform"
             whileHover={{ backgroundColor: "#0A2A28" }}
           >
             <div className="grid grid-cols-5 grid-rows-5 gap-[2px] w-12 h-12 md:w-16 md:h-16 bg-[#051F20] border border-[#163832] p-1 group-hover:border-[#8EB69B] transition-colors">
@@ -179,14 +179,14 @@ export default function Hero() {
           </motion.div>
 
           {/* Cell 8: Location */}
-          <motion.div className="col-span-1 md:col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 flex flex-col justify-between group transform-gpu will-change-transform" whileHover={{ backgroundColor: "#0A2A28" }}>
+          <motion.div className="col-span-1 md:col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform" whileHover={{ backgroundColor: "#0A2A28" }}>
             <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">LOC_COORDS</span>
             <span className="text-[#DAF1DE] font-mono text-xs md:text-sm group-hover:tracking-widest transition-all">POZNAŃ, PL</span>
           </motion.div>
 
           {/* Cell 9: Interactive Map/Radar */}
           <motion.div 
-            className="col-span-2 md:col-span-2 row-span-1 bg-[#051F20] p-4 md:p-6 relative overflow-hidden flex items-center justify-center group transform-gpu will-change-transform" 
+            className="col-span-2 md:col-span-2 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 relative overflow-hidden flex items-center justify-center group transform-gpu will-change-transform"
             whileHover={{ scale: 0.98 }}
           >
              {!isMobile && (
@@ -199,7 +199,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Cell 10: Scroll Hint */}
-          <motion.div className="col-span-1 md:col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 flex items-center justify-center flex-col gap-2 group transform-gpu will-change-transform" whileHover={{ backgroundColor: "#0A2A28" }}>
+          <motion.div className="col-span-1 md:col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex items-center justify-center flex-col gap-2 group transform-gpu will-change-transform" whileHover={{ backgroundColor: "#0A2A28" }}>
             <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest text-center">INIT_SEQUENCE</span>
             <div className="h-8 md:h-12 w-[1px] bg-[#163832] relative overflow-hidden mt-2">
                <motion.div className="absolute top-0 left-0 w-full h-1/2 bg-[#DAF1DE] transform-gpu will-change-transform" animate={{ y: ["-100%", "200%"] }} transition={{ duration: 1.5, repeat: Infinity }} />

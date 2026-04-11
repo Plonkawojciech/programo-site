@@ -33,7 +33,7 @@ function ProjectCell({ project, lang, index, isMobile }: { project: Project; lan
       transition={{ duration: 0.3, ease: "easeInOut" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative bg-[#051F20] overflow-hidden group min-h-[350px] ${spanClass} transform-gpu will-change-transform`}
+      className={`relative bg-[#051F20] overflow-hidden group min-h-[350px] 2xl:min-h-[450px] ${spanClass} transform-gpu will-change-transform`}
     >
       <Link href={`/projects/${project.slug}`} className="block w-full h-full">
         {project.screenshots?.[0] ? (
@@ -82,7 +82,7 @@ function ProjectCell({ project, lang, index, isMobile }: { project: Project; lan
           <motion.div 
             className="flex flex-col gap-2 bg-[#051F20]/95 p-4 border border-[#163832] transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out will-change-transform"
           >
-            <h3 className="text-[#DAF1DE] text-2xl md:text-3xl font-sans font-light tracking-tight truncate">
+            <h3 className="text-[#DAF1DE] text-2xl md:text-3xl 2xl:text-4xl font-sans font-light tracking-tight truncate">
               {project.title}
             </h3>
             
@@ -137,7 +137,7 @@ export default function FeaturedWork() {
            <div className="flex w-full flex-col md:flex-row justify-between items-start md:items-end mb-12">
              <div>
                <span className="text-[#8EB69B] font-mono text-xs uppercase tracking-[0.4em] mb-4 block">DATABASE_QUERY: WORK</span>
-               <h2 className="text-[#DAF1DE] text-4xl md:text-6xl lg:text-[5rem] font-serif italic tracking-tighter leading-none">
+               <h2 className="text-[#DAF1DE] text-4xl md:text-6xl lg:text-[5rem] 2xl:text-[6rem] font-serif italic tracking-tighter leading-none">
                  {lang === 'pl' ? "Archiwum" : "Archive"}
                </h2>
              </div>
