@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
@@ -8,146 +9,164 @@ import { projects } from "@/lib/projects";
 import type { Project } from "@/lib/projects";
 import type { Lang } from "@/lib/i18n";
 
-function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
+function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  
+  // Parallax effects for an asymmetric, "crazy" look
+  const yImage = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const yText = useTransform(scrollYProgress, [0, 1], [-50, 150]);
+  const scaleImage = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const smoothScale = useSpring(scaleImage, { stiffness: 100, damping: 30 });
+
+  const isEven = index % 2 === 0;
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="group relative flex flex-col md:flex-row items-center gap-8 md:gap-16 w-full max-w-7xl mx-auto py-16 border-b border-[#DAF1DE]/10 last:border-0"
+      ref={ref}
+      className={`relative w-full flex flex-col md:flex-row items-center gap-12 md:gap-32 mb-40 md:mb-64 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
     >
+      {/* Background massive index */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40vw] font-serif italic text-[#051F20]/5 pointer-events-none select-none z-0">
+        0{index + 1}
+      </div>
+
       {/* Image Container */}
-      <div className="relative w-full md:w-3/5 aspect-[4/3] md:aspect-[16/10] overflow-hidden rounded-xl bg-[#0A2A28] border border-[#DAF1DE]/5">
-        <Link href={`/projects/${project.slug}`} className="block w-full h-full">
+      <Link href={`/projects/${project.slug}`} className="relative z-10 w-full md:w-[55%] aspect-[4/5] md:aspect-[16/10] overflow-hidden group">
+        <motion.div style={{ y: yImage, scale: smoothScale }} className="w-full h-full transform-gpu will-change-transform">
           {project.screenshots?.[0] ? (
-            <motion.div 
-              whileHover={{ scale: 1.05 }} 
-              transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }} 
-              className="h-full w-full origin-center will-change-transform transform-gpu"
-            >
-              <Image 
-                src={project.screenshots[0]} 
-                alt={project.title} 
-                fill 
-                className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700" 
-              />
-            </motion.div>
+            <Image 
+              src={project.screenshots[0]} 
+              alt={project.title} 
+              fill 
+              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out" 
+            />
           ) : (
-            <div className="flex h-full w-full items-center justify-center">
-              <span className="font-sans text-6xl font-light text-[#DAF1DE]/20">{project.title[0]}</span>
+            <div className="w-full h-full bg-[#051F20] flex items-center justify-center">
+              <span className="text-[#DAF1DE] font-serif text-8xl italic opacity-20">{project.title[0]}</span>
             </div>
           )}
-        </Link>
-      </div>
-      
-      {/* Content */}
-      <div className="w-full md:w-2/5 flex flex-col justify-center px-4 md:px-0">
-        <span className="text-[10px] md:text-xs font-medium uppercase tracking-[0.2em] text-[#8EB69B] mb-4">
-          {project.tags.join(" • ")}
+        </motion.div>
+        {/* Border frame that stays static */}
+        <div className="absolute inset-0 border border-[#051F20]/10 pointer-events-none" />
+      </Link>
+
+      {/* Text Info */}
+      <motion.div 
+        style={{ y: yText }} 
+        className={`relative z-20 w-full md:w-[45%] flex flex-col ${isEven ? 'items-start text-left' : 'items-end text-right'}`}
+      >
+        <span className="text-[#163832] font-mono text-[10px] uppercase tracking-[0.4em] mb-6">
+          {project.tags.slice(0,3).join(" // ")}
         </span>
-        <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-light text-[#DAF1DE] mb-4 tracking-tight">
-          <Link href={`/projects/${project.slug}`} className="hover:text-white transition-colors">
-            {project.title}
-          </Link>
+        
+        <h3 className="text-[#051F20] text-5xl md:text-7xl lg:text-[6rem] font-sans font-light tracking-tighter leading-[0.9] mb-8">
+          {project.title}
         </h3>
-        <h4 className="text-lg md:text-xl text-[#8EB69B]/80 mb-6 font-normal">
+        
+        <h4 className="text-[#163832] text-xl md:text-2xl font-serif italic tracking-tight mb-8">
           {project.subtitle[lang]}
         </h4>
-        <p className="text-sm md:text-base text-[#DAF1DE]/60 leading-relaxed font-light mb-8">
+        
+        <p className="text-[#051F20]/70 text-sm md:text-base font-sans font-light leading-relaxed max-w-md">
           {project.description[lang]}
         </p>
-        
+
         <Link 
           href={`/projects/${project.slug}`}
-          className="inline-flex items-center gap-2 text-sm text-[#DAF1DE] hover:text-white transition-colors group/link w-fit"
+          className="mt-12 group flex items-center gap-4 text-[#051F20] font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] border-b border-[#051F20]/20 pb-3 hover:border-[#051F20] transition-colors"
         >
-          <span className="font-medium tracking-wide">Explore Project</span>
-          <motion.span 
-            className="block will-change-transform transform-gpu"
-            initial={{ x: 0 }}
-            whileHover={{ x: 4 }}
-            transition={{ duration: 0.2 }}
-          >
-            →
-          </motion.span>
+          <span>Discover Case</span>
+          <span className="transform transition-transform group-hover:translate-x-3">→</span>
         </Link>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
 
-const CategorySection = ({ title, items, lang }: { title: string; items: Project[]; lang: Lang }) => {
-  if (items.length === 0) return null;
+const CategoryTitle = ({ title, index }: { title: string, index: number }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const x = useTransform(scrollYProgress, [0, 1], [index % 2 === 0 ? -300 : 300, index % 2 === 0 ? 300 : -300]);
 
   return (
-    <div className="relative py-20 md:py-32 w-full">
-      <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-12">
-        <div className="mb-16 md:mb-24">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-2xl md:text-4xl font-sans font-light text-[#DAF1DE] tracking-tight"
-          >
+    <div ref={ref} className="relative py-32 md:py-56 overflow-hidden flex items-center justify-center">
+      {/* Background kinetic text */}
+      <motion.h2 
+        style={{ x }}
+        className="text-[15vw] font-sans font-black uppercase tracking-tighter text-[#051F20]/5 whitespace-nowrap select-none"
+      >
+        {title} — {title} — {title}
+      </motion.h2>
+      
+      {/* Foreground elegant title */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="bg-[#FCFCFA] px-12 py-6 border border-[#051F20]/10 shadow-sm">
+          <h3 className="text-2xl md:text-4xl font-serif italic text-[#051F20] tracking-tight">
             {title}
-          </motion.h2>
-          <div className="mt-8 h-[1px] w-full bg-gradient-to-r from-[#DAF1DE]/20 to-transparent" />
-        </div>
-        
-        <div className="flex flex-col gap-8 md:gap-16">
-          {items.map((project) => (
-            <ProjectCard key={project.slug} project={project} lang={lang} />
-          ))}
+          </h3>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default function FeaturedWork() {
-  const { t, lang } = useI18n();
+  const { lang } = useI18n();
 
   const naszeSystemy = projects.filter(p => p.category === "nasze-systemy");
   const stronyZrobione = projects.filter(p => p.category === "strony-zrobione");
   const pozostaleProjekty = projects.filter(p => p.category === "projekty");
 
   return (
-    <section id="work" className="relative min-h-screen bg-[#051F20] overflow-hidden">
-      <div className="relative z-10 flex min-h-[40vh] md:min-h-[50vh] flex-col items-center justify-end px-6 pb-16 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="max-w-4xl mx-auto"
-        >
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight text-[#DAF1DE] mb-6">
-            {t("work.title")}
-          </h1>
-          <p className="text-base md:text-xl text-[#8EB69B] font-light max-w-2xl mx-auto">
-            {t("work.label")} — {t("work.desc" as never) || "Curated selection of high-impact digital products"}
-          </p>
-        </motion.div>
+    <section id="work" className="relative bg-[#FCFCFA] w-full pb-40 overflow-hidden">
+      
+      {/* Global decorative scattered shapes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[10%] left-[5%] w-[1px] h-64 bg-[#051F20]/10 rotate-45" />
+        <div className="absolute top-[30%] right-[10%] w-32 h-32 border border-[#051F20]/5 rotate-12" />
+        <div className="absolute top-[60%] left-[15%] w-64 h-[1px] bg-[#051F20]/10 -rotate-12" />
+        <div className="absolute bottom-[20%] right-[5%] w-48 h-48 border border-[#051F20]/5 rounded-full" />
       </div>
 
-      <div className="relative z-10 flex flex-col pb-40">
-        <CategorySection 
-          title={lang === 'pl' ? "Nasze Systemy" : "Our Systems"} 
-          items={naszeSystemy} 
-          lang={lang} 
-        />
-        <CategorySection 
-          title={lang === 'pl' ? "Strony Które Zrobiliśmy" : "Websites We Made"} 
-          items={stronyZrobione} 
-          lang={lang} 
-        />
-        <CategorySection 
-          title={lang === 'pl' ? "Projekty" : "Projects"} 
-          items={pozostaleProjekty} 
-          lang={lang} 
-        />
+      <div className="max-w-[2560px] mx-auto px-6 md:px-12 lg:px-24 relative z-10">
+        
+        {/* Nasze Systemy */}
+        {naszeSystemy.length > 0 && (
+          <div>
+            <CategoryTitle title={lang === 'pl' ? "Nasze Systemy" : "Our Systems"} index={0} />
+            <div className="pt-10">
+              {naszeSystemy.map((project, idx) => (
+                <ProjectItem key={project.slug} project={project} lang={lang} index={idx} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Strony Które Zrobiliśmy */}
+        {stronyZrobione.length > 0 && (
+          <div>
+            <CategoryTitle title={lang === 'pl' ? "Strony Które Zrobiliśmy" : "Websites We Made"} index={1} />
+            <div className="pt-10">
+              {stronyZrobione.map((project, idx) => (
+                <ProjectItem key={project.slug} project={project} lang={lang} index={idx + naszeSystemy.length} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Projekty */}
+        {pozostaleProjekty.length > 0 && (
+          <div>
+            <CategoryTitle title={lang === 'pl' ? "Projekty" : "Projects"} index={2} />
+            <div className="pt-10">
+              {pozostaleProjekty.map((project, idx) => (
+                <ProjectItem key={project.slug} project={project} lang={lang} index={idx + naszeSystemy.length + stronyZrobione.length} />
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </section>
   );
