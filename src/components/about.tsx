@@ -37,7 +37,7 @@ function RevealText({ text }: { text: string }) {
         <motion.span
           key={i}
           style={{ opacity: opacities[i], y: ys[i] }}
-          className="font-headline text-[8vw] md:text-[10vw] font-bold uppercase tracking-tighter text-[#1A1816]"
+          className="font-headline text-[8vw] md:text-[10vw] 2xl:text-[8vw] font-bold uppercase tracking-tighter text-[#1A1816]"
         >
           {word}
         </motion.span>
@@ -59,7 +59,7 @@ function FadeInText({ text }: { text: string }) {
     <motion.p
       ref={container}
       style={{ opacity }}
-      className="mb-12 text-3xl font-light leading-tight text-[#1A1816] md:text-5xl lg:text-6xl"
+      className="mb-12 text-3xl font-light leading-tight text-[#1A1816] md:text-5xl lg:text-6xl 2xl:text-7xl"
     >
       {text}
     </motion.p>
@@ -153,7 +153,7 @@ export default function About() {
                   <h3 className="font-headline text-4xl font-bold tracking-tighter text-[#1A1816] md:text-6xl 2xl:text-7xl mb-4">
                     {f.name}
                   </h3>
-                  <p className="text-lg md:text-xl font-light text-[#6B6560] max-w-sm">
+                  <p className="text-lg md:text-xl 2xl:text-2xl font-light text-[#6B6560] max-w-sm 2xl:max-w-md">
                     {f.desc}
                   </p>
                 </div>

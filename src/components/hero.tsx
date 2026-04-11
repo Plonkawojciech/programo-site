@@ -73,7 +73,7 @@ export default function Hero() {
         {/* Main horizontal track */}
         <motion.div
           style={{ x: xMain }}
-          className="relative z-10 flex items-center h-full px-[10vw] gap-[15vw] whitespace-nowrap transform-gpu will-change-transform"
+          className="relative z-10 flex items-center h-full px-[10vw] 2xl:px-[15vw] gap-[15vw] 2xl:gap-[20vw] whitespace-nowrap transform-gpu will-change-transform"
         >
           {/* 1. Title */}
           <div className="flex flex-col relative shrink-0">
@@ -96,7 +96,7 @@ export default function Hero() {
             {isMounted && (
               <motion.div
                 style={{ rotate: isMobile ? 0 : cardRotate, y: isMobile ? 0 : cardY }}
-                className="relative z-20 w-[85vw] md:w-[520px] aspect-[1.6/1] transform-gpu will-change-transform"
+                className="relative z-20 w-[85vw] md:w-[520px] 2xl:w-[640px] aspect-[1.6/1] transform-gpu will-change-transform"
               >
                 {/* Glass card */}
                 <div className="absolute inset-0 bg-white/70 md:backdrop-blur-[12px] rounded-2xl shadow-[0_20px_50px_rgba(26,24,22,0.08),0_0_0_1px_rgba(26,24,22,0.04)] overflow-hidden">
@@ -138,7 +138,7 @@ export default function Hero() {
             <div className="w-full h-px bg-[#E5E0D5] relative overflow-hidden">
               <motion.div className="absolute top-0 bottom-0 left-0 w-1/4 bg-[#8EB69B]" animate={{ x: ["-100%", "400%"] }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
             </div>
-            <h2 className="text-[8vw] font-sans font-light tracking-tighter text-[#1A1816] leading-none">
+            <h2 className="text-[8vw] 2xl:text-[10vw] font-sans font-light tracking-tighter text-[#1A1816] leading-none">
               Clean<br/>Code.
             </h2>
             <p className="text-[#6B6560] font-sans text-sm uppercase tracking-[0.3em] max-w-xs whitespace-normal">

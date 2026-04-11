@@ -127,7 +127,7 @@ export default function Navbar() {
           duration: durationFast,
           ease: easeEntry,
         }}
-        className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[1400px] z-50 hidden md:block"
+        className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[1400px] 2xl:max-w-[1800px] z-50 hidden md:block"
       >
         <div
           className={`rounded-full border transition-all duration-500 ${
@@ -136,7 +136,7 @@ export default function Navbar() {
               : "border-[#E5E0D5]/30 bg-[#FAF8F4]/50 shadow-none backdrop-blur-xl"
           }`}
         >
-          <div className="flex justify-between items-center px-8 py-3">
+          <div className="flex justify-between items-center px-8 2xl:px-12 py-3 2xl:py-4">
             <Link
               href="/"
               className="font-headline text-xl font-semibold tracking-tight text-[#1A1816]"

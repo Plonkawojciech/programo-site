@@ -15,7 +15,7 @@ function HorizontalProject({ project, lang, index, totalCount }: { project: Proj
   return (
     <div
       ref={cardRef}
-      className="relative shrink-0 w-[85vw] md:w-[60vw] lg:w-[50vw] h-full flex items-center transform-gpu"
+      className="relative shrink-0 w-[85vw] md:w-[60vw] lg:w-[50vw] 2xl:w-[45vw] h-full flex items-center transform-gpu"
     >
       <Link href={`/projects/${project.slug}`} className="relative w-full group">
         {/* Glass Card */}
@@ -43,7 +43,7 @@ function HorizontalProject({ project, lang, index, totalCount }: { project: Proj
           </div>
 
           {/* Content area */}
-          <div className="p-6 md:p-8">
+          <div className="p-6 md:p-8 2xl:p-10">
             <div className="flex items-center gap-3 mb-3">
               <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#6B6560]">
                 {String(index + 1).padStart(2, "0")} / {String(totalCount).padStart(2, "0")}
@@ -60,10 +60,10 @@ function HorizontalProject({ project, lang, index, totalCount }: { project: Proj
               </span>
             </div>
 
-            <h3 className="text-2xl md:text-3xl font-sans font-light tracking-tighter text-[#1A1816] leading-tight mb-2">
+            <h3 className="text-2xl md:text-3xl 2xl:text-4xl font-sans font-light tracking-tighter text-[#1A1816] leading-tight mb-2">
               {project.title}
             </h3>
-            <p className="text-[#6B6560] text-sm font-light leading-relaxed line-clamp-2 whitespace-normal">
+            <p className="text-[#6B6560] text-sm 2xl:text-base font-light leading-relaxed line-clamp-2 whitespace-normal">
               {project.subtitle[lang]}
             </p>
 
@@ -105,7 +105,7 @@ function CategorySection({ title, categoryProjects, lang, sectionIndex }: { titl
             </span>
             <div className="h-px w-12 bg-[#E5E0D5]" />
           </div>
-          <h2 className="text-3xl md:text-5xl font-sans font-light tracking-tighter text-[#1A1816]">
+          <h2 className="text-3xl md:text-5xl 2xl:text-7xl font-sans font-light tracking-tighter text-[#1A1816]">
             {title}
           </h2>
         </motion.div>
@@ -113,7 +113,7 @@ function CategorySection({ title, categoryProjects, lang, sectionIndex }: { titl
         {/* Horizontal scroll track */}
         <motion.div
           style={{ x: xTrack }}
-          className="flex items-center gap-8 md:gap-12 h-full px-[5vw] pb-16 transform-gpu will-change-transform"
+          className="flex items-center gap-8 md:gap-12 2xl:gap-16 h-full px-[5vw] 2xl:px-[8vw] pb-16 transform-gpu will-change-transform"
         >
           {categoryProjects.map((project, idx) => (
             <HorizontalProject

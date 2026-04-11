@@ -20,7 +20,7 @@ export default function Footer() {
   return (
     <footer
       ref={footerRef}
-      className="w-full rounded-t-[32px] mt-12 bg-[#F0EDE6] overflow-hidden"
+      className="w-full rounded-t-[32px] 2xl:rounded-t-[48px] mt-12 bg-[#F0EDE6] overflow-hidden"
     >
       <motion.div
         style={{ y: contentY }}
@@ -28,10 +28,10 @@ export default function Footer() {
       >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
           <div>
-            <span className="text-2xl font-semibold text-[#1A1816]">
+            <span className="text-2xl 2xl:text-3xl font-semibold text-[#1A1816]">
               Programo
             </span>
-            <p className="text-sm text-[#6B6560] mt-6 max-w-xs leading-relaxed">
+            <p className="text-sm 2xl:text-base text-[#6B6560] mt-6 max-w-xs 2xl:max-w-sm leading-relaxed">
               {t("hero.desc")}
             </p>
           </div>
