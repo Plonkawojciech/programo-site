@@ -45,11 +45,10 @@ export default function Hero() {
   const tiltY = useSpring(useTransform(mouseX, [-1, 1], [-20, 20]), { stiffness: 100, damping: 30 });
 
   // Scroll animations
-  // 0.0 - 0.2: Normal, text fades out
-  // 0.2 - 0.5: Card scales up massively, rotates to flat
-  // 0.5 - 0.8: Tech modules reveal inside the giant card
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.5], [1, 1.2, 60]);
   const smoothScale = useSpring(scale, { stiffness: 80, damping: 20 });
+  
+  const flipProgress = useTransform(scrollYProgress, [0.05, 0.2], [0, 180]);
   
   const rotateX = useTransform(() => {
     const scroll = scrollYProgress.get();
@@ -60,13 +59,13 @@ export default function Hero() {
   const rotateY = useTransform(() => {
     const scroll = scrollYProgress.get();
     const tilt = tiltY.get();
-    return scroll > 0.1 ? 0 : tilt * (1 - scroll * 10);
+    const flip = flipProgress.get();
+    return flip + (scroll > 0.1 ? 0 : tilt * (1 - scroll * 10));
   });
   
   const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const cardContentOpacity = useTransform(scrollYProgress, [0.15, 0.25], [1, 0]);
+  const cardContentOpacity = useTransform(scrollYProgress, [0.3, 0.4], [1, 0]);
   const techOverlayOpacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
-  const heroOpacity = useTransform(scrollYProgress, [0.8, 1], [1, 0]);
 
   return (
     <section
@@ -77,20 +76,28 @@ export default function Hero() {
     >
       <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden">
         
+        {/* Geometric Pattern Background */}
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-[0.03] z-0" 
+          style={{ 
+            backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%238EB69B' stroke-width='1' stroke-opacity='1'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3Cpath d='M15 15h30v30H15z'/%3E%3Cpath d='M0 0l60 60M60 0L0 60'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+          }}
+        />
+
         {/* Floating background elements for "crazy" vibe */}
         <motion.div 
            style={{ y: useTransform(scrollYProgress, [0, 1], [0, -300]), rotate: useTransform(scrollYProgress, [0, 1], [0, 90]) }}
-           className="absolute top-[10%] right-[10%] w-64 h-64 border border-[#051F20]/5 rounded-full pointer-events-none"
+           className="absolute top-[10%] right-[10%] w-64 h-64 border border-[#051F20]/5 rounded-full pointer-events-none z-0"
         />
         <motion.div 
            style={{ y: useTransform(scrollYProgress, [0, 1], [0, 400]), rotate: useTransform(scrollYProgress, [0, 1], [0, -90]) }}
-           className="absolute bottom-[20%] left-[5%] w-32 h-32 bg-[#051F20]/5 pointer-events-none"
+           className="absolute bottom-[20%] left-[5%] w-32 h-32 bg-[#051F20]/5 pointer-events-none z-0"
         />
 
         {/* Giant floating background text */}
         <motion.div 
           style={{ opacity: textOpacity, y: useTransform(scrollYProgress, [0, 0.2], [0, -100]) }}
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
         >
           <h1 className="text-[15vw] font-serif font-light text-[#051F20]/5 tracking-tighter italic whitespace-nowrap select-none">
             digital craftsmanship
@@ -119,33 +126,55 @@ export default function Hero() {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="absolute inset-0 bg-[#051F20] rounded-2xl shadow-2xl border border-[#163832]/50 overflow-hidden">
-              
-              {/* Card Front Content */}
+            {/* BACK OF CARD (Initially Visible) */}
+            <div 
+              className="absolute inset-0 bg-[#051F20] rounded-2xl shadow-2xl border border-[#163832]/50 overflow-hidden"
+              style={{
+                backfaceVisibility: "hidden",
+                transform: "rotateY(0deg)",
+                backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%238EB69B' stroke-width='1' stroke-opacity='0.2'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3Cpath d='M15 15h30v30H15z'/%3E%3Cpath d='M0 0l60 60M60 0L0 60'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"
+              }}
+            >
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-[#DAF1DE] font-bold text-5xl tracking-tighter drop-shadow-[0_0_15px_rgba(218,241,222,0.5)] flex items-center gap-3">
+                  <span className="w-3 h-3 rounded-full bg-[#8EB69B] inline-block animate-pulse shadow-[0_0_10px_#8EB69B]" />
+                  pr.
+                </div>
+              </div>
+            </div>
+
+            {/* FRONT OF CARD (Revealed on flip) */}
+            <div 
+              className="absolute inset-0 bg-[#DAF1DE] rounded-2xl shadow-2xl border border-[#163832]/20 overflow-hidden"
+              style={{
+                backfaceVisibility: "hidden",
+                transform: "rotateY(180deg)"
+              }}
+            >
               <motion.div style={{ opacity: cardContentOpacity }} className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
                 <div className="flex justify-between items-start">
                   <div className="max-w-[70%]">
-                    <h2 className="text-[#DAF1DE] text-[10px] md:text-xs font-medium font-sans tracking-tight leading-tight uppercase">Bartosz Kolaj Wojciech Roch Płonka Programo Spółka Jawna</h2>
-                    <p className="text-[#8EB69B] text-[8px] md:text-[10px] mt-1.5 uppercase tracking-widest font-mono">Enterprise Solutions</p>
+                    <h2 className="text-[#051F20] text-[10px] md:text-xs font-bold font-sans tracking-tight leading-tight uppercase">Bartosz Kolaj Wojciech Roch Płonka Programo Spółka Jawna</h2>
+                    <p className="text-[#163832] text-[8px] md:text-[10px] mt-1.5 uppercase tracking-widest font-mono">Enterprise Solutions</p>
                   </div>
-                  <div className="text-[#DAF1DE] font-bold text-sm tracking-tight flex items-center gap-2 shrink-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#8EB69B] inline-block animate-pulse" />
+                  <div className="text-[#051F20] font-bold text-sm tracking-tight flex items-center gap-2 shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#163832] inline-block animate-pulse" />
                     pr.
                   </div>
                 </div>
 
                 <div className="flex justify-between items-end">
-                  <div className="flex flex-col gap-0.5 text-[#8EB69B] text-[8px] md:text-[10px] font-mono opacity-80 uppercase tracking-wide">
+                  <div className="flex flex-col gap-0.5 text-[#163832] text-[8px] md:text-[10px] font-mono opacity-80 uppercase tracking-wide">
                     <span>NIP: 7792604466</span>
                     <span>KRS: 0001233841</span>
                     <span>Ul. Podkomorska 14/1</span>
                     <span>60-326 Poznań, PL</span>
-                    <span className="mt-1.5 text-[#DAF1DE] normal-case tracking-normal">kontakt@programo.pl</span>
+                    <span className="mt-1.5 text-[#051F20] font-bold normal-case tracking-normal">kontakt@programo.pl</span>
                   </div>
 
-                  <div className="grid grid-cols-5 grid-rows-5 gap-[2px] w-12 h-12 bg-[#DAF1DE]/10 p-1 rounded-sm">
+                  <div className="grid grid-cols-5 grid-rows-5 gap-[2px] w-12 h-12 bg-[#051F20]/5 p-1 rounded-sm border border-[#051F20]/10">
                     {qrPattern.map((isActive, i) => (
-                      <div key={i} className={`w-full h-full rounded-[1px] ${isActive ? 'bg-[#DAF1DE]' : 'bg-transparent'}`} />
+                      <div key={i} className={`w-full h-full rounded-[1px] ${isActive ? 'bg-[#051F20]' : 'bg-transparent'}`} />
                     ))}
                   </div>
                 </div>

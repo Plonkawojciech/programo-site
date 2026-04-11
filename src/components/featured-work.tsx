@@ -139,6 +139,14 @@ export default function FeaturedWork() {
   return (
     <section id="work" className="relative bg-[#FCFCFA] w-full pb-40 overflow-hidden">
       
+      {/* Geometric Pattern Background */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.03] z-0 mix-blend-overlay" 
+        style={{ 
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%238EB69B' stroke-width='1' stroke-opacity='1'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3Cpath d='M15 15h30v30H15z'/%3E%3Cpath d='M0 0l60 60M60 0L0 60'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+        }}
+      />
+
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[10%] left-[5%] w-[1px] h-64 bg-[#051F20]/10 rotate-45" />
         <div className="absolute top-[30%] right-[10%] w-32 h-32 border border-[#051F20]/5 rotate-12 rounded-3xl" />
