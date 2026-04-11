@@ -1,56 +1,80 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 
 function RevealText({ text }: { text: string }) {
   const container = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start 0.8", "end 0.2"],
-  });
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = container.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-20% 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const words = text.split(" ");
 
   return (
     <div ref={container} className="flex flex-wrap justify-center gap-x-[4vw] gap-y-[2vw] px-6 py-40 md:py-64">
-      {words.map((word, i) => {
-        const start = i / words.length;
-        const end = start + 1 / words.length;
-        const opacity = useTransform(scrollYProgress, [start, end], [0.05, 1]);
-        const y = useTransform(scrollYProgress, [start, end], [30, 0]);
-        return (
-          <motion.span
-            key={i}
-            style={{ opacity, y }}
-            className="font-sans text-[7vw] md:text-[9vw] font-bold uppercase tracking-tighter text-black leading-none"
-          >
-            {word}
-          </motion.span>
-        );
-      })}
+      {words.map((word, i) => (
+        <span
+          key={i}
+          className="font-sans text-[7vw] md:text-[9vw] font-bold uppercase tracking-tighter text-black leading-none transition-all duration-700 ease-out"
+          style={{
+            opacity: isVisible ? 1 : 0.05,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transitionDelay: `${i * 120}ms`,
+          }}
+        >
+          {word}
+        </span>
+      ))}
     </div>
   );
 }
 
 function FadeInText({ text }: { text: string }) {
   const container = useRef<HTMLParagraphElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start 0.9", "start 0.6"],
-  });
+  const [isVisible, setIsVisible] = useState(false);
 
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.1, 1]);
+  useEffect(() => {
+    const el = container.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-10% 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <motion.p
+    <p
       ref={container}
-      style={{ opacity }}
-      className="mb-16 text-2xl font-light leading-relaxed text-black md:text-5xl max-w-5xl"
+      className="mb-16 text-2xl font-light leading-relaxed text-black md:text-5xl max-w-5xl transition-opacity duration-1000 ease-out"
+      style={{ opacity: isVisible ? 1 : 0.1 }}
     >
       {text}
-    </motion.p>
+    </p>
   );
 }
 

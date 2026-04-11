@@ -22,8 +22,8 @@ export default function Hero() {
   const handleMouseMove = (e: React.MouseEvent) => {
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
-    const x = (clientX / innerWidth - 0.5) * 2; 
-    const y = (clientY / innerHeight - 0.5) * 2; 
+    const x = (clientX / innerWidth - 0.5) * 2;
+    const y = (clientY / innerHeight - 0.5) * 2;
     mouseX.set(x);
     mouseY.set(y);
   };
@@ -36,12 +36,12 @@ export default function Hero() {
   const tiltX = useSpring(useTransform(mouseY, [-1, 1], [15, -15]), { stiffness: 100, damping: 30 });
   const tiltY = useSpring(useTransform(mouseX, [-1, 1], [-15, 15]), { stiffness: 100, damping: 30 });
 
-  // Scroll animations mapped continuously
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.5], [1, 1.1, 40]);
+  // Scroll animations — scale reduced from 40x to 15x for GPU performance
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.5], [1, 1.1, 15]);
   const smoothScale = useSpring(scale, { stiffness: 80, damping: 20 });
-  
+
   const flipProgress = useTransform(scrollYProgress, [0.0, 0.2], [0, 180]);
-  
+
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
@@ -53,7 +53,7 @@ export default function Hero() {
     const tilt = tiltX.get();
     return scroll > 0.1 ? 0 : tilt * (1 - scroll * 10);
   });
-  
+
   const rotateY = useTransform(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 768) return 0;
     const scroll = scrollYProgress.get();
@@ -61,14 +61,16 @@ export default function Hero() {
     const flip = flipProgress.get();
     return flip + (scroll > 0.1 ? 0 : tilt * (1 - scroll * 10));
   });
-  
+
   const textOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const cardContentOpacity = useTransform(scrollYProgress, [0.2, 0.35], [1, 0]);
-  
-  // Tech Overlay Animations (Minimalist Version)
+
+  // Tech Overlay — simplified: removed 3D perspective/z transforms for performance
   const techOverlayOpacity = useTransform(scrollYProgress, [0.4, 0.5, 0.9, 1.0], [0, 1, 1, 0]);
-  const techGridZ = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-1000, 0, 1000]);
-  const techGridScale = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [0.8, 1, 1.5]);
+  const techOverlayScale = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [0.9, 1, 1.1]);
+
+  // Fix: useTransform must be called unconditionally (React Rules of Hooks)
+  const techDisplayValue = useTransform(techOverlayOpacity, v => v > 0 ? 'flex' : 'none');
 
   // Floating background elements
   const bgTextY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
@@ -81,18 +83,18 @@ export default function Hero() {
       className="relative h-[300vh] bg-white cursor-default"
     >
       <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden">
-        
+
         {/* Subtle Background Grid */}
-        <div 
-          className="absolute inset-0 pointer-events-none opacity-[0.05] z-0 transform-gpu" 
-          style={{ 
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.05] z-0 transform-gpu"
+          style={{
             backgroundImage: "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
             backgroundSize: "100px 100px"
           }}
         />
 
         {/* Giant floating background text */}
-        <motion.div 
+        <motion.div
           style={{ opacity: textOpacity, y: bgTextY }}
           className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 transform-gpu will-change-[transform,opacity]"
         >
@@ -114,28 +116,24 @@ export default function Hero() {
         {isMounted && (
           <motion.div
             className="relative w-full max-w-[340px] md:max-w-[500px] aspect-[1.6/1] z-20 will-change-transform transform-gpu pointer-events-none"
-            style={{ 
-              scale: smoothScale, 
-              rotateX, 
-              rotateY, 
-              transformStyle: "preserve-3d" 
+            style={{
+              scale: smoothScale,
+              rotateX,
+              rotateY,
+              transformStyle: "preserve-3d"
             }}
             initial={{ scale: 0.9, opacity: 0, y: 50 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* BACK OF CARD (Initially Visible) - Textured White Paper */}
-            <div 
+            {/* BACK OF CARD (Initially Visible) */}
+            <div
               className="absolute inset-0 bg-white rounded-sm shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-[#E0E0E0] overflow-hidden transform-gpu translate-z-0"
               style={{
                 backfaceVisibility: "hidden",
                 transform: "rotateY(0deg)",
               }}
             >
-              {/* Subtle Paper Texture via SVG filter would be too heavy, using CSS pattern */}
-              <div className="absolute inset-0 opacity-[0.03] pointer-events-none transform-gpu" 
-                   style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")" }} />
-              
               <div className="absolute inset-0 flex items-center justify-center transform-gpu">
                 <div className="text-black font-bold text-4xl tracking-tighter flex items-center gap-4">
                   <div className="w-8 h-8 bg-black rounded-full" />
@@ -145,19 +143,16 @@ export default function Hero() {
             </div>
 
             {/* FRONT OF CARD (Revealed on flip) */}
-            <div 
+            <div
               className="absolute inset-0 bg-white rounded-sm shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-[#E0E0E0] overflow-hidden transform-gpu translate-z-0"
               style={{
                 backfaceVisibility: "hidden",
                 transform: "rotateY(180deg)"
               }}
             >
-              <div className="absolute inset-0 opacity-[0.03] pointer-events-none transform-gpu" 
-                   style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")" }} />
-              
-              <div 
-                className="absolute inset-0 opacity-[0.05] transform-gpu" 
-                style={{ 
+              <div
+                className="absolute inset-0 opacity-[0.05] transform-gpu"
+                style={{
                   backgroundImage: "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
                   backgroundSize: "20px 20px"
                 }}
@@ -187,21 +182,18 @@ export default function Hero() {
           </motion.div>
         )}
 
-        {/* Tech Overlay (Minimalist Content) */}
+        {/* Tech Overlay (Minimalist Content) — renders always but hidden via display */}
         {!isMobile && (
-          <motion.div 
-            style={{ 
-              opacity: techOverlayOpacity, 
-              display: useTransform(techOverlayOpacity, v => v > 0 ? 'flex' : 'none'),
-              perspective: "1500px"
+          <motion.div
+            style={{
+              opacity: techOverlayOpacity,
+              display: techDisplayValue,
             }}
             className="absolute inset-0 z-30 flex items-center justify-center bg-white transform-gpu"
           >
-            <motion.div 
-              style={{ 
-                z: techGridZ, 
-                scale: techGridScale,
-                transformStyle: "preserve-3d"
+            <motion.div
+              style={{
+                scale: techOverlayScale,
               }}
               className="w-full max-w-5xl aspect-video flex flex-col items-center justify-center text-center p-12 transform-gpu will-change-transform"
             >
@@ -215,7 +207,7 @@ export default function Hero() {
             </motion.div>
           </motion.div>
         )}
-        
+
         {/* Scroll Hint */}
         <motion.div
           style={{ opacity: textOpacity }}
