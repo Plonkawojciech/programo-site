@@ -123,7 +123,7 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={formState === "submitting"}
-                    className="group relative flex h-40 w-40 items-center justify-center rounded-full bg-primary text-sm font-bold uppercase tracking-widest text-on-primary transition-transform hover:scale-110 active:scale-95 disabled:opacity-50"
+                    className="group relative flex h-28 w-28 md:h-40 md:w-40 items-center justify-center rounded-full bg-primary text-xs md:text-sm font-bold uppercase tracking-widest text-on-primary transition-transform hover:scale-110 active:scale-95 disabled:opacity-50"
                   >
                     <AnimatePresence mode="wait">
                       {formState === "submitting" ? (
