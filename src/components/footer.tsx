@@ -20,7 +20,7 @@ export default function Footer() {
   return (
     <footer
       ref={footerRef}
-      className="w-full rounded-t-[32px] mt-12 bg-surface-container-low overflow-hidden"
+      className="w-full rounded-t-[32px] mt-12 bg-[#F0EDE6] overflow-hidden"
     >
       <motion.div
         style={{ y: contentY }}
@@ -28,10 +28,10 @@ export default function Footer() {
       >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
           <div>
-            <span className="text-2xl font-semibold text-on-surface">
+            <span className="text-2xl font-semibold text-[#1A1816]">
               Programo
             </span>
-            <p className="text-sm text-on-surface-variant mt-6 max-w-xs leading-relaxed">
+            <p className="text-sm text-[#6B6560] mt-6 max-w-xs leading-relaxed">
               {t("hero.desc")}
             </p>
           </div>
@@ -40,7 +40,7 @@ export default function Footer() {
               href="https://github.com/programo"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
+              className="text-sm text-[#6B6560] hover-underline transition-colors duration-300 hover:text-[#1A1816]"
             >
               GitHub
             </a>
@@ -48,7 +48,7 @@ export default function Footer() {
               href="https://linkedin.com/company/programo"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
+              className="text-sm text-[#6B6560] hover-underline transition-colors duration-300 hover:text-[#1A1816]"
             >
               LinkedIn
             </a>
@@ -60,14 +60,14 @@ export default function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="border-t border-outline-variant/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-6"
+          className="border-t border-[#E5E0D5] pt-8 flex flex-col md:flex-row justify-between items-center gap-6"
         >
-          <p className="text-xs font-normal text-on-surface-variant">
+          <p className="text-xs font-normal text-[#6B6560]">
             &copy; 2026&ndash;{currentYear} Programo
           </p>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">
+            <span className="w-2 h-2 rounded-full bg-[#8EB69B]" />
+            <span className="text-[10px] font-medium text-[#6B6560]/60 uppercase tracking-widest">
               {t("footer.location")}
             </span>
           </div>

@@ -1,15 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
-
-const qrPattern = [
-  1, 0, 1, 1, 0,
-  1, 1, 0, 1, 1,
-  0, 1, 1, 0, 0,
-  1, 0, 0, 1, 1,
-  0, 1, 1, 1, 0
-];
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 export default function Hero() {
   const container = useRef<HTMLElement>(null);
@@ -29,287 +21,140 @@ export default function Hero() {
     offset: ["start start", "end end"],
   });
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const smoothProgress = useSpring(scrollYProgress, { damping: 40, stiffness: 80 });
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isMobile) return;
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    const x = (clientX / innerWidth - 0.5) * 2; 
-    const y = (clientY / innerHeight - 0.5) * 2; 
-    mouseX.set(x);
-    mouseY.set(y);
-  };
+  // Horizontal tracks
+  const xMain = useTransform(smoothProgress, [0, 1], ["0vw", "-200vw"]);
+  const xBg = useTransform(smoothProgress, [0, 1], ["0vw", "-80vw"]);
 
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
+  // Business card transforms
+  const cardRotate = useTransform(smoothProgress, [0.1, 0.5], [8, -8]);
+  const cardY = useTransform(smoothProgress, [0.1, 0.5], [0, 80]);
 
-  const tiltX = useSpring(useTransform(mouseY, [-1, 1], [20, -20]), { stiffness: 100, damping: 30 });
-  const tiltY = useSpring(useTransform(mouseX, [-1, 1], [-20, 20]), { stiffness: 100, damping: 30 });
-
-  // Scroll animations mapped continuously
-  // 0.0 - 0.2: Card flips
-  // 0.2 - 0.5: Card scales up massively
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.5], [1, 1.2, isMobile ? 40 : 60]);
-  const smoothScale = useSpring(scale, { stiffness: 80, damping: 20 });
-  
-  const flipProgress = useTransform(scrollYProgress, [0.0, 0.2], [0, 180]);
-  
-  const rotateX = useTransform(() => {
-    const scroll = scrollYProgress.get();
-    const tilt = isMobile ? 0 : tiltX.get();
-    return scroll > 0.1 ? 0 : tilt * (1 - scroll * 10);
-  });
-  
-  const rotateY = useTransform(() => {
-    const scroll = scrollYProgress.get();
-    const tilt = isMobile ? 0 : tiltY.get();
-    const flip = flipProgress.get();
-    return flip + (scroll > 0.1 ? 0 : tilt * (1 - scroll * 10));
-  });
-  
-  const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const cardContentOpacity = useTransform(scrollYProgress, [0.2, 0.35], [1, 0]);
-  
-  // Tech Overlay Animations
-  // 0.4 - 0.5: Reveal fades in
-  // 0.7 - 1.0: Fades out as it flies past camera
-  const techOverlayOpacity = useTransform(scrollYProgress, [0.4, 0.5, 0.9, 1.0], [0, 1, 1, 0]);
-  
-  // Z-axis fly in and scale for the grid
-  const techGridZ = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-1500, 0, 1500]);
-  const techGridScale = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [0.5, 1, 2.5]);
-
-  // Modules scatter (fly in and pull apart)
-  const m1X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-800, 0, -1500]);
-  const m1Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-800, 0, -1500]);
-  const m1Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-1000, 0, 500]);
-  
-  const m2X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [400, 0, 800]);
-  const m2Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-600, 0, -1200]);
-  const m2Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-800, 0, 400]);
-  
-  const m3X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [800, 0, 1500]);
-  const m3Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-600, 0, -1200]);
-  const m3Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-1200, 0, 600]);
-
-  const m4X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [800, 0, 1500]);
-  const m4Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [400, 0, 800]);
-  const m4Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-900, 0, 450]);
-  
-  const m5X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-800, 0, -1500]);
-  const m5Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [800, 0, 1500]);
-  const m5Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-1100, 0, 550]);
-
-  const m6X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [0, 0, 0]);
-  const m6Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [800, 0, 1500]);
-  const m6Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-700, 0, 350]);
-
-  // Floating background elements
-  const bg1Y = useTransform(scrollYProgress, [0, 1], [0, -600]);
-  const bg1Rotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
-  const bg2Y = useTransform(scrollYProgress, [0, 1], [0, 800]);
-  const bg2Rotate = useTransform(scrollYProgress, [0, 1], [0, -180]);
-  const bgTextY = useTransform(scrollYProgress, [0, 0.2], [0, -150]);
+  // Scroll hint opacity — must be at top level
+  const scrollHintOpacity = useTransform(smoothProgress, [0, 0.1], [1, 0]);
 
   return (
     <section
       ref={container}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative h-[350vh] bg-[#FCFCFA] cursor-default"
+      className="relative h-[300vh] bg-[#FAF8F4] cursor-default text-[#1A1816]"
     >
-      <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden">
-        
-        {/* Geometric Pattern Background */}
-        <div 
-          className="absolute inset-0 pointer-events-none opacity-[0.03] z-0" 
-          style={{ 
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%238EB69B' stroke-width='1' stroke-opacity='1'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3Cpath d='M15 15h30v30H15z'/%3E%3Cpath d='M0 0l60 60M60 0L0 60'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
-          }}
-        />
+      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden" style={{ contain: "layout style paint" }}>
 
-        {/* Floating background elements for "crazy" vibe */}
-        <motion.div 
-           style={{ y: bg1Y, rotate: bg1Rotate }}
-           className="absolute top-[10%] right-[10%] w-64 h-64 border border-[#051F20]/5 rounded-full pointer-events-none z-0 transform-gpu will-change-transform"
-        />
-        <motion.div 
-           style={{ y: bg2Y, rotate: bg2Rotate }}
-           className="absolute bottom-[20%] left-[5%] w-32 h-32 bg-[#051F20]/5 pointer-events-none z-0 transform-gpu will-change-transform"
-        />
-
-        {/* Giant floating background text */}
-        <motion.div 
-          style={{ opacity: textOpacity, y: bgTextY }}
-          className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 transform-gpu will-change-transform"
-        >
-          <h1 className="text-[15vw] font-serif font-light text-[#051F20]/5 tracking-tighter italic whitespace-nowrap select-none">
-            digital craftsmanship
-          </h1>
-        </motion.div>
-
-        {/* Foreground Title */}
-        <motion.div style={{ opacity: textOpacity }} className="absolute z-10 top-[15%] md:top-[15%] flex flex-col items-center pointer-events-none transform-gpu will-change-opacity">
-          <h1 className="text-[14vw] md:text-[9vw] font-sans font-light text-[#051F20] tracking-tighter leading-none mb-2">
-            programo
-          </h1>
-          <p className="text-[#163832] font-mono text-[10px] md:text-xs uppercase tracking-[0.4em]">Software Engineering</p>
-        </motion.div>
-
-        {/* 3D Card Container */}
-        {isMounted && (
+        {/* Soft Liquid Orbs */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
           <motion.div
-            className="relative w-full max-w-[340px] md:max-w-[480px] aspect-[1.6/1] z-20 will-change-transform transform-gpu pointer-events-none"
-            style={{ 
-              scale: smoothScale, 
-              rotateX, 
-              rotateY, 
-              transformStyle: "preserve-3d" 
-            }}
-            initial={{ scale: 0.8, opacity: 0, y: 100 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {/* BACK OF CARD (Initially Visible) */}
-            <div 
-              className="absolute inset-0 bg-[#051F20] rounded-2xl shadow-2xl border border-[#163832]/50 overflow-hidden transform-gpu"
-              style={{
-                backfaceVisibility: "hidden",
-                transform: "rotateY(0deg)",
-                backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%238EB69B' stroke-width='1' stroke-opacity='0.2'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3Cpath d='M15 15h30v30H15z'/%3E%3Cpath d='M0 0l60 60M60 0L0 60'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"
-              }}
-            >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-[#DAF1DE] font-bold text-5xl tracking-tighter drop-shadow-[0_0_15px_rgba(218,241,222,0.5)] flex items-center gap-3">
-                  <span className="w-3 h-3 rounded-full bg-[#8EB69B] inline-block animate-pulse shadow-[0_0_10px_#8EB69B]" />
-                  pr.
-                </div>
-              </div>
+            animate={{ x: ["0%", "10%", "-5%", "0%"], y: ["0%", "-10%", "5%", "0%"] }}
+            transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[-15%] left-[-5%] w-[50vw] h-[50vw] rounded-full bg-[#8EB69B]/15 blur-[40px] will-change-transform transform-gpu"
+          />
+          <motion.div
+            animate={{ x: ["0%", "-10%", "8%", "0%"], y: ["0%", "12%", "-8%", "0%"] }}
+            transition={{ duration: 35, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[30%] right-[-5%] w-[40vw] h-[40vw] rounded-full bg-[#C4A876]/10 blur-[40px] will-change-transform transform-gpu"
+          />
+          <motion.div
+            animate={{ x: ["0%", "8%", "-12%", "0%"], y: ["0%", "5%", "-10%", "0%"] }}
+            transition={{ duration: 40, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[-10%] left-[25%] w-[45vw] h-[45vw] rounded-full bg-[#E8F0EA]/30 blur-[40px] will-change-transform transform-gpu"
+          />
+        </div>
+
+        {/* Background text layer (slow) */}
+        <motion.div
+          style={{ x: xBg }}
+          className="absolute top-[15%] left-0 flex whitespace-nowrap opacity-[0.03] pointer-events-none select-none z-0 transform-gpu will-change-transform"
+        >
+          <h1 className="text-[30vw] font-serif italic tracking-tighter leading-none text-[#1A1816]">
+            digital craftsmanship digital craftsmanship
+          </h1>
+        </motion.div>
+
+        {/* Main horizontal track */}
+        <motion.div
+          style={{ x: xMain }}
+          className="relative z-10 flex items-center h-full px-[10vw] gap-[15vw] whitespace-nowrap transform-gpu will-change-transform"
+        >
+          {/* 1. Title */}
+          <div className="flex flex-col relative shrink-0">
+            <h1 className="text-[14vw] font-sans font-light tracking-tighter leading-none text-[#1A1816]">
+              programo
+            </h1>
+            <p className="text-[#6B6560] font-mono text-sm md:text-lg uppercase tracking-[0.5em] ml-2 mt-4">
+              Software Engineering
+            </p>
+            <div className="mt-8 flex gap-4">
+              <div className="h-px w-20 bg-[#8EB69B] mt-3" />
+              <p className="text-[#6B6560] text-sm font-light max-w-[300px] whitespace-normal">
+                Projektujemy i budujemy oprogramowanie, kt&oacute;re rozwiazuje realne problemy.
+              </p>
             </div>
+          </div>
 
-            {/* FRONT OF CARD (Revealed on flip) */}
-            <div 
-              className="absolute inset-0 bg-[#DAF1DE] rounded-2xl shadow-2xl border border-[#163832]/20 overflow-hidden transform-gpu"
-              style={{
-                backfaceVisibility: "hidden",
-                transform: "rotateY(180deg)"
-              }}
-            >
-              <motion.div style={{ opacity: cardContentOpacity }} className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between transform-gpu will-change-opacity">
-                <div className="flex justify-between items-start">
-                  <div className="max-w-[70%]">
-                    <h2 className="text-[#051F20] text-lg md:text-xl font-bold font-sans tracking-tight leading-tight uppercase">Programo</h2>
-                    <p className="text-[#163832] text-[8px] md:text-[10px] mt-1.5 uppercase tracking-widest font-mono">Enterprise Solutions</p>
-                  </div>
-                  <div className="text-[#051F20] font-bold text-sm tracking-tight flex items-center gap-2 shrink-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#163832] inline-block animate-pulse" />
-                    pr.
-                  </div>
-                </div>
+          {/* 2. Glass Business Card */}
+          <div className="relative shrink-0 w-[50vw] h-[60vh] flex items-center justify-center">
+            {isMounted && (
+              <motion.div
+                style={{ rotate: isMobile ? 0 : cardRotate, y: isMobile ? 0 : cardY }}
+                className="relative z-20 w-[85vw] md:w-[520px] aspect-[1.6/1] transform-gpu will-change-transform"
+              >
+                {/* Glass card */}
+                <div className="absolute inset-0 bg-white/70 md:backdrop-blur-[12px] rounded-2xl shadow-[0_20px_50px_rgba(26,24,22,0.08),0_0_0_1px_rgba(26,24,22,0.04)] overflow-hidden">
+                  {/* Paper texture */}
+                  <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                       style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }} />
 
-                <div className="flex justify-between items-end">
-                  <div className="flex flex-col gap-0.5 text-[#163832] text-[8px] md:text-[10px] font-mono opacity-80 uppercase tracking-wide">
-                    <span>NIP: 7792604466</span>
-                    <span>KRS: 0001233841</span>
-                    <span>Located in Poznań</span>
-                    <span className="mt-1.5 text-[#051F20] font-bold normal-case tracking-normal">kontakt@programo.pl</span>
-                  </div>
+                  {/* Top reflection */}
+                  <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
 
-                  <div className="grid grid-cols-5 grid-rows-5 gap-[2px] w-12 h-12 bg-[#051F20]/5 p-1 rounded-sm border border-[#051F20]/10">
-                    {qrPattern.map((isActive, i) => (
-                      <div key={i} className={`w-full h-full rounded-[1px] ${isActive ? 'bg-[#051F20]' : 'bg-transparent'}`} />
-                    ))}
+                  <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-between">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h2 className="text-[#1A1816] text-2xl md:text-3xl font-bold tracking-tight uppercase">Programo</h2>
+                        <p className="text-[#6B6560] text-[10px] mt-1 uppercase tracking-[0.3em] font-mono">Software Studio &middot; Poznan</p>
+                      </div>
+                      <div className="text-[#1A1816] font-bold text-xl tracking-tight flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[#8EB69B] animate-pulse" />
+                        pr.
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <div className="flex flex-col gap-1 text-[#6B6560] text-[9px] md:text-[11px] font-mono uppercase tracking-wide">
+                        <span>NIP: 7792604466</span>
+                        <span>kontakt@programo.pl</span>
+                      </div>
+                      <div className="w-12 h-12 rounded-lg bg-[#FAF8F4] border border-[#E5E0D5] flex items-center justify-center">
+                        <span className="text-[#8EB69B] font-bold text-lg">P</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
+            )}
+          </div>
+
+          {/* 3. Manifesto */}
+          <div className="relative shrink-0 w-[40vw] flex flex-col gap-6">
+            <div className="w-full h-px bg-[#E5E0D5] relative overflow-hidden">
+              <motion.div className="absolute top-0 bottom-0 left-0 w-1/4 bg-[#8EB69B]" animate={{ x: ["-100%", "400%"] }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} />
             </div>
-          </motion.div>
-        )}
-
-        {/* Tech / AI Modules Overlay (Revealed when card covers screen) */}
-        <motion.div 
-          style={{ 
-            opacity: techOverlayOpacity, 
-            display: useTransform(techOverlayOpacity, v => v > 0 ? 'flex' : 'none'),
-            perspective: "1200px"
-          }}
-          className="absolute inset-0 z-30 flex items-center justify-center p-4 md:p-8 xl:p-16 bg-[#051F20] transform-gpu will-change-opacity"
-        >
-          <motion.div 
-            style={{ 
-              z: techGridZ, 
-              scale: techGridScale,
-              transformStyle: "preserve-3d"
-            }}
-            className="w-full max-w-6xl aspect-video grid grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-3 gap-px bg-[#163832]/30 transform-gpu will-change-transform"
-          >
-            
-            <motion.div style={{ x: m1X, y: m1Y, z: m1Z }} className="col-span-2 row-span-2 bg-[#051F20] p-8 flex flex-col justify-end relative overflow-hidden group hover:bg-[#0A2A28] transition-colors shadow-2xl transform-gpu will-change-transform">
-              <motion.div 
-                animate={{ y: ["-100%", "100%"] }} 
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#8EB69B]/40 to-transparent transform-gpu" 
-              />
-              <span className="text-[#8EB69B] font-mono text-[10px] md:text-xs mb-4 uppercase tracking-[0.3em]">Module // 01</span>
-              <h3 className="text-[#DAF1DE] text-4xl md:text-6xl font-serif italic tracking-tighter">Artificial<br/>Intelligence</h3>
-            </motion.div>
-            
-            <motion.div style={{ x: m2X, y: m2Y, z: m2Z }} className="bg-[#051F20] p-6 flex flex-col justify-between hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl transform-gpu will-change-transform">
-               <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">SYS.STATUS</span>
-               <div className="flex gap-1 items-end h-16">
-                  {[40, 70, 45, 90, 60, 85, 30, 80].map((h, i) => (
-                    <motion.div key={i} className="w-full bg-[#163832] transform-gpu" animate={{ height: [`${h}%`, `${(h * 1.5) % 100}%`, `${h}%`] }} transition={{ duration: 1.5, repeat: Infinity, delay: i*0.1 }} />
-                  ))}
-               </div>
-            </motion.div>
-            
-            <motion.div style={{ x: m3X, y: m3Y, z: m3Z }} className="bg-[#051F20] p-6 flex flex-col items-center justify-center relative hover:bg-[#0A2A28] transition-colors shadow-2xl transform-gpu will-change-transform">
-               <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-20 h-20 rounded-full border border-dashed border-[#8EB69B]/50 absolute transform-gpu" />
-               <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="w-16 h-16 rounded-full border border-dotted border-[#8EB69B] absolute transform-gpu" />
-               <div className="text-[#DAF1DE] font-mono text-[10px] z-10">ML/OP</div>
-            </motion.div>
-
-            <motion.div style={{ x: m4X, y: m4Y, z: m4Z }} className="row-span-2 bg-[#051F20] p-6 flex flex-col justify-end hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl transform-gpu will-change-transform">
-              <span className="text-[#8EB69B] font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">Module // 02</span>
-              <h3 className="text-[#DAF1DE] text-2xl md:text-3xl font-sans font-light tracking-tight">Hardware<br/>Integration</h3>
-              <div className="mt-8 w-full h-1 bg-[#163832] rounded-full overflow-hidden">
-                <motion.div className="h-full bg-[#8EB69B] transform-gpu" animate={{ x: ["-100%", "100%"] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
-              </div>
-            </motion.div>
-            
-            <motion.div style={{ x: m5X, y: m5Y, z: m5Z }} className="col-span-2 bg-[#051F20] p-6 flex items-end justify-between hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl transform-gpu will-change-transform">
-               <div className="text-[#DAF1DE]/50 text-xs font-mono">PROCESSING DATA_STREAM...</div>
-               <span className="text-[#DAF1DE] bg-[#163832] px-2 py-1 rounded font-mono text-[10px] animate-pulse">ACTIVE</span>
-            </motion.div>
-            
-            <motion.div style={{ x: m6X, y: m6Y, z: m6Z }} className="col-span-3 bg-[#051F20] p-6 flex items-center gap-6 hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl transform-gpu will-change-transform">
-               <div className="w-4 h-4 rounded-full bg-[#DAF1DE] animate-ping" />
-               <div className="text-[#8EB69B] text-xs font-mono flex flex-col gap-1">
-                 <span>Neural Net Cluster Online.</span>
-                 <span>Latency: 12ms. Zero packet loss.</span>
-               </div>
-            </motion.div>
-          </motion.div>
+            <h2 className="text-[8vw] font-sans font-light tracking-tighter text-[#1A1816] leading-none">
+              Clean<br/>Code.
+            </h2>
+            <p className="text-[#6B6560] font-sans text-sm uppercase tracking-[0.3em] max-w-xs whitespace-normal">
+              High-performance digital products built with precision and care.
+            </p>
+          </div>
         </motion.div>
-        
+
         {/* Scroll Hint */}
         <motion.div
-          style={{ opacity: textOpacity }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 pointer-events-none transform-gpu will-change-opacity"
+          style={{ opacity: scrollHintOpacity }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
         >
-          <div className="flex flex-col items-center gap-4">
-            <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#051F20]/50">
-              Scroll to Enter
-            </span>
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="h-10 w-px bg-[#051F20]/20 transform-gpu"
-            />
+          <div className="flex flex-col items-center gap-3">
+            <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-[#6B6560]/60">Scroll</span>
+            <motion.div animate={{ y: [0, 12, 0] }} transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }} className="h-10 w-px bg-[#8EB69B]/40" />
           </div>
         </motion.div>
       </div>

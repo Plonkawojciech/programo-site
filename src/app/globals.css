@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-surface: #051F20;
-  --color-surface-dim: #0B2B26;
-  --color-surface-container: #163832;
-  --color-surface-container-low: #0B2B26;
-  --color-surface-container-high: #235347;
-  --color-surface-container-highest: #8EB69B;
-  --color-surface-container-lowest: #051F20;
-  --color-on-surface: #DAF1DE;
-  --color-on-surface-variant: #8EB69B;
+  --color-surface: #FAF8F4;
+  --color-surface-dim: #F0EDE6;
+  --color-surface-container: #F5F2EB;
+  --color-surface-container-low: #F0EDE6;
+  --color-surface-container-high: #E5E0D5;
+  --color-surface-container-highest: #1A1816;
+  --color-surface-container-lowest: #FFFDF9;
+  --color-on-surface: #1A1816;
+  --color-on-surface-variant: #6B6560;
   --color-primary: #8EB69B;
-  --color-primary-container: #235347;
-  --color-on-primary: #051F20;
-  --color-on-primary-container: #DAF1DE;
-  --color-outline: #235347;
-  --color-outline-variant: #163832;
-  --color-secondary: #8EB69B;
-  --color-tertiary: #DAF1DE;
-  --color-inverse-surface: #DAF1DE;
-  --color-inverse-on-surface: #051F20;
-  --color-inverse-primary: #163832;
+  --color-primary-container: #E8F0EA;
+  --color-on-primary: #FAF8F4;
+  --color-on-primary-container: #1A1816;
+  --color-outline: #E5E0D5;
+  --color-outline-variant: #F0EDE6;
+  --color-secondary: #C4A876;
+  --color-tertiary: #6B6560;
+  --color-inverse-surface: #1A1816;
+  --color-inverse-on-surface: #FAF8F4;
+  --color-inverse-primary: #E8F0EA;
   --font-headline: var(--font-newsreader);
   --font-body: var(--font-jakarta);
 }
@@ -39,12 +39,12 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: none; /* Zapobiega efektowi bounce na macOS dla lepszego feelingu appki */
+  overscroll-behavior-y: none;
 }
 
 ::selection {
-  background: rgba(228, 228, 231, 0.2);
-  color: #ffffff;
+  background: rgba(142, 182, 155, 0.2);
+  color: #1A1816;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -65,7 +65,7 @@ body {
 }
 
 .editorial-shadow {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 40px rgba(26, 24, 22, 0.08);
 }
 
 .hover-underline {
@@ -89,7 +89,7 @@ body {
   transform-origin: left;
 }
 
-/* Noise Grain Effect - zoptymalizowany dla GPU */
+/* Noise Grain Effect - warm-tinted for cream */
 .noise {
   position: fixed;
   top: 0;
@@ -98,8 +98,9 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.03;
+  opacity: 0.015;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  filter: sepia(0.1);
   transform: translateZ(0);
   will-change: opacity;
 }
@@ -132,12 +133,12 @@ body {
   will-change: transform;
 }
 
-/* Glassmorphism utility */
+/* Glassmorphism utility — cream context */
 .glass {
-  background: rgba(20, 20, 20, 0.4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(250, 248, 244, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(26, 24, 22, 0.05);
   transform: translateZ(0);
 }
 
@@ -147,4 +148,3 @@ body {
     -webkit-backdrop-filter: blur(16px);
   }
 }
-
