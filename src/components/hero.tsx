@@ -196,7 +196,7 @@ export default function Hero() {
               <motion.div style={{ opacity: cardContentOpacity }} className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
                 <div className="flex justify-between items-start">
                   <div className="max-w-[70%]">
-                    <h2 className="text-[#051F20] text-[10px] md:text-xs font-bold font-sans tracking-tight leading-tight uppercase">Bartosz Kolaj Wojciech Roch Płonka Programo Spółka Jawna</h2>
+                    <h2 className="text-[#051F20] text-lg md:text-xl font-bold font-sans tracking-tight leading-tight uppercase">Programo</h2>
                     <p className="text-[#163832] text-[8px] md:text-[10px] mt-1.5 uppercase tracking-widest font-mono">Enterprise Solutions</p>
                   </div>
                   <div className="text-[#051F20] font-bold text-sm tracking-tight flex items-center gap-2 shrink-0">
@@ -209,8 +209,7 @@ export default function Hero() {
                   <div className="flex flex-col gap-0.5 text-[#163832] text-[8px] md:text-[10px] font-mono opacity-80 uppercase tracking-wide">
                     <span>NIP: 7792604466</span>
                     <span>KRS: 0001233841</span>
-                    <span>Ul. Podkomorska 14/1</span>
-                    <span>60-326 Poznań, PL</span>
+                    <span>Located in Poznań</span>
                     <span className="mt-1.5 text-[#051F20] font-bold normal-case tracking-normal">kontakt@programo.pl</span>
                   </div>
 
