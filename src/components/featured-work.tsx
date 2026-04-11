@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useVelocity } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
@@ -13,9 +13,10 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   
-  const yImage = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const yText = useTransform(scrollYProgress, [0, 1], [-50, 150]);
-  const scaleImage = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  // Increased parallax intensity
+  const yImage = useTransform(scrollYProgress, [0, 1], [250, -250]);
+  const yText = useTransform(scrollYProgress, [0, 1], [-150, 250]);
+  const scaleImage = useTransform(scrollYProgress, [0, 1], [0.85, 1.25]);
   const smoothScale = useSpring(scaleImage, { stiffness: 100, damping: 30 });
 
   const isEven = index % 2 === 0;
@@ -25,9 +26,12 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
       ref={ref}
       className={`relative w-full flex flex-col md:flex-row items-center gap-12 md:gap-32 mb-40 md:mb-64 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
     >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40vw] font-serif italic text-[#051F20]/5 pointer-events-none select-none z-0">
+      <motion.div 
+        style={{ y: useTransform(scrollYProgress, [0, 1], [300, -300]) }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40vw] font-serif italic text-[#051F20]/5 pointer-events-none select-none z-0"
+      >
         0{index + 1}
-      </div>
+      </motion.div>
 
       <Link href={`/projects/${project.slug}`} className="relative z-10 w-full md:w-[55%] aspect-[4/5] md:aspect-[16/10] overflow-hidden group rounded-2xl">
         <motion.div style={{ y: yImage, scale: smoothScale }} className="w-full h-full transform-gpu will-change-transform">
@@ -82,7 +86,7 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
 const CategoryTitle = ({ title, index }: { title: string, index: number }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const x = useTransform(scrollYProgress, [0, 1], [index % 2 === 0 ? -300 : 300, index % 2 === 0 ? 300 : -300]);
+  const x = useTransform(scrollYProgress, [0, 1], [index % 2 === 0 ? -600 : 600, index % 2 === 0 ? 600 : -600]);
 
   return (
     <div ref={ref} className="relative py-32 md:py-56 overflow-hidden flex items-center justify-center">
@@ -107,6 +111,20 @@ const CategoryTitle = ({ title, index }: { title: string, index: number }) => {
 export default function FeaturedWork() {
   const { lang } = useI18n();
   const [activeSection, setActiveSection] = useState<string>("nasze-systemy");
+  const containerRef = useRef<HTMLElement>(null);
+  
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
+  
+  // Velocity-based skewing
+  const { scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
+  const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
+  const skew = useTransform(smoothVelocity, [-1000, 1000], [-3, 3]);
+
+  const bgY1 = useTransform(scrollYProgress, [0, 1], [0, 800]);
+  const bgY2 = useTransform(scrollYProgress, [0, 1], [0, -800]);
+  const bgRotate1 = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const bgRotate2 = useTransform(scrollYProgress, [0, 1], [0, -360]);
 
   const naszeSystemy = projects.filter(p => p.category === "nasze-systemy");
   const stronyZrobione = projects.filter(p => p.category === "strony-zrobione");
@@ -137,7 +155,7 @@ export default function FeaturedWork() {
   }, [categories]);
 
   return (
-    <section id="work" className="relative bg-[#FCFCFA] w-full pb-40 overflow-hidden">
+    <section ref={containerRef} id="work" className="relative bg-[#FCFCFA] w-full pb-40 overflow-hidden">
       
       {/* Geometric Pattern Background */}
       <div 
@@ -147,11 +165,13 @@ export default function FeaturedWork() {
         }}
       />
 
+      {/* Moving Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[10%] left-[5%] w-[1px] h-64 bg-[#051F20]/10 rotate-45" />
-        <div className="absolute top-[30%] right-[10%] w-32 h-32 border border-[#051F20]/5 rotate-12 rounded-3xl" />
-        <div className="absolute top-[60%] left-[15%] w-64 h-[1px] bg-[#051F20]/10 -rotate-12" />
-        <div className="absolute bottom-[20%] right-[5%] w-48 h-48 border border-[#051F20]/5 rounded-full" />
+        <motion.div style={{ y: bgY1, rotate: bgRotate1 }} className="absolute top-[10%] left-[5%] w-[1px] h-[50vh] bg-[#051F20]/10" />
+        <motion.div style={{ y: bgY2, rotate: bgRotate2 }} className="absolute top-[30%] right-[10%] w-[30vw] h-[30vw] border border-[#051F20]/5 rounded-3xl" />
+        <motion.div style={{ y: bgY1, rotate: bgRotate2 }} className="absolute top-[60%] left-[15%] w-[40vw] h-[1px] bg-[#051F20]/10" />
+        <motion.div style={{ y: bgY2, rotate: bgRotate1 }} className="absolute bottom-[20%] right-[5%] w-[40vw] h-[40vw] border border-[#051F20]/5 rounded-full" />
+        <motion.div style={{ y: bgY1, scale: useTransform(scrollYProgress, [0, 1], [1, 1.5]) }} className="absolute top-[40%] left-[40%] w-[20vw] h-[20vw] bg-gradient-to-tr from-[#8EB69B]/5 to-transparent rounded-full blur-3xl" />
       </div>
 
       {/* Sticky Sidebar Indicator */}
@@ -170,7 +190,10 @@ export default function FeaturedWork() {
         <div className="absolute left-[3px] top-4 bottom-4 w-[2px] bg-white/10 -z-10" />
       </div>
 
-      <div className="max-w-[2560px] mx-auto px-6 md:px-12 lg:px-24 xl:px-48 relative z-10">
+      <motion.div 
+        style={{ skewY: skew }}
+        className="max-w-[2560px] mx-auto px-6 md:px-12 lg:px-24 xl:px-48 relative z-10"
+      >
         
         {naszeSystemy.length > 0 && (
           <div id="category-nasze-systemy">
@@ -205,7 +228,7 @@ export default function FeaturedWork() {
           </div>
         )}
 
-      </div>
+      </motion.div>
     </section>
   );
 }

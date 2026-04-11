@@ -44,11 +44,13 @@ export default function Hero() {
   const tiltX = useSpring(useTransform(mouseY, [-1, 1], [20, -20]), { stiffness: 100, damping: 30 });
   const tiltY = useSpring(useTransform(mouseX, [-1, 1], [-20, 20]), { stiffness: 100, damping: 30 });
 
-  // Scroll animations
+  // Scroll animations mapped continuously
+  // 0.0 - 0.2: Card flips
+  // 0.2 - 0.5: Card scales up massively
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.5], [1, 1.2, 60]);
   const smoothScale = useSpring(scale, { stiffness: 80, damping: 20 });
   
-  const flipProgress = useTransform(scrollYProgress, [0.05, 0.2], [0, 180]);
+  const flipProgress = useTransform(scrollYProgress, [0.0, 0.2], [0, 180]);
   
   const rotateX = useTransform(() => {
     const scroll = scrollYProgress.get();
@@ -64,8 +66,48 @@ export default function Hero() {
   });
   
   const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const cardContentOpacity = useTransform(scrollYProgress, [0.3, 0.4], [1, 0]);
-  const techOverlayOpacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
+  const cardContentOpacity = useTransform(scrollYProgress, [0.2, 0.35], [1, 0]);
+  
+  // Tech Overlay Animations
+  // 0.4 - 0.5: Reveal fades in
+  // 0.7 - 1.0: Fades out as it flies past camera
+  const techOverlayOpacity = useTransform(scrollYProgress, [0.4, 0.5, 0.9, 1.0], [0, 1, 1, 0]);
+  
+  // Z-axis fly in and scale for the grid
+  const techGridZ = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-1500, 0, 1500]);
+  const techGridScale = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [0.5, 1, 2.5]);
+
+  // Modules scatter (fly in and pull apart)
+  const m1X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-800, 0, -1500]);
+  const m1Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-800, 0, -1500]);
+  const m1Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-1000, 0, 500]);
+  
+  const m2X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [400, 0, 800]);
+  const m2Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-600, 0, -1200]);
+  const m2Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-800, 0, 400]);
+  
+  const m3X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [800, 0, 1500]);
+  const m3Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-600, 0, -1200]);
+  const m3Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-1200, 0, 600]);
+
+  const m4X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [800, 0, 1500]);
+  const m4Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [400, 0, 800]);
+  const m4Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-900, 0, 450]);
+  
+  const m5X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-800, 0, -1500]);
+  const m5Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [800, 0, 1500]);
+  const m5Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-1100, 0, 550]);
+
+  const m6X = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [0, 0, 0]);
+  const m6Y = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [800, 0, 1500]);
+  const m6Z = useTransform(scrollYProgress, [0.4, 0.7, 1.0], [-700, 0, 350]);
+
+  // Floating background elements
+  const bg1Y = useTransform(scrollYProgress, [0, 1], [0, -600]);
+  const bg1Rotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const bg2Y = useTransform(scrollYProgress, [0, 1], [0, 800]);
+  const bg2Rotate = useTransform(scrollYProgress, [0, 1], [0, -180]);
+  const bgTextY = useTransform(scrollYProgress, [0, 0.2], [0, -150]);
 
   return (
     <section
@@ -86,17 +128,17 @@ export default function Hero() {
 
         {/* Floating background elements for "crazy" vibe */}
         <motion.div 
-           style={{ y: useTransform(scrollYProgress, [0, 1], [0, -300]), rotate: useTransform(scrollYProgress, [0, 1], [0, 90]) }}
+           style={{ y: bg1Y, rotate: bg1Rotate }}
            className="absolute top-[10%] right-[10%] w-64 h-64 border border-[#051F20]/5 rounded-full pointer-events-none z-0"
         />
         <motion.div 
-           style={{ y: useTransform(scrollYProgress, [0, 1], [0, 400]), rotate: useTransform(scrollYProgress, [0, 1], [0, -90]) }}
+           style={{ y: bg2Y, rotate: bg2Rotate }}
            className="absolute bottom-[20%] left-[5%] w-32 h-32 bg-[#051F20]/5 pointer-events-none z-0"
         />
 
         {/* Giant floating background text */}
         <motion.div 
-          style={{ opacity: textOpacity, y: useTransform(scrollYProgress, [0, 0.2], [0, -100]) }}
+          style={{ opacity: textOpacity, y: bgTextY }}
           className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
         >
           <h1 className="text-[15vw] font-serif font-light text-[#051F20]/5 tracking-tighter italic whitespace-nowrap select-none">
@@ -185,12 +227,23 @@ export default function Hero() {
 
         {/* Tech / AI Modules Overlay (Revealed when card covers screen) */}
         <motion.div 
-          style={{ opacity: techOverlayOpacity, display: useTransform(techOverlayOpacity, v => v > 0 ? 'flex' : 'none') }}
+          style={{ 
+            opacity: techOverlayOpacity, 
+            display: useTransform(techOverlayOpacity, v => v > 0 ? 'flex' : 'none'),
+            perspective: "1200px"
+          }}
           className="absolute inset-0 z-30 flex items-center justify-center p-4 md:p-8 xl:p-16 bg-[#051F20]"
         >
-          <div className="w-full h-full border border-[#163832]/50 grid grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-3 gap-px bg-[#163832]/30">
+          <motion.div 
+            style={{ 
+              z: techGridZ, 
+              scale: techGridScale,
+              transformStyle: "preserve-3d"
+            }}
+            className="w-full max-w-6xl aspect-video grid grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-3 gap-px bg-[#163832]/30"
+          >
             
-            <div className="col-span-2 row-span-2 bg-[#051F20] p-8 flex flex-col justify-end relative overflow-hidden group hover:bg-[#0A2A28] transition-colors">
+            <motion.div style={{ x: m1X, y: m1Y, z: m1Z }} className="col-span-2 row-span-2 bg-[#051F20] p-8 flex flex-col justify-end relative overflow-hidden group hover:bg-[#0A2A28] transition-colors shadow-2xl">
               <motion.div 
                 animate={{ y: ["-100%", "100%"] }} 
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
@@ -198,44 +251,44 @@ export default function Hero() {
               />
               <span className="text-[#8EB69B] font-mono text-[10px] md:text-xs mb-4 uppercase tracking-[0.3em]">Module // 01</span>
               <h3 className="text-[#DAF1DE] text-4xl md:text-6xl font-serif italic tracking-tighter">Artificial<br/>Intelligence</h3>
-            </div>
+            </motion.div>
             
-            <div className="bg-[#051F20] p-6 flex flex-col justify-between hover:bg-[#0A2A28] transition-colors cursor-default">
+            <motion.div style={{ x: m2X, y: m2Y, z: m2Z }} className="bg-[#051F20] p-6 flex flex-col justify-between hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl">
                <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">SYS.STATUS</span>
                <div className="flex gap-1 items-end h-16">
                   {[40, 70, 45, 90, 60, 85, 30, 80].map((h, i) => (
                     <motion.div key={i} className="w-full bg-[#163832]" animate={{ height: [`${h}%`, `${(h * 1.5) % 100}%`, `${h}%`] }} transition={{ duration: 1.5, repeat: Infinity, delay: i*0.1 }} />
                   ))}
                </div>
-            </div>
+            </motion.div>
             
-            <div className="bg-[#051F20] p-6 flex flex-col items-center justify-center relative hover:bg-[#0A2A28] transition-colors">
+            <motion.div style={{ x: m3X, y: m3Y, z: m3Z }} className="bg-[#051F20] p-6 flex flex-col items-center justify-center relative hover:bg-[#0A2A28] transition-colors shadow-2xl">
                <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-20 h-20 rounded-full border border-dashed border-[#8EB69B]/50 absolute" />
                <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="w-16 h-16 rounded-full border border-dotted border-[#8EB69B] absolute" />
                <div className="text-[#DAF1DE] font-mono text-[10px] z-10">ML/OP</div>
-            </div>
+            </motion.div>
 
-            <div className="row-span-2 bg-[#051F20] p-6 flex flex-col justify-end hover:bg-[#0A2A28] transition-colors cursor-default">
+            <motion.div style={{ x: m4X, y: m4Y, z: m4Z }} className="row-span-2 bg-[#051F20] p-6 flex flex-col justify-end hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl">
               <span className="text-[#8EB69B] font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">Module // 02</span>
               <h3 className="text-[#DAF1DE] text-2xl md:text-3xl font-sans font-light tracking-tight">Hardware<br/>Integration</h3>
               <div className="mt-8 w-full h-1 bg-[#163832] rounded-full overflow-hidden">
                 <motion.div className="h-full bg-[#8EB69B]" animate={{ x: ["-100%", "100%"] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
               </div>
-            </div>
+            </motion.div>
             
-            <div className="col-span-2 bg-[#051F20] p-6 flex items-end justify-between hover:bg-[#0A2A28] transition-colors cursor-default">
+            <motion.div style={{ x: m5X, y: m5Y, z: m5Z }} className="col-span-2 bg-[#051F20] p-6 flex items-end justify-between hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl">
                <div className="text-[#DAF1DE]/50 text-xs font-mono">PROCESSING DATA_STREAM...</div>
                <span className="text-[#DAF1DE] bg-[#163832] px-2 py-1 rounded font-mono text-[10px] animate-pulse">ACTIVE</span>
-            </div>
+            </motion.div>
             
-            <div className="col-span-3 bg-[#051F20] p-6 flex items-center gap-6 hover:bg-[#0A2A28] transition-colors cursor-default">
+            <motion.div style={{ x: m6X, y: m6Y, z: m6Z }} className="col-span-3 bg-[#051F20] p-6 flex items-center gap-6 hover:bg-[#0A2A28] transition-colors cursor-default shadow-2xl">
                <div className="w-4 h-4 rounded-full bg-[#DAF1DE] animate-ping" />
                <div className="text-[#8EB69B] text-xs font-mono flex flex-col gap-1">
                  <span>Neural Net Cluster Online.</span>
                  <span>Latency: 12ms. Zero packet loss.</span>
                </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </motion.div>
         
         {/* Scroll Hint */}
