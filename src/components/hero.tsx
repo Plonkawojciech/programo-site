@@ -6,9 +6,14 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 export default function Hero() {
   const container = useRef<HTMLElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -18,7 +23,7 @@ export default function Hero() {
 
   const smoothProgress = useSpring(scrollYProgress, { damping: 20, stiffness: 100 });
 
-  const xMain = useTransform(smoothProgress, [0, 1], ["0vw", "-250vw"]);
+  const xMain = useTransform(smoothProgress, [0, 1], ["0vw", isMobile ? "-450vw" : "-250vw"]);
   const xBg = useTransform(smoothProgress, [0, 1], ["0vw", "-100vw"]);
   const xFg = useTransform(smoothProgress, [0, 1], ["0vw", "-400vw"]);
 
@@ -38,7 +43,7 @@ export default function Hero() {
         {/* Massive Background Text */}
         <motion.div 
           style={{ x: xBg }}
-          className="absolute top-[10%] left-0 flex whitespace-nowrap opacity-[0.03] pointer-events-none select-none z-0"
+          className="absolute top-[10%] left-0 flex whitespace-nowrap opacity-[0.03] pointer-events-none select-none z-0 transform-gpu will-change-transform"
         >
           <h1 className="text-[35vw] font-serif italic tracking-tighter leading-none text-[#DAF1DE]">
             digital craftsmanship digital craftsmanship digital craftsmanship
@@ -48,10 +53,10 @@ export default function Hero() {
         {/* Main Horizontal Track */}
         <motion.div 
           style={{ x: xMain }}
-          className="relative z-10 flex items-center h-full px-[10vw] gap-[20vw] whitespace-nowrap"
+          className="relative z-10 flex items-center h-full px-[10vw] gap-[20vw] whitespace-nowrap transform-gpu will-change-transform"
         >
           {/* 1. Intro Typography */}
-          <div className="flex flex-col relative shrink-0">
+          <div className="flex flex-col relative shrink-0 transform-gpu will-change-[transform,opacity]">
             <h1 className="text-[15vw] font-sans font-light tracking-tighter leading-none text-[#DAF1DE] mix-blend-difference">
               programo
             </h1>
@@ -61,11 +66,11 @@ export default function Hero() {
           </div>
 
           {/* 2. Abstract Geometric Composition & Card */}
-          <div className="relative shrink-0 w-[60vw] h-[60vh] flex items-center justify-center">
+          <div className="relative shrink-0 w-[60vw] h-[60vh] flex items-center justify-center transform-gpu will-change-transform">
             
             <motion.div 
-              style={{ y: useTransform(smoothProgress, [0, 1], [-100, 200]), rotate: 5 }}
-              className="absolute w-[40vw] h-[50vh] bg-[#0A2A28] border border-[#163832] right-0 top-0 opacity-80 z-0 flex items-end p-8"
+              style={{ y: isMobile ? 0 : useTransform(smoothProgress, [0, 1], [-100, 200]), rotate: isMobile ? 0 : 5 }}
+              className="absolute w-[40vw] h-[50vh] bg-[#0A2A28] border border-[#163832] right-0 top-0 opacity-80 z-0 flex items-end p-8 transform-gpu will-change-[transform,opacity]"
             >
               <h3 className="text-[#8EB69B] font-serif text-[8vw] italic leading-none opacity-50">engineering</h3>
             </motion.div>
@@ -73,8 +78,8 @@ export default function Hero() {
             {/* Business Card Overlay */}
             {isMounted && (
               <motion.div 
-                style={{ rotate: cardRotate, y: cardY }}
-                className="absolute z-20 left-[10%] w-[90vw] md:w-[600px] aspect-[1.6/1] bg-[#DAF1DE] rounded-2xl p-8 md:p-12 shadow-2xl border border-[#163832]/20 flex flex-col justify-between"
+                style={{ rotate: isMobile ? 0 : cardRotate, y: isMobile ? 0 : cardY }}
+                className="absolute z-20 left-[10%] w-[90vw] md:w-[600px] aspect-[1.6/1] bg-[#DAF1DE] rounded-2xl p-8 md:p-12 shadow-2xl border border-[#163832]/20 flex flex-col justify-between transform-gpu will-change-[transform,opacity]"
               >
                 <div className="flex justify-between items-start">
                   <div className="max-w-[70%]">
@@ -107,9 +112,9 @@ export default function Hero() {
           </div>
 
           {/* 3. Tech Specs Module */}
-          <div className="relative shrink-0 w-[50vw] flex flex-col gap-8">
+          <div className="relative shrink-0 w-[50vw] flex flex-col gap-8 transform-gpu">
             <div className="w-full h-[2px] bg-[#163832] relative overflow-hidden">
-               <motion.div className="absolute top-0 bottom-0 left-0 w-1/3 bg-[#8EB69B]" animate={{ x: ["-100%", "300%"] }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }} />
+               <motion.div className="absolute top-0 bottom-0 left-0 w-1/3 bg-[#8EB69B] transform-gpu" animate={{ x: ["-100%", "300%"] }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }} />
             </div>
             <h2 className="text-[10vw] font-sans font-black tracking-tighter text-[#DAF1DE] uppercase leading-none mix-blend-difference">
               Systems<br/>Online
@@ -126,7 +131,7 @@ export default function Hero() {
         {/* Foreground fast moving ticker */}
         <motion.div 
           style={{ x: xFg }}
-          className="absolute bottom-12 left-0 flex whitespace-nowrap z-30 opacity-60 text-[#8EB69B] font-mono text-2xl tracking-[0.5em]"
+          className="absolute bottom-12 left-0 flex whitespace-nowrap z-30 opacity-60 text-[#8EB69B] font-mono text-2xl tracking-[0.5em] transform-gpu will-change-transform"
         >
            {[...Array(10)].map((_, i) => (
              <span key={i} className="mx-12">SCROLL TO EXPLORE // INIT.SEQUENCE // HORIZONTAL_TRACK_ACTIVE //</span>

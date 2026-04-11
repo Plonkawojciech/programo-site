@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useSpring, MotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,23 +9,23 @@ import { projects } from "@/lib/projects";
 import type { Project } from "@/lib/projects";
 
 // Inner Project Component to handle local parallax and text offsets
-function HorizontalProject({ project, index, progress, lang, totalProjects }: { project: Project, index: number, progress: MotionValue<number>, lang: string, totalProjects: number }) {
+function HorizontalProject({ project, index, progress, lang, totalProjects, isMobile }: { project: Project, index: number, progress: MotionValue<number>, lang: string, totalProjects: number, isMobile: boolean }) {
   // Determine start and end points of this project's visibility in the global progress (0 to 1)
   const center = index / Math.max(1, (totalProjects - 1));
   const start = Math.max(0, center - 0.2);
   const end = Math.min(1, center + 0.2);
 
   // Inner image parallax (moves inside its container boundaries)
-  const imageX = useTransform(progress, [start, end], ["-30%", "30%"]);
+  const imageX = useTransform(progress, [start, end], isMobile ? ["0%", "0%"] : ["-30%", "30%"]);
   
   // Project text moving at a different speed (offset relative to the main container)
-  const textX = useTransform(progress, [start, end], ["15vw", "-15vw"]);
+  const textX = useTransform(progress, [start, end], isMobile ? ["0vw", "0vw"] : ["15vw", "-15vw"]);
 
   return (
-    <div className="w-[80vw] h-[80vh] flex-shrink-0 flex items-center justify-center relative mx-[5vw]">
+    <div className="w-[80vw] h-[80vh] flex-shrink-0 flex items-center justify-center relative mx-[5vw] transform-gpu will-change-transform">
       
       {/* Text layer with separate parallax speed */}
-      <motion.div style={{ x: textX }} className="absolute z-30 left-[5vw] top-1/4 max-w-3xl pointer-events-none">
+      <motion.div style={{ x: textX }} className="absolute z-30 left-[5vw] top-1/4 max-w-3xl pointer-events-none transform-gpu will-change-[transform,opacity]">
         <h3 className="text-[6vw] font-sans font-black tracking-tighter leading-[0.8] text-[#DAF1DE] uppercase mix-blend-difference drop-shadow-2xl">
           {project.title}
         </h3>
@@ -35,29 +35,29 @@ function HorizontalProject({ project, index, progress, lang, totalProjects }: { 
       </motion.div>
 
       {/* Image layer */}
-      <Link href={`/projects/${project.slug}`} className="relative z-20 w-[60vw] md:w-[45vw] aspect-[16/10] overflow-hidden group rounded-xl shadow-2xl border border-[#163832]/50 block cursor-pointer transform-gpu hover:scale-[1.02] transition-transform duration-500">
-        <motion.div style={{ x: imageX, width: "160%", left: "-30%" }} className="relative h-full">
+      <Link href={`/projects/${project.slug}`} className="relative z-20 w-[60vw] md:w-[45vw] aspect-[16/10] overflow-hidden group rounded-xl shadow-2xl border border-[#163832]/50 block cursor-pointer transform-gpu hover:scale-[1.02] transition-transform duration-500 will-change-transform">
+        <motion.div style={{ x: imageX, width: isMobile ? "100%" : "160%", left: isMobile ? "0%" : "-30%" }} className="relative h-full transform-gpu will-change-transform">
           {project.screenshots?.[0] ? (
             <Image 
               src={project.screenshots[0]} 
               alt={project.title} 
               fill 
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out opacity-80 group-hover:opacity-100" 
+              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out opacity-80 group-hover:opacity-100 transform-gpu" 
             />
           ) : (
-             <div className="w-full h-full bg-[#0A2A28] flex items-center justify-center">
+             <div className="w-full h-full bg-[#0A2A28] flex items-center justify-center transform-gpu">
                <span className="text-[#8EB69B] font-serif text-8xl italic opacity-20">{project.title[0]}</span>
              </div>
           )}
         </motion.div>
         
         {/* Overlay gradient for depth */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#051F20]/80 via-transparent to-[#051F20]/80 opacity-50 pointer-events-none transition-opacity duration-500 group-hover:opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#051F20]/80 via-transparent to-[#051F20]/80 opacity-50 pointer-events-none transition-opacity duration-500 group-hover:opacity-20 transform-gpu" />
       </Link>
       
       {/* Decorative details */}
-      <div className="absolute bottom-10 right-10 flex flex-col items-end gap-3 text-[#8EB69B] font-mono text-sm uppercase tracking-widest text-right z-20 pointer-events-none">
+      <div className="absolute bottom-10 right-10 flex flex-col items-end gap-3 text-[#8EB69B] font-mono text-sm uppercase tracking-widest text-right z-20 pointer-events-none transform-gpu will-change-[transform,opacity]">
         <span className="bg-[#051F20]/80 px-4 py-2 border border-[#163832] backdrop-blur-sm">Project // {String(index + 1).padStart(2, '0')}</span>
         <div className="flex gap-2">
           {project.tags.slice(0, 3).map((t: string) => <span key={t} className="px-3 py-1 border border-[#163832] bg-[#0A2A28]/80 backdrop-blur-sm rounded-sm">{t}</span>)}
@@ -69,6 +69,7 @@ function HorizontalProject({ project, index, progress, lang, totalProjects }: { 
 
 export default function FeaturedWork() {
   const containerRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const { scrollYProgress } = useScroll({ 
     target: containerRef, 
     offset: ["start start", "end end"] 
@@ -76,6 +77,13 @@ export default function FeaturedWork() {
   
   const smoothProgress = useSpring(scrollYProgress, { damping: 20, stiffness: 100 });
   const { lang } = useI18n();
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Combine all categories into one massive timeline
   const naszeSystemy = projects.filter(p => p.category === "nasze-systemy");
@@ -89,7 +97,7 @@ export default function FeaturedWork() {
 
   // Main track horizontal movement: from 0vw to the very end of the projects
   // We offset it so the last project aligns near the center or left edge at the end of the scroll
-  const xMain = useTransform(smoothProgress, [0, 1], ["0vw", `-${totalProjects * 90}vw`]);
+  const xMain = useTransform(smoothProgress, [0, 1], ["0vw", isMobile ? `-${totalProjects * 95}vw` : `-${totalProjects * 90}vw`]);
 
   // Background big numbers scrolling at a different (slower) speed
   const xBgNumbers = useTransform(smoothProgress, [0, 1], ["0vw", `-${totalProjects * 40}vw`]);
@@ -101,7 +109,7 @@ export default function FeaturedWork() {
         {/* BIG NUMBERS BACKGROUND TRACK (Slower) */}
         <motion.div 
           style={{ x: xBgNumbers }}
-          className="absolute top-1/2 -translate-y-1/2 flex items-center h-full pointer-events-none z-0 whitespace-nowrap"
+          className="absolute top-1/2 -translate-y-1/2 flex items-center h-full pointer-events-none z-0 whitespace-nowrap transform-gpu will-change-transform"
         >
            {allProjects.map((p, i) => (
              <div key={`bg-${i}`} className="w-[80vw] mx-[5vw] flex-shrink-0 flex justify-center text-[40vw] font-serif italic text-[#DAF1DE]/5 leading-none select-none">
@@ -113,7 +121,7 @@ export default function FeaturedWork() {
         {/* MAIN PROJECTS TRACK */}
         <motion.div 
           style={{ x: xMain }}
-          className="relative z-10 flex items-center h-full whitespace-nowrap"
+          className="relative z-10 flex items-center h-full whitespace-nowrap transform-gpu will-change-transform"
         >
           {/* Pad the start so it connects smoothly from Hero's exit */}
           <div className="w-[20vw] flex-shrink-0" />
@@ -126,6 +134,7 @@ export default function FeaturedWork() {
                progress={smoothProgress} 
                lang={lang}
                totalProjects={totalProjects}
+               isMobile={isMobile}
              />
           ))}
           
