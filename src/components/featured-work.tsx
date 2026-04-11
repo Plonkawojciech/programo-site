@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { projects } from "@/lib/projects";
 import type { Project } from "@/lib/projects";
 import type { Lang } from "@/lib/i18n";
 
-function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; index: number }) {
+function ProjectCell({ project, lang, index, isMobile }: { project: Project; lang: Lang; index: number; isMobile: boolean }) {
   const [isHovered, setIsHovered] = useState(false);
   
   const spans = [
@@ -27,19 +27,19 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
 
   return (
     <motion.div
-      layout
+      layout="position"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative bg-[#051F20] overflow-hidden group min-h-[350px] ${spanClass}`}
+      className={`relative bg-[#051F20] overflow-hidden group min-h-[350px] ${spanClass} transform-gpu will-change-transform`}
     >
       <Link href={`/projects/${project.slug}`} className="block w-full h-full">
         {project.screenshots?.[0] ? (
           <motion.div 
-            className="absolute inset-0 w-full h-full origin-center"
+            className="absolute inset-0 w-full h-full origin-center transform-gpu will-change-transform"
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
@@ -54,34 +54,34 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
             
             {/* Scanning line effect on hover */}
             <AnimatePresence>
-              {isHovered && (
+              {isHovered && !isMobile && (
                 <motion.div 
                   initial={{ top: "-10%" }}
                   animate={{ top: "110%" }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 1.5, ease: "linear", repeat: Infinity }}
-                  className="absolute left-0 right-0 h-[2px] bg-[#DAF1DE] shadow-[0_0_15px_#DAF1DE] z-20 pointer-events-none opacity-50"
+                  className="absolute left-0 right-0 h-[2px] bg-[#DAF1DE] shadow-[0_0_15px_#DAF1DE] z-20 pointer-events-none opacity-50 transform-gpu"
                 />
               )}
             </AnimatePresence>
           </motion.div>
         ) : (
-          <div className="absolute inset-0 bg-[#0A2A28] flex items-center justify-center">
+          <div className="absolute inset-0 bg-[#0A2A28] flex items-center justify-center transform-gpu">
             <span className="text-[#163832] font-serif text-8xl italic opacity-50">{project.title[0]}</span>
           </div>
         )}
 
         {/* Text overlay - always visible minimal, fully revealed on hover */}
-        <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between z-30 pointer-events-none">
+        <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between z-30 pointer-events-none transform-gpu">
           <div className="flex justify-between items-start">
-            <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest bg-[#051F20]/80 px-2 py-1 backdrop-blur-sm border border-[#163832]">
+            <span className={`text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest bg-[#051F20]/80 px-2 py-1 border border-[#163832] ${isMobile ? '' : 'backdrop-blur-sm'}`}>
               {project.category} // {String(index + 1).padStart(2, '0')}
             </span>
             <div className="w-2 h-2 rounded-full bg-[#163832] group-hover:bg-[#DAF1DE] transition-colors group-hover:animate-ping shadow-[0_0_10px_#DAF1DE] group-hover:shadow-[0_0_10px_#DAF1DE]" />
           </div>
 
           <motion.div 
-            className="flex flex-col gap-2 bg-[#051F20]/95 p-4 border border-[#163832] backdrop-blur-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out"
+            className={`flex flex-col gap-2 bg-[#051F20]/95 p-4 border border-[#163832] ${isMobile ? '' : 'backdrop-blur-md'} transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out will-change-transform`}
           >
             <h3 className="text-[#DAF1DE] text-2xl md:text-3xl font-sans font-light tracking-tight truncate">
               {project.title}
@@ -91,7 +91,7 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: isHovered ? "auto" : 0, opacity: isHovered ? 1 : 0 }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden"
+              className="overflow-hidden transform-gpu"
             >
               <p className="text-[#8EB69B] text-xs md:text-sm font-serif italic mb-2 line-clamp-2">
                 {project.subtitle[lang]}
@@ -115,6 +115,14 @@ export default function FeaturedWork() {
   const { lang } = useI18n();
   const containerRef = useRef<HTMLElement>(null);
   const [filter, setFilter] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
   
   const allProjects = projects;
   const filteredProjects = filter ? allProjects.filter(p => p.category === filter) : allProjects;
@@ -126,7 +134,7 @@ export default function FeaturedWork() {
       <div className="w-full bg-[#163832] p-[1px] grid grid-cols-1 md:grid-cols-4 gap-[1px]">
         
         {/* Header Cell with Filter */}
-        <div className="col-span-1 md:col-span-4 bg-[#0A2A28] p-8 md:p-12 flex flex-col items-start justify-between border-b border-[#163832]">
+        <div className="col-span-1 md:col-span-4 bg-[#0A2A28] p-8 md:p-12 flex flex-col items-start justify-between border-b border-[#163832] transform-gpu">
            <div className="flex w-full flex-col md:flex-row justify-between items-start md:items-end mb-12">
              <div>
                <span className="text-[#8EB69B] font-mono text-xs uppercase tracking-[0.4em] mb-4 block">DATABASE_QUERY: WORK</span>
@@ -162,12 +170,12 @@ export default function FeaturedWork() {
         {/* The Bento Grid of Projects */}
         <AnimatePresence mode="popLayout">
           {filteredProjects.map((project, idx) => (
-            <ProjectCell key={project.slug} project={project} lang={lang} index={idx} />
+            <ProjectCell key={project.slug} project={project} lang={lang} index={idx} isMobile={isMobile} />
           ))}
         </AnimatePresence>
         
         {/* Footer Cell */}
-        <div className="col-span-1 md:col-span-4 bg-[#051F20] p-12 flex items-center justify-center">
+        <div className="col-span-1 md:col-span-4 bg-[#051F20] p-12 flex items-center justify-center transform-gpu">
           <div className="flex items-center gap-4 text-[#8EB69B] font-mono text-xs uppercase tracking-[0.3em]">
              <span className="w-8 h-[1px] bg-[#163832]" />
              END_OF_RECORDS
