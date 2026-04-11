@@ -12,7 +12,6 @@ import {
   durationMedium,
   springGentle,
 } from "@/lib/motion";
-import MagneticWrapper from "@/components/magnetic";
 
 export default function Navbar() {
   const { lang, toggle, t } = useI18n();
@@ -144,7 +143,7 @@ export default function Navbar() {
           <div className="flex justify-between items-center px-8 py-3">
             <Link
               href="/"
-              className="font-headline text-xl font-semibold tracking-tight text-on-surface"
+              className="font-headline text-xl font-semibold tracking-tight text-[#051F20]"
             >
               Programo
             </Link>
@@ -158,8 +157,8 @@ export default function Navbar() {
                     href={link.href}
                     className={`relative text-[13px] uppercase font-medium transition-colors ${
                       isActive
-                        ? "text-primary"
-                        : "text-on-surface-variant/70 hover:text-primary"
+                        ? "text-[#051F20]"
+                        : "text-[#051F20]/60 hover:text-[#051F20]"
                     }`}
                     style={{
                       transitionDuration: `${durationFast * 1000}ms`,
@@ -186,7 +185,7 @@ export default function Navbar() {
               <button
                 onClick={toggle}
                 aria-label={t("a11y.langToggle")}
-                className="text-[13px] uppercase font-medium text-on-surface-variant/50 cursor-pointer hover:text-primary transition-colors"
+                className="text-[13px] uppercase font-medium text-[#051F20]/40 cursor-pointer hover:text-[#051F20] transition-colors"
                 style={{
                   transitionDuration: `${durationFast * 1000}ms`,
                   transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
@@ -194,18 +193,16 @@ export default function Navbar() {
               >
                 {lang === "pl" ? "EN" : "PL"}
               </button>
-              <MagneticWrapper>
-                <a
-                  href="#contact"
-                  className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all"
-                  style={{
-                    transitionDuration: `${durationFast * 1000}ms`,
-                    transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
-                  }}
-                >
-                  {t("nav.cta")}
-                </a>
-              </MagneticWrapper>
+              <a
+                href="#contact"
+                className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all"
+                style={{
+                  transitionDuration: `${durationFast * 1000}ms`,
+                  transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
+                }}
+              >
+                {t("nav.cta")}
+              </a>
             </div>
           </div>
         </div>
@@ -237,12 +234,12 @@ export default function Navbar() {
             aria-label="Toggle menu"
           >
             <span
-              className={`h-[1.5px] w-5 bg-on-surface transition-all duration-300 ${
+              className={`h-[1.5px] w-5 bg-[#051F20] transition-all duration-300 ${
                 mobileOpen ? "translate-y-[4.5px] rotate-45" : ""
               }`}
             />
             <span
-              className={`h-[1.5px] w-5 bg-on-surface transition-all duration-300 ${
+              className={`h-[1.5px] w-5 bg-[#051F20] transition-all duration-300 ${
                 mobileOpen ? "-translate-y-[1.5px] -rotate-45" : ""
               }`}
             />
@@ -250,7 +247,7 @@ export default function Navbar() {
 
           <Link
             href="/"
-            className="text-lg font-headline font-semibold tracking-tight text-on-surface"
+            className="text-lg font-headline font-semibold tracking-tight text-[#051F20]"
           >
             Programo
           </Link>
@@ -258,7 +255,7 @@ export default function Navbar() {
           <button
             onClick={toggle}
             aria-label={t("a11y.langToggle")}
-            className="text-[13px] uppercase text-primary font-medium cursor-pointer"
+            className="text-[13px] uppercase text-[#051F20] font-medium cursor-pointer"
           >
             {lang === "pl" ? "EN" : "PL"}
           </button>
