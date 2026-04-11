@@ -124,22 +124,23 @@ export default function Hero() {
               {/* Card Front Content */}
               <motion.div style={{ opacity: cardContentOpacity }} className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-[#DAF1DE] text-xl font-medium font-sans tracking-tight">Programo Sp. z o.o.</h2>
-                    <p className="text-[#8EB69B] text-[10px] mt-1 uppercase tracking-widest font-mono">Enterprise Solutions</p>
+                  <div className="max-w-[70%]">
+                    <h2 className="text-[#DAF1DE] text-[10px] md:text-xs font-medium font-sans tracking-tight leading-tight uppercase">Bartosz Kolaj Wojciech Roch Płonka Programo Spółka Jawna</h2>
+                    <p className="text-[#8EB69B] text-[8px] md:text-[10px] mt-1.5 uppercase tracking-widest font-mono">Enterprise Solutions</p>
                   </div>
-                  <div className="text-[#DAF1DE] font-bold text-sm tracking-tight flex items-center gap-2">
+                  <div className="text-[#DAF1DE] font-bold text-sm tracking-tight flex items-center gap-2 shrink-0">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#8EB69B] inline-block animate-pulse" />
                     pr.
                   </div>
                 </div>
 
                 <div className="flex justify-between items-end">
-                  <div className="flex flex-col gap-1 text-[#8EB69B] text-[10px] md:text-xs font-mono opacity-80">
+                  <div className="flex flex-col gap-0.5 text-[#8EB69B] text-[8px] md:text-[10px] font-mono opacity-80 uppercase tracking-wide">
                     <span>NIP: 7792604466</span>
-                    <span>KRS: 0000000000</span>
-                    <span>Poznań, PL</span>
-                    <span className="mt-2 text-[#DAF1DE]">kontakt@programo.pl</span>
+                    <span>KRS: 0001233841</span>
+                    <span>Ul. Podkomorska 14/1</span>
+                    <span>60-326 Poznań, PL</span>
+                    <span className="mt-1.5 text-[#DAF1DE] normal-case tracking-normal">kontakt@programo.pl</span>
                   </div>
 
                   <div className="grid grid-cols-5 grid-rows-5 gap-[2px] w-12 h-12 bg-[#DAF1DE]/10 p-1 rounded-sm">
