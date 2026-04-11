@@ -17,6 +17,7 @@ export interface Project {
   description: { pl: string; en: string };
   longDescription: { pl: string; en: string };
   status: ProjectStatus;
+  category: "nasze-systemy" | "strony-zrobione" | "projekty";
   liveUrl?: string;
   tech: string[];
   features: { pl: string[]; en: string[] };
@@ -46,6 +47,7 @@ export const projects: Project[] = [
       en: "Estalo is an enterprise-grade SaaS CRM designed specifically for Polish real estate agencies.\n\nTwo plans:\n• Solo — for individual agents and small agencies\n• Enterprise — for larger agencies with team management\n\nAI Features:\n• Intelligent client-property matching (scoring 0-100)\n• RAG chatbot with pgvector embeddings\n• Property listing generator (AIDA model)\n• Quick Note — AI data extraction from free-form text\n• Professional email generator\n• Brain — pipeline analysis and trend detection\n\nPortal Integrations:\n• Otodom (OAuth 2.0 + REST API + XML + webhooks)\n• NOE 2.0, Domy.pl, Morizon-Gratka (XML feed + FTP)\n• Estalo Portal — proprietary property marketplace (webhook sync)\n\nEnterprise:\n• RBAC (5 roles: Owner, Manager, Director, Agent, Assistant)\n• Director dashboard with team analytics\n• Audit logging (17+ event types)\n• Invite system with codes\n\nSecurity:\n• 217 security tests (XSS, IDOR, prompt injection, upload validation)\n• FTP password encryption AES-256-GCM\n• Zod validation on 28 server actions\n• CSP headers with dynamic Azure endpoint",
     },
     status: "live",
+    category: "nasze-systemy",
     liveUrl: "https://estalo.pl",
     tech: ["Next.js 15.5", "TypeScript", "React 19", "Supabase", "Azure OpenAI", "pgvector", "Capacitor 8", "Lemon Squeezy", "Resend", "TipTap", "Recharts", "Zod"],
     features: {
@@ -116,6 +118,7 @@ export const projects: Project[] = [
       en: "Baulx is a complete software ecosystem for the timber construction and CNC prefabrication industry.\n\n Free:\n• Viewer — BTLx/WUP/TCN/G-code/IFC viewer with 3D visualization, shop drawings, QR labels, transport plans, BOM\n• Thermo — U-value calculators (EN ISO 6946), condensation analysis, thermal bridges\n\n Paid:\n• Convert — WUP/BTLx → TCN/G-code conversion, 5 post-processors (Weinmann WBS/WBZ, Hundegger K2, WBZ 160 HOMAG 5-axis, Fanuc 0i-MF, Mafell erika), batch processing\n• Wall — parametric 2D/3D wall designer (Konva.js + Three.js), studs, sheathing, CLT, installation niches, AI wall generator (Claude API)\n• Roof — roof designer (5 types), auto-timber, battens, dormers, skylights, wind load calculations, tile database\n• Floor — floor designer with deflection checking, timber connections, steel beams, hardware library\n• Calc — Eurocode 5 calculator (EN 1995), 20 modules: beams, columns, trusses, carports, connections, anchoring, snow/wind loads, fire, notch, steel profiles (EC3), AI D-bot\n• CNC — G-code editor + simulator with visual feedback, 6 post-processors, CNC Studio HMI\n• Nest — panel nesting optimizer (FFDH algorithm)\n• API — REST API v1 for developers, Bearer/JWT auth, rate limiting\n\n Baulx Pro — all paid products bundle\n\nTech: Vanilla JS (zero bundler), Three.js v0.170, Konva.js v9, Python serverless (Vercel), Supabase, PWA with Service Worker, dark/light theme, PL/EN.",
     },
     status: "live",
+    category: "nasze-systemy",
     liveUrl: "https://baulx.pl",
     tech: ["JavaScript", "Python", "Three.js", "Konva.js", "Supabase", "Anthropic Claude", "Vercel Serverless", "Eurocode 5"],
     features: {
@@ -178,6 +181,7 @@ export const projects: Project[] = [
       en: "Athlix is an ecosystem of 3 sport apps for serious athletes.\n\nTrainPilot — your personal training hub. Garmin Connect sync, daily AI briefing with recommendations, meal tracking from photos and barcodes, PMC fitness chart, power profile, seasonal supplements, and Google Calendar export.\n\nTrainMate — athlete community. Swipe and match training partners, real-time chat, Strava integration, gym module with personal records, training session organizer, forum and leaderboards.\n\nHealth — free health and recovery analytics. Bluetooth heart rate monitoring (Polar, Garmin, Wahoo, Coospo), 20+ heart rate variability algorithms, recovery and training load scoring, sleep analysis with stages, AI health coach, and overtraining detection.",
     },
     status: "live",
+    category: "nasze-systemy",
     liveUrl: "https://athlix-trainpilot.vercel.app",
     tech: ["Next.js 16.1", "TypeScript", "React 19", "Neon", "Drizzle", "Capacitor 8", "Anthropic Claude", "Web Bluetooth", "Pusher", "Strava API", "Garmin Connect", "Google Maps", "Recharts"],
     features: {
@@ -301,6 +305,7 @@ export const projects: Project[] = [
       en: "LearnAI is a modern course platform for creating, publishing and selling online courses. The system provides complete tools for course authors (lesson builder, video, quizzes, assignments) and for students (progress dashboard, certificates, notes).\n\nThe platform integrates AI for generating lesson summaries, recommending next courses, and personalizing learning paths. Payments handled by Stripe, video hosting, rating and review system.",
     },
     status: "planned",
+    category: "projekty",
     tech: ["Next.js", "TypeScript", "Supabase", "Stripe", "Azure OpenAI"],
     features: {
       pl: [
@@ -332,6 +337,71 @@ export const projects: Project[] = [
     },
     screenshots: ["/screenshots/learnai-hero.png", "/screenshots/learnai-levels.png"],
   },
+  {
+    slug: "sklep-x",
+    title: "Sklep internetowy X",
+    subtitle: {
+      pl: "Nowoczesny e-commerce",
+      en: "Modern e-commerce",
+    },
+    description: {
+      pl: "Kompleksowe wdrożenie sklepu internetowego z systemem płatności i zarządzaniem magazynem.",
+      en: "Comprehensive implementation of an online store with payment system and inventory management.",
+    },
+    longDescription: {
+      pl: "Projekt obejmował stworzenie dedykowanego sklepu internetowego od zera dla wiodącego dystrybutora elektroniki. System zawiera zintegrowane bramki płatności, śledzenie zamówień na żywo oraz zaawansowany panel administracyjny do zarządzania bazą produktów i relacjami z klientami.",
+      en: "The project involved creating a dedicated online store from scratch for a leading electronics distributor. The system features integrated payment gateways, live order tracking, and an advanced admin panel for managing the product database and customer relationships.",
+    },
+    status: "live",
+    category: "strony-zrobione",
+    liveUrl: "https://example.com/sklep",
+    tech: ["Next.js", "Shopify", "Tailwind CSS", "TypeScript", "Redis"],
+    features: {
+      pl: ["Płatności online w wielu walutach", "Koszyk z auto-zapisem", "Panel administratora B2B"],
+      en: ["Multi-currency online payments", "Auto-saving cart", "B2B admin dashboard"],
+    },
+    tags: ["E-commerce", "Web", "B2B"],
+    accentColor: "#3b82f6",
+    bgColor: "#0f172a",
+    year: "2025",
+    role: {
+      pl: "Development, Integracje API",
+      en: "Development, API Integrations",
+    },
+    screenshots: [],
+  },
+  {
+    slug: "korpo-y",
+    title: "Strona korporacyjna Y",
+    subtitle: {
+      pl: "Wizytówka firmy",
+      en: "Company showcase",
+    },
+    description: {
+      pl: "Responsywna i szybka strona wizerunkowa dla dużej korporacji. Skupiona na animacjach, mikro-interakcjach i SEO.",
+      en: "Responsive and fast corporate website for a large corporation. Focused on animations, micro-interactions, and SEO.",
+    },
+    longDescription: {
+      pl: "Zaprojektowaliśmy i wdrożyliśmy nowoczesną stronę dla międzynarodowej firmy Y. Strona wykorzystuje headless CMS do zarządzania treścią i serwuje statycznie wygenerowane podstrony w celu osiągnięcia maksymalnej wydajności i bezpieczeństwa. Warstwa frontendowa została wzbogacona o liczne, płynne animacje realizowane za pomocą Framer Motion i GSAP.",
+      en: "We designed and implemented a modern website for the international company Y. The site uses a headless CMS for content management and serves statically generated pages for maximum performance and security. The frontend layer was enriched with numerous, smooth animations implemented using Framer Motion and GSAP.",
+    },
+    status: "live",
+    category: "strony-zrobione",
+    tech: ["React", "Framer Motion", "GSAP", "Sanity CMS", "Next.js"],
+    features: {
+      pl: ["Zaawansowane animacje scroll", "Integracja Headless CMS", "Zoptymalizowane SEO", "Wsparcie i18n"],
+      en: ["Advanced scroll animations", "Headless CMS integration", "Optimized SEO", "i18n support"],
+    },
+    tags: ["Corporate", "Design", "Animations"],
+    accentColor: "#ec4899",
+    bgColor: "#171717",
+    year: "2024",
+    role: {
+      pl: "Projekt UX/UI i Development",
+      en: "UX/UI Design & Development",
+    },
+    screenshots: [],
+  }
 ];
 
 export function getProjectBySlug(slug: string): Project | undefined {
