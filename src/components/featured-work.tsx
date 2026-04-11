@@ -23,19 +23,19 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
   return (
     <motion.div
       ref={ref}
-      className={`relative w-full flex flex-col items-center gap-12 md:gap-24 mb-48 md:mb-80`}
+      className={`relative w-full flex flex-col items-center gap-12 md:gap-24 mb-48 md:mb-80 transform-gpu will-change-transform`}
     >
-      <Link href={`/projects/${project.slug}`} className="relative z-10 w-full aspect-[16/10] md:aspect-[21/9] overflow-hidden group rounded-sm shadow-sm border border-[#F5F5F5]">
+      <Link href={`/projects/${project.slug}`} className="relative z-10 w-full aspect-[16/10] md:aspect-[21/9] overflow-hidden group rounded-sm shadow-sm border border-[#F5F5F5] transform-gpu">
         <motion.div style={{ y: yImage, scale: smoothScale }} className="w-full h-full transform-gpu will-change-transform transition-opacity duration-700 group-hover:opacity-90">
           {project.screenshots?.[0] ? (
             <Image 
               src={project.screenshots[0]} 
               alt={project.title} 
               fill 
-              className="object-cover grayscale hover:grayscale-0 transition-all duration-1000 ease-out" 
+              className="object-cover grayscale hover:grayscale-0 transition-all duration-1000 ease-out transform-gpu will-change-[transform,opacity,filter]" 
             />
           ) : (
-            <div className="w-full h-full bg-[#FAFAFA] flex items-center justify-center">
+            <div className="w-full h-full bg-[#FAFAFA] flex items-center justify-center transform-gpu">
               <span className="text-black font-sans text-8xl font-bold opacity-5">{project.title[0]}</span>
             </div>
           )}
@@ -44,7 +44,7 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
 
       <motion.div 
         style={{ y: yText }} 
-        className={`relative z-20 w-full max-w-4xl flex flex-col items-center text-center`}
+        className={`relative z-20 w-full max-w-4xl flex flex-col items-center text-center transform-gpu will-change-transform`}
       >
         <span className="text-black/40 font-sans text-[10px] uppercase tracking-[0.5em] mb-6">
           {project.tags.slice(0,3).join(" / ")}
@@ -60,7 +60,7 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
 
         <Link 
           href={`/projects/${project.slug}`}
-          className="group flex items-center gap-6 text-black font-sans text-[10px] md:text-xs uppercase tracking-[0.5em] border-b border-black/10 pb-4 hover:border-black transition-colors"
+          className="group flex items-center gap-6 text-black font-sans text-[10px] md:text-xs uppercase tracking-[0.5em] border-b border-black/10 pb-4 hover:border-black transition-colors transform-gpu will-change-[border-color]"
         >
           <span>{lang === 'pl' ? 'Zobacz Projekt' : 'View Project'}</span>
           <span className="transform transition-transform group-hover:translate-x-4">→</span>
@@ -77,8 +77,8 @@ const CategoryTitle = ({ title, index }: { title: string, index: number }) => {
   const scale = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0.9, 1, 0.9]);
 
   return (
-    <div ref={ref} className="relative py-48 md:py-72 flex items-center justify-center overflow-hidden">
-        <motion.div style={{ opacity, scale }} className="text-center">
+    <div ref={ref} className="relative py-48 md:py-72 flex items-center justify-center overflow-hidden transform-gpu">
+        <motion.div style={{ opacity, scale }} className="text-center transform-gpu will-change-[transform,opacity]">
           <span className="text-black/20 font-sans text-xs uppercase tracking-[1em] mb-4 block">Section 0{index + 1}</span>
           <h2 className="text-6xl md:text-9xl font-sans font-bold uppercase tracking-tighter text-black">
             {title}

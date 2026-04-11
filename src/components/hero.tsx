@@ -42,13 +42,20 @@ export default function Hero() {
   
   const flipProgress = useTransform(scrollYProgress, [0.0, 0.2], [0, 180]);
   
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
   const rotateX = useTransform(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return 0;
     const scroll = scrollYProgress.get();
     const tilt = tiltX.get();
     return scroll > 0.1 ? 0 : tilt * (1 - scroll * 10);
   });
   
   const rotateY = useTransform(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return 0;
     const scroll = scrollYProgress.get();
     const tilt = tiltY.get();
     const flip = flipProgress.get();
@@ -77,7 +84,7 @@ export default function Hero() {
         
         {/* Subtle Background Grid */}
         <div 
-          className="absolute inset-0 pointer-events-none opacity-[0.05] z-0" 
+          className="absolute inset-0 pointer-events-none opacity-[0.05] z-0 transform-gpu" 
           style={{ 
             backgroundImage: "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
             backgroundSize: "100px 100px"
@@ -87,7 +94,7 @@ export default function Hero() {
         {/* Giant floating background text */}
         <motion.div 
           style={{ opacity: textOpacity, y: bgTextY }}
-          className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 transform-gpu will-change-[transform,opacity]"
         >
           <h1 className="text-[12vw] font-sans font-bold text-black/[0.02] tracking-tighter uppercase whitespace-nowrap select-none">
             pure minimalism
@@ -95,7 +102,7 @@ export default function Hero() {
         </motion.div>
 
         {/* Foreground Title */}
-        <motion.div style={{ opacity: textOpacity }} className="absolute z-10 top-[20%] flex flex-col items-center pointer-events-none">
+        <motion.div style={{ opacity: textOpacity }} className="absolute z-10 top-[20%] flex flex-col items-center pointer-events-none transform-gpu will-change-opacity">
           <h1 className="text-[10vw] md:text-[6vw] font-sans font-bold text-black tracking-tight leading-none mb-4">
             programo
           </h1>
@@ -119,17 +126,17 @@ export default function Hero() {
           >
             {/* BACK OF CARD (Initially Visible) - Textured White Paper */}
             <div 
-              className="absolute inset-0 bg-white rounded-sm shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-[#E0E0E0] overflow-hidden"
+              className="absolute inset-0 bg-white rounded-sm shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-[#E0E0E0] overflow-hidden transform-gpu translate-z-0"
               style={{
                 backfaceVisibility: "hidden",
                 transform: "rotateY(0deg)",
               }}
             >
               {/* Subtle Paper Texture via SVG filter would be too heavy, using CSS pattern */}
-              <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+              <div className="absolute inset-0 opacity-[0.03] pointer-events-none transform-gpu" 
                    style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")" }} />
               
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center transform-gpu">
                 <div className="text-black font-bold text-4xl tracking-tighter flex items-center gap-4">
                   <div className="w-8 h-8 bg-black rounded-full" />
                   programo.
@@ -139,26 +146,26 @@ export default function Hero() {
 
             {/* FRONT OF CARD (Revealed on flip) */}
             <div 
-              className="absolute inset-0 bg-white rounded-sm shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-[#E0E0E0] overflow-hidden"
+              className="absolute inset-0 bg-white rounded-sm shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-[#E0E0E0] overflow-hidden transform-gpu translate-z-0"
               style={{
                 backfaceVisibility: "hidden",
                 transform: "rotateY(180deg)"
               }}
             >
-              <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+              <div className="absolute inset-0 opacity-[0.03] pointer-events-none transform-gpu" 
                    style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")" }} />
               
               <div 
-                className="absolute inset-0 opacity-[0.05]" 
+                className="absolute inset-0 opacity-[0.05] transform-gpu" 
                 style={{ 
                   backgroundImage: "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
                   backgroundSize: "20px 20px"
                 }}
               />
 
-              <motion.div style={{ opacity: cardContentOpacity }} className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between">
-                <div className="flex justify-between items-start">
-                  <div>
+              <motion.div style={{ opacity: cardContentOpacity }} className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between transform-gpu will-change-opacity">
+                <div className="flex justify-between items-start transform-gpu">
+                  <div className="transform-gpu">
                     <h2 className="text-black text-xl md:text-2xl font-bold tracking-tighter uppercase">Programo</h2>
                     <p className="text-black/40 text-[9px] md:text-[11px] mt-1 uppercase tracking-[0.3em] font-sans">Software Engineering</p>
                   </div>
@@ -167,8 +174,8 @@ export default function Hero() {
                   </div>
                 </div>
 
-                <div className="flex justify-between items-end">
-                  <div className="flex flex-col gap-1 text-black/60 text-[9px] md:text-[11px] font-sans uppercase tracking-widest">
+                <div className="flex justify-between items-end transform-gpu">
+                  <div className="flex flex-col gap-1 text-black/60 text-[9px] md:text-[11px] font-sans uppercase tracking-widest transform-gpu">
                     <span>Poznań, Poland</span>
                     <span className="text-black font-medium normal-case tracking-normal mt-1">hello@programo.site</span>
                   </div>
@@ -181,31 +188,33 @@ export default function Hero() {
         )}
 
         {/* Tech Overlay (Minimalist Content) */}
-        <motion.div 
-          style={{ 
-            opacity: techOverlayOpacity, 
-            display: useTransform(techOverlayOpacity, v => v > 0 ? 'flex' : 'none'),
-            perspective: "1500px"
-          }}
-          className="absolute inset-0 z-30 flex items-center justify-center bg-white"
-        >
+        {!isMobile && (
           <motion.div 
             style={{ 
-              z: techGridZ, 
-              scale: techGridScale,
-              transformStyle: "preserve-3d"
+              opacity: techOverlayOpacity, 
+              display: useTransform(techOverlayOpacity, v => v > 0 ? 'flex' : 'none'),
+              perspective: "1500px"
             }}
-            className="w-full max-w-5xl aspect-video flex flex-col items-center justify-center text-center p-12"
+            className="absolute inset-0 z-30 flex items-center justify-center bg-white transform-gpu"
           >
-            <h2 className="text-black text-6xl md:text-8xl font-bold tracking-tighter mb-8 uppercase">
-              Clean Code.
-            </h2>
-            <div className="h-px w-32 bg-black mb-8" />
-            <p className="text-black/40 text-sm md:text-base uppercase tracking-[0.5em] max-w-2xl leading-relaxed">
-              We build high-performance digital products with surgical precision and minimalist aesthetics.
-            </p>
+            <motion.div 
+              style={{ 
+                z: techGridZ, 
+                scale: techGridScale,
+                transformStyle: "preserve-3d"
+              }}
+              className="w-full max-w-5xl aspect-video flex flex-col items-center justify-center text-center p-12 transform-gpu will-change-transform"
+            >
+              <h2 className="text-black text-6xl md:text-8xl font-bold tracking-tighter mb-8 uppercase">
+                Clean Code.
+              </h2>
+              <div className="h-px w-32 bg-black mb-8" />
+              <p className="text-black/40 text-sm md:text-base uppercase tracking-[0.5em] max-w-2xl leading-relaxed">
+                We build high-performance digital products with surgical precision and minimalist aesthetics.
+              </p>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
         
         {/* Scroll Hint */}
         <motion.div
