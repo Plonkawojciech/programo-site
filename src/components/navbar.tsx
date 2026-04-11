@@ -12,7 +12,7 @@ import {
   durationMedium,
   springGentle,
 } from "@/lib/motion";
-import MagneticWrapper from "@/components/magnetic";
+
 
 export default function Navbar() {
   const { lang, toggle, t } = useI18n();
@@ -144,7 +144,7 @@ export default function Navbar() {
           <div className="flex justify-between items-center px-10 py-4">
             <Link
               href="/"
-              className="font-sans text-xl font-bold tracking-tighter text-black uppercase"
+              className="font-sans text-xl 2xl:text-2xl font-bold tracking-tighter text-black uppercase"
             >
               Programo
             </Link>
@@ -156,7 +156,7 @@ export default function Navbar() {
                   <a
                     key={link.href}
                     href={link.href}
-                    className={`relative text-[11px] uppercase tracking-[0.3em] font-medium transition-colors ${
+                    className={`relative text-[11px] 2xl:text-[13px] uppercase tracking-[0.3em] font-medium transition-colors ${
                       isActive
                         ? "text-black"
                         : "text-black/40 hover:text-black"
@@ -186,7 +186,7 @@ export default function Navbar() {
               <button
                 onClick={toggle}
                 aria-label={t("a11y.langToggle")}
-                className="text-[11px] uppercase font-medium text-black/40 cursor-pointer hover:text-black transition-colors"
+                className="text-[11px] 2xl:text-[13px] uppercase font-medium text-black/40 cursor-pointer hover:text-black transition-colors"
                 style={{
                   transitionDuration: `${durationFast * 1000}ms`,
                   transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
@@ -196,7 +196,7 @@ export default function Navbar() {
               </button>
               <a
                 href="#contact"
-                className="border border-black px-6 py-2 text-black text-[11px] uppercase tracking-[0.2em] font-medium hover:bg-black hover:text-white transition-all"
+                className="border border-black px-6 py-2 2xl:px-8 2xl:py-3 text-black text-[11px] 2xl:text-[13px] uppercase tracking-[0.2em] font-medium hover:bg-black hover:text-white transition-all"
                 style={{
                   transitionDuration: `${durationFast * 1000}ms`,
                   transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,

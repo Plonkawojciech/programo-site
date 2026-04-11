@@ -105,7 +105,7 @@ export default function Hero() {
 
         {/* Foreground Title */}
         <motion.div style={{ opacity: textOpacity }} className="absolute z-10 top-[20%] flex flex-col items-center pointer-events-none transform-gpu will-change-opacity">
-          <h1 className="text-[10vw] md:text-[6vw] font-sans font-bold text-black tracking-tight leading-none mb-4">
+          <h1 className="text-[10vw] md:text-[6vw] 2xl:text-[8vw] font-sans font-bold text-black tracking-tight leading-none mb-4">
             programo
           </h1>
           <div className="h-px w-12 bg-black mb-4" />
@@ -115,7 +115,7 @@ export default function Hero() {
         {/* 3D Card Container */}
         {isMounted && (
           <motion.div
-            className="relative w-full max-w-[340px] md:max-w-[500px] aspect-[1.6/1] z-20 will-change-transform transform-gpu pointer-events-none"
+            className="relative w-full max-w-[340px] md:max-w-[500px] 2xl:max-w-[580px] aspect-[1.6/1] z-20 will-change-transform transform-gpu pointer-events-none"
             style={{
               scale: smoothScale,
               rotateX,
@@ -197,7 +197,7 @@ export default function Hero() {
               }}
               className="w-full max-w-5xl aspect-video flex flex-col items-center justify-center text-center p-12 transform-gpu will-change-transform"
             >
-              <h2 className="text-black text-6xl md:text-8xl font-bold tracking-tighter mb-8 uppercase">
+              <h2 className="text-black text-6xl md:text-8xl 2xl:text-[10vw] font-bold tracking-tighter mb-8 uppercase">
                 Clean Code.
               </h2>
               <div className="h-px w-32 bg-black mb-8" />

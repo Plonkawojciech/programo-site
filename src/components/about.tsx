@@ -129,7 +129,7 @@ export default function About() {
               <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-black/30">
                 {stat.label}
               </span>
-              <span className="font-sans text-5xl md:text-7xl font-bold tracking-tighter text-black">
+              <span className="font-sans text-5xl md:text-7xl 2xl:text-8xl font-bold tracking-tighter text-black">
                 {stat.value}
               </span>
             </motion.div>
@@ -153,7 +153,7 @@ export default function About() {
                 <span className="mb-6 block text-[11px] font-bold uppercase tracking-[0.5em] text-black/30">
                   {f.role}
                 </span>
-                <h3 className="font-sans text-5xl md:text-8xl font-bold tracking-tighter text-black uppercase mb-8">
+                <h3 className="font-sans text-5xl md:text-8xl 2xl:text-[10vw] font-bold tracking-tighter text-black uppercase mb-8">
                   {f.name}
                 </h3>
               </div>

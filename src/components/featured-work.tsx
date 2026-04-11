@@ -22,7 +22,7 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
       ref={ref}
       className="relative w-full flex flex-col items-center gap-12 md:gap-24 mb-48 md:mb-80 transform-gpu will-change-transform"
     >
-      <Link href={`/projects/${project.slug}`} className="relative z-10 w-full aspect-[16/10] md:aspect-[21/9] overflow-hidden group rounded-sm shadow-sm border border-[#F5F5F5] transform-gpu">
+      <Link href={`/projects/${project.slug}`} className="relative z-10 w-full aspect-[16/10] md:aspect-[21/9] 2xl:aspect-[24/9] overflow-hidden group rounded-sm shadow-sm border border-[#F5F5F5] transform-gpu">
         <motion.div style={{ y: yImage }} className="w-full h-full transform-gpu will-change-transform transition-all duration-700 group-hover:opacity-90 group-hover:scale-[1.03]">
           {project.screenshots?.[0] ? (
             <Image
@@ -47,11 +47,11 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
           {project.tags.slice(0,3).join(" / ")}
         </span>
 
-        <h3 className="text-black text-4xl md:text-7xl font-sans font-bold tracking-tighter leading-none mb-8 uppercase">
+        <h3 className="text-black text-4xl md:text-7xl 2xl:text-8xl font-sans font-bold tracking-tighter leading-none mb-8 uppercase">
           {project.title}
         </h3>
 
-        <p className="text-black/60 text-base md:text-lg font-sans font-light leading-relaxed max-w-2xl mb-10">
+        <p className="text-black/60 text-base md:text-lg 2xl:text-xl font-sans font-light leading-relaxed max-w-2xl mb-10">
           {project.description[lang]}
         </p>
 
@@ -77,7 +77,7 @@ const CategoryTitle = ({ title, index }: { title: string, index: number }) => {
     <div ref={ref} className="relative py-48 md:py-72 flex items-center justify-center overflow-hidden transform-gpu">
         <motion.div style={{ opacity }} className="text-center transform-gpu will-change-opacity">
           <span className="text-black/20 font-sans text-xs uppercase tracking-[1em] mb-4 block">Section 0{index + 1}</span>
-          <h2 className="text-6xl md:text-9xl font-sans font-bold uppercase tracking-tighter text-black">
+          <h2 className="text-6xl md:text-9xl 2xl:text-[12vw] font-sans font-bold uppercase tracking-tighter text-black">
             {title}
           </h2>
         </motion.div>

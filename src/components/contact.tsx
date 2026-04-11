@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import MagneticWrapper from "@/components/magnetic";
+
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -117,7 +117,7 @@ export default function Contact() {
               </div>
 
               <div className="mt-12 flex items-center gap-12">
-                <MagneticWrapper strength={0.4}>
+                <div>
                   <button
                     type="submit"
                     disabled={formState === "submitting"}
@@ -139,7 +139,7 @@ export default function Contact() {
                       )}
                     </AnimatePresence>
                   </button>
-                </MagneticWrapper>
+                </div>
                 
                 <p className="max-w-[200px] text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                   By clicking send you agree to our privacy policy.
@@ -150,12 +150,6 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Background Kinetic Text */}
-      <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-full overflow-hidden opacity-[0.03]">
-        <div className="whitespace-nowrap font-headline text-[10vw] font-bold uppercase text-on-surface animate-slide-left w-max will-change-transform transform-gpu">
-          CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US CONTACT US
-        </div>
-      </div>
     </section>
   );
 }
