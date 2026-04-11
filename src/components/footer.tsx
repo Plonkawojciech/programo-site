@@ -20,58 +20,55 @@ export default function Footer() {
   return (
     <footer
       ref={footerRef}
-      className="w-full rounded-t-[32px] mt-12 bg-surface-container-low overflow-hidden"
+      className="w-full mt-24 bg-white overflow-hidden border-t border-[#F5F5F5]"
     >
       <motion.div
         style={{ y: contentY }}
-        className="flex flex-col gap-10 px-6 md:px-24 2xl:px-40 py-12 md:py-16 2xl:py-24 w-full max-w-[2560px] mx-auto will-change-transform transform-gpu"
+        className="flex flex-col gap-12 px-8 md:px-24 py-16 md:py-24 w-full max-w-[1400px] mx-auto will-change-transform transform-gpu"
       >
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
-          <div>
-            <span className="text-2xl font-semibold text-on-surface">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-16">
+          <div className="max-w-md">
+            <span className="text-4xl font-bold tracking-tighter text-black uppercase">
               Programo
             </span>
-            <p className="text-sm text-on-surface-variant mt-6 max-w-xs leading-relaxed">
-              {t("hero.desc")}
+            <p className="text-sm text-black/40 mt-8 leading-relaxed uppercase tracking-widest">
+              Digital Craftsmanship / Software Engineering / Minimalism
             </p>
           </div>
-          <div className="flex flex-wrap gap-8 md:gap-16">
-            <a
-              href="https://github.com/programo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://linkedin.com/company/programo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
-            >
-              LinkedIn
-            </a>
+          <div className="flex flex-col gap-6">
+            <span className="text-[10px] uppercase tracking-[0.5em] text-black/20">Connect</span>
+            <div className="flex flex-col gap-3">
+              <a
+                href="https://github.com/programo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-black hover:text-black/60 transition-colors uppercase tracking-widest"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://linkedin.com/company/programo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-black hover:text-black/60 transition-colors uppercase tracking-widest"
+              >
+                LinkedIn
+              </a>
+            </div>
           </div>
         </div>
 
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="border-t border-outline-variant/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-6"
-        >
-          <p className="text-xs font-normal text-on-surface-variant">
-            &copy; 2026&ndash;{currentYear} Programo
+        <div className="border-t border-black/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
+          <p className="text-[10px] font-medium text-black/30 uppercase tracking-[0.3em]">
+            &copy; {currentYear} Programo — All rights reserved
           </p>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">
+          <div className="flex items-center gap-4">
+            <div className="w-1.5 h-1.5 rounded-full bg-black/10" />
+            <span className="text-[10px] font-medium text-black/30 uppercase tracking-[0.5em]">
               {t("footer.location")}
             </span>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </footer>
   );

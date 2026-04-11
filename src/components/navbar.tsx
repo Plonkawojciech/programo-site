@@ -132,34 +132,34 @@ export default function Navbar() {
           duration: durationFast,
           ease: easeEntry,
         }}
-        className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[1400px] z-50 hidden md:block"
+        className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[1200px] z-50 hidden md:block"
       >
         <div
-          className={`rounded-full border transition-all duration-500 ${
+          className={`rounded-sm border transition-all duration-500 ${
             scrolled
-              ? "border-white/20 bg-white/80 shadow-[0_20px_40px_rgba(26,28,28,0.08)] backdrop-blur-2xl"
-              : "border-white/10 bg-white/50 shadow-none backdrop-blur-xl"
+              ? "border-[#E0E0E0] bg-white shadow-sm"
+              : "border-transparent bg-transparent shadow-none"
           }`}
         >
-          <div className="flex justify-between items-center px-8 py-3">
+          <div className="flex justify-between items-center px-10 py-4">
             <Link
               href="/"
-              className="font-headline text-xl font-semibold tracking-tight text-on-surface"
+              className="font-sans text-xl font-bold tracking-tighter text-black uppercase"
             >
               Programo
             </Link>
 
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-10">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.section;
                 return (
                   <a
                     key={link.href}
                     href={link.href}
-                    className={`relative text-[13px] uppercase font-medium transition-colors ${
+                    className={`relative text-[11px] uppercase tracking-[0.3em] font-medium transition-colors ${
                       isActive
-                        ? "text-primary"
-                        : "text-on-surface-variant/70 hover:text-primary"
+                        ? "text-black"
+                        : "text-black/40 hover:text-black"
                     }`}
                     style={{
                       transitionDuration: `${durationFast * 1000}ms`,
@@ -170,7 +170,7 @@ export default function Navbar() {
                     {isActive && (
                       <motion.span
                         layoutId="nav-indicator"
-                        className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-primary rounded-full"
+                        className="absolute -bottom-1.5 left-0 right-0 h-px bg-black"
                         transition={{
                           type: "spring",
                           ...springGentle,
@@ -182,11 +182,11 @@ export default function Navbar() {
               })}
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               <button
                 onClick={toggle}
                 aria-label={t("a11y.langToggle")}
-                className="text-[13px] uppercase font-medium text-on-surface-variant/50 cursor-pointer hover:text-primary transition-colors"
+                className="text-[11px] uppercase font-medium text-black/40 cursor-pointer hover:text-black transition-colors"
                 style={{
                   transitionDuration: `${durationFast * 1000}ms`,
                   transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
@@ -194,18 +194,16 @@ export default function Navbar() {
               >
                 {lang === "pl" ? "EN" : "PL"}
               </button>
-              <MagneticWrapper>
-                <a
-                  href="#contact"
-                  className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all"
-                  style={{
-                    transitionDuration: `${durationFast * 1000}ms`,
-                    transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
-                  }}
-                >
-                  {t("nav.cta")}
-                </a>
-              </MagneticWrapper>
+              <a
+                href="#contact"
+                className="border border-black px-6 py-2 text-black text-[11px] uppercase tracking-[0.2em] font-medium hover:bg-black hover:text-white transition-all"
+                style={{
+                  transitionDuration: `${durationFast * 1000}ms`,
+                  transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
+                }}
+              >
+                {t("nav.cta")}
+              </a>
             </div>
           </div>
         </div>

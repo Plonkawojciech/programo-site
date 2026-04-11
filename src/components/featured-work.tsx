@@ -13,10 +13,9 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   
-  // Increased parallax intensity
-  const yImage = useTransform(scrollYProgress, [0, 1], [250, -250]);
-  const yText = useTransform(scrollYProgress, [0, 1], [-150, 250]);
-  const scaleImage = useTransform(scrollYProgress, [0, 1], [0.85, 1.25]);
+  const yImage = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const yText = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+  const scaleImage = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   const smoothScale = useSpring(scaleImage, { stiffness: 100, damping: 30 });
 
   const isEven = index % 2 === 0;
@@ -24,59 +23,47 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
   return (
     <motion.div
       ref={ref}
-      className={`relative w-full flex flex-col md:flex-row items-center gap-12 md:gap-32 mb-40 md:mb-64 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+      className={`relative w-full flex flex-col items-center gap-12 md:gap-24 mb-48 md:mb-80`}
     >
-      <motion.div 
-        style={{ y: useTransform(scrollYProgress, [0, 1], [300, -300]) }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40vw] font-serif italic text-[#051F20]/5 pointer-events-none select-none z-0"
-      >
-        0{index + 1}
-      </motion.div>
-
-      <Link href={`/projects/${project.slug}`} className="relative z-10 w-full md:w-[55%] aspect-[4/5] md:aspect-[16/10] overflow-hidden group rounded-2xl">
-        <motion.div style={{ y: yImage, scale: smoothScale }} className="w-full h-full transform-gpu will-change-transform">
+      <Link href={`/projects/${project.slug}`} className="relative z-10 w-full aspect-[16/10] md:aspect-[21/9] overflow-hidden group rounded-sm shadow-sm border border-[#F5F5F5]">
+        <motion.div style={{ y: yImage, scale: smoothScale }} className="w-full h-full transform-gpu will-change-transform transition-opacity duration-700 group-hover:opacity-90">
           {project.screenshots?.[0] ? (
             <Image 
               src={project.screenshots[0]} 
               alt={project.title} 
               fill 
-              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out" 
+              className="object-cover grayscale hover:grayscale-0 transition-all duration-1000 ease-out" 
             />
           ) : (
-            <div className="w-full h-full bg-[#051F20] flex items-center justify-center">
-              <span className="text-[#DAF1DE] font-serif text-8xl italic opacity-20">{project.title[0]}</span>
+            <div className="w-full h-full bg-[#FAFAFA] flex items-center justify-center">
+              <span className="text-black font-sans text-8xl font-bold opacity-5">{project.title[0]}</span>
             </div>
           )}
         </motion.div>
-        <div className="absolute inset-0 border border-[#051F20]/10 pointer-events-none rounded-2xl" />
       </Link>
 
       <motion.div 
         style={{ y: yText }} 
-        className={`relative z-20 w-full md:w-[45%] flex flex-col ${isEven ? 'items-start text-left' : 'items-end text-right'}`}
+        className={`relative z-20 w-full max-w-4xl flex flex-col items-center text-center`}
       >
-        <span className="text-[#163832] font-mono text-[10px] uppercase tracking-[0.4em] mb-6">
-          {project.tags.slice(0,3).join(" // ")}
+        <span className="text-black/40 font-sans text-[10px] uppercase tracking-[0.5em] mb-6">
+          {project.tags.slice(0,3).join(" / ")}
         </span>
         
-        <h3 className="text-[#051F20] text-5xl md:text-7xl lg:text-[6rem] font-sans font-light tracking-tighter leading-[0.9] mb-8">
+        <h3 className="text-black text-4xl md:text-7xl font-sans font-bold tracking-tighter leading-none mb-8 uppercase">
           {project.title}
         </h3>
         
-        <h4 className="text-[#163832] text-xl md:text-2xl font-serif italic tracking-tight mb-8">
-          {project.subtitle[lang]}
-        </h4>
-        
-        <p className="text-[#051F20]/70 text-sm md:text-base font-sans font-light leading-relaxed max-w-md">
+        <p className="text-black/60 text-base md:text-lg font-sans font-light leading-relaxed max-w-2xl mb-10">
           {project.description[lang]}
         </p>
 
         <Link 
           href={`/projects/${project.slug}`}
-          className="mt-12 group flex items-center gap-4 text-[#051F20] font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] border-b border-[#051F20]/20 pb-3 hover:border-[#051F20] transition-colors"
+          className="group flex items-center gap-6 text-black font-sans text-[10px] md:text-xs uppercase tracking-[0.5em] border-b border-black/10 pb-4 hover:border-black transition-colors"
         >
-          <span>{lang === 'pl' ? 'Odkryj Projekt' : 'Discover Case'}</span>
-          <span className="transform transition-transform group-hover:translate-x-3">→</span>
+          <span>{lang === 'pl' ? 'Zobacz Projekt' : 'View Project'}</span>
+          <span className="transform transition-transform group-hover:translate-x-4">→</span>
         </Link>
       </motion.div>
     </motion.div>
@@ -86,118 +73,56 @@ function ProjectItem({ project, lang, index }: { project: Project; lang: Lang; i
 const CategoryTitle = ({ title, index }: { title: string, index: number }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const x = useTransform(scrollYProgress, [0, 1], [index % 2 === 0 ? -600 : 600, index % 2 === 0 ? 600 : -600]);
+  const opacity = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0.9, 1, 0.9]);
 
   return (
-    <div ref={ref} className="relative py-32 md:py-56 overflow-hidden flex items-center justify-center">
-      <motion.h2 
-        style={{ x }}
-        className="text-[15vw] font-sans font-black uppercase tracking-tighter text-[#051F20]/5 whitespace-nowrap select-none"
-      >
-        {title} — {title} — {title}
-      </motion.h2>
-      
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="bg-[#FCFCFA] px-12 py-6 border border-[#051F20]/10 shadow-sm rounded-full">
-          <h3 className="text-2xl md:text-4xl font-serif italic text-[#051F20] tracking-tight">
+    <div ref={ref} className="relative py-48 md:py-72 flex items-center justify-center overflow-hidden">
+        <motion.div style={{ opacity, scale }} className="text-center">
+          <span className="text-black/20 font-sans text-xs uppercase tracking-[1em] mb-4 block">Section 0{index + 1}</span>
+          <h2 className="text-6xl md:text-9xl font-sans font-bold uppercase tracking-tighter text-black">
             {title}
-          </h3>
-        </div>
-      </div>
+          </h2>
+        </motion.div>
     </div>
   );
 }
 
 export default function FeaturedWork() {
   const { lang } = useI18n();
-  const [activeSection, setActiveSection] = useState<string>("nasze-systemy");
   const containerRef = useRef<HTMLElement>(null);
   
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
   
-  // Velocity-based skewing
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
-  const skew = useTransform(smoothVelocity, [-1000, 1000], [-3, 3]);
-
-  const bgY1 = useTransform(scrollYProgress, [0, 1], [0, 800]);
-  const bgY2 = useTransform(scrollYProgress, [0, 1], [0, -800]);
-  const bgRotate1 = useTransform(scrollYProgress, [0, 1], [0, 360]);
-  const bgRotate2 = useTransform(scrollYProgress, [0, 1], [0, -360]);
+  const skew = useTransform(smoothVelocity, [-1000, 1000], [-1, 1]);
 
   const naszeSystemy = projects.filter(p => p.category === "nasze-systemy");
   const stronyZrobione = projects.filter(p => p.category === "strony-zrobione");
   const pozostaleProjekty = projects.filter(p => p.category === "projekty");
 
-  const categories = [
-    { id: "nasze-systemy", label: lang === 'pl' ? "Nasze Systemy" : "Our Systems", count: naszeSystemy.length },
-    { id: "strony-zrobione", label: lang === 'pl' ? "Strony Które Zrobiliśmy" : "Websites We Made", count: stronyZrobione.length },
-    { id: "projekty", label: lang === 'pl' ? "Projekty" : "Projects", count: pozostaleProjekty.length },
-  ].filter(c => c.count > 0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = categories.map(c => document.getElementById(`category-${c.id}`));
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
-
-      let currentActive = categories[0]?.id;
-      sections.forEach(section => {
-        if (section && section.offsetTop <= scrollPosition) {
-          currentActive = section.id.replace('category-', '');
-        }
-      });
-      setActiveSection(currentActive);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [categories]);
-
   return (
-    <section ref={containerRef} id="work" className="relative bg-[#FCFCFA] w-full pb-40 overflow-hidden">
+    <section ref={containerRef} id="work" className="relative bg-white w-full pb-40 overflow-hidden">
       
-      {/* Geometric Pattern Background */}
+      {/* Subtle Background Grid */}
       <div 
-        className="absolute inset-0 pointer-events-none opacity-[0.03] z-0 mix-blend-overlay" 
+        className="absolute inset-0 pointer-events-none opacity-[0.02] z-0" 
         style={{ 
-          backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%238EB69B' stroke-width='1' stroke-opacity='1'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3Cpath d='M15 15h30v30H15z'/%3E%3Cpath d='M0 0l60 60M60 0L0 60'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+          backgroundImage: "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
+          backgroundSize: "200px 200px"
         }}
       />
 
-      {/* Moving Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <motion.div style={{ y: bgY1, rotate: bgRotate1 }} className="absolute top-[10%] left-[5%] w-[1px] h-[50vh] bg-[#051F20]/10" />
-        <motion.div style={{ y: bgY2, rotate: bgRotate2 }} className="absolute top-[30%] right-[10%] w-[30vw] h-[30vw] border border-[#051F20]/5 rounded-3xl" />
-        <motion.div style={{ y: bgY1, rotate: bgRotate2 }} className="absolute top-[60%] left-[15%] w-[40vw] h-[1px] bg-[#051F20]/10" />
-        <motion.div style={{ y: bgY2, rotate: bgRotate1 }} className="absolute bottom-[20%] right-[5%] w-[40vw] h-[40vw] border border-[#051F20]/5 rounded-full" />
-        <motion.div style={{ y: bgY1, scale: useTransform(scrollYProgress, [0, 1], [1, 1.5]) }} className="absolute top-[40%] left-[40%] w-[20vw] h-[20vw] bg-gradient-to-tr from-[#8EB69B]/5 to-transparent rounded-full blur-3xl" />
-      </div>
-
-      {/* Sticky Sidebar Indicator */}
-      <div className="hidden lg:flex fixed left-8 top-1/2 -translate-y-1/2 z-50 flex-col gap-8 mix-blend-difference text-white">
-        {categories.map((cat, idx) => (
-          <div key={cat.id} className="relative flex items-center group cursor-pointer" onClick={() => {
-             document.getElementById(`category-${cat.id}`)?.scrollIntoView({ behavior: 'smooth' });
-          }}>
-            <span className={`w-2 h-2 rounded-full transition-all duration-500 ${activeSection === cat.id ? 'bg-white scale-150' : 'bg-white/30 group-hover:bg-white/70'}`} />
-            <span className={`absolute left-8 uppercase tracking-[0.2em] text-[10px] whitespace-nowrap transition-all duration-500 origin-left ${activeSection === cat.id ? 'opacity-100 scale-100 font-bold' : 'opacity-0 scale-75 group-hover:opacity-50'}`}>
-              {cat.label}
-            </span>
-          </div>
-        ))}
-        {/* Progress line */}
-        <div className="absolute left-[3px] top-4 bottom-4 w-[2px] bg-white/10 -z-10" />
-      </div>
-
       <motion.div 
         style={{ skewY: skew }}
-        className="max-w-[2560px] mx-auto px-6 md:px-12 lg:px-24 xl:px-48 relative z-10"
+        className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 xl:px-32 relative z-10"
       >
         
         {naszeSystemy.length > 0 && (
           <div id="category-nasze-systemy">
-            <CategoryTitle title={lang === 'pl' ? "Nasze Systemy" : "Our Systems"} index={0} />
+            <CategoryTitle title={lang === 'pl' ? "Systemy" : "Systems"} index={0} />
             <div className="pt-10">
               {naszeSystemy.map((project, idx) => (
                 <ProjectItem key={project.slug} project={project} lang={lang} index={idx} />
@@ -208,7 +133,7 @@ export default function FeaturedWork() {
 
         {stronyZrobione.length > 0 && (
           <div id="category-strony-zrobione">
-            <CategoryTitle title={lang === 'pl' ? "Strony Które Zrobiliśmy" : "Websites We Made"} index={1} />
+            <CategoryTitle title={lang === 'pl' ? "Strony" : "Websites"} index={1} />
             <div className="pt-10">
               {stronyZrobione.map((project, idx) => (
                 <ProjectItem key={project.slug} project={project} lang={lang} index={idx + naszeSystemy.length} />
