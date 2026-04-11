@@ -123,12 +123,12 @@ body {
 }
 
 .animate-slide-left {
-  animation: slideLeft 40s linear infinite;
+  animation: slideLeft 90s linear infinite;
   will-change: transform;
 }
 
 .animate-slide-right {
-  animation: slideRight 50s linear infinite;
+  animation: slideRight 110s linear infinite;
   will-change: transform;
 }
 
@@ -177,5 +177,22 @@ body {
 
 .animate-qr-blink {
   animation: qr-blink 2s ease-in-out infinite;
+}
+
+/* Tech card top-line hover effect */
+.tech-card-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tech-card-line:hover::before {
+  transform: translateX(0%);
 }
 

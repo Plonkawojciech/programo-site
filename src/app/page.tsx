@@ -2,6 +2,7 @@
 
 import { I18nProvider, useI18n } from "@/lib/i18n";
 import Navbar from "@/components/navbar";
+import HorizontalIntro from "@/components/horizontal-intro";
 import Hero from "@/components/hero";
 import FeaturedWork from "@/components/featured-work";
 import About from "@/components/about";
@@ -24,6 +25,7 @@ function HomeContent() {
         </a>
         <Navbar />
         <main id="main-content">
+          <HorizontalIntro />
           <Hero />
           <FeaturedWork />
           <About />
