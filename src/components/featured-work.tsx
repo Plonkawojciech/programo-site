@@ -22,11 +22,11 @@ function HorizontalProject({ project, index, progress, lang, totalProjects, isMo
   const textX = useTransform(progress, [start, end], ["15vw", "-15vw"]);
 
   return (
-    <div className="w-[80vw] h-[80vh] flex-shrink-0 flex items-center justify-center relative mx-[5vw] transform-gpu will-change-transform">
+    <div className="w-[80vw] 2xl:w-[70vw] h-[80vh] flex-shrink-0 flex items-center justify-center relative mx-[5vw] transform-gpu will-change-transform">
       
       {/* Text layer with separate parallax speed */}
       <motion.div style={isMobile ? undefined : { x: textX }} className="absolute z-30 left-[5vw] top-1/4 max-w-3xl pointer-events-none transform-gpu will-change-[transform,opacity]">
-        <h3 className="text-[6vw] font-sans font-black tracking-tighter leading-[0.8] text-[#DAF1DE] uppercase mix-blend-difference drop-shadow-2xl">
+        <h3 className="text-[6vw] 2xl:text-[8vw] font-sans font-black tracking-tighter leading-[0.8] text-[#DAF1DE] uppercase mix-blend-difference drop-shadow-2xl">
           {project.title}
         </h3>
         <p className="mt-8 text-[#051F20] bg-[#DAF1DE] inline-block font-mono text-sm md:text-lg uppercase tracking-widest p-4 shadow-xl">
@@ -35,7 +35,7 @@ function HorizontalProject({ project, index, progress, lang, totalProjects, isMo
       </motion.div>
 
       {/* Image layer */}
-      <Link href={`/projects/${project.slug}`} className="relative z-20 w-[60vw] md:w-[45vw] aspect-[16/10] overflow-hidden group rounded-xl shadow-2xl border border-[#163832]/50 block cursor-pointer transform-gpu hover:scale-[1.02] transition-transform duration-500 will-change-transform">
+      <Link href={`/projects/${project.slug}`} className="relative z-20 w-[60vw] md:w-[45vw] 2xl:w-[55vw] aspect-[16/10] overflow-hidden group rounded-xl shadow-2xl border border-[#163832]/50 block cursor-pointer transform-gpu hover:scale-[1.02] transition-transform duration-500 will-change-transform">
         <motion.div style={isMobile ? { width: "100%", left: "0%" } : { x: imageX, width: "160%", left: "-30%" }} className="relative h-full transform-gpu will-change-transform">
           {project.screenshots?.[0] ? (
             <Image 

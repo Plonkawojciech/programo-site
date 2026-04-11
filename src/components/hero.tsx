@@ -54,11 +54,11 @@ export default function Hero() {
         {/* Main Horizontal Track */}
         <motion.div 
           style={{ x: xMain }}
-          className="relative z-10 flex items-center h-full px-[10vw] gap-[20vw] whitespace-nowrap transform-gpu will-change-transform"
+          className="relative z-10 flex items-center h-full px-[10vw] 2xl:px-[15vw] gap-[20vw] 2xl:gap-[25vw] whitespace-nowrap transform-gpu will-change-transform"
         >
           {/* 1. Intro Typography */}
           <div className="flex flex-col relative shrink-0 transform-gpu will-change-[transform,opacity]">
-            <h1 className="text-[15vw] font-sans font-light tracking-tighter leading-none text-[#DAF1DE] mix-blend-difference">
+            <h1 className="text-[15vw] 2xl:text-[12vw] font-sans font-light tracking-tighter leading-none text-[#DAF1DE] mix-blend-difference">
               programo
             </h1>
             <p className="text-[#8EB69B] font-mono text-xl md:text-3xl uppercase tracking-[0.5em] ml-2 mt-4">
@@ -80,7 +80,7 @@ export default function Hero() {
             {isMounted && (
               <motion.div 
                 style={{ rotate: isMobile ? 0 : cardRotate, y: isMobile ? 0 : cardY }}
-                className="absolute z-20 left-[10%] w-[90vw] md:w-[600px] aspect-[1.6/1] bg-[#DAF1DE] rounded-2xl p-8 md:p-12 shadow-2xl border border-[#163832]/20 flex flex-col justify-between transform-gpu will-change-[transform,opacity]"
+                className="absolute z-20 left-[10%] w-[90vw] md:w-[600px] 2xl:w-[700px] aspect-[1.6/1] bg-[#DAF1DE] rounded-2xl p-8 md:p-12 shadow-2xl border border-[#163832]/20 flex flex-col justify-between transform-gpu will-change-[transform,opacity]"
               >
                 <div className="flex justify-between items-start">
                   <div className="max-w-[70%]">
@@ -117,7 +117,7 @@ export default function Hero() {
             <div className="w-full h-[2px] bg-[#163832] relative overflow-hidden">
                <motion.div className="absolute top-0 bottom-0 left-0 w-1/3 bg-[#8EB69B] transform-gpu" animate={{ x: ["-100%", "300%"] }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }} />
             </div>
-            <h2 className="text-[10vw] font-sans font-black tracking-tighter text-[#DAF1DE] uppercase leading-none mix-blend-difference">
+            <h2 className="text-[10vw] 2xl:text-[10vw] font-sans font-black tracking-tighter text-[#DAF1DE] uppercase leading-none mix-blend-difference">
               Systems<br/>Online
             </h2>
             <div className="flex gap-8 font-mono text-xl text-[#8EB69B] uppercase tracking-widest">
