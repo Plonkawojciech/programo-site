@@ -46,28 +46,28 @@
 }
 
 [data-theme="light"] {
-  /* Light mode — inverted */
-  --theme-bg-1: #FAFCF8;      /* creamy white base */
-  --theme-bg-2: #F0F5EC;      /* slightly darker cream */
-  --theme-bg-3: #E8EFE3;      /* container */
-  --theme-bg-4: #D5E0CF;      /* high container */
-  --theme-border-1: #D5E0CF;
-  --theme-border-2: #B8C8B0;
-  --theme-text-1: #0A1F12;    /* dark forest text */
-  --theme-text-2: #3A5A40;    /* muted forest */
-  --theme-accent: #5A7A62;    /* darker sage for contrast on light */
-  --theme-glow: 10, 31, 18;
+  /* Light mode — warm cream/beige palette */
+  --theme-bg-1: #F4ECD6;      /* warm cream beige base */
+  --theme-bg-2: #EBE1C2;      /* slightly deeper warm cream */
+  --theme-bg-3: #E0D3A8;      /* warm container */
+  --theme-bg-4: #C9B883;      /* warm container high */
+  --theme-border-1: #D4C395;
+  --theme-border-2: #A89670;
+  --theme-text-1: #2A1F08;    /* warm dark (espresso) */
+  --theme-text-2: #6B5420;    /* warm muted (warm brown) */
+  --theme-accent: #5A7A5C;    /* sage green — works on warm cream */
+  --theme-glow: 42, 31, 8;
 
   /* RGB variants */
-  --theme-bg-1-rgb: 250, 252, 248;
-  --theme-bg-2-rgb: 240, 245, 236;
-  --theme-bg-3-rgb: 232, 239, 227;
-  --theme-bg-4-rgb: 213, 224, 207;
-  --theme-border-1-rgb: 213, 224, 207;
-  --theme-border-2-rgb: 184, 200, 176;
-  --theme-text-1-rgb: 10, 31, 18;
-  --theme-text-2-rgb: 58, 90, 64;
-  --theme-accent-rgb: 90, 122, 98;
+  --theme-bg-1-rgb: 244, 236, 214;
+  --theme-bg-2-rgb: 235, 225, 194;
+  --theme-bg-3-rgb: 224, 211, 168;
+  --theme-bg-4-rgb: 201, 184, 131;
+  --theme-border-1-rgb: 212, 195, 149;
+  --theme-border-2-rgb: 168, 150, 112;
+  --theme-text-1-rgb: 42, 31, 8;
+  --theme-text-2-rgb: 107, 84, 32;
+  --theme-accent-rgb: 90, 122, 92;
 
   /* About section alt — inverted to dark forest */
   --theme-alt-bg: #051F20;
