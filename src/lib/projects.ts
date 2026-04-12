@@ -368,6 +368,7 @@ export const projects: Project[] = [
       pl: "Wojciech Płonka — Full-stack development, integracja API",
       en: "Wojciech Płonka — Full-stack development, API integration",
     },
+    screenshots: ["/screenshots/jedmar-hero.png"],
   },
   {
     slug: "wks-poznan",
@@ -386,6 +387,7 @@ export const projects: Project[] = [
     },
     status: "live" as ProjectStatus,
     category: "strony-zrobione" as const,
+    liveUrl: "https://wks-strona.vercel.app",
     tech: ["HTML", "CSS", "JavaScript", "Vercel"],
     features: {
       pl: ["7 responsywnych podstron", "Profile trenerów", "Harmonogram treningów", "Galeria zdjęć", "Animacje przejść", "Formularz kontaktowy"],
@@ -399,6 +401,7 @@ export const projects: Project[] = [
       pl: "Wojciech Płonka — Design i development",
       en: "Wojciech Płonka — Design and development",
     },
+    screenshots: ["/screenshots/wks-hero.png"],
   },
   {
     slug: "ks-posnania",
@@ -417,6 +420,7 @@ export const projects: Project[] = [
     },
     status: "live" as ProjectStatus,
     category: "strony-zrobione" as const,
+    liveUrl: "https://ks-posnania.vercel.app",
     tech: ["HTML", "Tailwind CSS", "JavaScript", "Vercel"],
     features: {
       pl: ["8 sekcji sportowych", "Material Design 3", "Karuzele i animacje", "Responsive navigation", "Sekcja sponsorów", "Historia klubu"],
@@ -430,10 +434,11 @@ export const projects: Project[] = [
       pl: "Wojciech Płonka — Design i development",
       en: "Wojciech Płonka — Design and development",
     },
+    screenshots: ["/screenshots/ks-posnania-hero.png"],
   },
   {
-    slug: "safe-finanse",
-    title: "Safe Finanse",
+    slug: "wsafefinanse",
+    title: "WSafeFinanse",
     subtitle: {
       pl: "Bezpieczne decyzje finansowe",
       en: "Safe financial decisions",
@@ -462,6 +467,7 @@ export const projects: Project[] = [
       pl: "Bartosz Kolaj — Design i development",
       en: "Bartosz Kolaj — Design and development",
     },
+    screenshots: ["/screenshots/wsafefinanse-hero.png"],
   }
 ];
 

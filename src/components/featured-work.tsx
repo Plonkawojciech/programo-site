@@ -76,18 +76,34 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
 
         {/* Text overlay */}
         <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between z-30 pointer-events-none transform-gpu">
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-start gap-2">
             <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest bg-[#051F20]/90 px-2 py-1 border border-[#163832]">
               {project.category} // {String(index + 1).padStart(2, '0')}
             </span>
-            {/* Status dot — glows with accent color on hover */}
-            <div
-              className="w-2 h-2 rounded-full bg-[#163832] transition-colors duration-300"
-              style={{
-                backgroundColor: isHovered ? project.accentColor : undefined,
-                boxShadow: isHovered ? `0 0 12px ${project.accentColor}, 0 0 4px ${project.accentColor}` : "none",
-              }}
-            />
+            <div className="flex items-center gap-2">
+              {/* Visit site link — always visible for strony-zrobione */}
+              {project.category === "strony-zrobione" && project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-1.5 text-[9px] md:text-[10px] font-mono uppercase tracking-widest text-[#DAF1DE] bg-[#051F20]/90 border px-2.5 py-1 pointer-events-auto transition-colors hover:bg-[#051F20]"
+                  style={{ borderColor: `${project.accentColor}66` }}
+                >
+                  <span>VISIT</span>
+                  <span>↗</span>
+                </a>
+              )}
+              {/* Status dot — glows with accent color on hover */}
+              <div
+                className="w-2 h-2 rounded-full bg-[#163832] transition-colors duration-300"
+                style={{
+                  backgroundColor: isHovered ? project.accentColor : undefined,
+                  boxShadow: isHovered ? `0 0 12px ${project.accentColor}, 0 0 4px ${project.accentColor}` : "none",
+                }}
+              />
+            </div>
           </div>
 
           <motion.div

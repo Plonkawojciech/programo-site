@@ -11,11 +11,13 @@ import Contact from "@/components/contact";
 import Footer from "@/components/footer";
 import Preloader from "@/components/preloader";
 import PageTransition from "@/components/page-transition";
+import ScrollProgress from "@/components/scroll-progress";
 
 function HomeContent() {
   const { t } = useI18n();
   return (
     <>
+      <ScrollProgress />
       <PageTransition>
         <a
           href="#main-content"

@@ -1,54 +1,40 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 
 function RevealText({ text }: { text: string }) {
-  const container = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start 0.9", "end 0.3"],
-  });
-
   const words = text.split(" ");
 
   return (
-    <div ref={container} className="flex flex-wrap justify-center gap-x-[3vw] gap-y-[1vw] px-6 py-24 md:py-40">
-      {words.map((word, i) => {
-        const start = i / words.length;
-        const end = start + 1 / words.length;
-        const opacity = useTransform(scrollYProgress, [start, end], [0.02, 1]);
-        const y = useTransform(scrollYProgress, [start, end], [80, 0]);
-        const scale = useTransform(scrollYProgress, [start, end], [0.9, 1]);
-        return (
-          <motion.span
-            key={i}
-            style={{ opacity, y, scale }}
-            className="font-headline text-[8vw] md:text-[10vw] font-bold uppercase tracking-tighter text-on-surface"
-          >
-            {word}
-          </motion.span>
-        );
-      })}
+    <div className="flex flex-wrap justify-center gap-x-[3vw] gap-y-[1vw] px-6 py-24 md:py-40">
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, y: 80, scale: 0.9 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          transition={{
+            delay: i * 0.12,
+            duration: 0.9,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="font-headline text-[8vw] md:text-[10vw] font-bold uppercase tracking-tighter text-on-surface"
+        >
+          {word}
+        </motion.span>
+      ))}
     </div>
   );
 }
 
 function FadeInText({ text }: { text: string }) {
-  const container = useRef<HTMLParagraphElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start 0.95", "start 0.5"],
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.0, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [30, 0]);
-
   return (
     <motion.p
-      ref={container}
-      style={{ opacity, y }}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-15% 0px -15% 0px" }}
+      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       className="mb-12 text-3xl font-light leading-tight text-on-surface/80 md:text-5xl lg:text-6xl"
     >
       {text}
@@ -58,17 +44,6 @@ function FadeInText({ text }: { text: string }) {
 
 export default function About() {
   const { t, lang } = useI18n();
-
-  const quoteRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: quoteProgress } = useScroll({
-    target: quoteRef,
-    offset: ["start 0.95", "end 0.4"],
-  });
-  const futureScale = useTransform(quoteProgress, [0, 0.4], [0.5, 1]);
-  const futureOpacity = useTransform(quoteProgress, [0, 0.3], [0, 0.05]);
-  const quoteOpacity = useTransform(quoteProgress, [0.1, 0.5], [0, 1]);
-  const quoteY = useTransform(quoteProgress, [0.1, 0.5], [60, 0]);
-  const borderScale = useTransform(quoteProgress, [0.05, 0.4], [0, 1]);
 
   const revealTextContent = lang === "pl"
     ? "Dwoch builderow. Jedno studio. Budujemy cyfrowa przyszlosc."
@@ -132,17 +107,35 @@ export default function About() {
           </div>
 
           {/* Animated Quote Section */}
-          <div ref={quoteRef} className="mt-20 md:mt-48 py-16 md:py-20 relative overflow-hidden">
+          <div className="mt-20 md:mt-48 py-16 md:py-20 relative overflow-hidden">
             {/* Animated top border */}
-            <motion.div style={{ scaleX: borderScale }} className="absolute top-0 left-0 right-0 h-px bg-[#1A1816]/10 origin-center" />
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, margin: "-15% 0px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute top-0 left-0 right-0 h-px bg-[#1A1816]/10 origin-center"
+            />
 
             {/* FUTURE ghost text */}
-            <motion.div style={{ scale: futureScale, opacity: futureOpacity }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] font-headline font-black text-[#1A1816] pointer-events-none select-none">
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 0.05 }}
+              viewport={{ once: true, margin: "-10% 0px" }}
+              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] font-headline font-black text-[#1A1816] pointer-events-none select-none"
+            >
               FUTURE
             </motion.div>
 
             {/* Quote */}
-            <motion.div style={{ opacity: quoteOpacity, y: quoteY }} className="relative z-10 max-w-5xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-20% 0px" }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="relative z-10 max-w-5xl mx-auto text-center"
+            >
               <h3 className="text-2xl md:text-5xl font-serif italic text-[#1A1816] font-light leading-relaxed">
                 {lang === "pl"
                   ? `"Planujemy ogromny rozwoj. Nowe systemy SaaS, miedzynarodowa ekspansja oraz wyznaczanie nowych standardow w cyfrowym designie. To dopiero poczatek naszej drogi."`
@@ -151,7 +144,13 @@ export default function About() {
             </motion.div>
 
             {/* Animated bottom border */}
-            <motion.div style={{ scaleX: borderScale }} className="absolute bottom-0 left-0 right-0 h-px bg-[#1A1816]/10 origin-center" />
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, margin: "-15% 0px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute bottom-0 left-0 right-0 h-px bg-[#1A1816]/10 origin-center"
+            />
           </div>
 
           {/* Founders */}
