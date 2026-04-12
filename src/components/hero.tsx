@@ -122,12 +122,55 @@ export default function Hero() {
 
           {/* Cell 4: Contact */}
           <motion.div
-            className="col-span-1 row-span-1 md:col-span-1 bg-[var(--theme-bg-1)] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform animate-fadeSlideIn"
+            className="col-span-1 row-span-1 md:col-span-1 bg-[var(--theme-bg-1)] p-3 md:p-4 2xl:p-6 flex flex-col justify-between gap-2 group transform-gpu will-change-transform animate-fadeSlideIn relative overflow-hidden"
             style={{ animationDelay: "0.3s", animationFillMode: "both" }}
             whileHover={{ backgroundColor: "var(--theme-bg-2)" }}
           >
-            <span className="text-[var(--theme-text-2)] font-mono text-[10px] uppercase tracking-widest">COMMS_LINK</span>
-            <span className="text-[var(--theme-text-1)] font-mono text-[10px] md:text-sm truncate group-hover:text-[var(--theme-text-2)] transition-colors">kontakt@programo.pl</span>
+            <span className="text-[var(--theme-text-2)] font-mono text-[9px] md:text-[10px] uppercase tracking-widest">COMMS_LINK</span>
+
+            <div className="flex flex-col gap-1.5 md:gap-2 text-[9px] md:text-[10px] 2xl:text-xs font-mono leading-tight overflow-hidden">
+              {/* Main contact */}
+              <a
+                href="mailto:kontakt@programo.pl"
+                className="text-[var(--theme-text-1)] hover:text-[var(--theme-accent)] transition-colors truncate pointer-events-auto"
+              >
+                kontakt@programo.pl
+              </a>
+
+              {/* Wojciech */}
+              <div className="flex flex-col gap-0.5 border-t border-[var(--theme-border-1)]/30 pt-1.5 md:pt-2">
+                <span className="text-[var(--theme-text-2)] text-[8px] md:text-[9px] uppercase tracking-wider">Wojciech</span>
+                <a
+                  href="mailto:wojciech.plonka@programo.pl"
+                  className="text-[var(--theme-text-1)] hover:text-[var(--theme-accent)] transition-colors truncate pointer-events-auto"
+                >
+                  wojciech.plonka@programo.pl
+                </a>
+                <a
+                  href="tel:+48797222363"
+                  className="text-[var(--theme-text-2)] hover:text-[var(--theme-accent)] transition-colors pointer-events-auto"
+                >
+                  +48 797 222 363
+                </a>
+              </div>
+
+              {/* Bartosz */}
+              <div className="flex flex-col gap-0.5 border-t border-[var(--theme-border-1)]/30 pt-1.5 md:pt-2">
+                <span className="text-[var(--theme-text-2)] text-[8px] md:text-[9px] uppercase tracking-wider">Bartosz</span>
+                <a
+                  href="mailto:bartosz.kolaj@programo.pl"
+                  className="text-[var(--theme-text-1)] hover:text-[var(--theme-accent)] transition-colors truncate pointer-events-auto"
+                >
+                  bartosz.kolaj@programo.pl
+                </a>
+                <a
+                  href="tel:+48509123434"
+                  className="text-[var(--theme-text-2)] hover:text-[var(--theme-accent)] transition-colors pointer-events-auto"
+                >
+                  +48 509 123 434
+                </a>
+              </div>
+            </div>
           </motion.div>
 
           {/* Cell 5: Abstract Tech / Stats */}
