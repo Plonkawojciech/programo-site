@@ -31,7 +31,7 @@ function TechCard({ item, index }: { item: TechItem; index: number }) {
 
   return (
     <div
-      className="tech-card-line group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] border border-[#235347]/30 bg-[#0B2B26] p-8 shadow-sm transition-all duration-500 hover:shadow-[0_0_30px_rgba(142,182,155,0.12)] hover:-translate-y-2.5 md:min-w-[320px] overflow-hidden"
+      className="tech-card-line group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] border border-[var(--theme-border-2)]/30 bg-[var(--theme-bg-3)] p-8 shadow-sm transition-all duration-500 hover:shadow-[0_0_30px_rgba(var(--theme-accent-rgb),0.12)] hover:-translate-y-2.5 md:min-w-[320px] overflow-hidden"
       style={{
         animationDelay: `${index * 0.1}s`,
         // @ts-expect-error CSS custom property for tech-card-line hover color
@@ -109,7 +109,7 @@ export default function TechStack() {
   ];
 
   return (
-    <section id="stack" className="relative overflow-hidden py-24 md:py-32 lg:py-56 bg-gradient-to-b from-[#051F20] via-[#0B2B26] to-[#051F20]">
+    <section id="stack" className="relative overflow-hidden py-24 md:py-32 lg:py-56 bg-gradient-to-b from-[var(--theme-bg-1)] via-[var(--theme-bg-3)] to-[var(--theme-bg-1)]">
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
         <div className="mb-20 md:mb-32 2xl:mb-48 flex flex-col items-end text-right">
           <motion.span
@@ -126,7 +126,7 @@ export default function TechStack() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw] bg-gradient-to-r from-[#DAF1DE] via-[#8EB69B] to-[#DAF1DE] bg-clip-text text-transparent"
+            className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw] bg-gradient-to-r from-[var(--theme-text-1)] via-[var(--theme-text-2)] to-[var(--theme-text-1)] bg-clip-text text-transparent"
           >
             {t("stack.title")}
           </motion.h2>

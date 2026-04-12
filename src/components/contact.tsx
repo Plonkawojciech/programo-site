@@ -22,7 +22,7 @@ export default function Contact() {
   return (
     <section id="contact" className="relative min-h-screen bg-surface py-24 md:py-32 lg:py-56 border-t border-outline-variant/20 overflow-hidden">
       {/* Top accent line */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#8EB69B] to-transparent opacity-40" />
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--theme-accent)] to-transparent opacity-40" />
 
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
         <div className="grid grid-cols-1 gap-20 md:gap-32 lg:grid-cols-12">

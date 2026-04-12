@@ -32,33 +32,33 @@ function AIScannerCell() {
 
   return (
     <div
-      className="col-span-1 row-span-2 bg-[#051F20] relative overflow-hidden cursor-crosshair group transform-gpu will-change-transform"
+      className="col-span-1 row-span-2 bg-[var(--theme-bg-1)] relative overflow-hidden cursor-crosshair group transform-gpu will-change-transform"
       onMouseMove={handleScannerMove}
     >
       {/* Interactive Scanner Lines - CSS transforms for performance */}
       <div
         data-scanner-h
-        className="absolute left-0 right-0 top-0 h-[1px] bg-[#DAF1DE] shadow-[0_0_10px_#DAF1DE] z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity transform-gpu will-change-transform"
+        className="absolute left-0 right-0 top-0 h-[1px] bg-[var(--theme-text-1)] shadow-[0_0_10px_var(--theme-text-1)] z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity transform-gpu will-change-transform"
         style={{ transform: "translateY(50px)" }}
       />
       <div
         data-scanner-v
-        className="absolute top-0 bottom-0 left-0 w-[1px] bg-[#DAF1DE] shadow-[0_0_10px_#DAF1DE] z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity transform-gpu will-change-transform"
+        className="absolute top-0 bottom-0 left-0 w-[1px] bg-[var(--theme-text-1)] shadow-[0_0_10px_var(--theme-text-1)] z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity transform-gpu will-change-transform"
         style={{ transform: "translateX(50px)" }}
       />
 
-      <div className="absolute top-4 left-4 text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest z-10 mix-blend-difference">
+      <div className="absolute top-4 left-4 text-[var(--theme-text-2)] font-mono text-[10px] uppercase tracking-widest z-10 mix-blend-difference">
         AI_SCANNER
       </div>
       <div className="w-full h-full p-4 flex flex-col gap-2 opacity-30 mt-8 pointer-events-none">
         {[...Array(12)].map((_, i) => (
-          <div key={i} className="h-1 md:h-2 w-full bg-[#163832] rounded" style={{ width: `${30 + (i * 23) % 70}%` }} />
+          <div key={i} className="h-1 md:h-2 w-full bg-[var(--theme-border-1)] rounded" style={{ width: `${30 + (i * 23) % 70}%` }} />
         ))}
       </div>
 
       {/* Ambient auto scanner */}
       <div
-        className="absolute left-0 right-0 top-0 h-16 bg-gradient-to-b from-transparent via-[#8EB69B]/10 to-transparent pointer-events-none z-10 transform-gpu animate-scanner-sweep"
+        className="absolute left-0 right-0 top-0 h-16 bg-gradient-to-b from-transparent via-[rgba(var(--theme-accent-rgb),0.1)] to-transparent pointer-events-none z-10 transform-gpu animate-scanner-sweep"
       />
     </div>
   );
@@ -80,26 +80,26 @@ export default function Hero() {
   return (
     <section
       ref={container}
-      className="relative bg-[#051F20] h-[150vh] md:h-[200vh]"
+      className="relative bg-[var(--theme-bg-1)] h-[150vh] md:h-[200vh]"
     >
       <motion.div
-        className="sticky top-0 h-screen w-full overflow-hidden bg-[#163832] p-[1px] flex flex-col transform-gpu will-change-transform"
+        className="sticky top-0 h-screen w-full overflow-hidden bg-[var(--theme-border-1)] p-[1px] flex flex-col transform-gpu will-change-transform"
         style={{ scale, opacity, rotateX, y, transformStyle: "preserve-3d", perspective: 1200 }}
       >
         <div className="w-full h-full grid grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-4 gap-[1px]">
           {/* Cell 1: PR Logo */}
           <motion.div
-            className="col-span-2 row-span-2 md:col-span-2 md:row-span-2 bg-[#051F20] relative overflow-hidden group flex items-center justify-center transform-gpu will-change-[transform,opacity] animate-fadeSlideIn"
+            className="col-span-2 row-span-2 md:col-span-2 md:row-span-2 bg-[var(--theme-bg-1)] relative overflow-hidden group flex items-center justify-center transform-gpu will-change-[transform,opacity] animate-fadeSlideIn"
             style={{ animationDelay: "0.1s", animationFillMode: "both" }}
             whileHover={{ scale: 0.99 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#0A2A28] to-[#051F20] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="relative text-[#DAF1DE] font-bold text-8xl md:text-[10vw] 2xl:text-[12vw] tracking-tighter flex items-center gap-4 animate-logo-glow">
-              <span className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-[#8EB69B] inline-block animate-pulse shadow-[0_0_10px_#8EB69B]" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--theme-bg-2)] to-[var(--theme-bg-1)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative text-[var(--theme-text-1)] font-bold text-8xl md:text-[10vw] 2xl:text-[12vw] tracking-tighter flex items-center gap-4 animate-logo-glow">
+              <span className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-[var(--theme-accent)] inline-block animate-pulse shadow-[0_0_10px_var(--theme-accent)]" />
               pr.
             </div>
-            <div className="absolute top-4 left-4 text-[#8EB69B] font-mono text-[10px] md:text-xs uppercase tracking-widest">programo_hub</div>
+            <div className="absolute top-4 left-4 text-[var(--theme-text-2)] font-mono text-[10px] md:text-xs uppercase tracking-widest">programo_hub</div>
           </motion.div>
 
           {/* Cell 2: AI Scanner — always rendered, hidden on mobile via CSS */}
@@ -109,12 +109,12 @@ export default function Hero() {
 
           {/* Cell 3: NIP/KRS */}
           <motion.div
-            className="col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform animate-fadeSlideIn"
+            className="col-span-1 row-span-1 bg-[var(--theme-bg-1)] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform animate-fadeSlideIn"
             style={{ animationDelay: "0.2s", animationFillMode: "both" }}
-            whileHover={{ backgroundColor: "#0A2A28" }}
+            whileHover={{ backgroundColor: "var(--theme-bg-2)" }}
           >
-            <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">ENTITY_DATA</span>
-            <div className="flex flex-col gap-1 text-[#DAF1DE] font-mono text-[10px] md:text-sm">
+            <span className="text-[var(--theme-text-2)] font-mono text-[10px] uppercase tracking-widest">ENTITY_DATA</span>
+            <div className="flex flex-col gap-1 text-[var(--theme-text-1)] font-mono text-[10px] md:text-sm">
               <span className="group-hover:translate-x-1 transition-transform">NIP: 7792604466</span>
               <span className="group-hover:translate-x-1 transition-transform delay-75">KRS: 0001233841</span>
             </div>
@@ -122,26 +122,26 @@ export default function Hero() {
 
           {/* Cell 4: Contact */}
           <motion.div
-            className="col-span-1 row-span-1 md:col-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform animate-fadeSlideIn"
+            className="col-span-1 row-span-1 md:col-span-1 bg-[var(--theme-bg-1)] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform animate-fadeSlideIn"
             style={{ animationDelay: "0.3s", animationFillMode: "both" }}
-            whileHover={{ backgroundColor: "#0A2A28" }}
+            whileHover={{ backgroundColor: "var(--theme-bg-2)" }}
           >
-            <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">COMMS_LINK</span>
-            <span className="text-[#DAF1DE] font-mono text-[10px] md:text-sm truncate group-hover:text-[#8EB69B] transition-colors">kontakt@programo.pl</span>
+            <span className="text-[var(--theme-text-2)] font-mono text-[10px] uppercase tracking-widest">COMMS_LINK</span>
+            <span className="text-[var(--theme-text-1)] font-mono text-[10px] md:text-sm truncate group-hover:text-[var(--theme-text-2)] transition-colors">kontakt@programo.pl</span>
           </motion.div>
 
           {/* Cell 5: Abstract Tech / Stats */}
           <motion.div
-            className="col-span-1 md:col-span-1 row-span-2 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex flex-col justify-between overflow-hidden relative group transform-gpu will-change-transform animate-fadeSlideIn"
+            className="col-span-1 md:col-span-1 row-span-2 bg-[var(--theme-bg-1)] p-4 md:p-6 2xl:p-10 flex flex-col justify-between overflow-hidden relative group transform-gpu will-change-transform animate-fadeSlideIn"
             style={{ animationDelay: "0.4s", animationFillMode: "both" }}
             whileHover={{ scale: 0.98 }}
           >
-            <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest z-10">SYS.LOAD_METRICS</span>
+            <span className="text-[var(--theme-text-2)] font-mono text-[10px] uppercase tracking-widest z-10">SYS.LOAD_METRICS</span>
             <div className="flex gap-1 items-end h-24 md:h-32 z-10 mt-8">
               {[40, 70, 45, 90, 60, 85].map((h, i) => (
                 <div
                   key={i}
-                  className="w-full bg-[#163832] group-hover:bg-[#8EB69B]/50 transition-colors transform-gpu animate-bar-pulse"
+                  className="w-full bg-[var(--theme-border-1)] group-hover:bg-[var(--theme-accent)]/50 transition-colors transform-gpu animate-bar-pulse"
                   style={{
                     height: `${h}%`,
                     animationDelay: `${i * 0.15}s`,
@@ -154,14 +154,14 @@ export default function Hero() {
 
           {/* Cell 6: Digital Craftsmanship */}
           <motion.div
-            className="col-span-2 md:col-span-2 row-span-1 bg-[#051F20] p-4 md:p-8 2xl:p-10 flex items-center justify-center relative overflow-hidden group cursor-default transform-gpu will-change-transform animate-fadeSlideIn"
+            className="col-span-2 md:col-span-2 row-span-1 bg-[var(--theme-bg-1)] p-4 md:p-8 2xl:p-10 flex items-center justify-center relative overflow-hidden group cursor-default transform-gpu will-change-transform animate-fadeSlideIn"
             style={{ animationDelay: "0.5s", animationFillMode: "both" }}
           >
-            <h2 className="text-[#DAF1DE] text-2xl md:text-4xl lg:text-5xl 2xl:text-7xl font-serif italic tracking-tighter mix-blend-difference z-10 pointer-events-none animate-shimmer bg-clip-text">
+            <h2 className="text-[var(--theme-text-1)] text-2xl md:text-4xl lg:text-5xl 2xl:text-7xl font-serif italic tracking-tighter mix-blend-difference z-10 pointer-events-none animate-shimmer bg-clip-text">
               digital craftsmanship
             </h2>
             <motion.div
-              className="absolute inset-0 bg-[#8EB69B] transform-gpu will-change-transform"
+              className="absolute inset-0 bg-[var(--theme-accent)] transform-gpu will-change-transform"
               initial={{ x: "-100%" }}
               whileHover={{ x: "0%" }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
@@ -175,15 +175,15 @@ export default function Hero() {
           {/* Cell 7: QR Pattern / Matrix — always rendered, hidden on mobile via CSS */}
           <div className="hidden md:contents">
             <motion.div
-              className="col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex items-center justify-center group transform-gpu will-change-transform animate-fadeSlideIn"
+              className="col-span-1 row-span-1 bg-[var(--theme-bg-1)] p-4 md:p-6 2xl:p-10 flex items-center justify-center group transform-gpu will-change-transform animate-fadeSlideIn"
               style={{ animationDelay: "0.6s", animationFillMode: "both" }}
-              whileHover={{ backgroundColor: "#0A2A28" }}
+              whileHover={{ backgroundColor: "var(--theme-bg-2)" }}
             >
-              <div className="grid grid-cols-5 grid-rows-5 gap-[2px] w-12 h-12 md:w-16 md:h-16 bg-[#051F20] border border-[#163832] p-1 group-hover:border-[#8EB69B] transition-colors">
+              <div className="grid grid-cols-5 grid-rows-5 gap-[2px] w-12 h-12 md:w-16 md:h-16 bg-[var(--theme-bg-1)] border border-[var(--theme-border-1)] p-1 group-hover:border-[var(--theme-accent)] transition-colors">
                 {qrPattern.map((isActive, i) => (
                   <div
                     key={i}
-                    className={`w-full h-full ${isActive ? 'bg-[#8EB69B] animate-qr-blink' : 'bg-[#163832]'}`}
+                    className={`w-full h-full ${isActive ? 'bg-[var(--theme-accent)] animate-qr-blink' : 'bg-[var(--theme-border-1)]'}`}
                     style={isActive ? { animationDelay: `${((i * 13) % 7) * 0.1}s` } : undefined}
                   />
                 ))}
@@ -193,36 +193,36 @@ export default function Hero() {
 
           {/* Cell 8: Location */}
           <motion.div
-            className="col-span-1 md:col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform animate-fadeSlideIn"
+            className="col-span-1 md:col-span-1 row-span-1 bg-[var(--theme-bg-1)] p-4 md:p-6 2xl:p-10 flex flex-col justify-between group transform-gpu will-change-transform animate-fadeSlideIn"
             style={{ animationDelay: "0.7s", animationFillMode: "both" }}
-            whileHover={{ backgroundColor: "#0A2A28" }}
+            whileHover={{ backgroundColor: "var(--theme-bg-2)" }}
           >
-            <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest">LOC_COORDS</span>
-            <span className="text-[#DAF1DE] font-mono text-xs md:text-sm group-hover:tracking-widest transition-all">POZNAN, PL</span>
+            <span className="text-[var(--theme-text-2)] font-mono text-[10px] uppercase tracking-widest">LOC_COORDS</span>
+            <span className="text-[var(--theme-text-1)] font-mono text-xs md:text-sm group-hover:tracking-widest transition-all">POZNAN, PL</span>
           </motion.div>
 
           {/* Cell 9: Interactive Map/Radar — always rendered, hidden on mobile via CSS */}
           <div className="hidden md:contents">
             <motion.div
-              className="col-span-2 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 relative overflow-hidden flex items-center justify-center group transform-gpu will-change-transform animate-fadeSlideIn"
+              className="col-span-2 row-span-1 bg-[var(--theme-bg-1)] p-4 md:p-6 2xl:p-10 relative overflow-hidden flex items-center justify-center group transform-gpu will-change-transform animate-fadeSlideIn"
               style={{ animationDelay: "0.8s", animationFillMode: "both" }}
               whileHover={{ scale: 0.98 }}
             >
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-32 h-32 md:w-48 md:h-48 rounded-full border border-dashed border-[#163832] group-hover:border-[#8EB69B]/50 absolute transition-colors transform-gpu will-change-transform" />
-              <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="w-20 h-20 md:w-32 md:h-32 rounded-full border border-dotted border-[#8EB69B] absolute transform-gpu will-change-transform" />
-              <div className="text-[#DAF1DE] font-mono text-[10px] md:text-xs z-10 bg-[#051F20] px-2 py-1 rounded-full border border-[#163832]">RADAR_ONLINE</div>
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-32 h-32 md:w-48 md:h-48 rounded-full border border-dashed border-[var(--theme-border-1)] group-hover:border-[var(--theme-accent)]/50 absolute transition-colors transform-gpu will-change-transform" />
+              <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="w-20 h-20 md:w-32 md:h-32 rounded-full border border-dotted border-[var(--theme-accent)] absolute transform-gpu will-change-transform" />
+              <div className="text-[var(--theme-text-1)] font-mono text-[10px] md:text-xs z-10 bg-[var(--theme-bg-1)] px-2 py-1 rounded-full border border-[var(--theme-border-1)]">RADAR_ONLINE</div>
             </motion.div>
           </div>
 
           {/* Cell 10: Scroll Hint */}
           <motion.div
-            className="col-span-1 md:col-span-1 row-span-1 bg-[#051F20] p-4 md:p-6 2xl:p-10 flex items-center justify-center flex-col gap-2 group transform-gpu will-change-transform animate-fadeSlideIn"
+            className="col-span-1 md:col-span-1 row-span-1 bg-[var(--theme-bg-1)] p-4 md:p-6 2xl:p-10 flex items-center justify-center flex-col gap-2 group transform-gpu will-change-transform animate-fadeSlideIn"
             style={{ animationDelay: "0.9s", animationFillMode: "both" }}
-            whileHover={{ backgroundColor: "#0A2A28" }}
+            whileHover={{ backgroundColor: "var(--theme-bg-2)" }}
           >
-            <span className="text-[#8EB69B] font-mono text-[10px] uppercase tracking-widest text-center">INIT_SEQUENCE</span>
-            <div className="h-8 md:h-12 w-[1px] bg-[#163832] relative overflow-hidden mt-2">
-               <motion.div className="absolute top-0 left-0 w-full h-1/2 bg-[#DAF1DE] transform-gpu will-change-transform" animate={{ y: ["-100%", "200%"] }} transition={{ duration: 1.5, repeat: Infinity }} />
+            <span className="text-[var(--theme-text-2)] font-mono text-[10px] uppercase tracking-widest text-center">INIT_SEQUENCE</span>
+            <div className="h-8 md:h-12 w-[1px] bg-[var(--theme-border-1)] relative overflow-hidden mt-2">
+               <motion.div className="absolute top-0 left-0 w-full h-1/2 bg-[var(--theme-text-1)] transform-gpu will-change-transform" animate={{ y: ["-100%", "200%"] }} transition={{ duration: 1.5, repeat: Infinity }} />
             </div>
           </motion.div>
         </div>

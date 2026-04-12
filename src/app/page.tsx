@@ -1,6 +1,7 @@
 "use client";
 
 import { I18nProvider, useI18n } from "@/lib/i18n";
+import { ThemeProvider } from "@/lib/theme";
 import Navbar from "@/components/navbar";
 import HorizontalIntro from "@/components/horizontal-intro";
 import Hero from "@/components/hero";
@@ -42,9 +43,11 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <I18nProvider>
-      <Preloader />
-      <HomeContent />
-    </I18nProvider>
+    <ThemeProvider>
+      <I18nProvider>
+        <Preloader />
+        <HomeContent />
+      </I18nProvider>
+    </ThemeProvider>
   );
 }

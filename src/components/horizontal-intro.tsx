@@ -25,7 +25,7 @@ export default function HorizontalIntro() {
   return (
     <section
       ref={container}
-      className="relative bg-[#051F20] cursor-default text-[#DAF1DE] h-[200vh] md:h-[250vh]"
+      className="relative bg-[var(--theme-bg-1)] cursor-default text-[var(--theme-text-1)] h-[200vh] md:h-[250vh]"
     >
       <motion.div
         style={{ opacity: introOpacity, contain: "layout style paint" }}
@@ -36,7 +36,7 @@ export default function HorizontalIntro() {
           style={{ x: xBg }}
           className="absolute top-[15%] left-0 flex whitespace-nowrap opacity-[0.03] pointer-events-none select-none z-0 transform-gpu will-change-transform"
         >
-          <span className="text-[30vw] md:text-[25vw] font-serif italic tracking-tighter leading-none text-[#DAF1DE]">
+          <span className="text-[30vw] md:text-[25vw] font-serif italic tracking-tighter leading-none text-[var(--theme-text-1)]">
             digital craftsmanship digital craftsmanship
           </span>
         </motion.div>
@@ -48,7 +48,7 @@ export default function HorizontalIntro() {
         >
           {/* Title block — individual letter animations */}
           <div className="flex flex-col relative shrink-0">
-            <h1 className="text-[18vw] md:text-[15vw] 2xl:text-[12vw] font-sans font-light tracking-tighter leading-none text-[#DAF1DE] flex">
+            <h1 className="text-[18vw] md:text-[15vw] 2xl:text-[12vw] font-sans font-light tracking-tighter leading-none text-[var(--theme-text-1)] flex">
               {programoLetters.map((letter, i) => (
                 <span
                   key={i}
@@ -62,24 +62,24 @@ export default function HorizontalIntro() {
                 </span>
               ))}
             </h1>
-            <p className="text-[#8EB69B] font-mono text-sm md:text-xl uppercase tracking-[0.5em] ml-2 mt-4 animate-fadeSlideIn" style={{ animationDelay: "1s", animationFillMode: "both" }}>
+            <p className="text-[var(--theme-text-2)] font-mono text-sm md:text-xl uppercase tracking-[0.5em] ml-2 mt-4 animate-fadeSlideIn" style={{ animationDelay: "1s", animationFillMode: "both" }}>
               Software Engineering
             </p>
           </div>
 
           {/* Manifesto block — subtle vertical parallax */}
           <motion.div style={{ y: manifestoY }} className="relative shrink-0 flex flex-col gap-6">
-            <div className="w-48 md:w-64 h-[2px] bg-[#163832] relative overflow-hidden">
+            <div className="w-48 md:w-64 h-[2px] bg-[var(--theme-border-1)] relative overflow-hidden">
               <motion.div
-                className="absolute top-0 bottom-0 left-0 w-1/3 bg-[#8EB69B] transform-gpu"
+                className="absolute top-0 bottom-0 left-0 w-1/3 bg-[var(--theme-accent)] transform-gpu"
                 animate={{ x: ["-100%", "300%"] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               />
             </div>
-            <h2 className="text-[8vw] md:text-[6vw] 2xl:text-[5vw] font-sans font-black tracking-tighter text-[#DAF1DE] uppercase leading-none whitespace-normal max-w-[50vw] md:max-w-[30vw]">
+            <h2 className="text-[8vw] md:text-[6vw] 2xl:text-[5vw] font-sans font-black tracking-tighter text-[var(--theme-text-1)] uppercase leading-none whitespace-normal max-w-[50vw] md:max-w-[30vw]">
               Digital<br />Precision
             </h2>
-            <p className="text-[#8EB69B] font-mono text-xs md:text-sm uppercase tracking-[0.3em] whitespace-normal max-w-[40vw] md:max-w-[25vw]">
+            <p className="text-[var(--theme-text-2)] font-mono text-xs md:text-sm uppercase tracking-[0.3em] whitespace-normal max-w-[40vw] md:max-w-[25vw]">
               Budujemy kompletne systemy software&apos;owe z chirurgiczn&#261; precyzj&#261;.
             </p>
           </motion.div>
@@ -88,7 +88,7 @@ export default function HorizontalIntro() {
         {/* Foreground ticker (fast) — more energetic with glow */}
         <motion.div
           style={{ x: xFg }}
-          className="absolute bottom-8 md:bottom-12 left-0 flex whitespace-nowrap z-30 opacity-50 text-[#8EB69B] font-mono text-lg md:text-2xl tracking-[0.3em] md:tracking-[0.5em] transform-gpu will-change-transform"
+          className="absolute bottom-8 md:bottom-12 left-0 flex whitespace-nowrap z-30 opacity-50 text-[var(--theme-text-2)] font-mono text-lg md:text-2xl tracking-[0.3em] md:tracking-[0.5em] transform-gpu will-change-transform"
         >
           {[...Array(8)].map((_, i) => (
             <span key={i} className="mx-6 md:mx-10 animate-tickerPulse" style={{ animationDelay: `${i * 0.3}s` }}>
@@ -100,13 +100,13 @@ export default function HorizontalIntro() {
         {/* Scroll hint (mobile only) */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none md:hidden">
           <div className="flex flex-col items-center gap-2">
-            <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#8EB69B]/50">
+            <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[var(--theme-text-2)]/50">
               scroll
             </span>
             <motion.div
               animate={{ y: [0, 8, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="h-6 w-px bg-[#8EB69B]/30"
+              className="h-6 w-px bg-[var(--theme-accent)]/30"
             />
           </div>
         </div>

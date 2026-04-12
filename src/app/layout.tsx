@@ -91,6 +91,11 @@ export default function RootLayout({
     <html lang="pl" className={`${newsreader.variable} ${jakarta.variable} selection:bg-primary/20 selection:text-primary`}>
       <head>
         <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('programo-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else{document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();`,
+          }}
+        />
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />

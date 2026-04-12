@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme";
 import {
   easeEntry,
   easeHover,
@@ -15,6 +16,7 @@ import {
 
 export default function Navbar() {
   const { lang, toggle, t } = useI18n();
+  const { theme, toggle: toggleTheme } = useTheme();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -136,14 +138,14 @@ export default function Navbar() {
         <div
           className={`rounded-full border transition-all duration-500 ${
             scrolled
-              ? "border-white/20 bg-white/80 shadow-[0_20px_40px_rgba(26,28,28,0.08)] backdrop-blur-2xl"
-              : "border-white/10 bg-white/50 shadow-none backdrop-blur-xl"
+              ? "border-[var(--theme-nav-pill-border-scrolled)] bg-[var(--theme-nav-pill-scrolled)] shadow-[0_20px_40px_var(--theme-nav-pill-shadow)] backdrop-blur-2xl"
+              : "border-[var(--theme-nav-pill-border)] bg-[var(--theme-nav-pill)] shadow-none backdrop-blur-xl"
           }`}
         >
           <div className="flex justify-between items-center px-8 py-3">
             <Link
               href="/"
-              className="font-headline text-xl font-semibold tracking-tight text-[#051F20]"
+              className="font-headline text-xl font-semibold tracking-tight text-[var(--theme-nav-text)]"
             >
               Programo
             </Link>
@@ -157,8 +159,8 @@ export default function Navbar() {
                     href={link.href}
                     className={`relative text-[13px] uppercase font-medium transition-colors ${
                       isActive
-                        ? "text-[#051F20]"
-                        : "text-[#051F20]/60 hover:text-[#051F20]"
+                        ? "text-[var(--theme-nav-text)]"
+                        : "text-[rgba(var(--theme-nav-text-rgb),0.6)] hover:text-[var(--theme-nav-text)]"
                     }`}
                     style={{
                       transitionDuration: `${durationFast * 1000}ms`,
@@ -183,9 +185,26 @@ export default function Navbar() {
 
             <div className="flex items-center gap-4">
               <button
+                onClick={toggleTheme}
+                aria-label="Toggle theme"
+                title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                className="flex items-center justify-center w-8 h-8 text-[rgba(var(--theme-nav-text-rgb),0.6)] hover:text-[var(--theme-nav-text)] transition-colors cursor-pointer"
+              >
+                {theme === "dark" ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                  </svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                  </svg>
+                )}
+              </button>
+              <button
                 onClick={toggle}
                 aria-label={t("a11y.langToggle")}
-                className="text-[13px] uppercase font-medium text-[#051F20]/40 cursor-pointer hover:text-[#051F20] transition-colors"
+                className="text-[13px] uppercase font-medium text-[rgba(var(--theme-nav-text-rgb),0.4)] cursor-pointer hover:text-[var(--theme-nav-text)] transition-colors"
                 style={{
                   transitionDuration: `${durationFast * 1000}ms`,
                   transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
@@ -224,8 +243,8 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 md:hidden flex justify-center"
       >
         <div
-          className={`bg-white/70 backdrop-blur-xl rounded-full mt-6 mx-auto max-w-fit px-5 py-2 border border-outline-variant/20 shadow-[0_20px_40px_rgba(26,28,28,0.04)] flex items-center gap-6 transition-all duration-500 ${
-            scrolled ? "shadow-[0_20px_40px_rgba(26,28,28,0.08)]" : ""
+          className={`bg-[var(--theme-nav-pill-mobile)] backdrop-blur-xl rounded-full mt-6 mx-auto max-w-fit px-5 py-2 border border-outline-variant/20 shadow-[0_20px_40px_var(--theme-nav-pill-shadow-soft)] flex items-center gap-6 transition-all duration-500 ${
+            scrolled ? "shadow-[0_20px_40px_var(--theme-nav-pill-shadow)]" : ""
           }`}
         >
           <button
@@ -234,12 +253,12 @@ export default function Navbar() {
             aria-label="Toggle menu"
           >
             <span
-              className={`h-[1.5px] w-5 bg-[#051F20] transition-all duration-300 ${
+              className={`h-[1.5px] w-5 bg-[var(--theme-nav-text)] transition-all duration-300 ${
                 mobileOpen ? "translate-y-[4.5px] rotate-45" : ""
               }`}
             />
             <span
-              className={`h-[1.5px] w-5 bg-[#051F20] transition-all duration-300 ${
+              className={`h-[1.5px] w-5 bg-[var(--theme-nav-text)] transition-all duration-300 ${
                 mobileOpen ? "-translate-y-[1.5px] -rotate-45" : ""
               }`}
             />
@@ -247,15 +266,31 @@ export default function Navbar() {
 
           <Link
             href="/"
-            className="text-lg font-headline font-semibold tracking-tight text-[#051F20]"
+            className="text-lg font-headline font-semibold tracking-tight text-[var(--theme-nav-text)]"
           >
             Programo
           </Link>
 
           <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="flex items-center justify-center w-7 h-7 text-[var(--theme-nav-text)] cursor-pointer"
+          >
+            {theme === "dark" ? (
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+              </svg>
+            ) : (
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            )}
+          </button>
+          <button
             onClick={toggle}
             aria-label={t("a11y.langToggle")}
-            className="text-[13px] uppercase text-[#051F20] font-medium cursor-pointer"
+            className="text-[13px] uppercase text-[var(--theme-nav-text)] font-medium cursor-pointer"
           >
             {lang === "pl" ? "EN" : "PL"}
           </button>

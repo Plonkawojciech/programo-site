@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
+:root {
+  /* Dark mode (default) — exact current colors */
+  --theme-bg-1: #051F20;      /* deepest bg — body, hero, sections */
+  --theme-bg-2: #0A2A28;      /* surface container low */
+  --theme-bg-3: #0B2B26;      /* tech stack, surface container */
+  --theme-bg-4: #163832;      /* surface container high */
+  --theme-border-1: #163832;  /* primary borders */
+  --theme-border-2: #235347;  /* secondary borders */
+  --theme-text-1: #DAF1DE;    /* main text — light mint */
+  --theme-text-2: #8EB69B;    /* muted text — sage */
+  --theme-accent: #8EB69B;    /* primary brand color */
+  --theme-glow: 218, 241, 222;   /* RGB for shadows/glows */
+
+  /* RGB variants for rgba() usage with opacity */
+  --theme-bg-1-rgb: 5, 31, 32;
+  --theme-bg-2-rgb: 10, 42, 40;
+  --theme-bg-3-rgb: 11, 43, 38;
+  --theme-bg-4-rgb: 22, 56, 50;
+  --theme-border-1-rgb: 22, 56, 50;
+  --theme-border-2-rgb: 35, 83, 71;
+  --theme-text-1-rgb: 218, 241, 222;
+  --theme-text-2-rgb: 142, 182, 155;
+  --theme-accent-rgb: 142, 182, 155;
+
+  /* About section alt (cream portion in dark mode) */
+  --theme-alt-bg: #FAF8F4;
+  --theme-alt-bg-2: #F0EDE6;
+  --theme-alt-text: #1A1816;
+  --theme-alt-muted: #6B6560;
+  --theme-alt-border: #E5E0D5;
+  --theme-alt-text-rgb: 26, 24, 22;
+  --theme-alt-accent-rgb: 142, 182, 155;
+
+  /* Navbar pill colors — pill is light in dark mode, dark in light mode */
+  --theme-nav-pill: rgba(255, 255, 255, 0.5);
+  --theme-nav-pill-scrolled: rgba(255, 255, 255, 0.8);
+  --theme-nav-pill-mobile: rgba(255, 255, 255, 0.7);
+  --theme-nav-pill-border: rgba(255, 255, 255, 0.1);
+  --theme-nav-pill-border-scrolled: rgba(255, 255, 255, 0.2);
+  --theme-nav-pill-shadow: rgba(26, 28, 28, 0.08);
+  --theme-nav-pill-shadow-soft: rgba(26, 28, 28, 0.04);
+  --theme-nav-text: #051F20;
+  --theme-nav-text-rgb: 5, 31, 32;
+}
+
+[data-theme="light"] {
+  /* Light mode — inverted */
+  --theme-bg-1: #FAFCF8;      /* creamy white base */
+  --theme-bg-2: #F0F5EC;      /* slightly darker cream */
+  --theme-bg-3: #E8EFE3;      /* container */
+  --theme-bg-4: #D5E0CF;      /* high container */
+  --theme-border-1: #D5E0CF;
+  --theme-border-2: #B8C8B0;
+  --theme-text-1: #0A1F12;    /* dark forest text */
+  --theme-text-2: #3A5A40;    /* muted forest */
+  --theme-accent: #5A7A62;    /* darker sage for contrast on light */
+  --theme-glow: 10, 31, 18;
+
+  /* RGB variants */
+  --theme-bg-1-rgb: 250, 252, 248;
+  --theme-bg-2-rgb: 240, 245, 236;
+  --theme-bg-3-rgb: 232, 239, 227;
+  --theme-bg-4-rgb: 213, 224, 207;
+  --theme-border-1-rgb: 213, 224, 207;
+  --theme-border-2-rgb: 184, 200, 176;
+  --theme-text-1-rgb: 10, 31, 18;
+  --theme-text-2-rgb: 58, 90, 64;
+  --theme-accent-rgb: 90, 122, 98;
+
+  /* About section alt — inverted to dark forest */
+  --theme-alt-bg: #051F20;
+  --theme-alt-bg-2: #0B2B26;
+  --theme-alt-text: #DAF1DE;
+  --theme-alt-muted: #8EB69B;
+  --theme-alt-border: #163832;
+  --theme-alt-text-rgb: 218, 241, 222;
+  --theme-alt-accent-rgb: 142, 182, 155;
+
+  /* Navbar pill colors — inverted: dark pill with light text */
+  --theme-nav-pill: rgba(5, 31, 32, 0.5);
+  --theme-nav-pill-scrolled: rgba(5, 31, 32, 0.8);
+  --theme-nav-pill-mobile: rgba(5, 31, 32, 0.7);
+  --theme-nav-pill-border: rgba(218, 241, 222, 0.1);
+  --theme-nav-pill-border-scrolled: rgba(218, 241, 222, 0.2);
+  --theme-nav-pill-shadow: rgba(0, 0, 0, 0.2);
+  --theme-nav-pill-shadow-soft: rgba(0, 0, 0, 0.15);
+  --theme-nav-text: #DAF1DE;
+  --theme-nav-text-rgb: 218, 241, 222;
+}
+
 @theme inline {
-  --color-surface: #051F20;
-  --color-surface-dim: #0B2B26;
-  --color-surface-container: #163832;
-  --color-surface-container-low: #0B2B26;
-  --color-surface-container-high: #235347;
-  --color-surface-container-highest: #8EB69B;
-  --color-surface-container-lowest: #051F20;
-  --color-on-surface: #DAF1DE;
-  --color-on-surface-variant: #8EB69B;
-  --color-primary: #8EB69B;
-  --color-primary-container: #235347;
-  --color-on-primary: #051F20;
-  --color-on-primary-container: #DAF1DE;
-  --color-outline: #235347;
-  --color-outline-variant: #163832;
-  --color-secondary: #8EB69B;
-  --color-tertiary: #DAF1DE;
-  --color-inverse-surface: #DAF1DE;
-  --color-inverse-on-surface: #051F20;
-  --color-inverse-primary: #163832;
+  --color-surface: var(--theme-bg-1);
+  --color-surface-dim: var(--theme-bg-3);
+  --color-surface-container: var(--theme-bg-4);
+  --color-surface-container-low: var(--theme-bg-3);
+  --color-surface-container-high: var(--theme-border-2);
+  --color-surface-container-highest: var(--theme-accent);
+  --color-surface-container-lowest: var(--theme-bg-1);
+  --color-on-surface: var(--theme-text-1);
+  --color-on-surface-variant: var(--theme-text-2);
+  --color-primary: var(--theme-accent);
+  --color-primary-container: var(--theme-border-2);
+  --color-on-primary: var(--theme-bg-1);
+  --color-on-primary-container: var(--theme-text-1);
+  --color-outline: var(--theme-border-2);
+  --color-outline-variant: var(--theme-border-1);
+  --color-secondary: var(--theme-accent);
+  --color-tertiary: var(--theme-text-1);
+  --color-inverse-surface: var(--theme-text-1);
+  --color-inverse-on-surface: var(--theme-bg-1);
+  --color-inverse-primary: var(--theme-border-1);
   --font-headline: var(--font-newsreader);
   --font-body: var(--font-jakarta);
 }
@@ -31,8 +121,8 @@ html {
 }
 
 body {
-  background: var(--color-surface);
-  color: var(--color-on-surface);
+  background: var(--theme-bg-1);
+  color: var(--theme-text-1);
   font-family: var(--font-body), system-ui, sans-serif;
   font-weight: 300;
   letter-spacing: -0.01em;
@@ -209,8 +299,8 @@ body {
 
 /* Logo subtle glow pulse */
 @keyframes logoGlow {
-  0%, 100% { text-shadow: 0 0 15px rgba(218, 241, 222, 0.2); }
-  50% { text-shadow: 0 0 30px rgba(218, 241, 222, 0.35), 0 0 60px rgba(142, 182, 155, 0.15); }
+  0%, 100% { text-shadow: 0 0 15px rgba(var(--theme-text-1-rgb), 0.2); }
+  50% { text-shadow: 0 0 30px rgba(var(--theme-text-1-rgb), 0.35), 0 0 60px rgba(var(--theme-accent-rgb), 0.15); }
 }
 
 .animate-logo-glow {
@@ -224,7 +314,7 @@ body {
 }
 
 .animate-shimmer-sweep {
-  background: linear-gradient(90deg, transparent 30%, rgba(218, 241, 222, 0.15) 50%, transparent 70%);
+  background: linear-gradient(90deg, transparent 30%, rgba(var(--theme-text-1-rgb), 0.15) 50%, transparent 70%);
   width: 200%;
   height: 200%;
   animation: shimmerSweep 6s ease-in-out infinite;
