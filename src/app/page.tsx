@@ -28,6 +28,9 @@ function HomeContent() {
         </a>
         <Navbar />
         <main id="main-content">
+          <h1 className="sr-only">
+            Programo — Software House Poznań | Tworzenie oprogramowania, systemów SaaS i aplikacji webowych
+          </h1>
           <HorizontalIntro />
           <Hero />
           <FeaturedWork />

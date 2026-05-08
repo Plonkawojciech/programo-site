@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
+      url: "https://programo.pl/software-house-poznan",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
       url: "https://programo.pl/projects/estalo",
       lastModified: new Date(),
       changeFrequency: "monthly",
