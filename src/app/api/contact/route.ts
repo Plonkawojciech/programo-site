@@ -92,31 +92,104 @@ export async function POST(request: NextRequest) {
 
   const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
 
-  try {
-    const resendApiKey = process.env.RESEND_API_KEY;
-    if (!resendApiKey) {
-      console.log("[DEV] No RESEND_API_KEY — skipping email. Contact form submission:", { name: safeName, email: sanitize(email), subject: safeSubject });
-    }
-    if (resendApiKey) {
-      const resend = new Resend(resendApiKey);
-      await resend.emails.send({
-        from: "Programo <noreply@programo.pl>",
-        to: emailTo,
-        subject: `[Programo] ${safeSubject} — od ${safeName}`,
-        html: `
-          <h2>Nowa wiadomość z formularza kontaktowego</h2>
-          <p><strong>Imię:</strong> ${safeName}</p>
-          <p><strong>Email:</strong> ${sanitize(email)}</p>
-          ${safePhone ? `<p><strong>Telefon:</strong> ${safePhone}</p>` : ""}
-          <p><strong>Temat:</strong> ${safeSubject}</p>
-          <p><strong>Wiadomość:</strong></p>
-          <p>${safeMessage.replace(/\n/g, "<br>")}</p>
-        `,
-      });
-    }
-  } catch {
+  // Send email + Telegram in parallel; success if at least one channel delivers
+  const tasks: Promise<{ channel: string; ok: boolean; error?: string }>[] = [];
+
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (resendApiKey) {
+    tasks.push(
+      (async () => {
+        try {
+          const resend = new Resend(resendApiKey);
+          await resend.emails.send({
+            from: "Programo <noreply@programo.pl>",
+            to: emailTo,
+            subject: `[Programo] ${safeSubject} — od ${safeName}`,
+            html: `
+              <h2>Nowa wiadomość z formularza kontaktowego</h2>
+              <p><strong>Imię:</strong> ${safeName}</p>
+              <p><strong>Email:</strong> ${sanitize(email)}</p>
+              ${safePhone ? `<p><strong>Telefon:</strong> ${safePhone}</p>` : ""}
+              <p><strong>Temat:</strong> ${safeSubject}</p>
+              <p><strong>Wiadomość:</strong></p>
+              <p>${safeMessage.replace(/\n/g, "<br>")}</p>
+            `,
+          });
+          return { channel: "resend", ok: true };
+        } catch (e) {
+          return { channel: "resend", ok: false, error: String(e) };
+        }
+      })()
+    );
+  } else {
+    console.log("[DEV] No RESEND_API_KEY — skipping email.");
+  }
+
+  const tgToken = process.env.TELEGRAM_BOT_TOKEN;
+  const tgChatId = process.env.TELEGRAM_CHAT_ID;
+  if (tgToken && tgChatId) {
+    tasks.push(
+      (async () => {
+        try {
+          const esc = (s: string) =>
+            s.replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, "\\$1");
+          const lines = [
+            `*Nowa wiadomość — Programo*`,
+            ``,
+            `*Imię:* ${esc(name)}`,
+            `*Email:* ${esc(email)}`,
+            phone ? `*Telefon:* ${esc(phone)}` : "",
+            `*Temat:* ${esc(subject)}`,
+            ``,
+            `*Wiadomość:*`,
+            esc(message),
+          ].filter(Boolean);
+
+          const res = await fetch(
+            `https://api.telegram.org/bot${tgToken}/sendMessage`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                chat_id: tgChatId,
+                text: lines.join("\n"),
+                parse_mode: "MarkdownV2",
+                disable_web_page_preview: true,
+              }),
+            }
+          );
+          if (!res.ok) {
+            const errText = await res.text().catch(() => "");
+            return { channel: "telegram", ok: false, error: errText };
+          }
+          return { channel: "telegram", ok: true };
+        } catch (e) {
+          return { channel: "telegram", ok: false, error: String(e) };
+        }
+      })()
+    );
+  } else {
+    console.log("[DEV] No TELEGRAM_BOT_TOKEN/CHAT_ID — skipping Telegram.");
+  }
+
+  if (tasks.length === 0) {
+    console.log("[DEV] No notification channels configured. Submission:", {
+      name: safeName,
+      email: sanitize(email),
+      subject: safeSubject,
+    });
+    return NextResponse.json({ success: true });
+  }
+
+  const results = await Promise.all(tasks);
+  const anyOk = results.some((r) => r.ok);
+  results
+    .filter((r) => !r.ok)
+    .forEach((r) => console.error(`[contact] ${r.channel} failed:`, r.error));
+
+  if (!anyOk) {
     return NextResponse.json(
-      { error: "Failed to send email" },
+      { error: "Failed to deliver notification" },
       { status: 500 }
     );
   }
