@@ -10,7 +10,127 @@ const translations = {
   "nav.about": { pl: "O nas", en: "About" },
   "nav.stack": { pl: "Technologie", en: "Stack" },
   "nav.contact": { pl: "Kontakt", en: "Contact" },
+  "nav.offer": { pl: "Oferta", en: "Services" },
+  "nav.pricing": { pl: "Cennik", en: "Pricing" },
   "nav.cta": { pl: "Napisz do nas", en: "Get in touch" },
+
+  // Main page intro section
+  "main.intro.label": { pl: "Programo Studio", en: "Programo Studio" },
+  "main.intro.headline": {
+    pl: "Tworzymy software, który rozwiązuje realne problemy.",
+    en: "We build software that solves real problems.",
+  },
+  "main.intro.subheadline": {
+    pl: "Dwóch inżynierów z Poznania. Projektujemy, kodujemy i wdrażamy produkty cyfrowe — od pomysłu po działający system.",
+    en: "Two engineers from Poznan. We design, code and ship digital products — from idea to running system.",
+  },
+  "main.values.title": { pl: "Co nas wyróżnia", en: "What sets us apart" },
+  "main.values.problem.title": { pl: "Realny problem", en: "Real problem" },
+  "main.values.problem.desc": {
+    pl: "Nie budujemy demo. Budujemy narzędzia, które naprawdę pomagają firmom zarabiać i oszczędzać czas.",
+    en: "We don't build demos. We build tools that actually help businesses earn and save time.",
+  },
+  "main.values.craft.title": { pl: "Pełne zaangażowanie", en: "Full ownership" },
+  "main.values.craft.desc": {
+    pl: "Bez warstw managementu. Architektura, design, kod i wdrożenie — wszystko z naszych rąk.",
+    en: "No management layers. Architecture, design, code and deployment — all hands-on from us.",
+  },
+  "main.values.speed.title": { pl: "Szybkie wdrożenie", en: "Fast delivery" },
+  "main.values.speed.desc": {
+    pl: "Pracujemy szybko, ale bez kompromisów. Nowoczesny stack i sprawdzone wzorce.",
+    en: "We move fast without cutting corners. Modern stack, battle-tested patterns.",
+  },
+  "main.cta.primary": { pl: "Porozmawiajmy o projekcie", en: "Let's talk about your project" },
+  "main.cta.secondary": { pl: "Zobacz nasze projekty", en: "See our work" },
+  "main.cta.offer": { pl: "Sprawdź ofertę", en: "Check our offer" },
+  "main.cta.pricing": { pl: "Zobacz cennik", en: "See pricing" },
+
+  // Quick contact form (main page)
+  "quick.title": { pl: "Napisz do nas", en: "Get in touch" },
+  "quick.subtitle": {
+    pl: "Wypełnij formularz, a odezwiemy się w ciągu 24 godzin.",
+    en: "Fill out the form and we'll get back to you within 24 hours.",
+  },
+  "quick.name": { pl: "Imię i nazwisko", en: "Your name" },
+  "quick.email": { pl: "Email", en: "Email" },
+  "quick.phone": { pl: "Telefon", en: "Phone" },
+  "quick.message": { pl: "Opisz krótko swoją sytuację i czego potrzebujesz", en: "Briefly describe your situation and what you need" },
+  "quick.send": { pl: "Wyślij wiadomość", en: "Send message" },
+  "quick.sending": { pl: "Wysyłanie...", en: "Sending..." },
+  "quick.sent": { pl: "Wysłano! Odezwiemy się wkrótce.", en: "Sent! We'll be in touch soon." },
+  "quick.error": { pl: "Coś poszło nie tak. Spróbuj ponownie.", en: "Something went wrong. Try again." },
+
+  // Offer page
+  "offer.label": { pl: "Co robimy", en: "What we do" },
+  "offer.title": { pl: "Oferta", en: "Services" },
+  "offer.desc": {
+    pl: "Budujemy kompletne produkty cyfrowe. Niezależnie od skali — od MVP po skalowalne platformy SaaS.",
+    en: "We build complete digital products. From MVPs to scalable SaaS platforms.",
+  },
+  "offer.web.title": { pl: "Strony internetowe", en: "Websites" },
+  "offer.web.desc": {
+    pl: "Nowoczesne strony firmowe, landing page'e i portale. Szybkie, SEO-friendly, gotowe do skalowania.",
+    en: "Modern company sites, landing pages and portals. Fast, SEO-friendly, ready to scale.",
+  },
+  "offer.saas.title": { pl: "Aplikacje SaaS", en: "SaaS applications" },
+  "offer.saas.desc": {
+    pl: "Pełne platformy z autoryzacją, płatnościami, panelami administracyjnymi i integracjami.",
+    en: "Full platforms with auth, payments, admin panels and integrations.",
+  },
+  "offer.mobile.title": { pl: "Aplikacje mobilne", en: "Mobile apps" },
+  "offer.mobile.desc": {
+    pl: "Natywne aplikacje na iOS i Android. Jeden codebase, dwie platformy.",
+    en: "Native iOS and Android apps. One codebase, both platforms.",
+  },
+  "offer.ai.title": { pl: "Integracje AI", en: "AI integrations" },
+  "offer.ai.desc": {
+    pl: "Wdrażamy LLM-y, asystenty AI i automatyzacje oparte o sztuczną inteligencję w Twoim biznesie.",
+    en: "We deploy LLMs, AI assistants and AI-powered automation in your business.",
+  },
+  "offer.consulting.title": { pl: "Doradztwo techniczne", en: "Tech consulting" },
+  "offer.consulting.desc": {
+    pl: "Pomożemy wybrać stack, zaplanować architekturę i uniknąć kosztownych błędów.",
+    en: "We help you pick the stack, plan architecture and avoid costly mistakes.",
+  },
+
+  // Pricing page
+  "pricing.label": { pl: "Cennik", en: "Pricing" },
+  "pricing.title": { pl: "Przejrzysty model rozliczeń", en: "Transparent pricing" },
+  "pricing.desc": {
+    pl: "Każdy projekt jest inny — wycenę przygotujemy po krótkiej rozmowie. Poniżej orientacyjne zakresy.",
+    en: "Every project is different — we'll prepare a quote after a short call. Below are ballpark ranges.",
+  },
+  "pricing.starter.name": { pl: "Starter", en: "Starter" },
+  "pricing.starter.price": { pl: "od 6 000 zł", en: "from €1,400" },
+  "pricing.starter.desc": {
+    pl: "Landing page lub prosta strona firmowa. Idealne na start.",
+    en: "Landing page or simple company site. Perfect to start.",
+  },
+  "pricing.starter.f1": { pl: "Projekt graficzny", en: "Custom design" },
+  "pricing.starter.f2": { pl: "Do 5 podstron", en: "Up to 5 pages" },
+  "pricing.starter.f3": { pl: "Formularz kontaktowy", en: "Contact form" },
+  "pricing.starter.f4": { pl: "SEO i analytics", en: "SEO & analytics" },
+  "pricing.business.name": { pl: "Business", en: "Business" },
+  "pricing.business.price": { pl: "od 15 000 zł", en: "from €3,500" },
+  "pricing.business.desc": {
+    pl: "Rozbudowana strona firmowa, e-commerce lub portal z panelem klienta.",
+    en: "Advanced company site, e-commerce or portal with client area.",
+  },
+  "pricing.business.f1": { pl: "Wszystko ze Startera", en: "Everything in Starter" },
+  "pricing.business.f2": { pl: "Panel administracyjny / CMS", en: "Admin panel / CMS" },
+  "pricing.business.f3": { pl: "Integracje (płatności, CRM)", en: "Integrations (payments, CRM)" },
+  "pricing.business.f4": { pl: "Wielojęzyczność", en: "Multilingual" },
+  "pricing.saas.name": { pl: "SaaS / Aplikacja", en: "SaaS / Application" },
+  "pricing.saas.price": { pl: "wycena indywidualna", en: "custom quote" },
+  "pricing.saas.desc": {
+    pl: "Pełna aplikacja webowa lub mobilna. Skala dopasowana do Twojego biznesu.",
+    en: "Full web or mobile application. Scale matched to your business.",
+  },
+  "pricing.saas.f1": { pl: "Architektura systemu", en: "System architecture" },
+  "pricing.saas.f2": { pl: "Backend + frontend", en: "Backend + frontend" },
+  "pricing.saas.f3": { pl: "Autoryzacja, role, płatności", en: "Auth, roles, payments" },
+  "pricing.saas.f4": { pl: "Wsparcie po wdrożeniu", en: "Post-launch support" },
+  "pricing.cta": { pl: "Porozmawiajmy o wycenie", en: "Let's discuss pricing" },
 
   // Hero
   "hero.label": { pl: "Studio Software", en: "Software Studio" },

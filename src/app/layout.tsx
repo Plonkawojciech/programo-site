@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import Providers from "@/components/providers";
 
 
 const newsreader = Newsreader({
@@ -101,7 +102,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-surface text-on-surface overflow-x-hidden">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

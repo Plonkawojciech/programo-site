@@ -26,16 +26,12 @@ export default function Navbar() {
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
 
-  const isHome = pathname === "/";
-  const prefix = isHome ? "" : "/";
-
-  const sections = ["work", "about", "stack", "contact"];
-
   const navLinks = [
-    { label: t("nav.work"), href: `${prefix}#work`, section: "work" },
-    { label: t("nav.about"), href: `${prefix}#about`, section: "about" },
-    { label: t("nav.stack"), href: `${prefix}#stack`, section: "stack" },
-    { label: t("nav.contact"), href: `${prefix}#contact`, section: "contact" },
+    { label: t("nav.offer"), href: "/oferta", section: "oferta" },
+    { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
+    { label: t("nav.work"), href: "/projekty", section: "projekty" },
+    { label: t("nav.about"), href: "/o-nas", section: "o-nas" },
+    { label: t("nav.contact"), href: "/kontakt", section: "kontakt" },
   ];
 
   // --- Hide on scroll down, show on scroll up ---
@@ -79,29 +75,15 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [handleScroll]);
 
-  // --- Active section IntersectionObserver ---
+  // --- Active section from pathname ---
   useEffect(() => {
-    if (!isHome) return;
-
-    const observers: IntersectionObserver[] = [];
-    for (const id of sections) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveSection(id);
-          }
-        },
-        { rootMargin: "-40% 0px -40% 0px" }
-      );
-      observer.observe(el);
-      observers.push(observer);
+    if (!pathname) {
+      setActiveSection("");
+      return;
     }
-
-    return () => observers.forEach((o) => o.disconnect());
-  }, [isHome]); // eslint-disable-line react-hooks/exhaustive-deps
+    const match = navLinks.find((l) => pathname === l.href || pathname.startsWith(`${l.href}/`));
+    setActiveSection(match?.section ?? "");
+  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // --- Lock body scroll when mobile menu open ---
   useEffect(() => {
@@ -154,7 +136,7 @@ export default function Navbar() {
               {navLinks.map((link) => {
                 const isActive = activeSection === link.section;
                 return (
-                  <a
+                  <Link
                     key={link.href}
                     href={link.href}
                     className={`relative text-[13px] uppercase font-medium transition-colors ${
@@ -178,7 +160,7 @@ export default function Navbar() {
                         }}
                       />
                     )}
-                  </a>
+                  </Link>
                 );
               })}
             </div>
@@ -212,8 +194,8 @@ export default function Navbar() {
               >
                 {lang === "pl" ? "EN" : "PL"}
               </button>
-              <a
-                href="#contact"
+              <Link
+                href="/kontakt"
                 className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all"
                 style={{
                   transitionDuration: `${durationFast * 1000}ms`,
@@ -221,7 +203,7 @@ export default function Navbar() {
                 }}
               >
                 {t("nav.cta")}
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -312,10 +294,8 @@ export default function Navbar() {
           >
             <nav className="flex flex-col items-center gap-8">
               {navLinks.map((link, i) => (
-                <motion.a
+                <motion.div
                   key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
                   initial={{ opacity: 0, x: -30, y: 20 }}
                   animate={{ opacity: 1, x: 0, y: 0 }}
                   exit={{ opacity: 0, x: -30, y: 20 }}
@@ -324,26 +304,23 @@ export default function Navbar() {
                     duration: durationMedium,
                     ease: easeEntry,
                   }}
-                  className="font-headline text-2xl font-normal text-on-surface min-h-[44px] flex items-center"
                 >
-                  {link.label}
-                </motion.a>
+                  <Link
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="font-headline text-2xl font-normal text-on-surface min-h-[44px] flex items-center"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
-              <motion.a
-                href="#contact"
+              <Link
+                href="/kontakt"
                 onClick={() => setMobileOpen(false)}
-                initial={{ opacity: 0, x: -30, y: 20 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                exit={{ opacity: 0, x: -30, y: 20 }}
-                transition={{
-                  delay: navLinks.length * 0.1,
-                  duration: durationMedium,
-                  ease: easeEntry,
-                }}
                 className="mt-4 bg-primary px-8 py-3 rounded-full text-on-primary text-sm tracking-wide font-medium min-h-[44px] flex items-center"
               >
                 {t("nav.cta")}
-              </motion.a>
+              </Link>
             </nav>
           </motion.div>
         )}

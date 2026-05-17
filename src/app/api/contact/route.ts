@@ -5,12 +5,20 @@ import { Resend } from "resend";
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email format"),
-  subject: z.enum([
-    "Współpraca",
-    "Wycena projektu",
-    "Pytanie techniczne",
-    "Inne",
-  ]),
+  phone: z
+    .string()
+    .max(30, "Phone too long")
+    .optional()
+    .or(z.literal("")),
+  subject: z
+    .enum([
+      "Współpraca",
+      "Wycena projektu",
+      "Pytanie techniczne",
+      "Inne",
+    ])
+    .optional()
+    .default("Inne"),
   message: z
     .string()
     .min(20, "Message must be at least 20 characters")
@@ -76,10 +84,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: firstError }, { status: 400 });
   }
 
-  const { name, email, subject, message } = result.data;
+  const { name, email, phone, subject, message } = result.data;
   const safeName = sanitize(name);
   const safeMessage = sanitize(message);
   const safeSubject = sanitize(subject);
+  const safePhone = phone ? sanitize(phone) : "";
 
   const emailTo = process.env.EMAIL_TO || "kontakt@programo.pl";
 
@@ -98,6 +107,7 @@ export async function POST(request: NextRequest) {
           <h2>Nowa wiadomość z formularza kontaktowego</h2>
           <p><strong>Imię:</strong> ${safeName}</p>
           <p><strong>Email:</strong> ${sanitize(email)}</p>
+          ${safePhone ? `<p><strong>Telefon:</strong> ${safePhone}</p>` : ""}
           <p><strong>Temat:</strong> ${safeSubject}</p>
           <p><strong>Wiadomość:</strong></p>
           <p>${safeMessage.replace(/\n/g, "<br>")}</p>
