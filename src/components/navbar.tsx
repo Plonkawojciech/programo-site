@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
@@ -127,9 +128,18 @@ export default function Navbar() {
           <div className="flex justify-between items-center px-8 py-3">
             <Link
               href="/"
-              className="font-headline text-xl font-semibold tracking-tight text-[var(--theme-nav-text)]"
+              aria-label="Programo — strona główna"
+              className="flex items-center gap-2.5 font-headline text-xl font-semibold tracking-tight text-[var(--theme-nav-text)]"
             >
-              Programo
+              <Image
+                src="/programo-mark.svg"
+                alt=""
+                width={28}
+                height={28}
+                priority
+                className="h-7 w-7"
+              />
+              <span>Programo</span>
             </Link>
 
             <div className="flex items-center gap-8">
@@ -248,9 +258,18 @@ export default function Navbar() {
 
           <Link
             href="/"
-            className="text-lg font-headline font-semibold tracking-tight text-[var(--theme-nav-text)]"
+            aria-label="Programo — strona główna"
+            className="flex items-center gap-2 text-lg font-headline font-semibold tracking-tight text-[var(--theme-nav-text)]"
           >
-            Programo
+            <Image
+              src="/programo-mark.svg"
+              alt=""
+              width={22}
+              height={22}
+              priority
+              className="h-[22px] w-[22px]"
+            />
+            <span>Programo</span>
           </Link>
 
           <button

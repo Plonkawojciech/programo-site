@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { fadeInUp } from "@/lib/motion";
@@ -28,9 +29,13 @@ export default function Footer() {
       >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
           <div>
-            <span className="text-2xl font-semibold text-on-surface">
-              Programo
-            </span>
+            <Image
+              src="/programo-logo.svg"
+              alt="Programo"
+              width={180}
+              height={180}
+              className="h-auto w-[140px] md:w-[180px]"
+            />
             <p className="text-sm text-on-surface-variant mt-6 max-w-xs leading-relaxed">
               {t("hero.desc")}
             </p>

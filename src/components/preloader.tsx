@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Preloader() {
@@ -35,15 +36,25 @@ export default function Preloader() {
             transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] }
           }}
         >
-          {/* PROGRAMO text */}
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="block font-headline text-3xl font-medium italic tracking-[0.2em] md:text-5xl text-primary"
+          {/* Signet + PROGRAMO wordmark */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center gap-6"
           >
-            PROGRAMO
-          </motion.span>
+            <Image
+              src="/programo-mark.svg"
+              alt=""
+              width={96}
+              height={96}
+              priority
+              className="h-20 w-20 md:h-24 md:w-24"
+            />
+            <span className="block font-headline text-2xl font-medium italic tracking-[0.2em] md:text-4xl text-on-surface">
+              PROGRAMO
+            </span>
+          </motion.div>
 
           {/* Progress Number */}
           <div className="absolute bottom-12 right-12 flex items-baseline gap-2">
