@@ -30,7 +30,7 @@ function ProjectTile({ project }: { project: Project }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="group relative shrink-0 w-[320px] md:w-[380px] lg:w-[440px] aspect-[4/3] overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all hover:border-primary/60"
+      className="group relative shrink-0 w-[320px] md:w-[380px] lg:w-[440px] aspect-[4/3] overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all duration-500 ease-out hover:scale-125 hover:z-20 hover:border-primary/60 hover:shadow-2xl hover:shadow-black/30"
       aria-label={`${project.title} — ${project.subtitle[lang]}`}
     >
       {screenshot ? (
@@ -39,7 +39,7 @@ function ProjectTile({ project }: { project: Project }) {
           alt={project.title}
           fill
           sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 440px"
-          className="object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out"
+          className="object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500 ease-out"
         />
       ) : (
         <div

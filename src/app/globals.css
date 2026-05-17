@@ -410,11 +410,12 @@ body {
   width: max-content;
   animation: projectsMarquee 60s linear infinite;
   will-change: transform;
+  transition: animation-duration 0.4s ease-out;
 }
 
 .projects-marquee:hover .projects-marquee__track,
 .projects-marquee:focus-within .projects-marquee__track {
-  animation-play-state: paused;
+  animation-duration: 180s;
 }
 
 @media (prefers-reduced-motion: reduce) {
