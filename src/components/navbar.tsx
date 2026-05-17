@@ -114,20 +114,20 @@ export default function Navbar() {
           duration: durationFast,
           ease: easeEntry,
         }}
-        className="fixed top-6 left-8 z-50 hidden md:flex h-12 items-center"
+        className="fixed top-5 left-8 z-50 hidden md:flex h-14 items-center"
       >
         <Link
           href="/"
           aria-label="Programo — strona główna"
-          className="flex items-center gap-2.5 font-headline text-xl font-semibold tracking-tight text-on-surface"
+          className="flex items-center gap-3 font-headline text-3xl font-semibold tracking-tight text-on-surface"
         >
           <Image
             src="/programo-mark.svg"
             alt=""
-            width={32}
-            height={32}
+            width={48}
+            height={48}
             priority
-            className="h-8 w-8"
+            className="h-12 w-12"
           />
           <span>Programo</span>
         </Link>
@@ -149,13 +149,10 @@ export default function Navbar() {
         className="fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden md:block"
       >
         <div
-          className={`rounded-full border transition-all duration-500 ${
-            scrolled
-              ? "border-[var(--theme-nav-pill-border-scrolled)] bg-[var(--theme-nav-pill-scrolled)] shadow-[0_20px_40px_var(--theme-nav-pill-shadow)] backdrop-blur-2xl"
-              : "border-[var(--theme-nav-pill-border)] bg-[var(--theme-nav-pill)] shadow-none backdrop-blur-xl"
-          }`}
+          className="liquid-glass relative rounded-full transition-all duration-500"
+          data-scrolled={scrolled ? "true" : "false"}
         >
-          <div className="flex items-center gap-7 px-6 py-2.5">
+          <div className="relative z-10 flex items-center gap-7 px-6 py-2.5">
             {navLinks.map((link) => {
               const isActive = activeSection === link.section;
               return (
@@ -251,9 +248,8 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 md:hidden flex justify-center"
       >
         <div
-          className={`bg-[var(--theme-nav-pill-mobile)] backdrop-blur-xl rounded-full mt-6 mx-auto max-w-fit px-5 py-2 border border-outline-variant/20 shadow-[0_20px_40px_var(--theme-nav-pill-shadow-soft)] flex items-center gap-6 transition-all duration-500 ${
-            scrolled ? "shadow-[0_20px_40px_var(--theme-nav-pill-shadow)]" : ""
-          }`}
+          className="liquid-glass relative rounded-full mt-6 mx-auto max-w-fit px-5 py-2 flex items-center gap-6 transition-all duration-500"
+          data-scrolled={scrolled ? "true" : "false"}
         >
           <button
             onClick={() => setMobileOpen(!mobileOpen)}

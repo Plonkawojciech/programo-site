@@ -238,6 +238,64 @@ body {
   }
 }
 
+/* Liquid glass utility — translucent nav pill with refracted highlight + accent glow */
+.liquid-glass {
+  background: var(--theme-nav-pill);
+  border: 1px solid var(--theme-nav-pill-border);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 0 rgba(var(--theme-text-1-rgb), 0.04),
+    0 1px 2px rgba(var(--theme-text-1-rgb), 0.04),
+    0 8px 24px rgba(var(--theme-text-1-rgb), 0.06),
+    0 0 24px rgba(var(--theme-accent-rgb), 0.10);
+  transform: translateZ(0);
+  will-change: backdrop-filter, box-shadow;
+}
+
+.liquid-glass[data-scrolled="true"] {
+  background: var(--theme-nav-pill-scrolled);
+  border-color: var(--theme-nav-pill-border-scrolled);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 0 rgba(var(--theme-text-1-rgb), 0.06),
+    0 2px 4px rgba(var(--theme-text-1-rgb), 0.08),
+    0 12px 32px rgba(var(--theme-text-1-rgb), 0.12),
+    0 0 48px rgba(var(--theme-accent-rgb), 0.22),
+    0 0 80px rgba(var(--theme-accent-rgb), 0.12);
+}
+
+/* Subtle top-edge specular highlight (liquid refraction) */
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0) 65%,
+    rgba(var(--theme-accent-rgb), 0.06) 100%
+  );
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  opacity: 0.7;
+}
+
+.liquid-glass[data-scrolled="true"]::before {
+  opacity: 1;
+}
+
+/* Ensure direct children sit above the highlight overlay */
+.liquid-glass > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* GPU-accelerated CSS animations for hero bento cells */
 @keyframes scanner-sweep {
   0%, 100% { transform: translate3d(0, -100%, 0); }
