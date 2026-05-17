@@ -46,28 +46,28 @@
 }
 
 [data-theme="light"] {
-  /* Light mode — warm cream/beige palette */
-  --theme-bg-1: #F4ECD6;      /* warm cream beige base */
-  --theme-bg-2: #EBE1C2;      /* slightly deeper warm cream */
-  --theme-bg-3: #E0D3A8;      /* warm container */
-  --theme-bg-4: #C9B883;      /* warm container high */
-  --theme-border-1: #D4C395;
-  --theme-border-2: #A89670;
-  --theme-text-1: #2A1F08;    /* warm dark (espresso) */
-  --theme-text-2: #6B5420;    /* warm muted (warm brown) */
-  --theme-accent: #5A7A5C;    /* sage green — works on warm cream */
-  --theme-glow: 42, 31, 8;
+  /* Light mode — near-white with green palette accents */
+  --theme-bg-1: #FBFDFB;      /* near-white base with subtle mint hint */
+  --theme-bg-2: #F2F8F3;      /* very light mint */
+  --theme-bg-3: #E6F1E8;      /* light mint container */
+  --theme-bg-4: #DAF1DE;      /* mint from palette */
+  --theme-border-1: #DAF1DE;  /* mint border */
+  --theme-border-2: #8EB69B;  /* sage border */
+  --theme-text-1: #051F20;    /* deepest dark green — main text */
+  --theme-text-2: #235347;    /* medium dark green — muted text */
+  --theme-accent: #235347;    /* dark green accent for strong contrast on white */
+  --theme-glow: 35, 83, 71;
 
   /* RGB variants */
-  --theme-bg-1-rgb: 244, 236, 214;
-  --theme-bg-2-rgb: 235, 225, 194;
-  --theme-bg-3-rgb: 224, 211, 168;
-  --theme-bg-4-rgb: 201, 184, 131;
-  --theme-border-1-rgb: 212, 195, 149;
-  --theme-border-2-rgb: 168, 150, 112;
-  --theme-text-1-rgb: 42, 31, 8;
-  --theme-text-2-rgb: 107, 84, 32;
-  --theme-accent-rgb: 90, 122, 92;
+  --theme-bg-1-rgb: 251, 253, 251;
+  --theme-bg-2-rgb: 242, 248, 243;
+  --theme-bg-3-rgb: 230, 241, 232;
+  --theme-bg-4-rgb: 218, 241, 222;
+  --theme-border-1-rgb: 218, 241, 222;
+  --theme-border-2-rgb: 142, 182, 155;
+  --theme-text-1-rgb: 5, 31, 32;
+  --theme-text-2-rgb: 35, 83, 71;
+  --theme-accent-rgb: 35, 83, 71;
 
   /* About section alt — inverted to dark forest */
   --theme-alt-bg: #051F20;
@@ -78,14 +78,14 @@
   --theme-alt-text-rgb: 218, 241, 222;
   --theme-alt-accent-rgb: 142, 182, 155;
 
-  /* Navbar pill colors — inverted: dark pill with light text */
+  /* Navbar pill colors — dark green pill with light text */
   --theme-nav-pill: rgba(5, 31, 32, 0.5);
-  --theme-nav-pill-scrolled: rgba(5, 31, 32, 0.8);
-  --theme-nav-pill-mobile: rgba(5, 31, 32, 0.7);
-  --theme-nav-pill-border: rgba(218, 241, 222, 0.1);
-  --theme-nav-pill-border-scrolled: rgba(218, 241, 222, 0.2);
-  --theme-nav-pill-shadow: rgba(0, 0, 0, 0.2);
-  --theme-nav-pill-shadow-soft: rgba(0, 0, 0, 0.15);
+  --theme-nav-pill-scrolled: rgba(5, 31, 32, 0.85);
+  --theme-nav-pill-mobile: rgba(5, 31, 32, 0.75);
+  --theme-nav-pill-border: rgba(218, 241, 222, 0.15);
+  --theme-nav-pill-border-scrolled: rgba(218, 241, 222, 0.25);
+  --theme-nav-pill-shadow: rgba(5, 31, 32, 0.12);
+  --theme-nav-pill-shadow-soft: rgba(5, 31, 32, 0.08);
   --theme-nav-text: #DAF1DE;
   --theme-nav-text-rgb: 218, 241, 222;
 }
@@ -133,8 +133,8 @@ body {
 }
 
 ::selection {
-  background: rgba(228, 228, 231, 0.2);
-  color: #ffffff;
+  background: rgba(var(--theme-accent-rgb), 0.25);
+  color: var(--theme-text-1);
 }
 
 @media (prefers-reduced-motion: reduce) {

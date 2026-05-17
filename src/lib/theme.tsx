@@ -12,17 +12,17 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const saved = localStorage.getItem("programo-theme") as Theme | null;
-    const initial = saved === "light" || saved === "dark" ? saved : "dark";
+    const initial = saved === "light" || saved === "dark" ? saved : "light";
     setTheme(initial);
     document.documentElement.setAttribute("data-theme", initial);
   }, []);
 
   const toggle = () => {
-    const next = theme === "dark" ? "light" : "dark";
+    const next = theme === "light" ? "dark" : "light";
     setTheme(next);
     localStorage.setItem("programo-theme", next);
     document.documentElement.setAttribute("data-theme", next);
@@ -39,7 +39,7 @@ export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
   if (!ctx) {
     // Fallback for SSR/unmounted
-    return { theme: "dark" as Theme, toggle: () => {} };
+    return { theme: "light" as Theme, toggle: () => {} };
   }
   return ctx;
 }
