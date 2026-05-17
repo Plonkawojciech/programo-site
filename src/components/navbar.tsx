@@ -20,11 +20,9 @@ export default function Navbar() {
   const { theme, toggle: toggleTheme } = useTheme();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
-  const lastScrollY = useRef(0);
   const ticking = useRef(false);
 
   const navLinks = [
@@ -35,33 +33,9 @@ export default function Navbar() {
     { label: t("nav.contact"), href: "/kontakt", section: "kontakt" },
   ];
 
-  // --- Hide on scroll down, show on scroll up ---
+  // --- Track scroll position only to toggle liquid-glass intensity ---
   const handleScroll = useCallback(() => {
-    const currentY = window.scrollY;
-
-    // Always show at top of page
-    if (currentY < 100) {
-      setHidden(false);
-      setScrolled(currentY > 40);
-      lastScrollY.current = currentY;
-      ticking.current = false;
-      return;
-    }
-
-    setScrolled(true);
-
-    const delta = currentY - lastScrollY.current;
-
-    // Only trigger hide/show with a minimum delta to avoid jitter
-    if (delta > 8) {
-      // Scrolling DOWN
-      setHidden(true);
-    } else if (delta < -5) {
-      // Scrolling UP
-      setHidden(false);
-    }
-
-    lastScrollY.current = currentY;
+    setScrolled(window.scrollY > 40);
     ticking.current = false;
   }, []);
 
@@ -98,18 +72,12 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  // Don't hide nav when mobile menu is open
-  const isNavHidden = hidden && !mobileOpen;
-
   return (
     <>
       {/* Desktop logo — fixed top-left, at navbar height */}
       <motion.div
         initial={{ y: -30, opacity: 0 }}
-        animate={{
-          y: isNavHidden ? -100 : 0,
-          opacity: isNavHidden ? 0 : 1,
-        }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{
           duration: durationFast,
           ease: easeEntry,
@@ -138,10 +106,7 @@ export default function Navbar() {
         role="navigation"
         aria-label={t("a11y.mainNav")}
         initial={{ y: -30, opacity: 0 }}
-        animate={{
-          y: isNavHidden ? -100 : 0,
-          opacity: isNavHidden ? 0 : 1,
-        }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{
           duration: durationFast,
           ease: easeEntry,
@@ -190,10 +155,7 @@ export default function Navbar() {
       {/* Desktop right cluster — theme, lang, CTA */}
       <motion.div
         initial={{ y: -30, opacity: 0 }}
-        animate={{
-          y: isNavHidden ? -100 : 0,
-          opacity: isNavHidden ? 0 : 1,
-        }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{
           duration: durationFast,
           ease: easeEntry,
@@ -237,10 +199,7 @@ export default function Navbar() {
         role="navigation"
         aria-label={t("a11y.mainNav")}
         initial={{ y: -20, opacity: 0 }}
-        animate={{
-          y: isNavHidden ? -80 : 0,
-          opacity: isNavHidden ? 0 : 1,
-        }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{
           duration: durationFast,
           ease: easeEntry,
