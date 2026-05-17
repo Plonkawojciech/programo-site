@@ -83,14 +83,14 @@ export default function QuickContact() {
             {/* Alt contact channels */}
             <div className="flex flex-col gap-6 border-t border-outline-variant/30 pt-10">
               <a
-                href="mailto:kontakt@programo.pl"
+                href="mailto:biuro@programo.pl"
                 className="group flex flex-col gap-1"
               >
                 <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                   Email
                 </span>
                 <span className="font-headline text-xl md:text-2xl font-medium text-on-surface group-hover:text-primary transition-colors">
-                  kontakt@programo.pl
+                  biuro@programo.pl
                 </span>
               </a>
 

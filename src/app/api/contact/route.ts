@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
   const safeSubject = sanitize(subject);
   const safePhone = phone ? sanitize(phone) : "";
 
-  const emailTo = process.env.EMAIL_TO || "kontakt@programo.pl";
+  const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
 
   try {
     const resendApiKey = process.env.RESEND_API_KEY;

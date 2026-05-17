@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Contact from "@/components/contact";
+import QuickContact from "@/components/quick-contact";
 
 export const metadata: Metadata = {
   title: "Kontakt — Programo",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function KontaktPage() {
   return (
     <div className="pt-24 md:pt-32">
-      <Contact />
+      <QuickContact />
     </div>
   );
 }
