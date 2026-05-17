@@ -7,6 +7,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
+import ContactCtaLink from "@/components/contact-cta-link";
 import {
   easeEntry,
   easeHover,
@@ -186,12 +187,9 @@ export default function Navbar() {
         >
           {lang === "pl" ? "EN" : "PL"}
         </button>
-        <Link
-          href="/kontakt"
-          className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all"
-        >
+        <ContactCtaLink className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all">
           {t("nav.cta")}
-        </Link>
+        </ContactCtaLink>
       </motion.div>
 
       {/* Mobile navbar */}
@@ -304,13 +302,12 @@ export default function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              <Link
-                href="/kontakt"
-                onClick={() => setMobileOpen(false)}
+              <ContactCtaLink
+                onNavigate={() => setMobileOpen(false)}
                 className="mt-4 bg-primary px-8 py-3 rounded-full text-on-primary text-sm tracking-wide font-medium min-h-[44px] flex items-center"
               >
                 {t("nav.cta")}
-              </Link>
+              </ContactCtaLink>
             </nav>
           </motion.div>
         )}

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import ContactCtaLink from "@/components/contact-cta-link";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
@@ -67,12 +68,9 @@ export default function MainIntro() {
 
           {/* CTAs */}
           <div className="mt-12 flex flex-wrap gap-4">
-            <Link
-              href="/kontakt"
-              className="inline-flex items-center gap-3 bg-primary text-on-primary px-6 py-3.5 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-all hover:gap-5"
-            >
+            <ContactCtaLink className="inline-flex items-center gap-3 bg-primary text-on-primary px-6 py-3.5 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-all hover:gap-5">
               {t("main.cta.primary")} <span>→</span>
-            </Link>
+            </ContactCtaLink>
             <Link
               href="/oferta"
               className="inline-flex items-center gap-3 border border-outline-variant/40 text-on-surface px-6 py-3.5 rounded-full text-sm uppercase tracking-widest font-medium hover:border-primary transition-all hover:gap-5"
