@@ -45,6 +45,15 @@ const translations = {
   "main.cta.offer": { pl: "Sprawdź ofertę", en: "Check our offer" },
   "main.cta.pricing": { pl: "Zobacz cennik", en: "See pricing" },
 
+  // Projects marquee (main page preview strip)
+  "realizations.label": { pl: "Portfolio", en: "Portfolio" },
+  "realizations.title": { pl: "Nasze realizacje", en: "Our work" },
+  "realizations.subtitle": {
+    pl: "Mały przedsmak tego, co budujemy. Kliknij, żeby zobaczyć szczegóły.",
+    en: "A taste of what we build. Click to see the details.",
+  },
+  "realizations.viewAll": { pl: "Zobacz wszystkie projekty", en: "See all projects" },
+
   // Quick contact form (main page)
   "quick.title": { pl: "Napisz do nas", en: "Get in touch" },
   "quick.subtitle": {

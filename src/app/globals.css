@@ -400,3 +400,26 @@ body {
   animation: tickerPulse 2s ease-in-out infinite;
 }
 
+/* Projects marquee — infinite horizontal scroll */
+@keyframes projectsMarquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.projects-marquee__track {
+  width: max-content;
+  animation: projectsMarquee 60s linear infinite;
+  will-change: transform;
+}
+
+.projects-marquee:hover .projects-marquee__track,
+.projects-marquee:focus-within .projects-marquee__track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projects-marquee__track {
+    animation: none;
+  }
+}
+
