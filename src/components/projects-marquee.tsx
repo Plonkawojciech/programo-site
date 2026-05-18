@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { projects, type Project } from "@/lib/projects";
@@ -30,7 +31,7 @@ function ProjectTile({ project }: { project: Project }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="group relative shrink-0 w-[320px] md:w-[380px] lg:w-[440px] aspect-[4/3] overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all duration-500 ease-out hover:scale-125 hover:z-20 hover:border-primary/60 hover:shadow-2xl hover:shadow-black/30"
+      className="group relative shrink-0 w-[80vw] sm:w-[360px] md:w-[380px] lg:w-[440px] aspect-[4/3] overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all duration-500 ease-out md:hover:scale-125 md:hover:z-20 md:hover:border-primary/60 md:hover:shadow-2xl md:hover:shadow-black/30 snap-center"
       aria-label={`${project.title} — ${project.subtitle[lang]}`}
     >
       {screenshot ? (
@@ -38,8 +39,8 @@ function ProjectTile({ project }: { project: Project }) {
           src={screenshot}
           alt={project.title}
           fill
-          sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 440px"
-          className="object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500 ease-out"
+          sizes="(max-width: 768px) 80vw, (max-width: 1024px) 380px, 440px"
+          className="object-cover opacity-60 md:group-hover:opacity-100 transition-opacity duration-500 ease-out"
         />
       ) : (
         <div
@@ -84,6 +85,64 @@ function ProjectTile({ project }: { project: Project }) {
 export default function ProjectsMarquee() {
   const { t } = useI18n();
   const items = getMarqueeProjects();
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  const isHoveredRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mqHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const mqReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // Touch devices use native horizontal scroll; respect reduced motion
+    if (!mqHover.matches || mqReduced.matches) return;
+
+    const NORMAL_MS_PER_CYCLE = 60000;
+    const NORMAL_SPEED = 1 / NORMAL_MS_PER_CYCLE; // progress units / ms
+    const HOVERED_SPEED = NORMAL_SPEED / 3; // 3× slower
+
+    let raf = 0;
+    let lastTime = performance.now();
+    let progress = 0; // 0..1
+    let currentSpeed = NORMAL_SPEED;
+    // Time constant for speed interpolation (ms) — controls how fast the
+    // marquee eases between fast and slow. Higher = smoother but slower to react.
+    const TAU = 350;
+
+    function step(now: number) {
+      const dt = Math.min(now - lastTime, 64); // clamp big tab-switch jumps
+      lastTime = now;
+
+      const target = isHoveredRef.current ? HOVERED_SPEED : NORMAL_SPEED;
+      const alpha = 1 - Math.exp(-dt / TAU);
+      currentSpeed += (target - currentSpeed) * alpha;
+
+      progress += dt * currentSpeed;
+      if (progress >= 1) progress -= 1;
+
+      if (trackRef.current) {
+        const pct = -progress * 50; // 0% → -50% (half of duplicated track)
+        trackRef.current.style.transform = `translate3d(${pct}%, 0, 0)`;
+      }
+
+      raf = requestAnimationFrame(step);
+    }
+    raf = requestAnimationFrame(step);
+
+    function onVisibility() {
+      if (document.hidden) {
+        cancelAnimationFrame(raf);
+      } else {
+        lastTime = performance.now();
+        raf = requestAnimationFrame(step);
+      }
+    }
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
 
   if (items.length === 0) return null;
 
@@ -133,16 +192,42 @@ export default function ProjectsMarquee() {
         </div>
       </div>
 
-      {/* Marquee track — extends edge-to-edge */}
+      {/* MOBILE: native swipeable horizontal scroll */}
+      <div className="md:hidden">
+        <div className="projects-marquee-mobile flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 px-6">
+          {items.map((project) => (
+            <ProjectTile key={project.slug} project={project} />
+          ))}
+          {/* Trailing spacer so last tile can snap to centre */}
+          <div className="shrink-0 w-2" aria-hidden="true" />
+        </div>
+      </div>
+
+      {/* DESKTOP: rAF-driven auto-scroll marquee */}
       <div
-        className="projects-marquee group/marquee relative w-full"
-        aria-hidden={false}
+        className="hidden md:block projects-marquee-desktop relative w-full"
+        onMouseEnter={() => {
+          isHoveredRef.current = true;
+        }}
+        onMouseLeave={() => {
+          isHoveredRef.current = false;
+        }}
+        onFocusCapture={() => {
+          isHoveredRef.current = true;
+        }}
+        onBlurCapture={() => {
+          isHoveredRef.current = false;
+        }}
       >
         {/* Side fades */}
         <div className="pointer-events-none absolute inset-y-0 left-0 w-16 md:w-32 z-10 bg-gradient-to-r from-surface to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-16 md:w-32 z-10 bg-gradient-to-l from-surface to-transparent" />
 
-        <div className="projects-marquee__track flex gap-5 md:gap-7 py-2">
+        <div
+          ref={trackRef}
+          className="flex gap-5 md:gap-7 py-2 will-change-transform"
+          style={{ width: "max-content", transform: "translate3d(0,0,0)" }}
+        >
           {/* Duplicated twice for seamless loop */}
           {[0, 1].map((dup) => (
             <div

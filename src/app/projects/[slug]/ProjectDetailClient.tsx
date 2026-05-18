@@ -66,7 +66,7 @@ function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor, 
         alt={alt}
         fill
         priority={priority}
-        className="object-cover opacity-90"
+        className="object-cover opacity-70 blur-2xl scale-110"
       />
     </motion.div>
   );
@@ -119,29 +119,59 @@ function ProjectContent({ slug }: { slug: string }) {
              ) : (
                <div className="h-full w-full bg-[#0A0A0A]" />
              )}
-            <div className="absolute inset-0 bg-black/40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-90" />
+            <div className="absolute inset-0 bg-black/55" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent opacity-95" />
           </motion.div>
 
-          <div className="relative flex h-full flex-col justify-center items-center px-6 md:px-24 text-white mx-auto max-w-[2560px] text-center pointer-events-none">
+          <div className="relative flex h-full flex-col justify-center items-center px-6 md:px-24 text-white mx-auto max-w-[2560px] text-center">
             <motion.div
               style={{ opacity: headerOpacity }}
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center pointer-events-none"
             >
               <div className="flex items-center gap-6 mb-8 overflow-hidden">
-                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-white/50">{project.year}</span>
-                <span className="w-16 h-px bg-white/30" />
-                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-white/50">{project.tags[0]}</span>
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-white/60">{project.year}</span>
+                <span className="w-16 h-px bg-white/40" />
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-white/60">{project.tags[0]}</span>
               </div>
-              <h1 className="font-serif italic text-[18vw] md:text-[14vw] font-light leading-[0.8] tracking-tighter mix-blend-overlay opacity-90 whitespace-nowrap">
+              <h1 className="font-sans text-[15vw] md:text-[12vw] font-black uppercase leading-[0.85] tracking-tighter whitespace-nowrap text-white drop-shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
                 {project.title}
               </h1>
-              <h1 className="font-sans text-[15vw] md:text-[12vw] font-black uppercase leading-[0.8] tracking-tighter absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mix-blend-plus-lighter whitespace-nowrap text-white/80">
-                {project.title}
-              </h1>
+              <p className="mt-6 font-serif italic text-base md:text-2xl font-light text-white/70 max-w-xl leading-snug">
+                {project.subtitle[lang]}
+              </p>
+            </motion.div>
+
+            {/* Scroll indicator — animated arrows + line */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.2, delay: 1.4 }}
+              style={{ opacity: headerOpacity }}
+              className="absolute bottom-10 md:bottom-14 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 pointer-events-none"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/60">
+                {lang === "pl" ? "Przewiń" : "Scroll"}
+              </span>
+              <motion.div
+                animate={{ scaleY: [0.3, 1, 0.3], opacity: [0.3, 1, 0.3] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                className="w-px h-12 bg-gradient-to-b from-transparent via-white/80 to-white origin-top"
+              />
+              <motion.div
+                animate={{ y: [0, 6, 0], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                className="flex flex-col items-center -space-y-2"
+              >
+                <svg width="18" height="10" viewBox="0 0 18 10" fill="none" className="text-white/70">
+                  <path d="M1 1L9 8L17 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <svg width="18" height="10" viewBox="0 0 18 10" fill="none" className="text-white">
+                  <path d="M1 1L9 8L17 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </motion.div>
             </motion.div>
           </div>
         </section>
