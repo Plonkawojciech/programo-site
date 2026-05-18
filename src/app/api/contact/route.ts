@@ -5,6 +5,7 @@ import { Resend } from "resend";
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email format"),
+  phone: z.string().max(40, "Phone is too long").optional().default(""),
   subject: z.enum([
     "Współpraca",
     "Wycena projektu",
@@ -76,17 +77,41 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: firstError }, { status: 400 });
   }
 
-  const { name, email, subject, message } = result.data;
+  const { name, email, phone, subject, message } = result.data;
   const safeName = sanitize(name);
+  const safePhone = sanitize(phone);
   const safeMessage = sanitize(message);
   const safeSubject = sanitize(subject);
 
-  const emailTo = process.env.EMAIL_TO || "kontakt@programo.pl";
+  const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
+
+  // Send Telegram notification (fire-and-forget, never blocks the response)
+  const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
+  const telegramChatId = process.env.TELEGRAM_CHAT_ID;
+  if (telegramToken && telegramChatId) {
+    const tgText = [
+      `📬 *Nowa wiadomość z programo.pl*`,
+      `👤 *Imię:* ${safeName}`,
+      `📧 *Email:* ${sanitize(email)}`,
+      `📞 *Telefon:* ${safePhone || "Nie podano"}`,
+      `📌 *Temat:* ${safeSubject}`,
+      `💬 *Wiadomość:*\n${safeMessage}`,
+    ].join("\n");
+    fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: telegramChatId,
+        text: tgText,
+        parse_mode: "Markdown",
+      }),
+    }).catch((err) => console.error("[Telegram] Failed to send notification:", err));
+  }
 
   try {
     const resendApiKey = process.env.RESEND_API_KEY;
     if (!resendApiKey) {
-      console.log("[DEV] No RESEND_API_KEY — skipping email. Contact form submission:", { name: safeName, email: sanitize(email), subject: safeSubject });
+      console.log("[DEV] No RESEND_API_KEY — skipping email. Contact form submission:", { name: safeName, email: sanitize(email), phone: safePhone, subject: safeSubject });
     }
     if (resendApiKey) {
       const resend = new Resend(resendApiKey);
@@ -98,6 +123,7 @@ export async function POST(request: NextRequest) {
           <h2>Nowa wiadomość z formularza kontaktowego</h2>
           <p><strong>Imię:</strong> ${safeName}</p>
           <p><strong>Email:</strong> ${sanitize(email)}</p>
+          <p><strong>Telefon:</strong> ${safePhone || "Nie podano"}</p>
           <p><strong>Temat:</strong> ${safeSubject}</p>
           <p><strong>Wiadomość:</strong></p>
           <p>${safeMessage.replace(/\n/g, "<br>")}</p>
