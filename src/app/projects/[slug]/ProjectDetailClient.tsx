@@ -123,23 +123,23 @@ function ProjectContent({ slug }: { slug: string }) {
             <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent opacity-95" />
           </motion.div>
 
-          <div className="relative flex h-full flex-col justify-center items-center px-6 md:px-24 text-white mx-auto max-w-[2560px] text-center">
+          <div className="relative flex h-full flex-col justify-center items-center px-4 sm:px-6 md:px-12 text-white mx-auto max-w-7xl text-center">
             <motion.div
               style={{ opacity: headerOpacity }}
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-              className="flex flex-col items-center pointer-events-none"
+              className="flex flex-col items-center pointer-events-none w-full"
             >
-              <div className="flex items-center gap-6 mb-8 overflow-hidden">
-                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-white/60">{project.year}</span>
-                <span className="w-16 h-px bg-white/40" />
-                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-white/60">{project.tags[0]}</span>
+              <div className="flex items-center gap-4 md:gap-6 mb-6 md:mb-8 overflow-hidden">
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-white/60">{project.year}</span>
+                <span className="w-10 md:w-16 h-px bg-white/40" />
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-white/60">{project.tags[0]}</span>
               </div>
-              <h1 className="font-sans text-[15vw] md:text-[12vw] font-black uppercase leading-[0.85] tracking-tighter whitespace-nowrap text-white drop-shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
+              <h1 className="font-sans font-black uppercase leading-[0.9] tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(0,0,0,0.5)] max-w-full break-words" style={{ fontSize: 'clamp(2.5rem, 13vw, 10rem)' }}>
                 {project.title}
               </h1>
-              <p className="mt-6 font-serif italic text-base md:text-2xl font-light text-white/70 max-w-xl leading-snug">
+              <p className="mt-4 md:mt-6 font-serif italic text-sm sm:text-base md:text-xl font-light text-white/70 max-w-xl leading-snug px-4">
                 {project.subtitle[lang]}
               </p>
             </motion.div>
@@ -177,24 +177,24 @@ function ProjectContent({ slug }: { slug: string }) {
         </section>
 
         {/* The Story / Editorial Overview */}
-        <section className="relative z-10 bg-[#FDFDFD] px-6 py-32 md:px-12 lg:px-24 md:py-56">
-          <div className="mx-auto max-w-[2560px]">
-            <motion.div 
+        <section className="relative z-10 bg-[#FDFDFD] px-6 py-24 sm:px-8 md:px-12 lg:px-20 md:py-40">
+          <div className="mx-auto max-w-7xl">
+            <motion.div
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1 }}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-20 md:gap-32"
+              className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 lg:gap-20"
             >
-              {/* Massive Pull Quote on Left */}
-              <div className="lg:col-span-5 flex flex-col justify-start">
-                <div className="sticky top-40">
-                  <h2 className="font-serif text-5xl md:text-7xl lg:text-[5rem] font-light italic tracking-tight text-[#0A0A0A] leading-[1.1] mb-12">
+              {/* Pull Quote on Left */}
+              <div className="lg:col-span-5 flex flex-col justify-start min-w-0">
+                <div className="lg:sticky lg:top-32">
+                  <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light italic tracking-tight text-[#0A0A0A] leading-[1.15] mb-8 md:mb-10 break-words hyphens-auto">
                     "{project.subtitle[lang]}"
                   </h2>
-                  <div className="flex flex-wrap gap-4 mt-8">
+                  <div className="flex flex-wrap gap-2 md:gap-3 mt-6">
                      {project.tech.map((t) => (
-                      <span key={t} className="px-4 py-2 rounded-full border border-[#0A0A0A]/10 text-xs font-mono uppercase tracking-widest text-[#0A0A0A]/60">
+                      <span key={t} className="px-3 py-1.5 rounded-full border border-[#0A0A0A]/10 text-[10px] md:text-xs font-mono uppercase tracking-widest text-[#0A0A0A]/60 whitespace-nowrap">
                         {t}
                       </span>
                     ))}
@@ -203,15 +203,15 @@ function ProjectContent({ slug }: { slug: string }) {
               </div>
 
               {/* Description Paragraphs on Right */}
-              <div className="lg:col-span-7 flex flex-col gap-12 pt-12 lg:pt-0">
-                <div className="grid grid-cols-2 gap-8 border-b border-[#0A0A0A]/10 pb-12 mb-12">
-                   <div>
+              <div className="lg:col-span-7 flex flex-col gap-10 lg:pt-0 min-w-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 border-b border-[#0A0A0A]/10 pb-10 mb-2">
+                   <div className="min-w-0">
                       <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#0A0A0A]/40 mb-2">Role</h3>
-                      <p className="font-sans text-xl md:text-2xl text-[#0A0A0A]">{project.role[lang]}</p>
+                      <p className="font-sans text-base md:text-lg text-[#0A0A0A] break-words">{project.role[lang]}</p>
                    </div>
                    {project.liveUrl && (
-                     <div className="flex items-end justify-end">
-                       <a href={project.liveUrl} target="_blank" className="group inline-flex items-center gap-4 border-b border-[#0A0A0A] pb-1">
+                     <div className="flex items-end sm:justify-end">
+                       <a href={project.liveUrl} target="_blank" className="group inline-flex items-center gap-3 border-b border-[#0A0A0A] pb-1">
                           <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0A0A0A]">Live Site</span>
                           <span className="transform transition-transform group-hover:translate-x-2 group-hover:-translate-y-2">↗</span>
                        </a>
@@ -219,11 +219,19 @@ function ProjectContent({ slug }: { slug: string }) {
                    )}
                 </div>
 
-                <div className="flex flex-col gap-10">
+                <div className="flex flex-col gap-6 md:gap-8">
                   {formattedDescription.map((paragraph, idx) => {
                     if (paragraph.includes('•') || paragraph.startsWith('Darmowe:') || paragraph.startsWith('Płatne:')) return null;
+                    const isHeading = /^(Co robi|Na czym (jest|będzie) zbudowan[ay]|Stack|Dlaczego tak|Why|What it does):?\s*$/i.test(paragraph.trim());
+                    if (isHeading) {
+                      return (
+                        <h3 key={idx} className="text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-[#0A0A0A]/50 mt-4 first:mt-0">
+                          {paragraph.replace(/:$/, '')}
+                        </h3>
+                      );
+                    }
                     return (
-                      <p key={idx} className="text-xl md:text-3xl font-light leading-relaxed text-[#0A0A0A]/70">
+                      <p key={idx} className="text-base sm:text-lg md:text-xl font-light leading-relaxed text-[#0A0A0A]/75 break-words hyphens-auto">
                         {paragraph}
                       </p>
                     );
@@ -237,25 +245,25 @@ function ProjectContent({ slug }: { slug: string }) {
 
         {/* Asymmetric Grids for Screenshots */}
         {project.screenshots && project.screenshots.length > 1 && !hasIconScreenshots && !project.subProducts?.length && (
-          <section className="w-full pb-32 md:pb-56 px-6 md:px-12 lg:px-24">
-            <div className="mx-auto max-w-[2560px] grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
+          <section className="w-full pb-20 md:pb-32 px-6 sm:px-8 md:px-12 lg:px-20">
+            <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
               <motion.div
-                initial={{ opacity: 0, y: 100 }}
+                initial={{ opacity: 0, y: 60 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 1.2 }}
-                className="md:col-span-8 relative aspect-[16/10] overflow-hidden rounded-3xl"
+                className="md:col-span-8 relative aspect-[16/10] overflow-hidden rounded-2xl md:rounded-3xl"
               >
                 <ParallaxImage src={project.screenshots[1]} alt="Detail 1" className="w-full h-full" speed={0.2} />
               </motion.div>
 
               {project.screenshots[2] && (
                 <motion.div
-                  initial={{ opacity: 0, y: 100 }}
+                  initial={{ opacity: 0, y: 60 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 1.2, delay: 0.2 }}
-                  className="md:col-span-4 relative aspect-[4/5] overflow-hidden rounded-3xl mt-12 md:mt-48"
+                  className="md:col-span-4 relative aspect-[4/5] overflow-hidden rounded-2xl md:rounded-3xl md:mt-24"
                 >
                   <ParallaxImage src={project.screenshots[2]} alt="Detail 2" className="w-full h-full" speed={0.3} />
                 </motion.div>
@@ -266,13 +274,13 @@ function ProjectContent({ slug }: { slug: string }) {
 
         {/* Sub-Products Ecosystem */}
         {project.subProducts && project.subProducts.length > 0 && (
-          <section className="bg-[#0A0A0A] text-white py-32 md:py-56 px-6 md:px-12 lg:px-24 rounded-t-[3rem] md:rounded-t-[5rem]">
-            <div className="mx-auto max-w-[2560px]">
-              <div className="text-center mb-32">
-                <h2 className="font-serif italic text-6xl md:text-[8rem] font-light tracking-tighter leading-none mb-8 text-[#FDFDFD]">
+          <section className="bg-[#0A0A0A] text-white py-24 md:py-36 px-6 sm:px-8 md:px-12 lg:px-20 rounded-t-[2rem] md:rounded-t-[4rem]">
+            <div className="mx-auto max-w-7xl">
+              <div className="text-center mb-20 md:mb-28">
+                <h2 className="font-serif italic text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tighter leading-none mb-6 text-[#FDFDFD] break-words">
                   {lang === "pl" ? "Ekosystem" : "Ecosystem"}
                 </h2>
-                <p className="font-sans text-xl md:text-3xl font-light text-[#FDFDFD]/50 max-w-2xl mx-auto">
+                <p className="font-sans text-base sm:text-lg md:text-xl font-light text-[#FDFDFD]/50 max-w-2xl mx-auto">
                   {lang === "pl" ? "Zintegrowane rozwiązania dla jednego celu." : "Integrated solutions for one goal."}
                 </p>
               </div>
@@ -280,15 +288,15 @@ function ProjectContent({ slug }: { slug: string }) {
               {project.subProducts.map((sub, idx) => {
                 const isReversed = idx % 2 !== 0;
                 return (
-                  <div key={sub.name} className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 md:gap-32 items-center mb-32 md:mb-56`}>
-                    <div className="lg:w-1/2">
-                       <h3 className="font-sans text-5xl md:text-7xl font-bold tracking-tighter mb-6">{sub.name}</h3>
-                       <p className="font-serif italic text-2xl md:text-4xl text-white/70 mb-8">{sub.tagline[lang]}</p>
-                       <p className="text-lg md:text-xl font-light text-white/50 leading-relaxed mb-12">{sub.description[lang]}</p>
+                  <div key={sub.name} className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 md:gap-16 lg:gap-20 items-center mb-20 md:mb-32 last:mb-0`}>
+                    <div className="lg:w-1/2 min-w-0">
+                       <h3 className="font-sans text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter mb-4 break-words">{sub.name}</h3>
+                       <p className="font-serif italic text-xl sm:text-2xl md:text-3xl text-white/70 mb-6 break-words">{sub.tagline[lang]}</p>
+                       <p className="text-base md:text-lg font-light text-white/60 leading-relaxed break-words">{sub.description[lang]}</p>
                     </div>
-                    <div className="lg:w-1/2 flex flex-col gap-8 w-full">
+                    <div className="lg:w-1/2 flex flex-col gap-6 w-full">
                        {sub.screenshots.slice(0,2).map((s, i) => (
-                         <div key={i} className={`relative aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl ${i === 1 ? 'w-4/5 ml-auto -mt-20 z-10' : 'w-full z-0'}`}>
+                         <div key={i} className={`relative aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl ${i === 1 ? 'w-4/5 ml-auto -mt-10 md:-mt-16 z-10' : 'w-full z-0'}`}>
                            <Image src={s} alt={sub.name} fill className="object-cover" />
                          </div>
                        ))}
@@ -301,31 +309,31 @@ function ProjectContent({ slug }: { slug: string }) {
         )}
 
         {/* Capabilities Editorial View */}
-        <section className="bg-[#FDFDFD] py-32 md:py-48 px-6 md:px-12 lg:px-24 border-t border-[#0A0A0A]/10">
-          <div className="mx-auto max-w-[2560px]">
-            <h2 className="font-sans text-6xl md:text-[8rem] font-black uppercase tracking-tighter text-[#0A0A0A] mb-24 md:mb-40">
+        <section className="bg-[#FDFDFD] py-24 md:py-36 px-6 sm:px-8 md:px-12 lg:px-20 border-t border-[#0A0A0A]/10">
+          <div className="mx-auto max-w-7xl">
+            <h2 className="font-sans text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-[#0A0A0A] mb-16 md:mb-24 break-words">
               Capabilities<span className="text-primary">.</span>
             </h2>
-            
-            <div className="grid md:grid-cols-2 gap-x-24 gap-y-16">
-              {project.features[lang].map((f, i) => {
+
+            <div className="grid sm:grid-cols-2 gap-x-10 lg:gap-x-16 gap-y-10 md:gap-y-12">
+              {project.features[lang].filter(f => f.trim() !== '').map((f, i) => {
                 const cleanF = f.replace(/•/g, '').trim();
                 const parts = cleanF.split('—');
                 const hasTitle = parts.length > 1;
 
                 return (
-                  <div key={i} className="group border-t-2 border-[#0A0A0A] pt-8 flex gap-8">
-                    <span className="font-serif italic text-3xl text-[#0A0A0A]/30 group-hover:text-primary transition-colors">
+                  <div key={i} className="group border-t-2 border-[#0A0A0A] pt-6 flex gap-4 md:gap-6 min-w-0">
+                    <span className="font-serif italic text-xl md:text-2xl text-[#0A0A0A]/30 group-hover:text-primary transition-colors shrink-0">
                       0{i + 1}
                     </span>
-                    <div>
+                    <div className="min-w-0 flex-1">
                       {hasTitle ? (
                         <>
-                          <h4 className="font-sans text-3xl md:text-4xl font-bold text-[#0A0A0A] mb-4">{parts[0].trim()}</h4>
-                          <p className="font-serif text-xl font-light text-[#0A0A0A]/70 leading-relaxed">{parts[1].trim()}</p>
+                          <h4 className="font-sans text-lg sm:text-xl md:text-2xl font-bold text-[#0A0A0A] mb-2 break-words">{parts[0].trim()}</h4>
+                          <p className="font-serif text-sm sm:text-base md:text-lg font-light text-[#0A0A0A]/70 leading-relaxed break-words">{parts.slice(1).join('—').trim()}</p>
                         </>
                       ) : (
-                        <h4 className="font-sans text-3xl md:text-4xl font-bold text-[#0A0A0A]">{cleanF}</h4>
+                        <h4 className="font-sans text-lg sm:text-xl md:text-2xl font-bold text-[#0A0A0A] break-words">{cleanF}</h4>
                       )}
                     </div>
                   </div>
@@ -346,9 +354,9 @@ function ProjectContent({ slug }: { slug: string }) {
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-1000" />
               </div>
               
-              <div className="relative z-10 text-center flex flex-col items-center pointer-events-none">
-                <span className="mb-6 font-mono text-xs uppercase tracking-[0.5em] text-white/50 group-hover:text-white transition-colors">Next Project</span>
-                <h2 className="font-serif italic text-[12vw] md:text-[10vw] font-light leading-none tracking-tighter text-white">
+              <div className="relative z-10 text-center flex flex-col items-center pointer-events-none px-6 max-w-full">
+                <span className="mb-4 md:mb-6 font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] text-white/50 group-hover:text-white transition-colors">Next Project</span>
+                <h2 className="font-serif italic font-light leading-none tracking-tighter text-white max-w-full break-words" style={{ fontSize: 'clamp(3rem, 11vw, 9rem)' }}>
                   {next.title}
                 </h2>
               </div>
