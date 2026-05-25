@@ -32,11 +32,11 @@ export default function Footer() {
           <div>
             <Image
               key={theme}
-              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
+              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-gradient.svg"}
               alt="Programo"
-              width={240}
-              height={170}
-              className="h-auto w-[160px] md:w-[200px] select-none"
+              width={320}
+              height={226}
+              className="h-auto w-[220px] md:w-[280px] select-none"
               priority
             />
             <p className="text-sm text-on-surface-variant mt-6 max-w-xs leading-relaxed">
@@ -68,19 +68,8 @@ export default function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="border-t border-outline-variant/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-6"
+          className="border-t border-outline-variant/20 pt-8 flex justify-end items-center"
         >
-          <div className="flex items-center gap-2.5 text-xs font-normal text-on-surface-variant">
-            <span>&copy; 2026</span>
-            <Image
-              key={`copy-${theme}`}
-              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
-              alt="Programo"
-              width={140}
-              height={100}
-              className="h-auto w-[80px] md:w-[96px] select-none"
-            />
-          </div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">
