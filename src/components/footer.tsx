@@ -10,7 +10,6 @@ import { fadeInUp } from "@/lib/motion";
 export default function Footer() {
   const { t } = useI18n();
   const { theme } = useTheme();
-  const currentYear = new Date().getFullYear();
   const footerRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -71,9 +70,17 @@ export default function Footer() {
           viewport={{ once: true }}
           className="border-t border-outline-variant/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-6"
         >
-          <p className="text-xs font-normal text-on-surface-variant">
-            &copy; 2026&ndash;{currentYear} Programo
-          </p>
+          <div className="flex items-center gap-2.5 text-xs font-normal text-on-surface-variant">
+            <span>&copy; 2026</span>
+            <Image
+              key={`copy-${theme}`}
+              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
+              alt="Programo"
+              width={140}
+              height={100}
+              className="h-auto w-[80px] md:w-[96px] select-none"
+            />
+          </div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">

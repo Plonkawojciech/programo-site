@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/lib/theme";
 
 export default function Preloader() {
+  const { theme } = useTheme();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
@@ -36,24 +38,22 @@ export default function Preloader() {
             transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] }
           }}
         >
-          {/* Signet + PROGRAMO wordmark */}
+          {/* Full Programo logo */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center gap-6"
+            className="flex items-center justify-center"
           >
             <Image
-              src="/programo-mark.svg"
-              alt=""
-              width={96}
-              height={96}
+              key={theme}
+              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
+              alt="Programo"
+              width={480}
+              height={340}
               priority
-              className="h-20 w-20 md:h-24 md:w-24"
+              className="h-auto w-[240px] md:w-[340px] select-none"
             />
-            <span className="block font-headline text-2xl font-medium italic tracking-[0.2em] md:text-4xl text-on-surface">
-              PROGRAMO
-            </span>
           </motion.div>
 
           {/* Progress Number */}
