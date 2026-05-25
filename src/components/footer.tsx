@@ -4,10 +4,12 @@ import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme";
 import { fadeInUp } from "@/lib/motion";
 
 export default function Footer() {
   const { t } = useI18n();
+  const { theme } = useTheme();
   const currentYear = new Date().getFullYear();
   const footerRef = useRef<HTMLElement>(null);
 
@@ -30,11 +32,13 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
           <div>
             <Image
-              src="/programo-logo.svg"
+              key={theme}
+              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
               alt="Programo"
-              width={180}
-              height={180}
-              className="h-auto w-[140px] md:w-[180px]"
+              width={240}
+              height={170}
+              className="h-auto w-[160px] md:w-[200px] select-none"
+              priority
             />
             <p className="text-sm text-on-surface-variant mt-6 max-w-xs leading-relaxed">
               {t("hero.desc")}

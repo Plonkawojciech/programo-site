@@ -206,8 +206,16 @@ function ProjectContent({ slug }: { slug: string }) {
               <div className="lg:col-span-7 flex flex-col gap-10 lg:pt-0 min-w-0">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 border-b border-[#0A0A0A]/10 pb-10 mb-2">
                    <div className="min-w-0">
-                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#0A0A0A]/40 mb-2">Role</h3>
-                      <p className="font-sans text-base md:text-lg text-[#0A0A0A] break-words">{project.role[lang]}</p>
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#0A0A0A]/40 mb-3">Made by</h3>
+                      <Link href="/" aria-label="Programo" className="inline-flex items-center group">
+                        <Image
+                          src="/programo-logo-dark.svg"
+                          alt="Programo"
+                          width={240}
+                          height={170}
+                          className="h-auto w-[140px] md:w-[160px] select-none transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      </Link>
                    </div>
                    {project.liveUrl && (
                      <div className="flex items-end sm:justify-end">

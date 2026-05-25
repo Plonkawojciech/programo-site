@@ -91,12 +91,13 @@ export default function Navbar() {
           className="flex items-center gap-3 font-headline text-3xl font-semibold tracking-tight text-on-surface"
         >
           <Image
-            src="/programo-mark.svg"
+            key={theme}
+            src={theme === "dark" ? "/programo-symbol-white.svg" : "/programo-symbol-dark.svg"}
             alt=""
             width={48}
             height={48}
             priority
-            className="h-12 w-12"
+            className="h-12 w-12 select-none"
           />
           <span>Programo</span>
         </Link>
@@ -231,12 +232,13 @@ export default function Navbar() {
             className="flex items-center gap-2 text-lg font-headline font-semibold tracking-tight text-[var(--theme-nav-text)]"
           >
             <Image
-              src="/programo-mark.svg"
+              key={theme}
+              src={theme === "dark" ? "/programo-symbol-white.svg" : "/programo-symbol-dark.svg"}
               alt=""
               width={22}
               height={22}
               priority
-              className="h-[22px] w-[22px]"
+              className="h-[22px] w-[22px] select-none"
             />
             <span>Programo</span>
           </Link>
