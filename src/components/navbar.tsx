@@ -88,18 +88,17 @@ export default function Navbar() {
         <Link
           href="/"
           aria-label="Programo — strona główna"
-          className="flex items-center gap-3 font-headline text-3xl font-semibold tracking-tight text-on-surface"
+          className="flex items-center"
         >
           <Image
             key={theme}
-            src={theme === "dark" ? "/programo-symbol-white.svg" : "/programo-symbol-dark.svg"}
-            alt=""
-            width={48}
-            height={48}
+            src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-gradient-full.svg"}
+            alt="Programo"
+            width={300}
+            height={212}
             priority
-            className="h-12 w-12 select-none"
+            className="h-auto w-[180px] lg:w-[220px] select-none"
           />
-          <span>Programo</span>
         </Link>
       </motion.div>
 
@@ -229,18 +228,17 @@ export default function Navbar() {
           <Link
             href="/"
             aria-label="Programo — strona główna"
-            className="flex items-center gap-2 text-lg font-headline font-semibold tracking-tight text-[var(--theme-nav-text)]"
+            className="flex items-center"
           >
             <Image
               key={theme}
-              src={theme === "dark" ? "/programo-symbol-white.svg" : "/programo-symbol-dark.svg"}
-              alt=""
-              width={22}
-              height={22}
+              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-gradient-full.svg"}
+              alt="Programo"
+              width={170}
+              height={120}
               priority
-              className="h-[22px] w-[22px] select-none"
+              className="h-auto w-[110px] select-none"
             />
-            <span>Programo</span>
           </Link>
 
           <button
