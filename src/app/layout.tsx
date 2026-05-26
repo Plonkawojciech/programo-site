@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Providers from "@/components/providers";
+
+const GA_ID = "G-TGLPLMVV91";
 
 
 const newsreader = Newsreader({
@@ -102,6 +105,18 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-surface text-on-surface overflow-x-hidden">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
         <Providers>{children}</Providers>
       </body>
     </html>
