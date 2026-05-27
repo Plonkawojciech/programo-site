@@ -19,6 +19,7 @@ export type ConsentState = ConsentCategories & {
 };
 
 const STORAGE_KEY = "programo-consent-v1";
+const CLARITY_ID = "wxezq44wx0";
 
 const DEFAULT_STATE: ConsentState = {
   analytics: false,
@@ -39,11 +40,35 @@ type ConsentContextValue = {
 const ConsentContext = createContext<ConsentContextValue | null>(null);
 
 type GtagFn = (...args: unknown[]) => void;
+type ClarityFn = ((...args: unknown[]) => void) & { q?: unknown[] };
 declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: GtagFn;
+    clarity?: ClarityFn;
   }
+}
+
+function loadClarity() {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  if (window.clarity) return; // already loaded
+  // Microsoft Clarity loader (mirrors official snippet)
+  (function (c, l, a, r, i) {
+    const cw = c as unknown as Record<string, ClarityFn>;
+    cw[a] =
+      cw[a] ||
+      (function () {
+        const fn = function (...args: unknown[]) {
+          (fn.q = fn.q || []).push(args);
+        } as ClarityFn;
+        return fn;
+      })();
+    const t = l.createElement(r) as HTMLScriptElement;
+    t.async = true;
+    t.src = "https://www.clarity.ms/tag/" + i;
+    const y = l.getElementsByTagName(r)[0];
+    y.parentNode?.insertBefore(t, y);
+  })(window, document, "clarity", "script", CLARITY_ID);
 }
 
 function pushConsent(categories: ConsentCategories) {
@@ -62,6 +87,11 @@ function pushConsent(categories: ConsentCategories) {
     ad_personalization: categories.marketing ? "granted" : "denied",
     analytics_storage: categories.analytics ? "granted" : "denied",
   });
+
+  // Load Microsoft Clarity only after analytics consent is granted
+  if (categories.analytics) {
+    loadClarity();
+  }
 }
 
 export function ConsentProvider({ children }: { children: ReactNode }) {
