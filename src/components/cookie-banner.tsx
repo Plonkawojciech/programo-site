@@ -33,30 +33,59 @@ export default function CookieBanner() {
     }
   }, [settingsOpen, consent.analytics, consent.marketing]);
 
-  if (!mounted) return null;
+  const showBanner = mounted && !consent.decided && !settingsOpen;
 
-  const showBanner = !consent.decided && !settingsOpen;
+  // Lock body scroll while banner or settings modal is visible
+  useEffect(() => {
+    if (showBanner || settingsOpen) {
+      const original = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = original;
+      };
+    }
+  }, [showBanner, settingsOpen]);
+
+  if (!mounted) return null;
 
   return (
     <>
-      {/* Bottom banner */}
+      {/* Centered modal — blocks page interaction until user decides */}
       <AnimatePresence>
         {showBanner && (
           <motion.div
-            initial={{ y: 80, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 80, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             role="dialog"
+            aria-modal="true"
             aria-label={t("cookie.title")}
-            style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-            className="fixed bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-auto md:max-w-md z-[100]"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 md:p-6"
           >
-            <div className="rounded-2xl md:rounded-3xl bg-surface-container border-2 border-outline-variant/60 shadow-[0_25px_60px_-12px_rgba(0,0,0,0.6)] p-5 md:p-7">
-              <h2 className="font-headline text-base md:text-xl font-semibold tracking-tight text-on-surface">
+            <motion.div
+              initial={{ y: 40, opacity: 0, scale: 0.96 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 40, opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 1.5rem)" }}
+              className="w-full max-w-xl rounded-3xl bg-surface-container border-2 border-outline-variant/60 shadow-[0_30px_80px_-12px_rgba(0,0,0,0.8)] p-6 md:p-9"
+            >
+              <div className="mb-4 md:mb-5 inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-primary/10 border border-primary/20">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <path d="M12 2a10 10 0 1 0 10 10c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4-5.55 5.4 5.4 0 0 1-2-2A5.4 5.4 0 0 1 12 2Z" />
+                  <path d="M8.5 8.5v.01" />
+                  <path d="M16 15.5v.01" />
+                  <path d="M12 12v.01" />
+                  <path d="M11 17v.01" />
+                  <path d="M7 14v.01" />
+                </svg>
+              </div>
+
+              <h2 className="font-headline text-2xl md:text-3xl font-semibold tracking-tight text-on-surface leading-tight">
                 {t("cookie.title")}
               </h2>
-              <p className="mt-2 text-xs md:text-sm leading-relaxed text-on-surface-variant">
+              <p className="mt-3 text-sm md:text-base leading-relaxed text-on-surface-variant">
                 {t("cookie.desc")}{" "}
                 <Link
                   href="/polityka-prywatnosci"
@@ -67,32 +96,23 @@ export default function CookieBanner() {
                 .
               </p>
 
-              <div className="mt-4 md:mt-5 flex flex-col gap-2">
+              <div className="mt-6 md:mt-8 flex flex-col-reverse md:flex-row gap-2 md:gap-3">
+                <button
+                  type="button"
+                  onClick={openSettings}
+                  className="flex-1 border-2 border-outline-variant/60 bg-surface text-on-surface px-5 py-3.5 rounded-full text-xs uppercase tracking-widest font-medium hover:bg-on-surface/5 hover:border-outline-variant transition-all"
+                >
+                  {t("cookie.customize")}
+                </button>
                 <button
                   type="button"
                   onClick={acceptAll}
-                  className="w-full bg-primary text-on-primary px-5 py-3 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md"
+                  className="flex-1 bg-primary text-on-primary px-5 py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-primary-container hover:text-on-primary-container transition-all shadow-lg shadow-primary/20"
                 >
                   {t("cookie.acceptAll")}
                 </button>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={rejectAll}
-                    className="flex-1 border-2 border-outline-variant/60 bg-surface text-on-surface px-4 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium hover:bg-on-surface/5 hover:border-outline-variant transition-all"
-                  >
-                    {t("cookie.rejectAll")}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={openSettings}
-                    className="flex-1 text-on-surface px-4 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium hover:bg-on-surface/5 transition-colors"
-                  >
-                    {t("cookie.customize")}
-                  </button>
-                </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
