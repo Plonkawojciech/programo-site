@@ -23,6 +23,8 @@ const contactSchema = z.object({
     .string()
     .min(20, "Message must be at least 20 characters")
     .max(2000, "Message must be at most 2000 characters"),
+  consent: z.literal(true, { message: "Consent is required" }),
+  consentTimestamp: z.string().datetime().optional(),
 });
 
 // In-memory rate limiter: IP -> timestamps[]
@@ -84,11 +86,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: firstError }, { status: 400 });
   }
 
-  const { name, email, phone, subject, message } = result.data;
+  const { name, email, phone, subject, message, consentTimestamp } = result.data;
   const safeName = sanitize(name);
   const safeMessage = sanitize(message);
   const safeSubject = sanitize(subject);
   const safePhone = phone ? sanitize(phone) : "";
+  const consentAt = consentTimestamp || new Date().toISOString();
+  const safeConsentAt = sanitize(consentAt);
 
   const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
 
@@ -113,6 +117,8 @@ export async function POST(request: NextRequest) {
               <p><strong>Temat:</strong> ${safeSubject}</p>
               <p><strong>Wiadomość:</strong></p>
               <p>${safeMessage.replace(/\n/g, "<br>")}</p>
+              <hr>
+              <p style="color:#666;font-size:12px;">Zgoda RODO zaakceptowana: ${safeConsentAt}</p>
             `,
           });
           return { channel: "resend", ok: true };
@@ -143,6 +149,8 @@ export async function POST(request: NextRequest) {
             ``,
             `*Wiadomość:*`,
             esc(message),
+            ``,
+            `_Zgoda RODO: ${esc(consentAt)}_`,
           ].filter(Boolean);
 
           const res = await fetch(

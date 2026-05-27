@@ -2,14 +2,17 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
+import { useConsent } from "@/lib/consent";
 import { fadeInUp } from "@/lib/motion";
 
 export default function Footer() {
   const { t } = useI18n();
   const { theme } = useTheme();
+  const { openSettings } = useConsent();
   const footerRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -68,8 +71,23 @@ export default function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="border-t border-outline-variant/20 pt-8 flex justify-end items-center"
+          className="border-t border-outline-variant/20 pt-8 flex flex-col-reverse md:flex-row justify-between items-start md:items-center gap-4"
         >
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <Link
+              href="/polityka-prywatnosci"
+              className="text-[10px] font-medium text-on-surface-variant/70 uppercase tracking-widest hover-underline hover:text-on-surface transition-colors"
+            >
+              {t("footer.privacy")}
+            </Link>
+            <button
+              type="button"
+              onClick={openSettings}
+              className="text-[10px] font-medium text-on-surface-variant/70 uppercase tracking-widest hover-underline hover:text-on-surface transition-colors cursor-pointer"
+            >
+              {t("footer.cookies")}
+            </button>
+          </div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">

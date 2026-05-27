@@ -8,8 +8,30 @@ describe("contact API validation", () => {
       email: "jan@example.com",
       subject: "Współpraca",
       message: "To jest testowa wiadomość z minimum 20 znaków!",
+      consent: true,
     });
     expect(result.success).toBe(true);
+  });
+
+  it("missing consent fails", () => {
+    const result = contactSchema.safeParse({
+      name: "Jan Kowalski",
+      email: "jan@example.com",
+      subject: "Inne",
+      message: "To jest testowa wiadomość z minimum 20 znaków!",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("consent=false fails", () => {
+    const result = contactSchema.safeParse({
+      name: "Jan Kowalski",
+      email: "jan@example.com",
+      subject: "Inne",
+      message: "To jest testowa wiadomość z minimum 20 znaków!",
+      consent: false,
+    });
+    expect(result.success).toBe(false);
   });
 
   it("missing name fails", () => {
@@ -90,6 +112,7 @@ describe("contact API validation", () => {
         email: "jan@example.com",
         subject,
         message: "To jest testowa wiadomość z minimum 20 znaków!",
+        consent: true,
       });
       expect(result.success, `Subject "${subject}" should be valid`).toBe(true);
     }
@@ -101,6 +124,7 @@ describe("contact API validation", () => {
       email: "jan@example.com",
       subject: "Inne",
       message: "a".repeat(20),
+      consent: true,
     });
     expect(result.success).toBe(true);
   });
@@ -111,6 +135,7 @@ describe("contact API validation", () => {
       email: "jan@example.com",
       subject: "Inne",
       message: "a".repeat(2000),
+      consent: true,
     });
     expect(result.success).toBe(true);
   });

@@ -239,6 +239,8 @@ const translations = {
   // Footer
   "footer.location": { pl: "Pozna\u0144, Polska", en: "Pozna\u0144, Poland" },
   "footer.copyright": { pl: "Programo", en: "Programo" },
+  "footer.privacy": { pl: "Polityka prywatno\u015bci", en: "Privacy policy" },
+  "footer.cookies": { pl: "Ustawienia cookies", en: "Cookie settings" },
 
   // 404
   "notFound.title": { pl: "Nie znaleziono strony", en: "Page not found" },
@@ -269,6 +271,57 @@ const translations = {
     en: "Interested in something similar?",
   },
   "project.letsTalk": { pl: "Porozmawiajmy", en: "Let\u2019s talk" },
+
+  // Cookie banner / consent
+  "cookie.title": { pl: "Cookies & prywatność", en: "Cookies & privacy" },
+  "cookie.desc": {
+    pl: "Używamy plików cookies, aby ulepszać stronę i analizować ruch. Możesz zaakceptować wszystkie, odrzucić nieobowiązkowe lub dostosować preferencje.",
+    en: "We use cookies to improve the site and analyze traffic. You can accept all, reject non-essential ones, or customize your preferences.",
+  },
+  "cookie.privacyLink": { pl: "Polityka prywatności", en: "Privacy policy" },
+  "cookie.acceptAll": { pl: "Akceptuj wszystkie", en: "Accept all" },
+  "cookie.rejectAll": { pl: "Tylko niezbędne", en: "Reject all" },
+  "cookie.customize": { pl: "Dostosuj", en: "Customize" },
+  "cookie.savePrefs": { pl: "Zapisz wybór", en: "Save preferences" },
+  "cookie.settingsTitle": { pl: "Preferencje cookies", en: "Cookie preferences" },
+  "cookie.settingsDesc": {
+    pl: "Wybierz, które kategorie chcesz włączyć. Niezbędne pliki cookies są zawsze aktywne, ponieważ strona bez nich nie działa.",
+    en: "Choose which categories to enable. Necessary cookies are always on because the site cannot function without them.",
+  },
+  "cookie.necessaryTitle": { pl: "Niezbędne", en: "Necessary" },
+  "cookie.necessaryDesc": {
+    pl: "Wymagane do działania strony — preferencje motywu, języka, sesja. Bez nich strona nie działa.",
+    en: "Required for the site to work — theme, language, session. Cannot be disabled.",
+  },
+  "cookie.analyticsTitle": { pl: "Analityka", en: "Analytics" },
+  "cookie.analyticsDesc": {
+    pl: "Google Analytics 4 — pomaga nam rozumieć, jak korzystasz ze strony. Dane zanonimizowane.",
+    en: "Google Analytics 4 — helps us understand how the site is used. Data is anonymized.",
+  },
+  "cookie.marketingTitle": { pl: "Marketing", en: "Marketing" },
+  "cookie.marketingDesc": {
+    pl: "Pliki cookies używane przez Meta Ads / Google Ads do personalizacji reklam i pomiaru konwersji.",
+    en: "Cookies used by Meta Ads / Google Ads for personalized advertising and conversion measurement.",
+  },
+
+  // Contact form consent
+  "quick.consentLabel": {
+    pl: "Wyrażam zgodę na przetwarzanie moich danych osobowych przez Programo Studio w celu odpowiedzi na zapytanie.",
+    en: "I consent to processing of my personal data by Programo Studio for the purpose of responding to my inquiry.",
+  },
+  "quick.consentRequired": {
+    pl: "Akceptacja zgody jest wymagana, żeby wysłać wiadomość.",
+    en: "Consent is required to send the message.",
+  },
+  "quick.privacyLink": {
+    pl: "Zobacz politykę prywatności",
+    en: "See privacy policy",
+  },
+
+  // Privacy policy page
+  "privacy.title": { pl: "Polityka prywatności", en: "Privacy policy" },
+  "privacy.updated": { pl: "Ostatnia aktualizacja", en: "Last updated" },
+  "privacy.backHome": { pl: "\u2190 Wr\u00f3\u0107 na stron\u0119 g\u0142\u00f3wn\u0105", en: "\u2190 Back to homepage" },
 } as const;
 
 export type TranslationKey = keyof typeof translations;

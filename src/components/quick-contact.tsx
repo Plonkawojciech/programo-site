@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 
@@ -10,9 +11,15 @@ export default function QuickContact() {
   const { t } = useI18n();
   const [state, setState] = useState<FormState>("idle");
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [consent, setConsent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!consent) {
+      setErrorMsg(t("quick.consentRequired"));
+      setState("error");
+      return;
+    }
     setState("submitting");
     setErrorMsg("");
 
@@ -22,6 +29,8 @@ export default function QuickContact() {
       email: String(formData.get("email") || ""),
       phone: String(formData.get("phone") || ""),
       message: String(formData.get("message") || ""),
+      consent: true,
+      consentTimestamp: new Date().toISOString(),
     };
 
     try {
@@ -40,6 +49,7 @@ export default function QuickContact() {
 
       setState("success");
       (e.target as HTMLFormElement).reset();
+      setConsent(false);
     } catch {
       setErrorMsg(t("quick.error"));
       setState("error");
@@ -188,11 +198,55 @@ export default function QuickContact() {
                 />
               </div>
 
-              <div className="flex flex-col gap-4 mt-4">
+              <label className="mt-4 flex items-start gap-3 cursor-pointer group">
+                <span className="relative shrink-0 mt-0.5">
+                  <input
+                    type="checkbox"
+                    name="consent"
+                    checked={consent}
+                    onChange={(e) => {
+                      setConsent(e.target.checked);
+                      if (state === "error") {
+                        setState("idle");
+                        setErrorMsg("");
+                      }
+                    }}
+                    required
+                    className="peer h-[18px] w-[18px] appearance-none rounded-[5px] border border-outline-variant/50 bg-transparent transition-colors checked:bg-primary checked:border-primary hover:border-on-surface/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 16 16"
+                    className="pointer-events-none absolute inset-0 m-auto h-[12px] w-[12px] opacity-0 peer-checked:opacity-100 transition-opacity text-on-primary"
+                  >
+                    <path
+                      d="M3 8l3.5 3.5L13 5"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      fill="none"
+                    />
+                  </svg>
+                </span>
+                <span className="text-[11px] md:text-xs font-light leading-relaxed text-on-surface-variant group-hover:text-on-surface/90 transition-colors">
+                  {t("quick.consentLabel")}{" "}
+                  <Link
+                    href="/polityka-prywatnosci"
+                    className="underline decoration-on-surface-variant/40 underline-offset-2 hover:text-on-surface"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {t("quick.privacyLink")}
+                  </Link>
+                  .
+                </span>
+              </label>
+
+              <div className="flex flex-col gap-4 mt-2">
                 <button
                   type="submit"
-                  disabled={state === "submitting"}
-                  className="w-full md:w-auto md:self-start inline-flex items-center justify-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-all disabled:opacity-50 hover:gap-5"
+                  disabled={state === "submitting" || !consent}
+                  className="w-full md:w-auto md:self-start inline-flex items-center justify-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:gap-5"
                 >
                   {state === "submitting"
                     ? t("quick.sending")
