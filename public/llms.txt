@@ -1,0 +1,25 @@
+# Programo
+
+> Programo to software house z Poznania (założyciele: Wojciech Płonka i Bartosz Kolaj). Tworzymy oprogramowanie na zamówienie: strony internetowe, aplikacje webowe i mobilne, systemy SaaS oraz integracje AI. Butikowy, dwuosobowy zespół — klient pracuje bezpośrednio z założycielami. Stack: Next.js, React, TypeScript, Supabase/Neon, Vercel, Azure OpenAI, Anthropic Claude, Capacitor.
+
+## Najważniejsze strony
+- [Strona główna](https://programo.pl): kim jesteśmy, oferta, realizacje, kontakt
+- [Oferta](https://programo.pl/oferta): aplikacje webowe, systemy SaaS, aplikacje mobilne, integracje AI
+- [Cennik](https://programo.pl/cennik): orientacyjne widełki cenowe
+- [Software House Poznań](https://programo.pl/software-house-poznan): lokalna strona usługowa
+- [Ile kosztuje aplikacja](https://programo.pl/ile-kosztuje-aplikacji): orientacyjne koszty i co wpływa na cenę
+- [Darmowy audyt strony](https://programo.pl/audyt): bezpłatne narzędzie — wydajność, SEO, mobilność, bezpieczeństwo
+- [Projekty / realizacje](https://programo.pl/projekty): portfolio
+- [Kontakt](https://programo.pl/kontakt): formularz, e-mail, telefon
+
+## Realizacje (przykłady)
+- Estalo — SaaS CRM dla biur nieruchomości (AI matching, RAG, integracja Otodom)
+- Baulx — platforma CNC dla budownictwa drewnianego (viewer 3D, G-code, Eurocode 5)
+- Athlix — ekosystem aplikacji sportowych (HRV, AI coaching, sync Garmin/Strava)
+- Jedmar — sklep e-commerce dla centrum narzędziowego w Poznaniu (Next.js + PrestaShop API)
+
+## Kontakt
+- E-mail: biuro@programo.pl
+- Telefon: +48 797 222 363 (Wojciech Płonka), +48 509 123 434 (Bartosz Kolaj)
+- Lokalizacja: Poznań, Wielkopolska, Polska (realizacje zdalne dla całej Polski i z zagranicy)
+- Języki: polski, angielski

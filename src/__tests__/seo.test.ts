@@ -20,9 +20,16 @@ describe("SEO", () => {
   });
 
   describe("sitemap.ts", () => {
-    it("includes all 5 URLs", () => {
+    it("includes core, landing and lead-magnet URLs", () => {
       const entries = sitemap();
-      expect(entries).toHaveLength(5);
+      const urls = entries.map((e) => e.url);
+      expect(urls).toContain("https://programo.pl");
+      expect(urls).toContain("https://programo.pl/software-house-poznan");
+      expect(urls).toContain("https://programo.pl/ile-kosztuje-aplikacji");
+      expect(urls).toContain("https://programo.pl/audyt");
+      expect(entries.length).toBeGreaterThanOrEqual(11);
+      // no duplicate URLs
+      expect(new Set(urls).size).toBe(urls.length);
     });
 
     it("includes homepage with priority 1.0", () => {

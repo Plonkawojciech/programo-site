@@ -72,6 +72,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": "https://programo.pl/#organization",
   name: "Programo",
   url: "https://programo.pl",
   founders: [

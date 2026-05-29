@@ -9,6 +9,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
+      url: "https://programo.pl/software-house-poznan",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
+      url: "https://programo.pl/ile-kosztuje-aplikacji",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://programo.pl/audyt",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://programo.pl/oferta",
       lastModified: new Date(),
       changeFrequency: "monthly",
