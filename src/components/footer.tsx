@@ -9,8 +9,19 @@ import { useTheme } from "@/lib/theme";
 import { useConsent } from "@/lib/consent";
 import { fadeInUp } from "@/lib/motion";
 
+const footerLinks: { href: string; label: { pl: string; en: string } }[] = [
+  { href: "/oferta", label: { pl: "Oferta", en: "Services" } },
+  { href: "/cennik", label: { pl: "Cennik", en: "Pricing" } },
+  { href: "/projekty", label: { pl: "Projekty", en: "Projects" } },
+  { href: "/o-nas", label: { pl: "O nas", en: "About" } },
+  { href: "/software-house-poznan", label: { pl: "Software House Poznań", en: "Software House Poznań" } },
+  { href: "/ile-kosztuje-aplikacji", label: { pl: "Ile kosztuje aplikacja", en: "App cost" } },
+  { href: "/audyt", label: { pl: "Darmowy audyt", en: "Free audit" } },
+  { href: "/kontakt", label: { pl: "Kontakt", en: "Contact" } },
+];
+
 export default function Footer() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const { theme } = useTheme();
   const { openSettings } = useConsent();
   const footerRef = useRef<HTMLElement>(null);
@@ -46,23 +57,36 @@ export default function Footer() {
               {t("hero.desc")}
             </p>
           </div>
-          <div className="flex flex-wrap gap-8 md:gap-16">
-            <a
-              href="https://github.com/programo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://linkedin.com/company/programo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
-            >
-              LinkedIn
-            </a>
+          <div className="flex flex-wrap gap-10 md:gap-16">
+            <nav aria-label="Mapa strony" className="grid grid-cols-2 gap-x-8 gap-y-3">
+              {footerLinks.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
+                >
+                  {l.label[lang]}
+                </Link>
+              ))}
+            </nav>
+            <div className="flex flex-col gap-3">
+              <a
+                href="https://github.com/programo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://linkedin.com/company/programo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
+              >
+                LinkedIn
+              </a>
+            </div>
           </div>
         </div>
 

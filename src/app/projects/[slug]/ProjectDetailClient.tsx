@@ -262,7 +262,7 @@ function ProjectContent({ slug }: { slug: string }) {
                 transition={{ duration: 1.2 }}
                 className="md:col-span-8 relative aspect-[16/10] overflow-hidden rounded-2xl md:rounded-3xl"
               >
-                <ParallaxImage src={project.screenshots[1]} alt="Detail 1" className="w-full h-full" speed={0.2} />
+                <ParallaxImage src={project.screenshots[1]} alt={`${project.title} — zrzut ekranu`} className="w-full h-full" speed={0.2} />
               </motion.div>
 
               {project.screenshots[2] && (
@@ -273,7 +273,7 @@ function ProjectContent({ slug }: { slug: string }) {
                   transition={{ duration: 1.2, delay: 0.2 }}
                   className="md:col-span-4 relative aspect-[4/5] overflow-hidden rounded-2xl md:rounded-3xl md:mt-24"
                 >
-                  <ParallaxImage src={project.screenshots[2]} alt="Detail 2" className="w-full h-full" speed={0.3} />
+                  <ParallaxImage src={project.screenshots[2]} alt={`${project.title} — interfejs`} className="w-full h-full" speed={0.3} />
                 </motion.div>
               )}
             </div>

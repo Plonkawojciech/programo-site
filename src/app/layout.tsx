@@ -71,20 +71,38 @@ export const metadata: Metadata = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "ProfessionalService",
   "@id": "https://programo.pl/#organization",
   name: "Programo",
+  alternateName: ["Programo Software House", "Programo Studio"],
+  description:
+    "Software house z Poznania — oprogramowanie na zamówienie: strony, aplikacje webowe i mobilne, systemy SaaS oraz integracje AI.",
   url: "https://programo.pl",
+  logo: "https://programo.pl/programo-logo-gradient.svg",
+  image: "https://programo.pl/opengraph-image",
+  email: "biuro@programo.pl",
+  telephone: "+48797222363",
+  priceRange: "$$",
+  knowsLanguage: ["pl", "en"],
   founders: [
-    { "@type": "Person", name: "Wojciech Płonka" },
-    { "@type": "Person", name: "Bartosz Kolaj" },
+    { "@type": "Person", name: "Wojciech Płonka", jobTitle: "Design & Product" },
+    { "@type": "Person", name: "Bartosz Kolaj", jobTitle: "Engineering" },
   ],
   address: {
     "@type": "PostalAddress",
     addressLocality: "Poznań",
+    addressRegion: "wielkopolskie",
     addressCountry: "PL",
   },
-  sameAs: ["https://github.com/programo"],
+  areaServed: [
+    { "@type": "City", name: "Poznań" },
+    { "@type": "AdministrativeArea", name: "Wielkopolska" },
+    { "@type": "Country", name: "Polska" },
+  ],
+  sameAs: [
+    "https://github.com/programo",
+    "https://linkedin.com/company/programo",
+  ],
 };
 
 export default function RootLayout({
