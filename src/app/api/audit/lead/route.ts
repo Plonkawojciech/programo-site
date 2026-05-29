@@ -11,6 +11,18 @@ const leadSchema = z.object({
   phone: z.string().max(40).optional().default(""),
   overall: z.number().min(0).max(100).optional(),
   consent: z.literal(true, { message: "Wymagana zgoda na kontakt" }),
+  // Ad attribution (captured client-side) — all optional
+  gclid: z.string().max(300).optional(),
+  gbraid: z.string().max(300).optional(),
+  wbraid: z.string().max(300).optional(),
+  utm_source: z.string().max(300).optional(),
+  utm_medium: z.string().max(300).optional(),
+  utm_campaign: z.string().max(300).optional(),
+  utm_term: z.string().max(300).optional(),
+  utm_content: z.string().max(300).optional(),
+  landing_page: z.string().max(500).optional(),
+  referrer: z.string().max(500).optional(),
+  first_seen: z.string().max(40).optional(),
 });
 
 const rateLimitMap = new Map<string, number[]>();
@@ -66,6 +78,20 @@ export async function POST(request: NextRequest) {
   const safeName = sanitize(name);
   const safePhone = sanitize(phone);
   const scoreText = overall != null ? `${overall}/100` : "—";
+
+  // Lead source (Google Ads / UTM) — which keyword/campaign produced this lead
+  const { gclid, utm_source, utm_medium, utm_campaign, utm_term, landing_page } = result.data;
+  const sourcePairs: [string, string | undefined][] = [
+    ["Źródło", utm_source],
+    ["Medium", utm_medium],
+    ["Kampania", utm_campaign],
+    ["Słowo", utm_term],
+    ["gclid", gclid],
+    ["Wejście", landing_page],
+  ];
+  const sources = sourcePairs.filter((p): p is [string, string] => Boolean(p[1]));
+  const sourceText = sources.map(([k, v]) => `${k}: ${v}`).join(" · ");
+
   const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
 
   // Telegram (fire-and-forget)
@@ -79,8 +105,9 @@ export async function POST(request: NextRequest) {
       `👤 *Imię:* ${safeName || "—"}`,
       `📧 *Email:* ${safeEmail}`,
       `📞 *Telefon:* ${safePhone || "—"}`,
+      sourceText ? `🔎 *Źródło:* ${sanitize(sourceText)}` : "",
       `⏱ Oddzwoń w < 60 s!`,
-    ].join("\n");
+    ].filter(Boolean).join("\n");
     fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -111,6 +138,7 @@ export async function POST(request: NextRequest) {
 <p><b>Imię:</b> ${safeName || "—"}</p>
 <p><b>Email:</b> ${safeEmail}</p>
 <p><b>Telefon:</b> ${safePhone || "—"}</p>
+${sources.length ? `<p><b>Źródło:</b> ${sources.map(([k, v]) => `${k}: ${sanitize(v)}`).join(" · ")}</p>` : ""}
 <p style="color:#b00">Oddzwoń w ciągu 60 sekund — to świeży, ciepły lead.</p>`,
       });
       // 2) Confirmation to the lead

@@ -25,6 +25,18 @@ const contactSchema = z.object({
     .max(2000, "Message must be at most 2000 characters"),
   consent: z.literal(true, { message: "Consent is required" }),
   consentTimestamp: z.string().datetime().optional(),
+  // Ad attribution (captured client-side) — all optional
+  gclid: z.string().max(300).optional(),
+  gbraid: z.string().max(300).optional(),
+  wbraid: z.string().max(300).optional(),
+  utm_source: z.string().max(300).optional(),
+  utm_medium: z.string().max(300).optional(),
+  utm_campaign: z.string().max(300).optional(),
+  utm_term: z.string().max(300).optional(),
+  utm_content: z.string().max(300).optional(),
+  landing_page: z.string().max(500).optional(),
+  referrer: z.string().max(500).optional(),
+  first_seen: z.string().max(40).optional(),
 });
 
 // In-memory rate limiter: IP -> timestamps[]
@@ -94,6 +106,26 @@ export async function POST(request: NextRequest) {
   const consentAt = consentTimestamp || new Date().toISOString();
   const safeConsentAt = sanitize(consentAt);
 
+  // Lead source (Google Ads / UTM) — which keyword/campaign produced this lead
+  const {
+    gclid, gbraid, wbraid,
+    utm_source, utm_medium, utm_campaign, utm_term, utm_content,
+    landing_page, referrer,
+  } = result.data;
+  const sourcePairs: [string, string | undefined][] = [
+    ["Źródło", utm_source],
+    ["Medium", utm_medium],
+    ["Kampania", utm_campaign],
+    ["Słowo kluczowe", utm_term],
+    ["Treść", utm_content],
+    ["gclid", gclid],
+    ["gbraid", gbraid],
+    ["wbraid", wbraid],
+    ["Strona wejścia", landing_page],
+    ["Referrer", referrer],
+  ];
+  const sources = sourcePairs.filter((p): p is [string, string] => Boolean(p[1]));
+
   const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
 
   // Send email + Telegram in parallel; success if at least one channel delivers
@@ -118,6 +150,7 @@ export async function POST(request: NextRequest) {
               <p><strong>Wiadomość:</strong></p>
               <p>${safeMessage.replace(/\n/g, "<br>")}</p>
               <hr>
+              ${sources.length ? `<p style="color:#444;font-size:13px;"><strong>Źródło leada:</strong><br>${sources.map(([k, v]) => `${k}: ${sanitize(v)}`).join("<br>")}</p>` : ""}
               <p style="color:#666;font-size:12px;">Zgoda RODO zaakceptowana: ${safeConsentAt}</p>
             `,
           });
@@ -139,6 +172,7 @@ export async function POST(request: NextRequest) {
         try {
           const esc = (s: string) =>
             s.replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, "\\$1");
+          const srcLines = sources.map(([k, v]) => `*${esc(k)}:* ${esc(v)}`);
           const lines = [
             `*Nowa wiadomość — Programo*`,
             ``,
@@ -149,6 +183,7 @@ export async function POST(request: NextRequest) {
             ``,
             `*Wiadomość:*`,
             esc(message),
+            ...(srcLines.length ? ["", `*Źródło leada:*`, ...srcLines] : []),
             ``,
             `_Zgoda RODO: ${esc(consentAt)}_`,
           ].filter(Boolean);

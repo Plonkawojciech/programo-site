@@ -10,6 +10,7 @@ import ScrollProgress from "@/components/scroll-progress";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import CookieBanner from "@/components/cookie-banner";
+import AnalyticsTracker from "@/components/analytics-tracker";
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
@@ -24,6 +25,7 @@ export default function Providers({ children }: { children: ReactNode }) {
             <Footer />
           </PageTransition>
           <CookieBanner />
+          <AnalyticsTracker />
         </ConsentProvider>
       </I18nProvider>
     </ThemeProvider>

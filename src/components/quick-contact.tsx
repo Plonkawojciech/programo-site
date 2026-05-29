@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
+import { getAttribution, trackLead } from "@/lib/tracking";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -31,6 +32,7 @@ export default function QuickContact() {
       message: String(formData.get("message") || ""),
       consent: true,
       consentTimestamp: new Date().toISOString(),
+      ...getAttribution(),
     };
 
     try {
@@ -48,6 +50,7 @@ export default function QuickContact() {
       }
 
       setState("success");
+      trackLead({ form: "quick-contact" });
       (e.target as HTMLFormElement).reset();
       setConsent(false);
     } catch {

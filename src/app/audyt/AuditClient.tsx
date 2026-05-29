@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getAttribution, trackLead } from "@/lib/tracking";
 
 type Finding = { ok: boolean; text: string };
 type Category = {
@@ -118,6 +119,7 @@ export default function AuditClient() {
           phone: leadPhone,
           overall: result?.overall,
           consent,
+          ...getAttribution(),
         }),
       });
       const data = await res.json();
@@ -125,6 +127,7 @@ export default function AuditClient() {
         setLeadError(data.error || "Nie udało się wysłać. Spróbuj ponownie.");
       } else {
         setLeadDone(true);
+        trackLead({ form: "audit" });
       }
     } catch {
       setLeadError("Błąd połączenia. Spróbuj ponownie.");
