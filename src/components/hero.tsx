@@ -131,10 +131,10 @@ export default function Hero() {
             <div className="flex flex-col gap-1.5 md:gap-2 text-[9px] md:text-[10px] 2xl:text-xs font-mono leading-tight overflow-hidden">
               {/* Main contact */}
               <a
-                href="mailto:kontakt@programo.pl"
+                href="mailto:biuro@programo.pl"
                 className="text-[var(--theme-text-1)] hover:text-[var(--theme-accent)] transition-colors truncate pointer-events-auto"
               >
-                kontakt@programo.pl
+                biuro@programo.pl
               </a>
 
               {/* Wojciech */}

@@ -13,10 +13,9 @@ export default function HorizontalIntro() {
 
   const smoothProgress = useSpring(scrollYProgress, { damping: 40, stiffness: 80 });
 
-  // Use the wider range for desktop, narrower for mobile via CSS layout
-  const xMain = useTransform(smoothProgress, [0, 1], ["0vw", "-130vw"]);
-  const xBg = useTransform(smoothProgress, [0, 1], ["0vw", "-60vw"]);
-  const xFg = useTransform(smoothProgress, [0, 1], ["0vw", "-300vw"]);
+  const xMain = useTransform(smoothProgress, [0, 1], ["-8vw", "82vw"]);
+  const xBg = useTransform(smoothProgress, [0, 1], ["-35vw", "18vw"]);
+  const xFg = useTransform(smoothProgress, [0, 1], ["-260vw", "0vw"]);
   const introOpacity = useTransform(smoothProgress, [0.85, 1], [1, 0]);
   const manifestoY = useTransform(smoothProgress, [0, 1], ["10%", "-10%"]);
 
@@ -25,7 +24,7 @@ export default function HorizontalIntro() {
   return (
     <section
       ref={container}
-      className="relative bg-[var(--theme-bg-1)] cursor-default text-[var(--theme-text-1)] h-[200vh] md:h-[250vh]"
+      className="relative bg-[var(--theme-bg-1)] cursor-default text-[var(--theme-text-1)] h-[190vh] md:h-[240vh]"
     >
       <motion.div
         style={{ opacity: introOpacity, contain: "layout style paint" }}
@@ -44,7 +43,7 @@ export default function HorizontalIntro() {
         {/* Main content track */}
         <motion.div
           style={{ x: xMain }}
-          className="relative z-10 flex items-center h-full px-[8vw] md:px-[10vw] 2xl:px-[12vw] gap-[15vw] md:gap-[20vw] whitespace-nowrap transform-gpu will-change-transform"
+          className="relative z-10 flex items-center h-full px-[8vw] md:px-[10vw] 2xl:px-[12vw] gap-[14vw] md:gap-[18vw] whitespace-nowrap transform-gpu will-change-transform"
         >
           {/* Title block — individual letter animations */}
           <div className="flex flex-col relative shrink-0">

@@ -6,6 +6,17 @@ describe("contact API validation", () => {
     const result = contactSchema.safeParse({
       name: "Jan Kowalski",
       email: "jan@example.com",
+      phone: "+48 600 700 800",
+      subject: "Współpraca",
+      message: "To jest testowa wiadomość z minimum 20 znaków!",
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("phone is optional", () => {
+    const result = contactSchema.safeParse({
+      name: "Jan Kowalski",
+      email: "jan@example.com",
       subject: "Współpraca",
       message: "To jest testowa wiadomość z minimum 20 znaków!",
     });

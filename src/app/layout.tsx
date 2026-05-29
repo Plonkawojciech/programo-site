@@ -100,7 +100,7 @@ const localBusinessJsonLd = {
   url: "https://programo.pl",
   logo: "https://programo.pl/apple-touch-icon.png",
   image: "https://programo.pl/apple-touch-icon.png",
-  email: "kontakt@programo.pl",
+  email: "biuro@programo.pl",
   telephone: "+48797222363",
   priceRange: "$$",
   founders: [
@@ -238,7 +238,7 @@ const faqJsonLd = {
       name: "Ile kosztuje stworzenie aplikacji w software house Programo?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Wycena zależy od zakresu projektu. Małe aplikacje webowe od kilku tysięcy złotych, kompletne systemy SaaS od kilkudziesięciu tysięcy. Skontaktuj się przez kontakt@programo.pl, by otrzymać bezpłatną wycenę.",
+        text: "Wycena zależy od zakresu projektu. Skontaktuj się przez biuro@programo.pl, by opisać projekt i dostać informację o dalszych krokach.",
       },
     },
     {

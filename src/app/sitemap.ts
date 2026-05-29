@@ -15,6 +15,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     {
+      url: "https://programo.pl/audyt",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://programo.pl/projects/estalo",
       lastModified: new Date(),
       changeFrequency: "monthly",

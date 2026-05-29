@@ -1,11 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { I18nProvider, useI18n } from "@/lib/i18n";
-import { getProjectBySlug, getAdjacentProjects, type Project, type SubProduct } from "@/lib/projects";
+import { getProjectBySlug, getAdjacentProjects } from "@/lib/projects";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
@@ -17,26 +17,28 @@ function ParallaxImage({ src, alt, speed = 0.5, className = "" }: { src: string,
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
       <motion.div style={{ y, scale: 1.15 }} className="absolute inset-0 w-full h-full origin-center">
-        <Image src={src} alt={alt} fill className="object-cover" />
+        <Image src={src} alt={alt} fill unoptimized sizes="100vw" className="object-cover" />
       </motion.div>
     </div>
   );
 }
 
-function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor, scale = 1 }: { src: string, alt: string, priority?: boolean, parallaxY?: any, accentColor?: string, scale?: any }) {
-  const isPlaceholder = src.includes("PLACEHOLDER");
+function ProjectImage({
+  src,
+  alt,
+  priority = false,
+  parallaxY = 0,
+  accentColor,
+  scale = 1,
+}: {
+  src: string;
+  alt: string;
+  priority?: boolean;
+  parallaxY?: number | MotionValue<number>;
+  accentColor?: string;
+  scale?: number | MotionValue<number>;
+}) {
   const isIcon = src.includes("-icon.");
-
-  if (isPlaceholder) {
-    const placeholderText = src.replace("/", "").replace(".png", "").replace(/_/g, " ");
-    return (
-      <motion.div style={parallaxY ? { y: parallaxY, scale: scale || 1 } : { scale: scale || 1 }} className="absolute inset-0 flex items-center justify-center bg-surface-container-high border border-outline-variant/10">
-        <span className="text-on-surface-variant/40 font-headline text-2xl uppercase tracking-widest font-bold text-center px-6">
-          [Wstaw zdjęcie: {placeholderText}]
-        </span>
-      </motion.div>
-    );
-  }
 
   if (isIcon) {
     const accent = accentColor || "#6abf69";
@@ -51,6 +53,8 @@ function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor, 
               alt={alt}
               fill
               priority={priority}
+              unoptimized
+              sizes="(min-width: 768px) 12rem, 8rem"
               className="object-cover"
             />
           </div>
@@ -66,6 +70,8 @@ function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor, 
         alt={alt}
         fill
         priority={priority}
+        unoptimized
+        sizes="100vw"
         className="object-cover opacity-90"
       />
     </motion.div>
@@ -73,9 +79,9 @@ function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor, 
 }
 
 function ProjectContent({ slug }: { slug: string }) {
-  const { t, lang } = useI18n();
+  const { lang } = useI18n();
   const project = getProjectBySlug(slug);
-  const { prev, next } = getAdjacentProjects(slug);
+  const { next } = getAdjacentProjects(slug);
   
   const headerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -106,9 +112,9 @@ function ProjectContent({ slug }: { slug: string }) {
                  <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 50% 40%, ${project.accentColor}15 0%, #0a0a0a 65%)` }} />
                  <div className="absolute inset-0 flex items-center justify-center">
                    <div className="flex items-center gap-8 md:gap-16">
-                     {project.subProducts.map((sub, i) => (
+                     {project.subProducts.map((sub) => (
                        <div key={sub.name} className="relative w-24 h-24 md:w-40 md:h-40 rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ boxShadow: `0 0 60px ${sub.accentColor || project.accentColor}25` }}>
-                         {sub.icon && <Image src={sub.icon} alt={sub.name} fill priority className="object-cover" />}
+                         {sub.icon && <Image src={sub.icon} alt={sub.name} fill priority unoptimized sizes="(min-width: 768px) 10rem, 6rem" className="object-cover" />}
                        </div>
                      ))}
                    </div>
@@ -160,7 +166,7 @@ function ProjectContent({ slug }: { slug: string }) {
               <div className="lg:col-span-5 flex flex-col justify-start">
                 <div className="sticky top-40">
                   <h2 className="font-serif text-5xl md:text-7xl lg:text-[5rem] font-light italic tracking-tight text-[#0A0A0A] leading-[1.1] mb-12">
-                    "{project.subtitle[lang]}"
+                    &ldquo;{project.subtitle[lang]}&rdquo;
                   </h2>
                   <div className="flex flex-wrap gap-4 mt-8">
                      {project.tech.map((t) => (
@@ -259,7 +265,7 @@ function ProjectContent({ slug }: { slug: string }) {
                     <div className="lg:w-1/2 flex flex-col gap-8 w-full">
                        {sub.screenshots.slice(0,2).map((s, i) => (
                          <div key={i} className={`relative aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl ${i === 1 ? 'w-4/5 ml-auto -mt-20 z-10' : 'w-full z-0'}`}>
-                           <Image src={s} alt={sub.name} fill className="object-cover" />
+                           <Image src={s} alt={sub.name} fill unoptimized sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
                          </div>
                        ))}
                     </div>
@@ -311,7 +317,7 @@ function ProjectContent({ slug }: { slug: string }) {
             <Link href={`/projects/${next.slug}`} className="group flex h-full w-full items-center justify-center">
               <div className="absolute inset-0 z-0">
                 {next.screenshots?.[0] && !next.screenshots[0].includes("-icon.") && (
-                  <Image src={next.screenshots[0]} alt={next.title} fill className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-[2s] ease-out" />
+                  <Image src={next.screenshots[0]} alt={next.title} fill unoptimized sizes="100vw" className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-[2s] ease-out" />
                 )}
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-1000" />
               </div>

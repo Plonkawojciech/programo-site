@@ -173,7 +173,7 @@ export default function SoftwareHousePoznanPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <a
-                href="mailto:kontakt@programo.pl"
+                href="mailto:biuro@programo.pl"
                 className="rounded-full bg-[var(--theme-accent,#ffb547)] px-6 py-3 text-sm font-medium text-black transition hover:opacity-90"
               >
                 Bezpłatna wycena
@@ -307,8 +307,8 @@ export default function SoftwareHousePoznanPage() {
               Poznań · Wielkopolska · cała Polska. Odpowiadamy w ciągu 24 godzin.
             </p>
             <div className="flex flex-col gap-3 text-sm md:flex-row md:gap-6">
-              <a href="mailto:kontakt@programo.pl" className="hover:underline">
-                kontakt@programo.pl
+              <a href="mailto:biuro@programo.pl" className="hover:underline">
+                biuro@programo.pl
               </a>
               <a href="tel:+48797222363" className="hover:underline">
                 +48 797 222 363 — Wojciech Płonka

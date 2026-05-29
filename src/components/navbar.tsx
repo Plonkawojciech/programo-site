@@ -3,16 +3,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
-import {
-  easeEntry,
-  easeHover,
-  durationFast,
-  durationMedium,
-  springGentle,
-} from "@/lib/motion";
+import { easeHover, durationFast } from "@/lib/motion";
 
 export default function Navbar() {
   const { lang, toggle, t } = useI18n();
@@ -29,13 +22,13 @@ export default function Navbar() {
   const isHome = pathname === "/";
   const prefix = isHome ? "" : "/";
 
-  const sections = ["work", "about", "stack", "contact"];
+  const sections = ["quick-contact", "services", "pricing", "work"];
 
   const navLinks = [
+    { label: lang === "pl" ? "Oferta" : "Services", href: `${prefix}#services`, section: "services" },
+    { label: lang === "pl" ? "Cennik" : "Pricing", href: `${prefix}#pricing`, section: "pricing" },
     { label: t("nav.work"), href: `${prefix}#work`, section: "work" },
-    { label: t("nav.about"), href: `${prefix}#about`, section: "about" },
-    { label: t("nav.stack"), href: `${prefix}#stack`, section: "stack" },
-    { label: t("nav.contact"), href: `${prefix}#contact`, section: "contact" },
+    { label: t("nav.contact"), href: `${prefix}#quick-contact`, section: "quick-contact" },
   ];
 
   // --- Hide on scroll down, show on scroll up ---
@@ -121,19 +114,12 @@ export default function Navbar() {
   return (
     <>
       {/* Desktop floating pill nav */}
-      <motion.nav
+      <nav
         role="navigation"
         aria-label={t("a11y.mainNav")}
-        initial={{ y: -30, opacity: 0 }}
-        animate={{
-          y: isNavHidden ? -100 : 0,
-          opacity: isNavHidden ? 0 : 1,
-        }}
-        transition={{
-          duration: durationFast,
-          ease: easeEntry,
-        }}
-        className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[1400px] z-50 hidden md:block"
+        className={`fixed top-6 left-1/2 z-50 hidden w-[90%] max-w-[1400px] -translate-x-1/2 transition-all duration-300 md:block ${
+          isNavHidden ? "-translate-y-24 opacity-0" : "translate-y-0 opacity-100"
+        }`}
       >
         <div
           className={`rounded-full border transition-all duration-500 ${
@@ -169,13 +155,8 @@ export default function Navbar() {
                   >
                     {link.label}
                     {isActive && (
-                      <motion.span
-                        layoutId="nav-indicator"
+                      <span
                         className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-primary rounded-full"
-                        transition={{
-                          type: "spring",
-                          ...springGentle,
-                        }}
                       />
                     )}
                   </a>
@@ -213,7 +194,7 @@ export default function Navbar() {
                 {lang === "pl" ? "EN" : "PL"}
               </button>
               <a
-                href="#contact"
+                href={`${prefix}#quick-contact`}
                 className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all"
                 style={{
                   transitionDuration: `${durationFast * 1000}ms`,
@@ -225,22 +206,15 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile navbar */}
-      <motion.nav
+      <nav
         role="navigation"
         aria-label={t("a11y.mainNav")}
-        initial={{ y: -20, opacity: 0 }}
-        animate={{
-          y: isNavHidden ? -80 : 0,
-          opacity: isNavHidden ? 0 : 1,
-        }}
-        transition={{
-          duration: durationFast,
-          ease: easeEntry,
-        }}
-        className="fixed top-0 left-0 right-0 z-50 md:hidden flex justify-center"
+        className={`fixed top-0 left-0 right-0 z-50 flex justify-center transition-all duration-300 md:hidden ${
+          isNavHidden ? "-translate-y-20 opacity-0" : "translate-y-0 opacity-100"
+        }`}
       >
         <div
           className={`bg-[var(--theme-nav-pill-mobile)] backdrop-blur-xl rounded-full mt-6 mx-auto max-w-fit px-5 py-2 border border-outline-variant/20 shadow-[0_20px_40px_var(--theme-nav-pill-shadow-soft)] flex items-center gap-6 transition-all duration-500 ${
@@ -295,59 +269,32 @@ export default function Navbar() {
             {lang === "pl" ? "EN" : "PL"}
           </button>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile menu overlay */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ clipPath: "circle(0% at 90% 5%)" }}
-            animate={{ clipPath: "circle(150% at 90% 5%)" }}
-            exit={{ clipPath: "circle(0% at 90% 5%)" }}
-            transition={{
-              duration: 0.6,
-              ease: easeEntry,
-            }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/98 backdrop-blur-lg md:hidden"
-          >
+      {mobileOpen && (
+          <div className="fixed inset-0 z-40 flex animate-[soft-lift_0.35s_cubic-bezier(0.16,1,0.3,1)_both] flex-col items-center justify-center bg-surface/98 backdrop-blur-lg md:hidden">
             <nav className="flex flex-col items-center gap-8">
-              {navLinks.map((link, i) => (
-                <motion.a
+              {navLinks.map((link) => (
+                <a
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  initial={{ opacity: 0, x: -30, y: 20 }}
-                  animate={{ opacity: 1, x: 0, y: 0 }}
-                  exit={{ opacity: 0, x: -30, y: 20 }}
-                  transition={{
-                    delay: i * 0.1,
-                    duration: durationMedium,
-                    ease: easeEntry,
-                  }}
                   className="font-headline text-2xl font-normal text-on-surface min-h-[44px] flex items-center"
                 >
                   {link.label}
-                </motion.a>
+                </a>
               ))}
-              <motion.a
-                href="#contact"
+              <a
+                href={`${prefix}#quick-contact`}
                 onClick={() => setMobileOpen(false)}
-                initial={{ opacity: 0, x: -30, y: 20 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                exit={{ opacity: 0, x: -30, y: 20 }}
-                transition={{
-                  delay: navLinks.length * 0.1,
-                  duration: durationMedium,
-                  ease: easeEntry,
-                }}
                 className="mt-4 bg-primary px-8 py-3 rounded-full text-on-primary text-sm tracking-wide font-medium min-h-[44px] flex items-center"
               >
                 {t("nav.cta")}
-              </motion.a>
+              </a>
             </nav>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </>
   );
 }

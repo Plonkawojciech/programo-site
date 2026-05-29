@@ -31,6 +31,7 @@ describe("Contact form component", () => {
     expect(screen.getByLabelText(/Imi/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Temat/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Telefon/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Wiadomo/)).toBeInTheDocument();
   });
 
@@ -144,6 +145,9 @@ describe("Contact form component", () => {
 
     const subjectSelect = screen.getByLabelText(/Temat/);
     expect(subjectSelect.id).toBe("contact-subject");
+
+    const phoneInput = screen.getByLabelText(/Telefon/);
+    expect(phoneInput.id).toBe("contact-phone");
 
     const messageInput = screen.getByLabelText(/Wiadomo/);
     expect(messageInput.id).toBe("contact-message");

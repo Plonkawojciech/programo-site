@@ -33,7 +33,7 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
       transition={{ duration: 0.3, ease: "easeInOut" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative bg-[var(--theme-bg-1)] overflow-hidden group min-h-[350px] 2xl:min-h-[450px] ${spanClass} transform-gpu will-change-transform`}
+      className={`relative bg-[var(--theme-bg-1)] overflow-hidden group min-h-[300px] md:min-h-[350px] 2xl:min-h-[450px] ${spanClass} transform-gpu will-change-transform`}
     >
       <Link href={`/projects/${project.slug}`} className="block w-full h-full">
         {project.screenshots?.[0] ? (
@@ -46,10 +46,12 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
               src={project.screenshots[0]}
               alt={project.title}
               fill
-              className="object-cover opacity-50 group-hover:opacity-100 transition-opacity duration-700 ease-out"
+              unoptimized
+              sizes="(min-width: 1280px) 50vw, (min-width: 768px) 50vw, 100vw"
+              className="object-cover opacity-95 saturate-[1.08] contrast-[1.03] transition duration-700 ease-out group-hover:scale-[1.02] group-hover:opacity-100"
             />
             {/* Dark overlay that lifts on hover */}
-            <div className="absolute inset-0 bg-[var(--theme-bg-1)]/60 group-hover:bg-[var(--theme-bg-1)]/10 transition-all duration-700 pointer-events-none" />
+            <div className="absolute inset-0 bg-[#051f20]/20 transition-all duration-700 pointer-events-none group-hover:bg-[#051f20]/5 md:bg-[#051f20]/26" />
 
             {/* Scanning line effect on hover — uses project accent color */}
             <AnimatePresence>
@@ -77,8 +79,8 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
         {/* Text overlay */}
         <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between z-30 pointer-events-none transform-gpu">
           <div className="flex justify-between items-start gap-2">
-            <span className="text-[var(--theme-text-2)] font-mono text-[10px] uppercase tracking-widest bg-[var(--theme-bg-1)]/90 px-2 py-1 border border-[var(--theme-border-1)]">
-              {project.category} // {String(index + 1).padStart(2, '0')}
+            <span className="text-[var(--theme-text-1)] font-mono text-[10px] uppercase tracking-widest bg-[var(--theme-bg-1)]/72 px-2 py-1 backdrop-blur">
+              {project.category} {"//"} {String(index + 1).padStart(2, '0')}
             </span>
             <div className="flex items-center gap-2">
               {/* Visit site link — always visible for strony-zrobione */}
@@ -107,7 +109,7 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
           </div>
 
           <motion.div
-            className="flex flex-col gap-2 bg-[var(--theme-bg-1)]/95 p-4 border border-[var(--theme-border-1)] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 ease-out will-change-transform"
+            className="flex flex-col gap-2 bg-[var(--theme-bg-1)]/88 p-4 transform translate-y-2 backdrop-blur-md transition-all duration-500 ease-out will-change-transform group-hover:translate-y-0"
             style={{
               borderLeftColor: isHovered ? project.accentColor : undefined,
               borderLeftWidth: isHovered ? "3px" : undefined,
@@ -145,7 +147,7 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
   );
 }
 
-export default function FeaturedWork() {
+export default function FeaturedWork({ sectionId = "work" }: { sectionId?: string }) {
   const { lang } = useI18n();
   const containerRef = useRef<HTMLElement>(null);
   const [filter, setFilter] = useState<string | null>(null);
@@ -154,7 +156,7 @@ export default function FeaturedWork() {
   const filteredProjects = filter ? allProjects.filter(p => p.category === filter) : allProjects;
 
   return (
-    <section ref={containerRef} id="work" className="relative bg-[var(--theme-bg-1)] w-full min-h-screen z-10">
+    <section ref={containerRef} id={sectionId} className="relative bg-[var(--theme-bg-1)] w-full min-h-screen z-10">
 
       {/* Category Header as a Bento Cell across the top */}
       <div className="w-full bg-[var(--theme-border-1)] p-[1px] grid grid-cols-1 md:grid-cols-4 gap-[1px]">
@@ -165,11 +167,13 @@ export default function FeaturedWork() {
              <div>
                <span className="text-[var(--theme-text-2)] font-mono text-xs uppercase tracking-[0.4em] mb-4 block">DATABASE_QUERY: WORK</span>
                <h2 className="text-[var(--theme-text-1)] text-4xl md:text-6xl lg:text-[5rem] 2xl:text-[6rem] font-serif italic tracking-tighter leading-none">
-                 {lang === 'pl' ? "Archiwum" : "Archive"}
+                 {lang === 'pl' ? "Archiwum projektów" : "Project archive"}
                </h2>
              </div>
              <div className="mt-8 md:mt-0 text-[var(--theme-text-2)] font-mono text-xs text-left md:text-right max-w-xs">
-               A highly dense, structured matrix of our digital implementations. Hover to extract data.
+               {lang === "pl"
+                 ? "Żywszy widok realizacji: strony, produkty i systemy bez szarej zasłony."
+                 : "A more vivid view of our websites, products, and systems."}
              </div>
            </div>
 
@@ -194,7 +198,7 @@ export default function FeaturedWork() {
         </div>
 
         {/* The Bento Grid of Projects */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {filteredProjects.map((project, idx) => (
             <ProjectCell key={project.slug} project={project} lang={lang} index={idx} />
           ))}
