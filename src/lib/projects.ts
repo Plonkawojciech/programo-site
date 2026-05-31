@@ -404,39 +404,6 @@ export const projects: Project[] = [
     screenshots: ["/screenshots/wks-hero.png"],
   },
   {
-    slug: "ks-posnania",
-    title: "KS Posnania",
-    subtitle: {
-      pl: "Legendarny klub sportowy założony w 1907",
-      en: "Legendary sports club founded in 1907",
-    },
-    description: {
-      pl: "Strona KS Posnania — jednego z najstarszych klubów sportowych w Polsce. 8 sekcji: wioślarstwo, rugby, pływanie, kajakarstwo, żeglarstwo, triathlon, piłka ręczna, kajakarstwo górskie.",
-      en: "Website for KS Posnania — one of the oldest sports clubs in Poland. 8 sections: rowing, rugby, swimming, kayaking, sailing, triathlon, handball, whitewater canoeing.",
-    },
-    longDescription: {
-      pl: "Co robi:\nStrona KS Posnania — jednego z najstarszych klubów sportowych w Polsce, działającego od 1907 roku. Prezentuje 8 sekcji sportowych (wioślarstwo, rugby, pływanie, kajakarstwo, żeglarstwo, triathlon, piłka ręczna, kajakarstwo górskie), każda ma dedykowaną podstronę z trenerami, kontaktem i historią. Karuzele zdjęć, sekcja sponsorów, historia klubu i jego osiągnięcia.\n\nNa czym jest zbudowana:\nHTML5 + Tailwind CSS + Vanilla JavaScript, hosting Vercel.\n\nDlaczego tak:\n• Tailwind zamiast surowego CSS — klub ma silną tożsamość wizualną (granat #004e75), tokeny Tailwind trzymają system kolorów spójny przez 8 sekcji i kilkadziesiąt podstron.\n• Material Design 3 jako język wizualny — neutralny, premium, daje klubowi z 118-letnią historią nowoczesny look bez utraty powagi.\n• Statyczny HTML — treść zmienia się rzadko, brak panelu CMS znacząco obniża koszty utrzymania.\n• Vercel + CDN — natychmiastowe ładowanie dla użytkowników w Polsce, automatyczne wdrożenia.",
-      en: "What it does:\nWebsite for KS Posnania — one of Poland's oldest sports clubs, founded in 1907. Showcases 8 sport sections (rowing, rugby, swimming, kayaking, sailing, triathlon, handball, whitewater canoeing), each with its own subpage covering coaches, contact, and history. Photo carousels, sponsor section, club history and achievements.\n\nStack:\nHTML5 + Tailwind CSS + Vanilla JavaScript, hosted on Vercel.\n\nWhy:\n• Tailwind over raw CSS — the club has a strong visual identity (navy #004e75); Tailwind tokens keep the color system consistent across 8 sections and dozens of pages.\n• Material Design 3 as the visual language — neutral, premium, gives a club with 118 years of history a modern look without losing gravitas.\n• Static HTML — content rarely changes; skipping a CMS panel dramatically lowers maintenance cost.\n• Vercel + CDN — instant load for Polish users, automatic deploys.",
-    },
-    status: "live" as ProjectStatus,
-    category: "strony-zrobione" as const,
-    liveUrl: "https://ks-posnania.vercel.app",
-    tech: ["HTML", "Tailwind CSS", "JavaScript", "Vercel"],
-    features: {
-      pl: ["8 sekcji sportowych", "Material Design 3", "Karuzele i animacje", "Responsive navigation", "Sekcja sponsorów", "Historia klubu"],
-      en: ["8 sports sections", "Material Design 3", "Carousels and animations", "Responsive navigation", "Sponsor section", "Club history"],
-    },
-    tags: ["Sport", "Design", "Web"],
-    accentColor: "#004e75",
-    bgColor: "#0a1520",
-    year: "2026",
-    role: {
-      pl: "Programo — projektowanie i development",
-      en: "Programo — design and development",
-    },
-    screenshots: ["/screenshots/ks-posnania-hero.png"],
-  },
-  {
     slug: "wsafefinanse",
     title: "WSafeFinanse",
     subtitle: {
