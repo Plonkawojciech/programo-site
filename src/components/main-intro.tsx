@@ -55,7 +55,7 @@ export default function MainIntro() {
             {t("main.intro.headline")}
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="mt-10 text-xl md:text-2xl font-light text-on-surface/70 max-w-3xl leading-relaxed"

@@ -18,20 +18,29 @@ export default function Preloader() {
       return;
     }
 
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setLoading(false);
-          sessionStorage.setItem("programo-preloaded", "1");
-          return 100;
-        }
-        return prev + 5;
-      });
-    }, 15);
+    // Drive progress off real wall-clock time (not a fixed number of ticks)
+    // and hard-cap the total duration. This keeps the intro from stretching
+    // out — and gating LCP — when the main thread is throttled (e.g. Lighthouse
+    // mobile / slow devices), where tick-based timers drift badly.
+    const DURATION = 650;
+    const start = performance.now();
+    let raf = 0;
+
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const pct = Math.min(100, Math.round((elapsed / DURATION) * 100));
+      setProgress(pct);
+      if (elapsed >= DURATION) {
+        setLoading(false);
+        sessionStorage.setItem("programo-preloaded", "1");
+        return;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
 
     return () => {
-      clearInterval(interval);
+      cancelAnimationFrame(raf);
     };
   }, []);
 
