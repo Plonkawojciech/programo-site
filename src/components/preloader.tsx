@@ -49,7 +49,7 @@ export default function Preloader() {
       {loading && (
         <motion.div
           key="preloader"
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-surface text-on-surface"
+          className="fixed inset-0 z-[300] flex flex-col items-center justify-center bg-surface text-on-surface"
           exit={{
             clipPath: "inset(0 0 100% 0)",
             transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] }

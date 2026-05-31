@@ -36,7 +36,7 @@ export default function MainIntro() {
 
   return (
     <section className="relative bg-surface py-24 md:py-32 lg:py-40">
-      <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
+      <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         {/* Headline */}
         <div className="max-w-5xl">
           <motion.span
@@ -70,7 +70,7 @@ export default function MainIntro() {
             </ContactCtaLink>
             <Link
               href="/oferta"
-              className="inline-flex items-center gap-3 border border-outline-variant/40 text-on-surface px-6 py-3.5 rounded-full text-sm uppercase tracking-widest font-medium hover:border-primary transition-all hover:gap-5"
+              className="inline-flex items-center gap-3 border border-on-surface/30 text-on-surface px-6 py-3.5 rounded-full text-sm uppercase tracking-widest font-medium hover:border-primary transition-all hover:gap-5"
             >
               {t("main.cta.offer")} <span>→</span>
             </Link>

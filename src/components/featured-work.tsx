@@ -9,205 +9,210 @@ import { projects } from "@/lib/projects";
 import type { Project } from "@/lib/projects";
 import type { Lang } from "@/lib/i18n";
 
-function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; index: number }) {
-  const [isHovered, setIsHovered] = useState(false);
+const CATEGORY_LABELS: Record<Project["category"], { pl: string; en: string }> = {
+  "nasze-systemy": { pl: "Nasze systemy", en: "Our systems" },
+  "strony-zrobione": { pl: "Strony", en: "Websites" },
+  projekty: { pl: "Projekty", en: "Projects" },
+};
 
-  const spans = [
-    "md:col-span-2 md:row-span-2",
-    "md:col-span-1 md:row-span-1",
-    "md:col-span-1 md:row-span-1",
-    "md:col-span-2 md:row-span-1",
-    "md:col-span-1 md:row-span-2",
-    "md:col-span-1 md:row-span-1",
-    "md:col-span-2 md:row-span-2",
-    "md:col-span-1 md:row-span-1",
-  ];
-
-  const spanClass = spans[index % spans.length];
+function ProjectCard({
+  project,
+  lang,
+  featured,
+}: {
+  project: Project;
+  lang: Lang;
+  featured: boolean;
+}) {
+  const screenshot = project.screenshots?.[0];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`relative bg-[var(--theme-bg-1)] overflow-hidden group min-h-[350px] 2xl:min-h-[450px] ${spanClass} transform-gpu will-change-transform`}
+    <motion.article
+      layout
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 24 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className={`group relative overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all duration-500 ease-out hover:border-primary/50 hover:shadow-2xl hover:shadow-black/30 ${
+        featured
+          ? "md:col-span-2 md:row-span-2 min-h-[360px] md:min-h-[520px]"
+          : "min-h-[320px]"
+      }`}
     >
-      <Link href={`/projects/${project.slug}`} className="block w-full h-full">
-        {project.screenshots?.[0] ? (
-          <motion.div
-            className="absolute inset-0 w-full h-full origin-center transform-gpu will-change-transform"
-            animate={{ scale: isHovered ? 1.05 : 1 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Image
-              src={project.screenshots[0]}
-              alt={project.title}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-              className="object-cover opacity-50 group-hover:opacity-100 transition-opacity duration-700 ease-out"
-            />
-            {/* Dark overlay that lifts on hover */}
-            <div className="absolute inset-0 bg-[var(--theme-bg-1)]/60 group-hover:bg-[var(--theme-bg-1)]/10 transition-all duration-700 pointer-events-none" />
+      {/* Visual */}
+      {screenshot ? (
+        <Image
+          src={screenshot}
+          alt={project.title}
+          fill
+          sizes={
+            featured
+              ? "(max-width: 768px) 100vw, 66vw"
+              : "(max-width: 768px) 100vw, 33vw"
+          }
+          className="object-cover opacity-55 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-[1.04]"
+        />
+      ) : (
+        <div className="absolute inset-0" style={{ background: project.bgColor }} />
+      )}
 
-            {/* Scanning line effect on hover — uses project accent color */}
-            <AnimatePresence>
-              {isHovered && (
-                <motion.div
-                  initial={{ top: "-10%" }}
-                  animate={{ top: "110%" }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1.5, ease: "linear", repeat: Infinity }}
-                  className="absolute left-0 right-0 h-[2px] z-20 pointer-events-none opacity-60 transform-gpu hidden md:block"
-                  style={{
-                    backgroundColor: project.accentColor,
-                    boxShadow: `0 0 15px ${project.accentColor}`,
-                  }}
-                />
-              )}
-            </AnimatePresence>
-          </motion.div>
-        ) : (
-          <div className="absolute inset-0 bg-[var(--theme-bg-2)] flex items-center justify-center transform-gpu">
-            <span className="text-[var(--theme-border-1)] font-serif text-8xl italic opacity-50">{project.title[0]}</span>
-          </div>
+      {/* Bottom gradient for legibility */}
+      <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
+
+      {/* Accent line on top */}
+      <div
+        className="absolute top-0 left-0 right-0 h-1 opacity-80"
+        style={{ backgroundColor: project.accentColor }}
+      />
+
+      {/* Stretched link — whole card opens project detail. */}
+      <Link
+        href={`/projects/${project.slug}`}
+        aria-label={`${project.title} — ${project.subtitle[lang]}`}
+        className="absolute inset-0 z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+      />
+
+      {/* Top row: category + external link (sits above stretched link) */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-2 p-5 md:p-6">
+        <span
+          className="text-[10px] font-bold uppercase tracking-[0.3em]"
+          style={{ color: project.accentColor }}
+        >
+          {CATEGORY_LABELS[project.category][lang]}
+          <span className="text-white/50"> · {project.year}</span>
+        </span>
+        {project.category === "strony-zrobione" && project.liveUrl && (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/40 px-3 py-1.5 text-[10px] font-medium uppercase tracking-widest text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+          >
+            <span>{lang === "pl" ? "Zobacz" : "Visit"}</span>
+            <span aria-hidden="true">↗</span>
+          </a>
         )}
+      </div>
 
-        {/* Text overlay */}
-        <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between z-30 pointer-events-none transform-gpu">
-          <div className="flex justify-between items-start gap-2">
-            <span className="text-[var(--theme-text-2)] font-mono text-[10px] uppercase tracking-widest bg-[var(--theme-bg-1)]/90 px-2 py-1 border border-[var(--theme-border-1)]">
-              {project.category} // {String(index + 1).padStart(2, '0')}
-            </span>
-            <div className="flex items-center gap-2">
-              {/* Visit site link — always visible for strony-zrobione */}
-              {project.category === "strony-zrobione" && project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="inline-flex items-center gap-1.5 text-[9px] md:text-[10px] font-mono uppercase tracking-widest text-[var(--theme-text-1)] bg-[var(--theme-bg-1)]/90 border px-2.5 py-1 pointer-events-auto transition-colors hover:bg-[var(--theme-bg-1)]"
-                  style={{ borderColor: `${project.accentColor}66` }}
-                >
-                  <span>VISIT</span>
-                  <span>↗</span>
-                </a>
-              )}
-              {/* Status dot — glows with accent color on hover */}
-              <div
-                className="w-2 h-2 rounded-full bg-[var(--theme-border-1)] transition-colors duration-300"
-                style={{
-                  backgroundColor: isHovered ? project.accentColor : undefined,
-                  boxShadow: isHovered ? `0 0 12px ${project.accentColor}, 0 0 4px ${project.accentColor}` : "none",
-                }}
-              />
-            </div>
-          </div>
-
-          <motion.div
-            className="flex flex-col gap-2 bg-[var(--theme-bg-1)]/95 p-4 border border-[var(--theme-border-1)] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 ease-out will-change-transform"
-            style={{
-              borderLeftColor: isHovered ? project.accentColor : undefined,
-              borderLeftWidth: isHovered ? "3px" : undefined,
-            }}
-          >
-            <h3 className="text-[var(--theme-text-1)] text-2xl md:text-3xl 2xl:text-4xl font-sans font-light tracking-tight truncate">
-              {project.title}
-            </h3>
-
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: isHovered ? "auto" : 0, opacity: isHovered ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden transform-gpu"
+      {/* Content */}
+      <div className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-end p-5 md:p-7 text-white">
+        <h3
+          className={`font-headline font-bold tracking-tight text-white ${
+            featured ? "text-3xl md:text-5xl" : "text-2xl md:text-3xl"
+          }`}
+        >
+          {project.title}
+        </h3>
+        <p className="mt-2 max-w-md text-sm font-light leading-snug text-white/80 line-clamp-2">
+          {project.subtitle[lang]}
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+          {project.tags.slice(0, 3).map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-white/90"
             >
-              <p className="text-[var(--theme-text-2)] text-xs md:text-sm font-serif italic mb-2 line-clamp-2">
-                {project.subtitle[lang]}
-              </p>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {project.tags.slice(0, 3).map(tag => (
-                  <span
-                    key={tag}
-                    className="text-[var(--theme-bg-1)] text-[8px] md:text-[10px] font-mono uppercase px-1.5 py-0.5 tracking-wider transition-colors duration-300"
-                    style={{ backgroundColor: isHovered ? project.accentColor : "var(--theme-accent)" }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
+              {tag}
+            </span>
+          ))}
         </div>
-      </Link>
-    </motion.div>
+      </div>
+    </motion.article>
   );
 }
 
 export default function FeaturedWork() {
-  const { lang } = useI18n();
+  const { t, lang } = useI18n();
   const containerRef = useRef<HTMLElement>(null);
   const [filter, setFilter] = useState<string | null>(null);
 
   const allProjects = projects;
-  const filteredProjects = filter ? allProjects.filter(p => p.category === filter) : allProjects;
+  const categories = Array.from(new Set(allProjects.map((p) => p.category)));
+  const filteredProjects = filter
+    ? allProjects.filter((p) => p.category === filter)
+    : allProjects;
 
   return (
-    <section ref={containerRef} id="work" className="relative bg-[var(--theme-bg-1)] w-full min-h-screen z-10">
+    <section
+      ref={containerRef}
+      id="work"
+      className="relative bg-surface w-full"
+    >
+      <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24 py-24 md:py-32">
+        {/* Header */}
+        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between mb-12 md:mb-16">
+          <div className="max-w-2xl">
+            <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
+              {lang === "pl" ? "Realizacje" : "Selected work"}
+            </span>
+            <h2 className="mt-6 font-headline text-4xl md:text-6xl 2xl:text-7xl font-bold tracking-tighter text-on-surface leading-[1.05]">
+              {lang === "pl" ? "Archiwum projektów" : "Project archive"}
+            </h2>
+            <p className="mt-5 text-base md:text-lg font-light text-on-surface/70 leading-relaxed">
+              {lang === "pl"
+                ? "Wybór systemów, aplikacji i stron, które zbudowaliśmy. Najedź, aby zobaczyć szczegóły."
+                : "A selection of systems, apps and sites we have built. Hover for details."}
+            </p>
+          </div>
 
-      {/* Category Header as a Bento Cell across the top */}
-      <div className="w-full bg-[var(--theme-border-1)] p-[1px] grid grid-cols-1 md:grid-cols-4 gap-[1px]">
-
-        {/* Header Cell with Filter */}
-        <div className="col-span-1 md:col-span-4 bg-[var(--theme-bg-2)] p-8 md:p-12 flex flex-col items-start justify-between border-b border-[var(--theme-border-1)] transform-gpu">
-           <div className="flex w-full flex-col md:flex-row justify-between items-start md:items-end mb-12">
-             <div>
-               <span className="text-[var(--theme-text-2)] font-mono text-xs uppercase tracking-[0.4em] mb-4 block">DATABASE_QUERY: WORK</span>
-               <h2 className="text-[var(--theme-text-1)] text-4xl md:text-6xl lg:text-[5rem] 2xl:text-[6rem] font-serif italic tracking-tighter leading-none">
-                 {lang === 'pl' ? "Archiwum" : "Archive"}
-               </h2>
-             </div>
-             <div className="mt-8 md:mt-0 text-[var(--theme-text-2)] font-mono text-xs text-left md:text-right max-w-xs">
-               A highly dense, structured matrix of our digital implementations. Hover to extract data.
-             </div>
-           </div>
-
-           {/* Filter controls */}
-           <div className="flex flex-wrap gap-2">
-             <button
-               onClick={() => setFilter(null)}
-               className={`px-4 py-2 font-mono text-[10px] uppercase tracking-widest border transition-colors ${filter === null ? 'bg-[var(--theme-text-1)] text-[var(--theme-bg-1)] border-[var(--theme-text-1)]' : 'bg-[var(--theme-bg-1)] text-[var(--theme-text-2)] border-[var(--theme-border-1)] hover:border-[var(--theme-accent)]'}`}
-             >
-               ALL_SYSTEMS
-             </button>
-             {Array.from(new Set(allProjects.map(p => p.category))).map(cat => (
-               <button
-                 key={cat}
-                 onClick={() => setFilter(cat)}
-                 className={`px-4 py-2 font-mono text-[10px] uppercase tracking-widest border transition-colors ${filter === cat ? 'bg-[var(--theme-text-1)] text-[var(--theme-bg-1)] border-[var(--theme-text-1)]' : 'bg-[var(--theme-bg-1)] text-[var(--theme-text-2)] border-[var(--theme-border-1)] hover:border-[var(--theme-accent)]'}`}
-               >
-                 {cat.replace('-', '_')}
-               </button>
-             ))}
-           </div>
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setFilter(null)}
+              className={`min-h-[40px] rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-widest transition-colors cursor-pointer ${
+                filter === null
+                  ? "bg-primary text-on-primary"
+                  : "border border-outline-variant/40 text-on-surface-variant hover:border-primary hover:text-on-surface"
+              }`}
+            >
+              {lang === "pl" ? "Wszystkie" : "All"}
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setFilter(cat)}
+                className={`min-h-[40px] rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-widest transition-colors cursor-pointer ${
+                  filter === cat
+                    ? "bg-primary text-on-primary"
+                    : "border border-outline-variant/40 text-on-surface-variant hover:border-primary hover:text-on-surface"
+                }`}
+              >
+                {CATEGORY_LABELS[cat][lang]}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* The Bento Grid of Projects */}
-        <AnimatePresence mode="wait">
-          {filteredProjects.map((project, idx) => (
-            <ProjectCell key={project.slug} project={project} lang={lang} index={idx} />
-          ))}
-        </AnimatePresence>
+        {/* Editorial grid */}
+        <motion.div
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[minmax(0,1fr)] gap-5 md:gap-6"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project, idx) => (
+              <ProjectCard
+                key={project.slug}
+                project={project}
+                lang={lang}
+                featured={!filter && idx === 0}
+              />
+            ))}
+          </AnimatePresence>
+        </motion.div>
 
-        {/* Footer Cell */}
-        <div className="col-span-1 md:col-span-4 bg-[var(--theme-bg-1)] p-12 flex items-center justify-center transform-gpu">
-          <div className="flex items-center gap-4 text-[var(--theme-text-2)] font-mono text-xs uppercase tracking-[0.3em]">
-             <span className="w-8 h-[1px] bg-[var(--theme-border-1)]" />
-             END_OF_RECORDS
-             <span className="w-8 h-[1px] bg-[var(--theme-border-1)]" />
-          </div>
+        {/* Footer CTA */}
+        <div className="mt-16 flex flex-col items-start gap-4 border-t border-outline-variant/20 pt-10 md:flex-row md:items-center md:justify-between">
+          <p className="text-base md:text-lg font-light text-on-surface/70 max-w-md">
+            {lang === "pl"
+              ? "Masz pomysł na własny system lub aplikację?"
+              : "Have an idea for your own system or app?"}
+          </p>
+          <Link
+            href="/kontakt"
+            className="inline-flex items-center gap-3 rounded-full bg-primary px-6 py-3.5 text-sm uppercase tracking-widest font-medium text-on-primary transition-all hover:bg-primary-container hover:gap-5"
+          >
+            {t("nav.cta")} <span aria-hidden="true">→</span>
+          </Link>
         </div>
       </div>
     </section>

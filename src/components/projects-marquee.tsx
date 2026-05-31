@@ -30,7 +30,7 @@ function ProjectTile({ project }: { project: Project }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="group relative shrink-0 w-[80vw] sm:w-[360px] md:w-[380px] lg:w-[440px] aspect-[4/3] overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all duration-500 ease-out md:hover:scale-125 md:hover:z-20 md:hover:border-primary/60 md:hover:shadow-2xl md:hover:shadow-black/30 snap-center"
+      className="group relative shrink-0 w-[80vw] sm:w-[360px] md:w-[380px] lg:w-[440px] aspect-[4/3] overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all duration-500 ease-out md:hover:-translate-y-2 md:hover:z-20 md:hover:border-primary/60 md:hover:shadow-2xl md:hover:shadow-black/30 snap-center"
       aria-label={`${project.title} — ${project.subtitle[lang]}`}
     >
       {screenshot ? (
@@ -39,7 +39,7 @@ function ProjectTile({ project }: { project: Project }) {
           alt={project.title}
           fill
           sizes="(max-width: 768px) 80vw, (max-width: 1024px) 380px, 440px"
-          className="object-cover opacity-60 md:group-hover:opacity-100 transition-opacity duration-500 ease-out"
+          className="object-cover opacity-60 transition-all duration-500 ease-out md:group-hover:opacity-100 md:group-hover:scale-105"
         />
       ) : (
         <div
@@ -224,7 +224,7 @@ export default function ProjectsMarquee() {
 
         <div
           ref={trackRef}
-          className="flex gap-5 md:gap-7 py-2 will-change-transform"
+          className="flex gap-5 md:gap-7 py-6 will-change-transform"
           style={{ width: "max-content", transform: "translate3d(0,0,0)" }}
         >
           {/* Duplicated twice for seamless loop */}

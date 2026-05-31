@@ -128,7 +128,7 @@ export default function Navbar() {
                   className={`relative text-[13px] uppercase font-medium transition-colors ${
                     isActive
                       ? "text-[var(--theme-nav-text)]"
-                      : "text-[rgba(var(--theme-nav-text-rgb),0.6)] hover:text-[var(--theme-nav-text)]"
+                      : "text-[rgba(var(--theme-nav-text-rgb),0.72)] hover:text-[var(--theme-nav-text)]"
                   }`}
                   style={{
                     transitionDuration: `${durationFast * 1000}ms`,
@@ -167,7 +167,7 @@ export default function Navbar() {
           onClick={toggleTheme}
           aria-label="Toggle theme"
           title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          className="flex items-center justify-center w-8 h-8 text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
+          className="flex items-center justify-center w-11 h-11 text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
         >
           {theme === "dark" ? (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -183,7 +183,7 @@ export default function Navbar() {
         <button
           onClick={toggle}
           aria-label={t("a11y.langToggle")}
-          className="text-[13px] uppercase font-medium text-on-surface-variant cursor-pointer hover:text-on-surface transition-colors"
+          className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] text-[13px] uppercase font-medium text-on-surface-variant cursor-pointer hover:text-on-surface transition-colors"
         >
           {lang === "pl" ? "EN" : "PL"}
         </button>
@@ -205,12 +205,12 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 md:hidden flex justify-center"
       >
         <div
-          className="liquid-glass relative rounded-full mt-6 mx-auto max-w-fit px-5 py-2 flex items-center gap-6 transition-all duration-500"
+          className="liquid-glass relative rounded-full mt-4 mx-auto max-w-fit px-5 py-1 flex items-center gap-6 transition-all duration-500"
           data-scrolled={scrolled ? "true" : "false"}
         >
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-11 w-11 flex-col items-center justify-center gap-1.5"
+            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5"
             aria-label="Toggle menu"
           >
             <span
@@ -237,7 +237,7 @@ export default function Navbar() {
               width={170}
               height={120}
               priority
-              className="h-auto w-[110px] select-none"
+              className="h-auto w-[96px] select-none"
             />
           </Link>
 
