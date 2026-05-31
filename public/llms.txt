@@ -7,6 +7,7 @@
 - [Oferta](https://programo.pl/oferta): aplikacje webowe, systemy SaaS, aplikacje mobilne, integracje AI
 - [Cennik](https://programo.pl/cennik): orientacyjne widełki cenowe
 - [Software House Poznań](https://programo.pl/software-house-poznan): lokalna strona usługowa
+- [Sklepy internetowe](https://programo.pl/sklepy-internetowe): e-commerce — sklepy WooCommerce/Shopify/PrestaShop i headless, migracje, integracje Allegro/BaseLinker
 - [Ile kosztuje aplikacja](https://programo.pl/ile-kosztuje-aplikacji): orientacyjne koszty i co wpływa na cenę
 - [Darmowy audyt strony](https://programo.pl/audyt): bezpłatne narzędzie — wydajność, SEO, mobilność, bezpieczeństwo
 - [Projekty / realizacje](https://programo.pl/projekty): portfolio
