@@ -100,7 +100,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
-    screenshots: ["/screenshots/estalo-hero.png", "/screenshots/estalo-otodom.png", "/screenshots/estalo-portal.png"],
+    screenshots: ["/screenshots/estalo-hero.webp", "/screenshots/estalo-otodom.webp", "/screenshots/estalo-portal.webp"],
   },
   {
     slug: "athlix",
@@ -169,7 +169,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
-    screenshots: ["/screenshots/athlix-trainpilot-1.png"],
+    screenshots: ["/screenshots/athlix-trainpilot-1.webp"],
     subProducts: [
       {
         name: "TrainPilot",
@@ -181,9 +181,9 @@ export const projects: Project[] = [
           pl: "Synchronizacja z Garmin Connect, codzienny briefing AI, śledzenie posiłków ze zdjęć i kodów kreskowych, wykres formy, profil mocy, suplementacja sezonowa i eksport do Google Calendar.",
           en: "Garmin Connect sync, daily AI briefing, meal tracking from photos and barcodes, fitness chart, power profile, seasonal supplements, and Google Calendar export.",
         },
-        icon: "/screenshots/athlix-trainpilot-icon.png",
+        icon: "/screenshots/athlix-trainpilot-icon.webp",
         screenshots: [
-          "/screenshots/athlix-trainpilot-1.png",
+          "/screenshots/athlix-trainpilot-1.webp",
         ],
         liveUrl: "https://athlix-trainpilot.vercel.app",
         accentColor: "#6366f1",
@@ -198,10 +198,10 @@ export const projects: Project[] = [
           pl: "Swipe i dopasowywanie partnerów treningowych, czat w czasie rzeczywistym, integracja ze Stravą, moduł siłowni z rekordami, organizacja sesji treningowych, forum i rankingi.",
           en: "Swipe and match training partners, real-time chat, Strava integration, gym module with personal records, training session organizer, forum and leaderboards.",
         },
-        icon: "/screenshots/athlix-trainmate-icon.png",
+        icon: "/screenshots/athlix-trainmate-icon.webp",
         screenshots: [
-          "/screenshots/athlix-trainmate-1.png",
-          "/screenshots/athlix-trainmate-2.png",
+          "/screenshots/athlix-trainmate-1.webp",
+          "/screenshots/athlix-trainmate-2.webp",
         ],
         liveUrl: "https://athlix-trainmate.vercel.app",
         accentColor: "#F97316",
@@ -216,10 +216,10 @@ export const projects: Project[] = [
           pl: "Monitoring tętna przez Bluetooth (Polar, Garmin, Wahoo, Coospo), 20+ algorytmów HRV, scoring regeneracji i obciążenia treningowego, analiza snu z fazami, AI coach zdrowotny i wykrywanie przeciążenia.",
           en: "Bluetooth heart rate monitoring, 20+ heart rate variability algorithms, recovery and training load scoring, sleep analysis with stages, AI health coach, and overtraining detection.",
         },
-        icon: "/screenshots/athlix-health-icon.png",
+        icon: "/screenshots/athlix-health-icon.webp",
         screenshots: [
-          "/screenshots/athlix-health-1.png",
-          "/screenshots/athlix-health-2.png",
+          "/screenshots/athlix-health-1.webp",
+          "/screenshots/athlix-health-2.webp",
         ],
         liveUrl: "https://athlix-health.vercel.app",
         accentColor: "#00e676",
@@ -257,7 +257,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
-    screenshots: ["/screenshots/jedmar-hero.png"],
+    screenshots: ["/screenshots/jedmar-hero.webp"],
   },
   {
     slug: "wks-poznan",
@@ -290,7 +290,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
-    screenshots: ["/screenshots/wks-hero.png"],
+    screenshots: ["/screenshots/wks-hero.webp"],
   },
   {
     slug: "wsafefinanse",
@@ -323,7 +323,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
-    screenshots: ["/screenshots/wsafefinanse-hero.png"],
+    screenshots: ["/screenshots/wsafefinanse-hero.webp"],
   },
   {
     slug: "solvio",

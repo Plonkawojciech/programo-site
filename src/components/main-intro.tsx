@@ -41,16 +41,14 @@ export default function MainIntro() {
         <div className="max-w-5xl">
           <motion.span
             initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, x: 0 }}
             className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary"
           >
             {t("main.intro.label")}
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10% 0px" }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="mt-6 font-headline text-4xl md:text-7xl 2xl:text-[6vw] font-bold tracking-tighter text-on-surface leading-[1.05]"
           >
@@ -58,8 +56,7 @@ export default function MainIntro() {
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10% 0px" }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="mt-10 text-xl md:text-2xl font-light text-on-surface/70 max-w-3xl leading-relaxed"
           >

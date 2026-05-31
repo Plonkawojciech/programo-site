@@ -191,7 +191,7 @@ export default function SklepyInternetowePage() {
             </div>
             <div className="relative aspect-[16/11] overflow-hidden rounded-2xl border border-current/15 bg-[rgba(var(--theme-text-1-rgb,218,241,222),0.04)]">
               <Image
-                src="/screenshots/jedmar-hero.png"
+                src="/screenshots/jedmar-hero.webp"
                 alt="Sklep internetowy Jedmar zbudowany przez Programo"
                 fill
                 sizes="(min-width: 1024px) 40vw, 100vw"
