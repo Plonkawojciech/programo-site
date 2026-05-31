@@ -85,7 +85,7 @@ const services = [
   },
   {
     title: "Systemy SaaS",
-    desc: "Multi-tenant SaaS z billingiem, rolami, AI i integracjami. Przykłady: Estalo CRM, Athlix, Baulx.",
+    desc: "Multi-tenant SaaS z billingiem, rolami, AI i integracjami. Przykłady: Estalo CRM, Solvio, Rejestr Pro.",
   },
   {
     title: "Aplikacje mobilne",
@@ -120,9 +120,9 @@ const projects = [
     desc: "SaaS CRM dla biur nieruchomości — AI matching, RAG chatbot, integracje z Otodom.",
   },
   {
-    name: "Baulx",
-    slug: "baulx",
-    desc: "Platforma CNC dla drewna konstrukcyjnego — viewer 3D, generator G-code, BTL→TCN.",
+    name: "Solvio",
+    slug: "solvio",
+    desc: "SaaS do śledzenia wydatków z AI — OCR paragonów, grupy kosztów, porównywarka cen, raporty.",
   },
   {
     name: "Athlix",
@@ -130,9 +130,9 @@ const projects = [
     desc: "WHOOP alternative — analityka regeneracji, HRV, AI coaching, sync z Garmin/Strava.",
   },
   {
-    name: "LearnAI",
-    slug: "learnai",
-    desc: "Platforma do nauki z AI — adaptacyjne ścieżki, generowanie kursów, embedingi pgvector.",
+    name: "Rejestr Pro",
+    slug: "rejestr-pro",
+    desc: "Wyszukiwarka firm z KRS — oficjalne dane MS, profile spółek, powiązania osób, link do RDF.",
   },
 ];
 
@@ -291,8 +291,8 @@ export default function SoftwareHousePoznanPage() {
                   Co odróżnia Programo od innych software house&apos;ów w Poznaniu?
                 </h3>
                 <p className="opacity-75">
-                  Butikowy zespół, własne produkty SaaS w portfolio (Estalo, Baulx,
-                  Athlix), AI-first podejście, bezpośredni kontakt z założycielami.
+                  Butikowy zespół, własne produkty SaaS w portfolio (Estalo, Solvio,
+                  Rejestr Pro, Athlix), AI-first podejście, bezpośredni kontakt z założycielami.
                   Nie jesteśmy outsourcingową fabryką — budujemy partnerstwa.
                 </p>
               </div>

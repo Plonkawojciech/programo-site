@@ -10,11 +10,10 @@ import { projects, type Project } from "@/lib/projects";
 // Curated, ordered subset shown in the homepage strip. Order matters visually.
 const MARQUEE_SLUGS = [
   "estalo",
-  "baulx",
+  "solvio",
   "athlix",
-  "learnai",
+  "rejestr-pro",
   "jedmar",
-  "ks-posnania",
   "wks-poznan",
   "wsafefinanse",
 ];

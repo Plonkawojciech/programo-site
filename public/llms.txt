@@ -14,7 +14,8 @@
 
 ## Realizacje (przykłady)
 - Estalo — SaaS CRM dla biur nieruchomości (AI matching, RAG, integracja Otodom)
-- Baulx — platforma CNC dla budownictwa drewnianego (viewer 3D, G-code, Eurocode 5)
+- Solvio — SaaS do śledzenia wydatków z AI (OCR paragonów, porównywarka cen, raporty)
+- Rejestr Pro — wyszukiwarka firm z KRS (oficjalne dane Ministerstwa Sprawiedliwości, profile spółek, powiązania osób)
 - Athlix — ekosystem aplikacji sportowych (HRV, AI coaching, sync Garmin/Strava)
 - Jedmar — sklep e-commerce dla centrum narzędziowego w Poznaniu (Next.js + PrestaShop API)
 

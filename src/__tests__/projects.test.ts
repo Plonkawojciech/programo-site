@@ -1,17 +1,31 @@
 import { describe, it, expect } from "vitest";
 import { projects, getProjectBySlug, getAdjacentProjects } from "@/lib/projects";
 
+const EXPECTED_SLUGS = [
+  "estalo",
+  "athlix",
+  "jedmar",
+  "wks-poznan",
+  "wsafefinanse",
+  "solvio",
+  "rejestr-pro",
+];
+
+const REMOVED_SLUGS = ["baulx", "learnai", "ks-posnania"];
+
 describe("projects data", () => {
-  it("has exactly 4 projects", () => {
-    expect(projects).toHaveLength(4);
+  it("contains the expected projects", () => {
+    const slugs = projects.map((p) => p.slug);
+    for (const slug of EXPECTED_SLUGS) {
+      expect(slugs, `missing project: ${slug}`).toContain(slug);
+    }
   });
 
-  it("all 4 projects have correct slugs", () => {
+  it("does not contain removed projects", () => {
     const slugs = projects.map((p) => p.slug);
-    expect(slugs).toContain("estalo");
-    expect(slugs).toContain("baulx");
-    expect(slugs).toContain("athlix");
-    expect(slugs).toContain("learnai");
+    for (const slug of REMOVED_SLUGS) {
+      expect(slugs, `removed project still present: ${slug}`).not.toContain(slug);
+    }
   });
 
   it("each project has required fields", () => {
@@ -29,90 +43,60 @@ describe("projects data", () => {
     }
   });
 
-  it("all slugs are URL-safe", () => {
-    for (const p of projects) {
-      expect(p.slug).toMatch(/^[a-z0-9-]+$/);
+  it("all slugs are URL-safe and unique", () => {
+    const slugs = projects.map((p) => p.slug);
+    for (const slug of slugs) {
+      expect(slug).toMatch(/^[a-z0-9-]+$/);
     }
+    expect(new Set(slugs).size).toBe(slugs.length);
   });
 
-  it("generateStaticParams returns all 4 slugs", () => {
+  it("generateStaticParams returns one entry per project", () => {
     const params = projects.map((p) => ({ slug: p.slug }));
-    expect(params).toHaveLength(4);
-    expect(params).toContainEqual({ slug: "estalo" });
-    expect(params).toContainEqual({ slug: "baulx" });
-    expect(params).toContainEqual({ slug: "athlix" });
-    expect(params).toContainEqual({ slug: "learnai" });
+    expect(params).toHaveLength(projects.length);
+    expect(params).toContainEqual({ slug: "solvio" });
+    expect(params).toContainEqual({ slug: "rejestr-pro" });
   });
 
-  it("live projects (estalo, baulx) have liveUrl", () => {
-    const estalo = getProjectBySlug("estalo");
-    const baulx = getProjectBySlug("baulx");
-    expect(estalo?.liveUrl).toBeTruthy();
-    expect(baulx?.liveUrl).toBeTruthy();
-  });
-
-  it("live projects (athlix) have correct status", () => {
-    const athlix = getProjectBySlug("athlix");
-    expect(athlix?.status).toBe("live");
-  });
-
-  it("planned projects (learnai) have no liveUrl", () => {
-    const learnai = getProjectBySlug("learnai");
-    expect(learnai?.liveUrl).toBeUndefined();
-  });
-
-  it("features arrays are non-empty", () => {
+  it("live projects have a liveUrl", () => {
     for (const p of projects) {
-      expect(p.features.pl.length).toBeGreaterThan(0);
-      expect(p.features.en.length).toBeGreaterThan(0);
+      if (p.status === "live") {
+        expect(p.liveUrl, `${p.slug} is live but has no liveUrl`).toBeTruthy();
+      }
     }
   });
 
-  it("tech arrays are non-empty", () => {
-    for (const p of projects) {
-      expect(p.tech.length).toBeGreaterThan(0);
-    }
-  });
-
-  it("accent colors are valid hex", () => {
+  it("accent and bg colors are valid hex", () => {
     for (const p of projects) {
       expect(p.accentColor).toMatch(/^#[0-9a-fA-F]{6}$/);
+      expect(p.bgColor).toMatch(/^#[0-9a-fA-F]{6}$/);
     }
   });
 
-  it("getAdjacentProjects returns correct neighbors", () => {
-    const { prev, next } = getAdjacentProjects("baulx");
-    expect(prev?.slug).toBe("estalo");
-    expect(next?.slug).toBe("athlix");
+  it("getAdjacentProjects handles first and last project", () => {
+    const firstSlug = projects[0].slug;
+    const lastSlug = projects[projects.length - 1].slug;
+    expect(getAdjacentProjects(firstSlug).prev).toBeNull();
+    expect(getAdjacentProjects(lastSlug).next).toBeNull();
   });
 
-  it("getAdjacentProjects handles first/last project", () => {
-    const first = getAdjacentProjects("estalo");
-    expect(first.prev).toBeNull();
-    expect(first.next?.slug).toBe("baulx");
-
-    const last = getAdjacentProjects("learnai");
-    expect(last.prev?.slug).toBe("athlix");
-    expect(last.next).toBeNull();
+  it("getAdjacentProjects returns neighbors for a middle project", () => {
+    const { prev, next } = getAdjacentProjects(projects[1].slug);
+    expect(prev?.slug).toBe(projects[0].slug);
+    expect(next?.slug).toBe(projects[2].slug);
   });
 
-  it("year field present and valid for all projects", () => {
+  it("year field present and valid", () => {
     for (const p of projects) {
       expect(p.year).toBeTruthy();
-      expect(p.year).toMatch(/^\d{4}/); // starts with 4-digit year
+      expect(p.year).toMatch(/^\d{4}/);
     }
   });
 
-  it("role field present for both PL and EN", () => {
+  it("role present for PL and EN", () => {
     for (const p of projects) {
       expect(p.role.pl).toBeTruthy();
       expect(p.role.en).toBeTruthy();
-    }
-  });
-
-  it("bgColor is a valid hex color", () => {
-    for (const p of projects) {
-      expect(p.bgColor).toMatch(/^#[0-9a-fA-F]{6}$/);
     }
   });
 
