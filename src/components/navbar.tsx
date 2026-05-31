@@ -205,12 +205,12 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 md:hidden flex justify-center"
       >
         <div
-          className="liquid-glass relative rounded-full mt-4 mx-auto max-w-fit px-5 py-1 flex items-center gap-6 transition-all duration-500"
+          className="liquid-glass relative rounded-full mt-4 mx-auto max-w-fit px-5 py-0.5 flex items-center gap-5 transition-all duration-500"
           data-scrolled={scrolled ? "true" : "false"}
         >
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5"
+            className="flex h-8 w-8 flex-col items-center justify-center gap-1.5"
             aria-label="Toggle menu"
           >
             <span
@@ -237,14 +237,14 @@ export default function Navbar() {
               width={170}
               height={120}
               priority
-              className="h-auto w-[96px] select-none"
+              className="h-auto w-[78px] select-none"
             />
           </Link>
 
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className="flex items-center justify-center w-7 h-7 text-[var(--theme-nav-text)] cursor-pointer"
+            className="flex items-center justify-center w-6 h-6 text-[var(--theme-nav-text)] cursor-pointer"
           >
             {theme === "dark" ? (
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
