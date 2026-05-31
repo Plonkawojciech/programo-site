@@ -46,6 +46,7 @@ function ProjectCell({ project, lang, index }: { project: Project; lang: Lang; i
               src={project.screenshots[0]}
               alt={project.title}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
               className="object-cover opacity-50 group-hover:opacity-100 transition-opacity duration-700 ease-out"
             />
             {/* Dark overlay that lifts on hover */}

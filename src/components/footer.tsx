@@ -51,7 +51,7 @@ export default function Footer() {
               width={320}
               height={226}
               className="h-auto w-[220px] md:w-[280px] select-none"
-              priority
+              loading="lazy"
             />
             <p className="text-sm text-on-surface-variant mt-6 max-w-xs leading-relaxed">
               {t("hero.desc")}

@@ -46,14 +46,14 @@ export default function MainIntro() {
           >
             {t("main.intro.label")}
           </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
+          <motion.h1
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="mt-6 font-headline text-4xl md:text-7xl 2xl:text-[6vw] font-bold tracking-tighter text-on-surface leading-[1.05]"
           >
             {t("main.intro.headline")}
-          </motion.h2>
+          </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

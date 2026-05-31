@@ -11,11 +11,19 @@ export default function Preloader() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    // Show the branded intro only once per session so it never blocks
+    // content paint (LCP) on repeat navigations / returning visitors.
+    if (sessionStorage.getItem("programo-preloaded")) {
+      setLoading(false);
+      return;
+    }
+
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           setLoading(false);
+          sessionStorage.setItem("programo-preloaded", "1");
           return 100;
         }
         return prev + 5;
