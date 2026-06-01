@@ -23,6 +23,9 @@ const contactSchema = z.object({
     .string()
     .min(20, "Message must be at least 20 characters")
     .max(2000, "Message must be at most 2000 characters"),
+  // Lead qualification (chips on the form) — optional
+  projectType: z.string().max(60).optional().or(z.literal("")),
+  budget: z.string().max(60).optional().or(z.literal("")),
   consent: z.literal(true, { message: "Consent is required" }),
   consentTimestamp: z.string().datetime().optional(),
   // Ad attribution (captured client-side) — all optional
@@ -98,11 +101,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: firstError }, { status: 400 });
   }
 
-  const { name, email, phone, subject, message, consentTimestamp } = result.data;
+  const { name, email, phone, subject, message, projectType, budget, consentTimestamp } = result.data;
   const safeName = sanitize(name);
   const safeMessage = sanitize(message);
   const safeSubject = sanitize(subject);
   const safePhone = phone ? sanitize(phone) : "";
+  const safeProjectType = projectType ? sanitize(projectType) : "";
+  const safeBudget = budget ? sanitize(budget) : "";
   const consentAt = consentTimestamp || new Date().toISOString();
   const safeConsentAt = sanitize(consentAt);
 
@@ -147,6 +152,8 @@ export async function POST(request: NextRequest) {
               <p><strong>Email:</strong> ${sanitize(email)}</p>
               ${safePhone ? `<p><strong>Telefon:</strong> ${safePhone}</p>` : ""}
               <p><strong>Temat:</strong> ${safeSubject}</p>
+              ${safeProjectType ? `<p><strong>Rodzaj projektu:</strong> ${safeProjectType}</p>` : ""}
+              ${safeBudget ? `<p><strong>Budżet:</strong> ${safeBudget}</p>` : ""}
               <p><strong>Wiadomość:</strong></p>
               <p>${safeMessage.replace(/\n/g, "<br>")}</p>
               <hr>
@@ -180,6 +187,8 @@ export async function POST(request: NextRequest) {
             `*Email:* ${esc(email)}`,
             phone ? `*Telefon:* ${esc(phone)}` : "",
             `*Temat:* ${esc(subject)}`,
+            projectType ? `*Rodzaj projektu:* ${esc(projectType)}` : "",
+            budget ? `*Budżet:* ${esc(budget)}` : "",
             ``,
             `*Wiadomość:*`,
             esc(message),

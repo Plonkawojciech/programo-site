@@ -19,6 +19,8 @@ export interface Project {
   status: ProjectStatus;
   category: "nasze-systemy" | "strony-zrobione" | "projekty";
   liveUrl?: string;
+  // Short, real headline metric shown on cards (e.g. "1460 produktów · 190 kategorii").
+  metric?: { pl: string; en: string };
   tech: string[];
   features: { pl: string[]; en: string[] };
   tags: string[];
@@ -49,6 +51,7 @@ export const projects: Project[] = [
     status: "live",
     category: "nasze-systemy",
     liveUrl: "https://estalo.pl",
+    metric: { pl: "791 testów · 23 tabele z RLS", en: "791 tests · 23 RLS tables" },
     tech: ["Next.js 15.5", "TypeScript", "React 19", "Supabase", "Azure OpenAI", "pgvector", "Capacitor 8", "Lemon Squeezy", "Resend", "TipTap", "Recharts", "Zod"],
     features: {
       pl: [
@@ -120,6 +123,7 @@ export const projects: Project[] = [
     status: "live",
     category: "nasze-systemy",
     liveUrl: "https://athlix-trainpilot.vercel.app",
+    metric: { pl: "3 aplikacje · 20+ algorytmów HRV", en: "3 apps · 20+ HRV algorithms" },
     tech: ["Next.js 16.1", "TypeScript", "React 19", "Neon", "Drizzle", "Capacitor 8", "Anthropic Claude", "Web Bluetooth", "Pusher", "Strava API", "Garmin Connect", "Google Maps", "Recharts"],
     features: {
       pl: [
@@ -244,6 +248,7 @@ export const projects: Project[] = [
     status: "live" as ProjectStatus,
     category: "strony-zrobione" as const,
     liveUrl: "https://jedmar.pl",
+    metric: { pl: "1460 produktów · 190 kategorii", en: "1,460 products · 190 categories" },
     tech: ["Next.js 15", "TypeScript", "Tailwind CSS", "PrestaShop API", "Turborepo", "Vercel"],
     features: {
       pl: ["1460 produktów z PrestaShop API", "190 kategorii z filtrami", "Koszyk i checkout", "Konto klienta", "GA4 + GTM + edrone", "PWA mobile-first"],
@@ -277,6 +282,7 @@ export const projects: Project[] = [
     status: "live" as ProjectStatus,
     category: "strony-zrobione" as const,
     liveUrl: "https://wks-strona.vercel.app",
+    metric: { pl: "7 podstron · 3 sekcje sportowe", en: "7 pages · 3 sport sections" },
     tech: ["HTML", "CSS", "JavaScript", "Vercel"],
     features: {
       pl: ["7 responsywnych podstron", "Profile trenerów", "Harmonogram treningów", "Galeria zdjęć", "Animacje przejść", "Formularz kontaktowy"],
@@ -310,6 +316,7 @@ export const projects: Project[] = [
     status: "live" as ProjectStatus,
     category: "strony-zrobione" as const,
     liveUrl: "https://www.wsafefinance.pl",
+    metric: { pl: "PL/EN · Email + Telegram lead", en: "PL/EN · Email + Telegram lead" },
     tech: ["Web", "Design", "SEO"],
     features: {
       pl: ["Strona korporacyjna", "Prezentacja usług", "Formularz kontaktowy", "Responsywny design", "Optymalizacja SEO"],
@@ -343,6 +350,7 @@ export const projects: Project[] = [
     status: "live",
     category: "nasze-systemy",
     liveUrl: "https://solvio-lac.vercel.app",
+    metric: { pl: "OCR + AI · iOS + web", en: "OCR + AI · iOS + web" },
     tech: ["Next.js", "TypeScript", "React", "Neon", "Drizzle", "Vercel Blob", "Azure OCR", "OpenAI", "SwiftUI"],
     features: {
       pl: [
@@ -389,6 +397,7 @@ export const projects: Project[] = [
     status: "live",
     category: "nasze-systemy",
     liveUrl: "https://rejestr-pro.vercel.app",
+    metric: { pl: "Dane KRS · iOS + web", en: "KRS data · iOS + web" },
     tech: ["Next.js", "TypeScript", "React", "PostgreSQL", "Swift", "Vercel", "API KRS"],
     features: {
       pl: [

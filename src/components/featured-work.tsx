@@ -106,6 +106,15 @@ function ProjectCard({
         <p className="mt-2 max-w-md text-sm font-light leading-snug text-white/80 line-clamp-2">
           {project.subtitle[lang]}
         </p>
+        {project.metric && (
+          <p
+            className="mt-3 inline-flex w-fit items-center gap-2 text-[11px] md:text-xs font-semibold uppercase tracking-wider text-white/90"
+            style={{ color: project.accentColor }}
+          >
+            <span aria-hidden="true">▸</span>
+            {project.metric[lang]}
+          </p>
+        )}
         <div className="mt-4 flex flex-wrap gap-2 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
           {project.tags.slice(0, 3).map((tag) => (
             <span

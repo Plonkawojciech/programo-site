@@ -46,7 +46,7 @@ export default function About() {
   const { t, lang } = useI18n();
 
   const revealTextContent = lang === "pl"
-    ? "Dwoch builderow. Jedno studio. Budujemy cyfrowa przyszlosc."
+    ? "Dwóch builderów. Jedno studio. Budujemy cyfrową przyszłość."
     : "Two builders. One studio. Building the digital future.";
 
   return (
@@ -83,10 +83,10 @@ export default function About() {
           {/* Stats */}
           <div className="grid grid-cols-2 gap-x-8 gap-y-16 md:gap-20 md:grid-cols-2 lg:grid-cols-4">
             {[
-              { label: t("about.stat.products"), value: "04+" },
+              { label: t("about.stat.products"), value: "07" },
               { label: t("about.stat.founders"), value: "02" },
               { label: t("about.stat.founded"), value: "2026" },
-              { label: t("about.stat.location"), value: "Poznan" },
+              { label: t("about.stat.location"), value: "Poznań" },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -138,7 +138,7 @@ export default function About() {
             >
               <h3 className="text-2xl md:text-5xl font-serif italic text-[var(--theme-alt-text)] font-light leading-relaxed">
                 {lang === "pl"
-                  ? `"Planujemy ogromny rozwoj. Nowe systemy SaaS, miedzynarodowa ekspansja oraz wyznaczanie nowych standardow w cyfrowym designie. To dopiero poczatek naszej drogi."`
+                  ? `"Planujemy ogromny rozwój. Nowe systemy SaaS, międzynarodowa ekspansja oraz wyznaczanie nowych standardów w cyfrowym designie. To dopiero początek naszej drogi."`
                   : `"We are planning massive growth. New SaaS systems, international expansion, and setting new standards in digital design. This is just the beginning of our journey."`}
               </h3>
             </motion.div>
@@ -157,8 +157,8 @@ export default function About() {
           <div className="mt-20 md:mt-48 flex flex-col items-start md:items-center justify-between gap-16 md:gap-20 md:flex-row">
             <div className="flex flex-col gap-16 md:gap-24 w-full md:w-1/2">
               {[
-                { name: "Wojciech Plonka", role: "Design & Product", desc: lang === "pl" ? "Odpowiada za wizje, interfejsy i doswiadczenia uzytkownika." : "Responsible for vision, interfaces, and user experience." },
-                { name: "Bartosz Kolaj", role: "Engineering Lead", desc: lang === "pl" ? "Architekt systemow, dbajacy o perfekcje kodu i wydajnosc." : "Systems architect ensuring code perfection and performance." },
+                { name: "Wojciech Płonka", role: "Design & Product", desc: lang === "pl" ? "Odpowiada za wizję, interfejsy i doświadczenia użytkownika." : "Responsible for vision, interfaces, and user experience." },
+                { name: "Bartosz Kolaj", role: "Engineering Lead", desc: lang === "pl" ? "Architekt systemów, dbający o perfekcję kodu i wydajność." : "Systems architect ensuring code perfection and performance." },
               ].map((f, i) => (
                 <motion.div
                   key={i}

@@ -21,8 +21,8 @@ const translations = {
     en: "We build software that solves real problems.",
   },
   "main.intro.subheadline": {
-    pl: "Dwóch inżynierów z Poznania. Projektujemy, kodujemy i wdrażamy produkty cyfrowe — od pomysłu po działający system.",
-    en: "Two engineers from Poznan. We design, code and ship digital products — from idea to running system.",
+    pl: "Dwóch inżynierów z Poznania. Od pierwszej rozmowy po wdrożenie na produkcję bierzemy odpowiedzialność za całość — projekt, kod i uruchomienie. Bez pośredników.",
+    en: "Two engineers from Poznań. From the first call to production launch, we own the whole thing — design, code and deployment. No middlemen.",
   },
   "main.values.title": { pl: "Co nas wyróżnia", en: "What sets us apart" },
   "main.values.problem.title": { pl: "Realny problem", en: "Real problem" },
@@ -45,20 +45,34 @@ const translations = {
   "main.cta.offer": { pl: "Sprawdź ofertę", en: "Check our offer" },
   "main.cta.pricing": { pl: "Zobacz cennik", en: "See pricing" },
 
+  // Trust / proof bar (homepage, under hero)
+  "trust.eyebrow": { pl: "Co już zbudowaliśmy", en: "What we've already built" },
+  "trust.stat1.value": { pl: "7", en: "7" },
+  "trust.stat1.label": { pl: "Wdrożonych produktów", en: "Products shipped" },
+  "trust.stat2.value": { pl: "100%", en: "100%" },
+  "trust.stat2.label": { pl: "Własny kod, bez podwykonawców", en: "Own code, no subcontractors" },
+  "trust.stat3.value": { pl: "do 24 h", en: "under 24 h" },
+  "trust.stat3.label": { pl: "Czas pierwszej odpowiedzi", en: "First response time" },
+  "trust.stat4.value": { pl: "PL · EN", en: "PL · EN" },
+  "trust.stat4.label": { pl: "Dwujęzyczne wdrożenia", en: "Bilingual delivery" },
+
+  // Sticky mobile CTA
+  "sticky.cta": { pl: "Bezpłatna konsultacja", en: "Free consultation" },
+
   // Projects marquee (main page preview strip)
   "realizations.label": { pl: "Portfolio", en: "Portfolio" },
   "realizations.title": { pl: "Nasze realizacje", en: "Our work" },
   "realizations.subtitle": {
-    pl: "Mały przedsmak tego, co budujemy. Kliknij, żeby zobaczyć szczegóły.",
-    en: "A taste of what we build. Click to see the details.",
+    pl: "Realne systemy, aplikacje i sklepy, które działają na produkcji. Kliknij, żeby zobaczyć szczegóły.",
+    en: "Real systems, apps and stores running in production. Click to see the details.",
   },
   "realizations.viewAll": { pl: "Zobacz wszystkie projekty", en: "See all projects" },
 
   // Quick contact form (main page)
   "quick.title": { pl: "Napisz do nas", en: "Get in touch" },
   "quick.subtitle": {
-    pl: "Wypełnij formularz, a odezwiemy się w ciągu 24 godzin.",
-    en: "Fill out the form and we'll get back to you within 24 hours.",
+    pl: "Opisz w kilku zdaniach, co chcesz zbudować. Odezwiemy się w ciągu 24 godzin z konkretnymi pytaniami i propozycją kolejnego kroku.",
+    en: "Tell us in a few sentences what you want to build. We'll reply within 24 hours with concrete questions and a suggested next step.",
   },
   "quick.name": { pl: "Imię i nazwisko", en: "Your name" },
   "quick.email": { pl: "Email", en: "Email" },
@@ -69,12 +83,40 @@ const translations = {
   "quick.sent": { pl: "Wysłano! Odezwiemy się wkrótce.", en: "Sent! We'll be in touch soon." },
   "quick.error": { pl: "Coś poszło nie tak. Spróbuj ponownie.", en: "Something went wrong. Try again." },
 
+  // Quick contact — project type chips
+  "quick.typeLabel": { pl: "Czego potrzebujesz?", en: "What do you need?" },
+  "quick.type.web": { pl: "Strona / landing", en: "Website / landing" },
+  "quick.type.saas": { pl: "Aplikacja SaaS", en: "SaaS app" },
+  "quick.type.mobile": { pl: "Aplikacja mobilna", en: "Mobile app" },
+  "quick.type.ai": { pl: "Integracja AI", en: "AI integration" },
+  "quick.type.other": { pl: "Coś innego", en: "Something else" },
+
+  // Quick contact — budget chips
+  "quick.budgetLabel": { pl: "Orientacyjny budżet (opcjonalnie)", en: "Approx. budget (optional)" },
+  "quick.budget.s": { pl: "do 10 tys. zł", en: "up to €2.5k" },
+  "quick.budget.m": { pl: "10–30 tys. zł", en: "€2.5k–7k" },
+  "quick.budget.l": { pl: "30–80 tys. zł", en: "€7k–18k" },
+  "quick.budget.xl": { pl: "powyżej 80 tys. zł", en: "€18k+" },
+  "quick.budget.unsure": { pl: "Jeszcze nie wiem", en: "Not sure yet" },
+
+  // Quick contact — trust microcopy + success next-step
+  "quick.trust": {
+    pl: "Odpowiadamy w ciągu 24 h · Konsultacja bez zobowiązań · Twoje dane są bezpieczne (RODO)",
+    en: "We reply within 24 h · No-obligation consultation · Your data is safe (GDPR)",
+  },
+  "quick.successTitle": { pl: "Dziękujemy — wiadomość dotarła.", en: "Thank you — your message arrived." },
+  "quick.successBody": {
+    pl: "Przeczytamy ją osobiście i odezwiemy się w ciągu 24 godzin (zwykle szybciej). Jeśli sprawa jest pilna, zadzwoń — numery masz obok.",
+    en: "We'll read it personally and get back to you within 24 hours (usually sooner). If it's urgent, just call — numbers are next to this form.",
+  },
+  "quick.successAgain": { pl: "Wyślij kolejną wiadomość", en: "Send another message" },
+
   // Offer page
   "offer.label": { pl: "Co robimy", en: "What we do" },
   "offer.title": { pl: "Oferta", en: "Services" },
   "offer.desc": {
-    pl: "Budujemy kompletne produkty cyfrowe. Niezależnie od skali — od MVP po skalowalne platformy SaaS.",
-    en: "We build complete digital products. From MVPs to scalable SaaS platforms.",
+    pl: "Projektujemy i budujemy kompletne produkty cyfrowe — strony, aplikacje webowe i mobilne, systemy SaaS oraz integracje AI. Od MVP po platformy gotowe na skalę.",
+    en: "We design and build complete digital products — websites, web and mobile apps, SaaS systems and AI integrations. From MVP to platforms ready to scale.",
   },
   "offer.web.title": { pl: "Strony internetowe", en: "Websites" },
   "offer.web.desc": {
