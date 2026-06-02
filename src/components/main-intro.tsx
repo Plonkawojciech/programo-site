@@ -38,7 +38,7 @@ export default function MainIntro() {
     <section className="relative bg-surface py-24 md:py-32 lg:py-40">
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         {/* Headline */}
-        <div className="max-w-5xl">
+        <div className="max-w-5xl 2xl:max-w-6xl">
           <motion.span
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -50,7 +50,7 @@ export default function MainIntro() {
             initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 font-headline text-4xl md:text-7xl 2xl:text-[6vw] font-bold tracking-tighter text-on-surface leading-[1.05]"
+            className="mt-6 font-headline text-4xl md:text-7xl 2xl:text-[clamp(4.5rem,5vw,6rem)] font-bold tracking-tighter text-on-surface leading-[1.05]"
           >
             {t("main.intro.headline")}
           </motion.h1>
