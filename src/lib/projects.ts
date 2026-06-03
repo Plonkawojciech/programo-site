@@ -257,7 +257,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
-    screenshots: ["/screenshots/jedmar-hero.png"],
+    screenshots: ["/screenshots/jedmar-hero.png", "/screenshots/jedmar-clean1.png", "/screenshots/jedmar-clean2.png"],
   },
   {
     slug: "wks-poznan",
@@ -290,7 +290,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
-    screenshots: ["/screenshots/wks-hero.png"],
+    screenshots: ["/screenshots/wks-hero.png", "/screenshots/wks-cap2.png", "/screenshots/wks-cap3.png"],
   },
   {
     slug: "wsafefinanse",
@@ -323,7 +323,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
-    screenshots: ["/screenshots/wsafefinanse-hero.png"],
+    screenshots: ["/screenshots/wsafefinanse-hero.png", "/screenshots/wsafefinanse-cap2.png", "/screenshots/wsafefinanse-cap3.png"],
   },
   {
     slug: "solvio",
@@ -370,6 +370,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
+    screenshots: ["/screenshots/solvio-hero.png", "/screenshots/solvio-cap2.png", "/screenshots/solvio-cap3.png"],
   },
   {
     slug: "rejestr-pro",
@@ -416,6 +417,7 @@ export const projects: Project[] = [
       pl: "Programo — projektowanie i development",
       en: "Programo — design and development",
     },
+    screenshots: ["/screenshots/rejestr-pro-hero.png", "/screenshots/rejestr-pro-cap2.png", "/screenshots/rejestr-pro-cap4.png"],
   }
 ];
 
