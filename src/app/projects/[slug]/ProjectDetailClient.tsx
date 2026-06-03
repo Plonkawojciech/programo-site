@@ -6,17 +6,18 @@ import Link from "next/link";
 import { useRef } from "react";
 import { I18nProvider, useI18n } from "@/lib/i18n";
 import { getProjectBySlug, getAdjacentProjects, type Project, type SubProduct } from "@/lib/projects";
+import { useSmoothInput } from "@/lib/use-smooth-input";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
-function ParallaxImage({ src, alt, speed = 0.5, className = "" }: { src: string, alt: string, speed?: number, className?: string }) {
+function ParallaxImage({ src, alt, speed = 0.5, className = "", enabled = true }: { src: string, alt: string, speed?: number, className?: string, enabled?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [-100 * speed, 100 * speed]);
   
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
-      <motion.div style={{ y, scale: 1.15 }} className="absolute inset-0 w-full h-full origin-center">
+      <motion.div style={{ y: enabled ? y : 0, scale: enabled ? 1.15 : 1 }} className="absolute inset-0 w-full h-full origin-center">
         <Image src={src} alt={alt} fill className="object-cover" />
       </motion.div>
     </div>
@@ -76,6 +77,7 @@ function ProjectContent({ slug }: { slug: string }) {
   const { t, lang } = useI18n();
   const project = getProjectBySlug(slug);
   const { prev, next } = getAdjacentProjects(slug);
+  const smooth = useSmoothInput();
   
   const headerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -115,7 +117,7 @@ function ProjectContent({ slug }: { slug: string }) {
                  </div>
                </motion.div>
              ) : project.screenshots?.[0] ? (
-               <ProjectImage src={project.screenshots[0]} alt={project.title} priority={true} parallaxY={headerY} accentColor={project.accentColor} scale={smoothImageScale} />
+               <ProjectImage src={project.screenshots[0]} alt={project.title} priority={true} parallaxY={smooth ? headerY : 0} accentColor={project.accentColor} scale={smooth ? smoothImageScale : 1} />
              ) : (
                <div className="h-full w-full bg-[#0A0A0A]" />
              )}
@@ -262,7 +264,7 @@ function ProjectContent({ slug }: { slug: string }) {
                 transition={{ duration: 1.2 }}
                 className="md:col-span-8 relative aspect-[16/10] overflow-hidden rounded-2xl md:rounded-3xl"
               >
-                <ParallaxImage src={project.screenshots[1]} alt={`${project.title} — zrzut ekranu`} className="w-full h-full" speed={0.2} />
+                <ParallaxImage src={project.screenshots[1]} alt={`${project.title} — zrzut ekranu`} className="w-full h-full" speed={0.2} enabled={smooth} />
               </motion.div>
 
               {project.screenshots[2] && (
@@ -273,7 +275,7 @@ function ProjectContent({ slug }: { slug: string }) {
                   transition={{ duration: 1.2, delay: 0.2 }}
                   className="md:col-span-4 relative aspect-[4/5] overflow-hidden rounded-2xl md:rounded-3xl md:mt-24"
                 >
-                  <ParallaxImage src={project.screenshots[2]} alt={`${project.title} — interfejs`} className="w-full h-full" speed={0.3} />
+                  <ParallaxImage src={project.screenshots[2]} alt={`${project.title} — interfejs`} className="w-full h-full" speed={0.3} enabled={smooth} />
                 </motion.div>
               )}
             </div>
