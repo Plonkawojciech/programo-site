@@ -125,9 +125,9 @@ const projects = [
     desc: "SaaS do śledzenia wydatków z AI — OCR paragonów, grupy kosztów, porównywarka cen, raporty.",
   },
   {
-    name: "Athlix",
-    slug: "athlix",
-    desc: "WHOOP alternative — analityka regeneracji, HRV, AI coaching, sync z Garmin/Strava.",
+    name: "Pool System",
+    slug: "pool-system",
+    desc: "Innowacyjny system timingowy z aplikacją mobilną — hardware + software. Wkrótce.",
   },
   {
     name: "Rejestr Pro",
@@ -292,7 +292,7 @@ export default function SoftwareHousePoznanPage() {
                 </h3>
                 <p className="opacity-75">
                   Butikowy zespół, własne produkty SaaS w portfolio (Estalo, Solvio,
-                  Rejestr Pro, Athlix), AI-first podejście, bezpośredni kontakt z założycielami.
+                  Rejestr Pro, Pool System), AI-first podejście, bezpośredni kontakt z założycielami.
                   Nie jesteśmy outsourcingową fabryką — budujemy partnerstwa.
                 </p>
               </div>

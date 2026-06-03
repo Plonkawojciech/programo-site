@@ -92,6 +92,11 @@ function ProjectCard({
             <span aria-hidden="true">↗</span>
           </a>
         )}
+        {project.status !== "live" && (
+          <span className="rounded-full border border-white/30 bg-black/45 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-sm">
+            {lang === "pl" ? "Wkrótce" : "Coming soon"}
+          </span>
+        )}
       </div>
 
       {/* Content */}

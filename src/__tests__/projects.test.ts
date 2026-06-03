@@ -3,15 +3,15 @@ import { projects, getProjectBySlug, getAdjacentProjects } from "@/lib/projects"
 
 const EXPECTED_SLUGS = [
   "estalo",
-  "athlix",
   "jedmar",
   "wks-poznan",
   "wsafefinanse",
   "solvio",
   "rejestr-pro",
+  "pool-system",
 ];
 
-const REMOVED_SLUGS = ["baulx", "learnai", "ks-posnania"];
+const REMOVED_SLUGS = ["baulx", "learnai", "ks-posnania", "athlix"];
 
 describe("projects data", () => {
   it("contains the expected projects", () => {

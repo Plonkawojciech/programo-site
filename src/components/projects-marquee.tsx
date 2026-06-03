@@ -11,8 +11,8 @@ import { projects, type Project } from "@/lib/projects";
 const MARQUEE_SLUGS = [
   "estalo",
   "solvio",
-  "athlix",
   "rejestr-pro",
+  "pool-system",
   "jedmar",
   "wks-poznan",
   "wsafefinanse",
@@ -56,6 +56,13 @@ function ProjectTile({ project }: { project: Project }) {
         className="absolute top-0 left-0 right-0 h-1 opacity-80"
         style={{ backgroundColor: project.accentColor }}
       />
+
+      {/* Coming-soon badge for non-live projects */}
+      {project.status !== "live" && (
+        <span className="absolute right-4 top-4 z-20 rounded-full border border-white/30 bg-black/50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest text-white backdrop-blur-sm">
+          {lang === "pl" ? "Wkrótce" : "Coming soon"}
+        </span>
+      )}
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-7 text-white">

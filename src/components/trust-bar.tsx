@@ -17,7 +17,6 @@ const stats: { valueKey: TKey; labelKey: TKey }[] = [
 // Real, shipped products — wordmark strip links straight to each case study.
 const WORDMARK_SLUGS = [
   "estalo",
-  "athlix",
   "jedmar",
   "solvio",
   "rejestr-pro",
