@@ -4,6 +4,8 @@ import "./globals.css";
 import Providers from "@/components/providers";
 
 const GA_ID = "G-TGLPLMVV91";
+// Google Ads conversion tracking (gated by marketing consent via Consent Mode v2 above)
+const ADS_ID = "AW-18196600478";
 const CLARITY_ID = "wxezq44wx0";
 
 
@@ -132,7 +134,7 @@ export default function RootLayout({
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
         <script
           dangerouslySetInnerHTML={{
-            __html: `gtag('js', new Date());gtag('config', '${GA_ID}');`,
+            __html: `gtag('js', new Date());gtag('config', '${GA_ID}');gtag('config', '${ADS_ID}');`,
           }}
         />
         {/* Microsoft Clarity — only loaded if user has granted analytics consent */}

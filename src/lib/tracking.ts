@@ -96,7 +96,21 @@ export function getAttribution(): Attribution {
   }
 }
 
-/** GA4 lead conversion event. `form` identifies the source form. */
+/**
+ * Google Ads conversion: "Przesłanie formularza kontaktowego" (lead).
+ * Account 561-045-3845. Fires only after marketing consent (Consent Mode v2).
+ */
+const ADS_CONVERSION_LEAD = "AW-18196600478/tYIqCM3A_rkcEJ6t6ORD";
+
+function trackAdsConversion(): void {
+  gtag("event", "conversion", {
+    send_to: ADS_CONVERSION_LEAD,
+    value: 1.0,
+    currency: "PLN",
+  });
+}
+
+/** GA4 lead conversion event + Google Ads conversion. `form` identifies the source form. */
 export function trackLead(detail: { form: string; method?: string }): void {
   const attr = getAttribution();
   gtag("event", "generate_lead", {
@@ -106,9 +120,11 @@ export function trackLead(detail: { form: string; method?: string }): void {
     campaign: attr.utm_campaign,
     gclid: attr.gclid,
   });
+  trackAdsConversion();
 }
 
-/** GA4 event for clicks on phone / email links anywhere on the site. */
+/** GA4 event for clicks on phone / email links anywhere on the site, + Google Ads conversion. */
 export function trackContactClick(method: "phone" | "email", url: string): void {
   gtag("event", "contact_click", { method, link_url: url });
+  trackAdsConversion();
 }
