@@ -22,6 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     {
+      url: "https://programo.pl/strony-internetowe",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
       url: "https://programo.pl/ile-kosztuje-aplikacji",
       lastModified: new Date(),
       changeFrequency: "monthly",
