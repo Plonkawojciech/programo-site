@@ -282,12 +282,6 @@ export default function IleKosztujeAplikacjiPage() {
                 Bezpłatna wycena
               </Link>
               <Link
-                href="/audyt"
-                className="rounded-full border border-current/30 px-6 py-3 text-sm font-medium opacity-85 transition hover:opacity-100"
-              >
-                Darmowy audyt strony
-              </Link>
-              <Link
                 href="/software-house-poznan"
                 className="rounded-full border border-current/30 px-6 py-3 text-sm font-medium opacity-85 transition hover:opacity-100"
               >

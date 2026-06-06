@@ -16,7 +16,6 @@ const footerLinks: { href: string; label: { pl: string; en: string } }[] = [
   { href: "/o-nas", label: { pl: "O nas", en: "About" } },
   { href: "/software-house-poznan", label: { pl: "Software House Poznań", en: "Software House Poznań" } },
   { href: "/ile-kosztuje-aplikacji", label: { pl: "Ile kosztuje aplikacja", en: "App cost" } },
-  { href: "/audyt", label: { pl: "Darmowy audyt", en: "Free audit" } },
   { href: "/kontakt", label: { pl: "Kontakt", en: "Contact" } },
 ];
 

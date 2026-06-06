@@ -111,8 +111,8 @@ const services = [
     desc: "Allegro, BaseLinker, płatności (Przelewy24, Stripe), kurierzy, systemy ERP i fakturowanie (KSeF). Sklep, który dogaduje się z resztą firmy.",
   },
   {
-    title: "Aplikacje i PWA do sklepów",
-    desc: "Szybkie aplikacje mobilne / PWA dla Twojego sklepu — instalacja z przeglądarki, tryb offline, powiadomienia push.",
+    title: "Aplikacje mobilne do sklepów",
+    desc: "Natywne aplikacje iOS + Android dla Twojego sklepu (Capacitor) — katalog, koszyk i zamówienia z telefonu, spięte z backendem sklepu.",
   },
   {
     title: "Headless i wydajność",
@@ -181,13 +181,17 @@ export default function SklepyInternetowePage() {
                 >
                   Bezpłatna wycena
                 </Link>
-                <Link
-                  href="/projects/jedmar"
+                <a
+                  href="tel:+48509123434"
                   className="rounded-full border border-current/30 px-6 py-3 text-sm font-medium opacity-85 transition hover:opacity-100"
                 >
-                  Zobacz realizację: Jedmar
-                </Link>
+                  Zadzwoń: 509 123 434
+                </a>
               </div>
+              <p className="mt-5 text-sm opacity-60">
+                Realizacje: Jedmar · Estalo · WKS Poznań · WSafe Finanse — z
+                bezpośrednim kontaktem z założycielami.
+              </p>
             </div>
             <div className="relative aspect-[16/11] overflow-hidden rounded-2xl border border-current/15 bg-[rgba(var(--theme-text-1-rgb,218,241,222),0.04)]">
               <Image
@@ -224,21 +228,22 @@ export default function SklepyInternetowePage() {
               Realizacja
             </p>
             <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
-              Jedmar — sklep dla centrum narzędziowego
+              Jedmar — aplikacja mobilna do sklepu narzędziowego
             </h2>
             <p className="mb-6 max-w-3xl leading-relaxed opacity-80">
-              Nowoczesny frontend e-commerce w Next.js 15 na istniejącym
-              PrestaShop. 1460 produktów, 190 kategorii, 32 marki, koszyk i
-              checkout przez API, konto klienta, analityka (GA4, GTM, edrone) i
-              PWA mobile-first.
+              Natywna aplikacja mobilna iOS + Android (Capacitor) dla Jedmar
+              Centrum Narzędziowe — zakupy z telefonu: katalog 1460 produktów
+              (190 kategorii, 32 marki), koszyk, konto klienta i zamówienia,
+              spięte z backendem sklepu (PrestaShop). Zlecenie: aplikacja do
+              istniejącego sklepu — nie cały sklep.
             </p>
             <div className="flex flex-wrap gap-2">
               {[
-                "Next.js 15",
+                "iOS + Android (Capacitor)",
                 "PrestaShop API",
                 "1460 produktów",
-                "PWA mobile-first",
-                "GA4 + GTM + edrone",
+                "Next.js",
+                "Mobile-first",
               ].map((chip) => (
                 <span
                   key={chip}
@@ -299,12 +304,12 @@ export default function SklepyInternetowePage() {
               >
                 Bezpłatna wycena
               </Link>
-              <Link
-                href="/ile-kosztuje-aplikacji"
+              <a
+                href="tel:+48509123434"
                 className="rounded-full border border-current/30 px-6 py-3 text-sm font-medium opacity-85 transition hover:opacity-100"
               >
-                Ile to kosztuje?
-              </Link>
+                Zadzwoń: 509 123 434
+              </a>
             </div>
           </section>
         </article>
