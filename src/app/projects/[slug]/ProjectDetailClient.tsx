@@ -222,7 +222,7 @@ function ProjectContent({ slug }: { slug: string }) {
                    {project.liveUrl && (
                      <div className="flex items-end sm:justify-end">
                        <a href={project.liveUrl} target="_blank" className="group inline-flex items-center gap-3 border-b border-[#0A0A0A] pb-1">
-                          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0A0A0A]">Live Site</span>
+                          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0A0A0A]">{project.status === "live" ? "Live Site" : "Podgląd"}</span>
                           <span className="transform transition-transform group-hover:translate-x-2 group-hover:-translate-y-2">↗</span>
                        </a>
                      </div>
