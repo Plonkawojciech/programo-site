@@ -28,6 +28,8 @@ export default function Navbar() {
 
   const navLinks = [
     { label: t("nav.offer"), href: "/oferta", section: "oferta" },
+    { label: t("nav.websites"), href: "/strony-internetowe", section: "strony-internetowe" },
+    { label: t("nav.stores"), href: "/sklepy-internetowe", section: "sklepy-internetowe" },
     { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
     { label: t("nav.work"), href: "/projekty", section: "projekty" },
     { label: t("nav.about"), href: "/o-nas", section: "o-nas" },

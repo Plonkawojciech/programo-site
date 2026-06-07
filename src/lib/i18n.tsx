@@ -11,6 +11,8 @@ const translations = {
   "nav.stack": { pl: "Technologie", en: "Stack" },
   "nav.contact": { pl: "Kontakt", en: "Contact" },
   "nav.offer": { pl: "Oferta", en: "Services" },
+  "nav.websites": { pl: "Strony WWW", en: "Websites" },
+  "nav.stores": { pl: "Sklepy", en: "Stores" },
   "nav.pricing": { pl: "Cennik", en: "Pricing" },
   "nav.cta": { pl: "Napisz do nas", en: "Get in touch" },
 
@@ -122,6 +124,11 @@ const translations = {
   "offer.web.desc": {
     pl: "Nowoczesne strony firmowe, landing page'e i portale. Szybkie, SEO-friendly, gotowe do skalowania.",
     en: "Modern company sites, landing pages and portals. Fast, SEO-friendly, ready to scale.",
+  },
+  "offer.ecommerce.title": { pl: "Sklepy internetowe", en: "Online stores" },
+  "offer.ecommerce.desc": {
+    pl: "Sklepy WooCommerce, Shopify, PrestaShop i headless. Migracje, integracje (Allegro, BaseLinker, płatności) i aplikacje mobilne do sklepu.",
+    en: "WooCommerce, Shopify, PrestaShop and headless stores. Migrations, integrations (Allegro, BaseLinker, payments) and mobile store apps.",
   },
   "offer.saas.title": { pl: "Aplikacje SaaS", en: "SaaS applications" },
   "offer.saas.desc": {

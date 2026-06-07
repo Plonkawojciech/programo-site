@@ -10,18 +10,20 @@ interface OfferItem {
   titleKey: TKey;
   descKey: TKey;
   number: string;
+  href?: string;
 }
 
 const offerItems: OfferItem[] = [
-  { titleKey: "offer.web.title", descKey: "offer.web.desc", number: "01" },
-  { titleKey: "offer.saas.title", descKey: "offer.saas.desc", number: "02" },
-  { titleKey: "offer.mobile.title", descKey: "offer.mobile.desc", number: "03" },
-  { titleKey: "offer.ai.title", descKey: "offer.ai.desc", number: "04" },
-  { titleKey: "offer.consulting.title", descKey: "offer.consulting.desc", number: "05" },
+  { titleKey: "offer.web.title", descKey: "offer.web.desc", number: "01", href: "/strony-internetowe" },
+  { titleKey: "offer.ecommerce.title", descKey: "offer.ecommerce.desc", number: "02", href: "/sklepy-internetowe" },
+  { titleKey: "offer.saas.title", descKey: "offer.saas.desc", number: "03" },
+  { titleKey: "offer.mobile.title", descKey: "offer.mobile.desc", number: "04" },
+  { titleKey: "offer.ai.title", descKey: "offer.ai.desc", number: "05" },
+  { titleKey: "offer.consulting.title", descKey: "offer.consulting.desc", number: "06" },
 ];
 
 export default function Offer() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   return (
     <section className="relative bg-surface py-24 md:py-32 lg:py-40">
@@ -75,6 +77,19 @@ export default function Offer() {
               <p className="mt-6 text-base md:text-lg font-light leading-relaxed text-on-surface/70">
                 {t(item.descKey)}
               </p>
+              {item.href && (
+                <>
+                  <span className="mt-6 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-primary">
+                    {lang === "pl" ? "Zobacz" : "See"}
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </span>
+                  <Link
+                    href={item.href}
+                    aria-label={t(item.titleKey)}
+                    className="absolute inset-0"
+                  />
+                </>
+              )}
             </motion.div>
           ))}
 
