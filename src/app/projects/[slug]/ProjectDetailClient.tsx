@@ -4,12 +4,10 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { I18nProvider, useI18n } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import type { Lang } from "@/lib/i18n";
 import { getProjectBySlug, getAdjacentProjects, type Project, type SubProduct } from "@/lib/projects";
 import { useSmoothInput } from "@/lib/use-smooth-input";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 
 function ParallaxImage({ src, alt, speed = 0.5, className = "", enabled = true }: { src: string, alt: string, speed?: number, className?: string, enabled?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -176,9 +174,7 @@ function ProjectContent({ slug }: { slug: string }) {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] text-[#0A0A0A] selection:bg-primary/20 selection:text-primary overflow-x-hidden">
-      <Navbar />
-
-      <main>
+      <div>
         {/* Cinematic Hero - Massive Typography Overlap */}
         <section ref={headerRef} className="relative h-screen w-full overflow-hidden bg-[#0A0A0A]">
           <motion.div className="absolute inset-0 h-full w-full">
@@ -462,17 +458,11 @@ function ProjectContent({ slug }: { slug: string }) {
             </Link>
           </section>
         )}
-      </main>
-
-      {!next && <Footer />}
+      </div>
     </div>
   );
 }
 
 export default function ProjectDetailClient({ slug }: { slug: string }) {
-  return (
-    <I18nProvider>
-      <ProjectContent slug={slug} />
-    </I18nProvider>
-  );
+  return <ProjectContent slug={slug} />;
 }
