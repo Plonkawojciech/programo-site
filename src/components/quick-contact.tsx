@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
@@ -39,14 +39,19 @@ export default function QuickContact() {
   const [consent, setConsent] = useState(false);
   const [projectType, setProjectType] = useState<TKey | null>(null);
   const [budget, setBudget] = useState<TKey | null>(null);
+  // Guards the primary Google Ads "Lead" conversion against a double-fire from a
+  // rapid double-submit (before the button's disabled state applies) or any re-render race.
+  const submittingRef = useRef(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submittingRef.current) return;
     if (!consent) {
       setErrorMsg(t("quick.consentRequired"));
       setState("error");
       return;
     }
+    submittingRef.current = true;
     setState("submitting");
     setErrorMsg("");
 
@@ -77,6 +82,8 @@ export default function QuickContact() {
         return;
       }
 
+      // Success branch only (API returned ok) — fire the primary Google Ads "Lead"
+      // conversion exactly once per successful submit.
       setState("success");
       trackLead({ form: "quick-contact" });
       (e.target as HTMLFormElement).reset();
@@ -86,6 +93,8 @@ export default function QuickContact() {
     } catch {
       setErrorMsg(t("quick.error"));
       setState("error");
+    } finally {
+      submittingRef.current = false;
     }
   }
 

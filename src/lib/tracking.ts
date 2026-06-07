@@ -110,7 +110,12 @@ function trackAdsConversion(): void {
   });
 }
 
-/** GA4 lead conversion event + Google Ads conversion. `form` identifies the source form. */
+/**
+ * GA4 lead conversion event + Google Ads "Lead" conversion. `form` identifies the source form.
+ *
+ * Form submit = primary Google Ads Lead conversion. Phone/email clicks = GA4-only secondary
+ * signal; a dedicated Ads call-click conversion action can be added later.
+ */
 export function trackLead(detail: { form: string; method?: string }): void {
   const attr = getAttribution();
   gtag("event", "generate_lead", {
@@ -123,8 +128,13 @@ export function trackLead(detail: { form: string; method?: string }): void {
   trackAdsConversion();
 }
 
-/** GA4 event for clicks on phone / email links anywhere on the site, + Google Ads conversion. */
+/**
+ * GA4 event for clicks on phone / email links anywhere on the site.
+ *
+ * Form submit = primary Google Ads Lead conversion. Phone/email clicks = GA4-only secondary
+ * signal; a dedicated Ads call-click conversion action can be added later. Deliberately does
+ * NOT fire the Google Ads "Lead" conversion label so the primary lead signal stays clean.
+ */
 export function trackContactClick(method: "phone" | "email", url: string): void {
   gtag("event", "contact_click", { method, link_url: url });
-  trackAdsConversion();
 }
