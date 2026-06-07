@@ -11,6 +11,8 @@ import { fadeInUp } from "@/lib/motion";
 
 const footerLinks: { href: string; label: { pl: string; en: string } }[] = [
   { href: "/oferta", label: { pl: "Oferta", en: "Services" } },
+  { href: "/strony-internetowe", label: { pl: "Strony internetowe", en: "Websites" } },
+  { href: "/sklepy-internetowe", label: { pl: "Sklepy internetowe", en: "Online stores" } },
   { href: "/cennik", label: { pl: "Cennik", en: "Pricing" } },
   { href: "/projekty", label: { pl: "Projekty", en: "Projects" } },
   { href: "/o-nas", label: { pl: "O nas", en: "About" } },

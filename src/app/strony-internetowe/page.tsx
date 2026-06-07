@@ -136,13 +136,13 @@ export default function StronyInternetowePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <main className="min-h-screen bg-[var(--theme-bg-1,#051F20)] text-[var(--theme-text-1,#DAF1DE)]">
-        <article className="mx-auto max-w-5xl px-6 py-16 md:px-10 md:py-24">
+      <div className="min-h-screen bg-surface text-on-surface">
+        <article className="mx-auto max-w-5xl px-6 pt-28 pb-20 md:px-10 md:pt-32 md:pb-28">
           <nav
             aria-label="breadcrumb"
-            className="mb-8 text-xs uppercase tracking-widest opacity-60"
+            className="mb-8 text-xs uppercase tracking-widest text-on-surface-variant"
           >
-            <Link href="/" className="hover:underline">
+            <Link href="/" className="hover:text-on-surface transition-colors">
               Programo
             </Link>
             <span className="mx-2">/</span>
@@ -151,13 +151,13 @@ export default function StronyInternetowePage() {
 
           {/* Hero */}
           <header className="mb-14">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] opacity-60">
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] text-primary">
               Strony WWW · Poznań · cała Polska
             </p>
             <h1 className="mb-6 max-w-3xl font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl">
               Strony internetowe, które pracują na Twój biznes
             </h1>
-            <p className="max-w-2xl text-lg leading-relaxed opacity-85 md:text-xl">
+            <p className="max-w-2xl text-lg leading-relaxed text-on-surface-variant md:text-xl">
               Projektujemy i budujemy nowoczesne strony firmowe, landing page
               i serwisy w Next.js — szybkie (Core Web Vitals), pod SEO i pod
               konwersję. Bez szablonów z półki: strona skrojona pod Twój cel.
@@ -165,18 +165,18 @@ export default function StronyInternetowePage() {
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 href="/kontakt"
-                className="rounded-full bg-[var(--theme-accent,#235347)] px-6 py-3 text-sm font-semibold text-[var(--theme-bg-1,#051F20)] transition hover:opacity-90"
+                className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
               >
                 Bezpłatna wycena
               </Link>
               <a
                 href="tel:+48509123434"
-                className="rounded-full border border-current/30 px-6 py-3 text-sm font-medium opacity-85 transition hover:opacity-100"
+                className="rounded-full border border-outline px-6 py-3 text-sm font-medium text-on-surface-variant transition hover:text-on-surface"
               >
                 Zadzwoń: 509 123 434
               </a>
             </div>
-            <p className="mt-5 text-sm opacity-60">
+            <p className="mt-5 text-sm text-on-surface-variant">
               Realizacje: Estalo · WKS Poznań · WSafe Finanse · Jedmar — z
               bezpośrednim kontaktem z założycielami.
             </p>
@@ -191,24 +191,24 @@ export default function StronyInternetowePage() {
               {services.map((s) => (
                 <div
                   key={s.title}
-                  className="rounded-2xl border border-current/15 p-6 transition hover:border-current/30"
+                  className="rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6 transition hover:border-outline"
                 >
                   <h3 className="mb-3 text-xl font-semibold">{s.title}</h3>
-                  <p className="text-sm leading-relaxed opacity-75">{s.desc}</p>
+                  <p className="text-sm leading-relaxed text-on-surface-variant">{s.desc}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* Dlaczego my */}
-          <section className="mb-16 rounded-3xl border border-current/15 p-8 md:p-12">
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] opacity-60">
+          <section className="mb-16 rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:p-12">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-primary">
               Dlaczego Programo
             </p>
             <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
               Nowoczesny stack, butikowe podejście
             </h2>
-            <p className="mb-6 max-w-3xl leading-relaxed opacity-80">
+            <p className="mb-6 max-w-3xl leading-relaxed text-on-surface-variant">
               Jesteśmy dwuosobowym studiem z Poznania — pracujesz bezpośrednio z
               założycielami, bez warstw pośredników. Budujemy w Next.js / React /
               TypeScript, z naciskiem na szybkość, dostępność i realny efekt
@@ -225,7 +225,7 @@ export default function StronyInternetowePage() {
               ].map((chip) => (
                 <span
                   key={chip}
-                  className="rounded-full border border-current/20 px-4 py-1.5 text-sm opacity-80"
+                  className="rounded-full border border-outline-variant/60 px-4 py-1.5 text-sm text-on-surface-variant"
                 >
                   {chip}
                 </span>
@@ -234,7 +234,7 @@ export default function StronyInternetowePage() {
             <div className="mt-6">
               <Link
                 href="/projekty"
-                className="text-sm font-medium underline underline-offset-4 opacity-80 hover:opacity-100"
+                className="text-sm font-medium text-primary underline underline-offset-4 transition hover:text-on-surface"
               >
                 Zobacz nasze realizacje →
               </Link>
@@ -248,12 +248,12 @@ export default function StronyInternetowePage() {
             </h2>
             <div className="grid gap-6 md:grid-cols-3">
               {steps.map(([num, title, desc]) => (
-                <div key={num} className="rounded-2xl border border-current/15 p-6">
-                  <div className="mb-3 font-headline text-3xl font-bold opacity-30">
+                <div key={num} className="rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6">
+                  <div className="mb-3 font-headline text-3xl font-bold text-primary/40">
                     {num}
                   </div>
                   <h3 className="mb-2 text-lg font-semibold">{title}</h3>
-                  <p className="text-sm leading-relaxed opacity-75">{desc}</p>
+                  <p className="text-sm leading-relaxed text-on-surface-variant">{desc}</p>
                 </div>
               ))}
             </div>
@@ -268,38 +268,38 @@ export default function StronyInternetowePage() {
               {faqs.map((f) => (
                 <div key={f.q}>
                   <h3 className="mb-2 text-lg font-semibold">{f.q}</h3>
-                  <p className="leading-relaxed opacity-75">{f.a}</p>
+                  <p className="leading-relaxed text-on-surface-variant">{f.a}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* CTA */}
-          <section className="rounded-3xl border border-current/15 p-8 md:p-12">
+          <section className="rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:p-12">
             <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
               Zróbmy stronę, która sprzedaje
             </h2>
-            <p className="mb-6 max-w-2xl opacity-80">
+            <p className="mb-6 max-w-2xl text-on-surface-variant">
               Opisz projekt w 2 minuty — wrócimy z planem i wyceną. Poznań,
               Wielkopolska i cała Polska. Odpowiadamy w ciągu 24 godzin.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/kontakt"
-                className="rounded-full bg-[var(--theme-accent,#235347)] px-6 py-3 text-sm font-semibold text-[var(--theme-bg-1,#051F20)] transition hover:opacity-90"
+                className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
               >
                 Bezpłatna wycena
               </Link>
               <a
                 href="tel:+48509123434"
-                className="rounded-full border border-current/30 px-6 py-3 text-sm font-medium opacity-85 transition hover:opacity-100"
+                className="rounded-full border border-outline px-6 py-3 text-sm font-medium text-on-surface-variant transition hover:text-on-surface"
               >
                 Zadzwoń: 509 123 434
               </a>
             </div>
           </section>
         </article>
-      </main>
+      </div>
     </>
   );
 }

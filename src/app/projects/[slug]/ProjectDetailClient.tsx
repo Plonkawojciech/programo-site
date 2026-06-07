@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { I18nProvider, useI18n } from "@/lib/i18n";
+import type { Lang } from "@/lib/i18n";
 import { getProjectBySlug, getAdjacentProjects, type Project, type SubProduct } from "@/lib/projects";
 import { useSmoothInput } from "@/lib/use-smooth-input";
 import Navbar from "@/components/navbar";
@@ -70,6 +71,84 @@ function ProjectImage({ src, alt, priority = false, parallaxY = 0, accentColor, 
         className="object-cover opacity-70 blur-2xl scale-110"
       />
     </motion.div>
+  );
+}
+
+// Single App-Store-style phone mockup: rounded bezel + notch, screenshot inside.
+function PhoneFrame({ src, alt, priority = false }: { src: string; alt: string; priority?: boolean }) {
+  return (
+    <div className="relative mx-auto w-[220px] sm:w-[230px] lg:w-[250px]">
+      {/* Device body — dark bezel with rounded corners */}
+      <div className="relative aspect-[9/19.5] rounded-[2.6rem] bg-[#0A0A0A] p-[3px] shadow-2xl ring-1 ring-white/10">
+        {/* Inner screen */}
+        <div className="relative h-full w-full overflow-hidden rounded-[2.4rem] bg-[#0A0A0A]">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            priority={priority}
+            sizes="260px"
+            className="object-cover object-top"
+          />
+          {/* Notch */}
+          <div className="absolute left-1/2 top-0 z-10 h-[1.45rem] w-[38%] -translate-x-1/2 rounded-b-2xl bg-[#0A0A0A]" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// App-Store-style showcase: phone mockups floating on a dark stage with accent glow.
+function PhoneGallery({
+  screenshots,
+  title,
+  accentColor,
+  lang,
+}: {
+  screenshots: string[];
+  title: string;
+  accentColor: string;
+  lang: Lang;
+}) {
+  const shots = screenshots.filter((s) => !s.includes("PLACEHOLDER") && !s.includes("-icon."));
+  if (shots.length === 0) return null;
+
+  return (
+    <section className="relative w-full overflow-hidden bg-[#0A0A0A] py-24 md:py-36 px-6 sm:px-8 md:px-12 lg:px-20 rounded-t-[2rem] md:rounded-t-[4rem]">
+      {/* Accent stage glow */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: `radial-gradient(ellipse at 50% 30%, ${accentColor}1f 0%, #0a0a0a 65%)` }}
+      />
+      <div className="relative mx-auto max-w-7xl">
+        <div className="mb-16 md:mb-24 text-center">
+          <span className="font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] text-white/40">
+            {lang === "pl" ? "Aplikacja mobilna" : "Mobile app"}
+          </span>
+          <h2 className="mt-4 font-serif italic text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-none text-[#FDFDFD] break-words">
+            {lang === "pl" ? "iOS i Android" : "iOS & Android"}
+          </h2>
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-12 sm:flex-row sm:flex-wrap sm:items-end md:gap-10 lg:gap-14">
+          {shots.map((src, i) => (
+            <motion.div
+              key={src}
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 1, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+              // Center phone sits slightly raised for an App-Store hero arrangement.
+              className={`shrink-0${i === 1 ? " sm:-translate-y-8 md:-translate-y-12" : ""}`}
+            >
+              <PhoneFrame src={src} alt={`${title} — ${lang === "pl" ? "ekran aplikacji" : "app screen"} ${i + 1}`} priority={i === 0} />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* TODO: add store badges (App Store / Google Play) once the app is published */}
+      </div>
+    </section>
   );
 }
 
@@ -232,7 +311,7 @@ function ProjectContent({ slug }: { slug: string }) {
                 <div className="flex flex-col gap-6 md:gap-8">
                   {formattedDescription.map((paragraph, idx) => {
                     if (paragraph.includes('•') || paragraph.startsWith('Darmowe:') || paragraph.startsWith('Płatne:')) return null;
-                    const isHeading = /^(Co robi|Na czym (jest|będzie) zbudowan[ay]|Stack|Dlaczego tak|Why|What it does):?\s*$/i.test(paragraph.trim());
+                    const isHeading = /^(Co robi|Co zrobiliśmy|Na czym (jest|będzie) zbudowan[ay]|Jak (jest|to) zbudowane|Stack|Dlaczego tak|Dlaczego (tak|w ten sposób)|Efekt|Why|Why this way|What it does|What we did|How it'?s built|Outcome):?\s*$/i.test(paragraph.trim());
                     if (isHeading) {
                       return (
                         <h3 key={idx} className="text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-[#0A0A0A]/50 mt-4 first:mt-0">
@@ -253,8 +332,18 @@ function ProjectContent({ slug }: { slug: string }) {
           </div>
         </section>
 
+        {/* App-Store-style phone gallery — only for mobile-app projects */}
+        {project.kind === "mobile-app" && project.screenshots && project.screenshots.length > 0 && (
+          <PhoneGallery
+            screenshots={project.screenshots}
+            title={project.title}
+            accentColor={project.accentColor}
+            lang={lang}
+          />
+        )}
+
         {/* Asymmetric Grids for Screenshots */}
-        {project.screenshots && project.screenshots.length > 1 && !hasIconScreenshots && !project.subProducts?.length && (
+        {project.kind !== "mobile-app" && project.screenshots && project.screenshots.length > 1 && !hasIconScreenshots && !project.subProducts?.length && (
           <section className="w-full pb-20 md:pb-32 px-6 sm:px-8 md:px-12 lg:px-20">
             <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
               <motion.div

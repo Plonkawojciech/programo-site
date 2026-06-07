@@ -17,6 +17,9 @@ export interface Project {
   description: { pl: string; en: string };
   longDescription: { pl: string; en: string };
   status: ProjectStatus;
+  // Optional presentation hint. "mobile-app" → the detail page shows screenshots
+  // inside App-Store-style phone frames instead of the default editorial grid.
+  kind?: "mobile-app";
   category: "nasze-systemy" | "strony-zrobione" | "projekty";
   liveUrl?: string;
   // Short, real headline metric shown on cards (e.g. "1460 produktów · 190 kategorii").
@@ -109,25 +112,44 @@ export const projects: Project[] = [
     slug: "jedmar",
     title: "Jedmar",
     subtitle: {
-      pl: "Aplikacja mobilna iOS + Android dla sklepu Jedmar",
-      en: "iOS + Android mobile app for the Jedmar store",
+      pl: "Aplikacja mobilna iOS + Android dla Centrum Narzędziowego Jedmar",
+      en: "iOS + Android mobile app for the Jedmar Tool Center",
     },
     description: {
-      pl: "Aplikacja mobilna (iOS i Android) dla sklepu Jedmar Centrum Narzędziowe w Poznaniu — to było nasze zlecenie. Zakupy z telefonu: katalog 1460 produktów, koszyk, konto klienta i zamówienia, spięte z backendem sklepu (PrestaShop). Nie budowaliśmy całego sklepu — zbudowaliśmy apkę mobilną do niego.",
-      en: "A mobile app (iOS and Android) for the Jedmar Tool Center store in Poznan — this was our commission. Shopping from the phone: a 1,460-product catalog, cart, customer account and orders, wired to the store's backend (PrestaShop). We didn't build the whole store — we built the mobile app for it.",
+      pl: "Natywna aplikacja mobilna (iOS i Android) dla Centrum Narzędziowego Jedmar w Poznaniu. Cały sklep w kieszeni klienta: katalog z kategoriami i markami, koszyk, konto i historia zamówień — spięte z istniejącym backendem sklepu (PrestaShop). Nie budowaliśmy całego sklepu — zbudowaliśmy aplikację mobilną do niego.",
+      en: "A native mobile app (iOS and Android) for the Jedmar Tool Center in Poznan. The whole store in the customer's pocket: a catalog with categories and brands, cart, account, and order history — wired to the store's existing backend (PrestaShop). We didn't build the whole store — we built the mobile app for it.",
     },
     longDescription: {
-      pl: "Co robi:\nAplikacja mobilna na iOS i Android dla sklepu Jedmar Centrum Narzędziowe w Poznaniu. To było konkretne zlecenie: nie cały sklep, lecz apka mobilna do istniejącego sklepu. Klient przegląda katalog (1460 produktów, 190 kategorii, 32 marki) z filtrami, dodaje do koszyka, składa zamówienie i zarządza nim z poziomu telefonu. Apka spina się z backendem sklepu (PrestaShop), więc zamówienia trafiają tam, gdzie reszta procesów klienta.\n\nNa czym jest zbudowana:\nAplikacja mobilna iOS + Android z jednego kodu (Capacitor), warstwa frontu w Next.js + TypeScript, dane przez PrestaShop REST API.\n\nDlaczego tak:\n• Jeden kod na iOS i Android (Capacitor) — bez utrzymywania dwóch osobnych aplikacji natywnych.\n• PrestaShop REST API — zamówienia i klienci z apki lądują w istniejącym systemie sklepu, bez migracji danych.\n• Mobile-first — zakupy w narzędziówce robione z telefonu, często w terenie i na budowie.",
-      en: "What it does:\nA mobile app for iOS and Android for the Jedmar Tool Center store in Poznan. This was a specific commission: not the whole store, but the mobile app for the existing store. Customers browse the catalog (1,460 products, 190 categories, 32 brands) with filters, add to cart, place and manage orders from their phone. The app talks to the store's backend (PrestaShop), so orders land where the client's other processes already are.\n\nStack:\niOS + Android mobile app from one codebase (Capacitor), a Next.js + TypeScript front layer, data via the PrestaShop REST API.\n\nWhy:\n• One codebase for iOS and Android (Capacitor) — no two separate native apps to maintain.\n• PrestaShop REST API — orders and customers from the app land in the store's existing system, with no data migration.\n• Mobile-first — tool-store shopping done from the phone, often on-site.",
+      pl: "Co zrobiliśmy:\nZaprojektowaliśmy i zbudowaliśmy natywną aplikację mobilną na iOS i Android dla Centrum Narzędziowego Jedmar w Poznaniu. To było konkretne zlecenie od klienta — nie cały sklep, lecz dedykowana apka mobilna do istniejącego sklepu narzędziowego. Klient przegląda pełny katalog z kategoriami i markami, korzysta z wyszukiwarki i filtrów, dodaje produkty do koszyka, zakłada konto, składa zamówienie i śledzi jego historię — wszystko z poziomu telefonu, także w terenie i na budowie.\n\nJak jest zbudowane:\nJedna baza kodu na oba systemy: warstwa interfejsu w React / Next.js (TypeScript) opakowana natywną powłoką Capacitor, która buduje osobne paczki na iOS i Android. Dane produktów, koszyk i zamówienia pobieramy z istniejącego backendu sklepu (PrestaShop) przez jego API, dzięki czemu aplikacja działa na tych samych danych i procesach co sklep — bez migracji i bez drugiej bazy do utrzymania.\n\nDlaczego tak:\n• Capacitor zamiast dwóch osobnych aplikacji natywnych — jeden kod na iOS i Android, jeden zespół, jedno tempo wydań zamiast utrzymywania Swifta i Kotlina równolegle.\n• Integracja z PrestaShop przez API — zamówienia i klienci z apki trafiają do systemu, w którym sklep już pracuje; nie duplikujemy katalogu ani stanu magazynowego.\n• Mobile-first — zakupy w narzędziówce robi się szybko, z telefonu, często jedną ręką na budowie; aplikacja jest do tego zaprojektowana lepiej niż mobilna wersja strony.\n\nEfekt:\nKlient Jedmar dostał własną, markową aplikację zakupową na iOS i Android, działającą na danych jego sklepu. Aplikacja jest gotowa i przetestowana; nie jest jeszcze opublikowana w App Store ani Google Play — publikacja to kolejny krok.",
+      en: "What we did:\nWe designed and built a native mobile app for iOS and Android for the Jedmar Tool Center in Poznan. This was a specific client commission — not the whole store, but a dedicated mobile app for the existing tool store. Customers browse the full catalog with categories and brands, use search and filters, add products to the cart, create an account, place an order, and track its history — all from their phone, including on-site and on the job.\n\nHow it's built:\nA single codebase for both platforms: a React / Next.js (TypeScript) UI layer wrapped in a native Capacitor shell that produces separate iOS and Android bundles. Product data, cart, and orders are pulled from the store's existing backend (PrestaShop) through its API, so the app runs on the same data and processes as the store — no migration and no second database to maintain.\n\nWhy this way:\n• Capacitor instead of two separate native apps — one codebase for iOS and Android, one team, one release cadence instead of maintaining Swift and Kotlin in parallel.\n• PrestaShop API integration — orders and customers from the app land in the system the store already runs on; we don't duplicate the catalog or stock.\n• Mobile-first — tool shopping happens fast, from the phone, often one-handed on a site; the app is designed for that better than the mobile web version.\n\nOutcome:\nJedmar got its own branded shopping app for iOS and Android, running on its store's data. The app is complete and tested; it is not yet published on the App Store or Google Play — publishing is the next step.",
     },
     status: "live" as ProjectStatus,
     category: "strony-zrobione" as const,
-    liveUrl: "https://jedmar.pl",
-    metric: { pl: "Apka iOS + Android · 1460 produktów", en: "iOS + Android app · 1,460 products" },
-    tech: ["Capacitor", "iOS", "Android", "Next.js", "TypeScript", "PrestaShop API"],
+    kind: "mobile-app",
+    liveUrl: "https://jedmar-shop.vercel.app",
+    metric: { pl: "Aplikacja iOS + Android · Capacitor", en: "iOS + Android app · Capacitor" },
+    tech: ["Capacitor", "iOS", "Android", "React", "Next.js", "TypeScript", "PrestaShop API"],
     features: {
-      pl: ["Aplikacja iOS + Android (jeden kod)", "Katalog 1460 produktów, 190 kategorii", "Koszyk i składanie zamówień", "Konto klienta i historia zamówień", "Integracja z backendem sklepu (PrestaShop)", "Mobile-first — zakupy z telefonu"],
-      en: ["iOS + Android app (one codebase)", "1,460-product catalog, 190 categories", "Cart and order placement", "Customer account and order history", "Integration with the store backend (PrestaShop)", "Mobile-first — shopping from the phone"],
+      pl: [
+        "iOS + Android z jednego kodu — natywne paczki na oba systemy budowane przez Capacitor",
+        "Katalog produktów — kategorie, marki i karty produktów prosto z backendu sklepu",
+        "Wyszukiwarka i filtry — szybkie znajdowanie sprzętu po nazwie i kategorii",
+        "Koszyk i składanie zamówień — pełny proces zakupowy z poziomu telefonu",
+        "Konto klienta — logowanie, dane i historia zamówień w aplikacji",
+        "Integracja z PrestaShop — apka działa na danych i procesach istniejącego sklepu",
+        "Mobile-first UX — interfejs zaprojektowany pod zakupy z telefonu, także w terenie",
+        "Spójna marka Jedmar — własna aplikacja w identyfikacji wizualnej sklepu",
+      ],
+      en: [
+        "iOS + Android from one codebase — native bundles for both built with Capacitor",
+        "Product catalog — categories, brands, and product pages straight from the store backend",
+        "Search and filters — quickly find gear by name and category",
+        "Cart and checkout — the full purchase flow from the phone",
+        "Customer account — sign-in, details, and order history in the app",
+        "PrestaShop integration — the app runs on the existing store's data and processes",
+        "Mobile-first UX — an interface designed for shopping on the phone, including on-site",
+        "Consistent Jedmar brand — a dedicated app in the store's visual identity",
+      ],
     },
     tags: ["Mobile", "iOS", "Android", "E-commerce"],
     accentColor: "#ffd333",
