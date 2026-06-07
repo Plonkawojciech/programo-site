@@ -112,7 +112,7 @@ const services = [
   },
   {
     title: "Aplikacje mobilne do sklepów",
-    desc: "Natywne aplikacje iOS + Android dla Twojego sklepu (Capacitor) — katalog, koszyk i zamówienia z telefonu, spięte z backendem sklepu.",
+    desc: "Natywne aplikacje iOS + Android dla Twojego sklepu — katalog, koszyk i zamówienia z telefonu, spięte z backendem sklepu.",
   },
   {
     title: "Headless i wydajność",
@@ -231,7 +231,7 @@ export default function SklepyInternetowePage() {
               Jedmar — aplikacja mobilna do sklepu narzędziowego
             </h2>
             <p className="mb-6 max-w-3xl leading-relaxed text-on-surface-variant">
-              Natywna aplikacja mobilna iOS + Android (Capacitor) dla Jedmar
+              Natywna aplikacja mobilna na iOS i Android dla Jedmar
               Centrum Narzędziowe — zakupy z telefonu: katalog 1460 produktów
               (190 kategorii, 32 marki), koszyk, konto klienta i zamówienia,
               spięte z backendem sklepu (PrestaShop). Zlecenie: aplikacja do
@@ -239,7 +239,7 @@ export default function SklepyInternetowePage() {
             </p>
             <div className="flex flex-wrap gap-2">
               {[
-                "iOS + Android (Capacitor)",
+                "Natywne iOS + Android",
                 "PrestaShop API",
                 "1460 produktów",
                 "Next.js",
