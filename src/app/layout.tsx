@@ -3,7 +3,7 @@ import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 
-const GA_ID = "G-TGLPLMVV91";
+const GA_ID = "G-KT2R144BYG";
 // Google Ads conversion tracking (gated by marketing consent via Consent Mode v2 above)
 const ADS_ID = "AW-18196600478";
 const CLARITY_ID = "wxezq44wx0";
