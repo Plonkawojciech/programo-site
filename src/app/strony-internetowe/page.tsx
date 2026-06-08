@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import QuickContact from "@/components/quick-contact";
+import ProjectsMarquee from "@/components/projects-marquee";
+import TrustBar from "@/components/trust-bar";
 
 export const metadata: Metadata = {
   title:
@@ -163,12 +166,12 @@ export default function StronyInternetowePage() {
               konwersję. Bez szablonów z półki: strona skrojona pod Twój cel.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href="/kontakt"
+              <a
+                href="#kontakt-main"
                 className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
               >
                 Bezpłatna wycena
-              </Link>
+              </a>
               <a
                 href="tel:+48509123434"
                 className="rounded-full border border-outline px-6 py-3 text-sm font-medium text-on-surface-variant transition hover:text-on-surface"
@@ -284,12 +287,12 @@ export default function StronyInternetowePage() {
               Wielkopolska i cała Polska. Odpowiadamy w ciągu 24 godzin.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link
-                href="/kontakt"
+              <a
+                href="#kontakt-main"
                 className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
               >
                 Bezpłatna wycena
-              </Link>
+              </a>
               <a
                 href="tel:+48509123434"
                 className="rounded-full border border-outline px-6 py-3 text-sm font-medium text-on-surface-variant transition hover:text-on-surface"
@@ -299,6 +302,18 @@ export default function StronyInternetowePage() {
             </div>
           </section>
         </article>
+
+        {/* Dowód społeczny: realne wdrożenia + portfolio */}
+        <TrustBar />
+        <ProjectsMarquee />
+
+        {/* Formularz inline — cel kotwicy #kontakt-main z CTA powyżej */}
+        <div className="mx-auto max-w-5xl px-6 md:px-10">
+          <h2 className="font-headline text-2xl font-semibold tracking-tight md:text-3xl">
+            Napisz — wrócimy z wyceną w 24h
+          </h2>
+        </div>
+        <QuickContact />
       </div>
     </>
   );
