@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { Resend } from "resend";
+import { storeLead } from "@/lib/leads";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -137,6 +138,38 @@ export async function POST(request: NextRequest) {
   ];
   const sources = sourcePairs.filter((p): p is [string, string] => Boolean(p[1]));
 
+  // Persist the lead for the internal CRM (/crm). Best-effort: storeLead never
+  // throws, but wrap defensively so a store failure can never affect the
+  // contact email/Telegram flow or the response.
+  const requestTs = new Date().toISOString();
+  try {
+    await storeLead({
+      id: crypto.randomUUID(),
+      ts: requestTs,
+      name,
+      email: email || "",
+      phone: phone || "",
+      subject,
+      message: message || "",
+      projectType: projectType || "",
+      budget: budget || "",
+      consentTimestamp: consentAt,
+      gclid: gclid || "",
+      gbraid: gbraid || "",
+      wbraid: wbraid || "",
+      utm_source: utm_source || "",
+      utm_medium: utm_medium || "",
+      utm_campaign: utm_campaign || "",
+      utm_term: utm_term || "",
+      utm_content: utm_content || "",
+      landing_page: landing_page || "",
+      referrer: referrer || "",
+      first_seen: result.data.first_seen || "",
+    });
+  } catch (e) {
+    console.error("[contact] storeLead threw unexpectedly:", e);
+  }
+
   const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
 
   // Send email + Telegram in parallel; success if at least one channel delivers
@@ -230,7 +263,7 @@ export async function POST(request: NextRequest) {
   if (tasks.length === 0) {
     console.log("[DEV] No notification channels configured. Submission:", {
       name: safeName,
-      email: sanitize(email),
+      email: safeEmail,
       subject: safeSubject,
     });
     return NextResponse.json({ success: true });
