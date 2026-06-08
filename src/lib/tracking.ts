@@ -110,22 +110,54 @@ function trackAdsConversion(): void {
   });
 }
 
+// Once-per-session guard for the Google Ads "Lead" conversion. Multiple lead
+// forms can live on one page (e.g. the compact catcher + the full QuickContact);
+// the same person submitting both must NOT double-count the Ads conversion or it
+// poisons Smart Bidding. GA4 generate_lead still fires every time (with a
+// `duplicate` flag) so analytics keep full fidelity. NOTE: the Ads conversion
+// action should also be set to count "One" in the panel as a second line of defence.
+const ADS_LEAD_FIRED_KEY = "programo-lead-fired";
+
+function hasAdsLeadFired(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.sessionStorage.getItem(ADS_LEAD_FIRED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markAdsLeadFired(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(ADS_LEAD_FIRED_KEY, "1");
+  } catch {
+    /* ignore storage errors */
+  }
+}
+
 /**
  * GA4 lead conversion event + Google Ads "Lead" conversion. `form` identifies the source form.
  *
  * Form submit = primary Google Ads Lead conversion. Phone/email clicks = GA4-only secondary
- * signal; a dedicated Ads call-click conversion action can be added later.
+ * signal; a dedicated Ads call-click conversion action can be added later. The Ads conversion
+ * fires at most once per browser session; GA4 generate_lead fires on every submit.
  */
 export function trackLead(detail: { form: string; method?: string }): void {
   const attr = getAttribution();
+  const duplicate = hasAdsLeadFired();
   gtag("event", "generate_lead", {
     form_location: detail.form,
     method: detail.method,
     lead_source: attr.utm_source || (attr.gclid ? "google_ads" : "direct"),
     campaign: attr.utm_campaign,
     gclid: attr.gclid,
+    duplicate,
   });
-  trackAdsConversion();
+  if (!duplicate) {
+    trackAdsConversion();
+    markAdsLeadFired();
+  }
 }
 
 /**

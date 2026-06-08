@@ -3,6 +3,10 @@ import Link from "next/link";
 import QuickContact from "@/components/quick-contact";
 import ProjectsMarquee from "@/components/projects-marquee";
 import TrustBar from "@/components/trust-bar";
+import CaseStudies from "@/components/case-studies";
+import CompactLeadForm from "@/components/compact-lead-form";
+import CtaButton from "@/components/ui/cta-button";
+import Reveal from "@/components/ui/reveal";
 
 export const metadata: Metadata = {
   title:
@@ -91,227 +95,227 @@ const faqJsonLd = {
 };
 
 const services = [
-  {
-    title: "Strony firmowe",
-    desc: "Nowoczesna wizytówka firmy w Next.js — szybka, dostępna i zbudowana pod konwersję. Z CMS-em do samodzielnej edycji treści.",
-  },
-  {
-    title: "Landing page / strony sprzedażowe",
-    desc: "Skoncentrowane na jednym celu strony pod kampanie i ofertę — z formularzem, dowodami i jasnym CTA. Mierzone i optymalizowane.",
-  },
-  {
-    title: "Sklepy internetowe",
-    desc: "Potrzebujesz e-commerce? Robimy też sklepy (WooCommerce, Shopify, PrestaShop, headless) — zobacz osobną ofertę dla sklepów.",
-  },
-  {
-    title: "Redesign i migracja",
-    desc: "Odświeżamy i przyspieszamy istniejące strony, migrujemy bez utraty pozycji w Google (przekierowania 301, zachowana struktura URL).",
-  },
-  {
-    title: "Wydajność i SEO",
-    desc: "Optymalizacja Core Web Vitals, struktura, dane strukturalne i techniczne SEO. Szybsza strona = wyższe pozycje i więcej zapytań.",
-  },
-  {
-    title: "Utrzymanie i rozwój",
-    desc: "Opieka po wdrożeniu, aktualizacje, nowe sekcje i ciągła optymalizacja. Stała współpraca, nie znikamy po starcie.",
-  },
+  { n: "01", title: "Strony firmowe", desc: "Nowoczesna wizytówka firmy w Next.js — szybka, dostępna i zbudowana pod konwersję. Z CMS-em do samodzielnej edycji treści." },
+  { n: "02", title: "Landing page / sprzedażowe", desc: "Skoncentrowane na jednym celu strony pod kampanie i ofertę — z formularzem, dowodami i jasnym CTA. Mierzone i optymalizowane." },
+  { n: "03", title: "Sklepy internetowe", desc: "Potrzebujesz e-commerce? Robimy też sklepy (WooCommerce, Shopify, PrestaShop, headless) — zobacz osobną ofertę dla sklepów." },
+  { n: "04", title: "Redesign i migracja", desc: "Odświeżamy i przyspieszamy istniejące strony, migrujemy bez utraty pozycji w Google (przekierowania 301, zachowana struktura URL)." },
+  { n: "05", title: "Wydajność i SEO", desc: "Optymalizacja Core Web Vitals, struktura, dane strukturalne i techniczne SEO. Szybsza strona = wyższe pozycje i więcej zapytań." },
+  { n: "06", title: "Utrzymanie i rozwój", desc: "Opieka po wdrożeniu, aktualizacje, nowe sekcje i ciągła optymalizacja. Stała współpraca, nie znikamy po starcie." },
 ];
 
 const steps = [
-  ["01", "Krótka rozmowa", "Ustalamy cel strony, zakres, budżet i termin."],
-  ["02", "Makieta i wycena", "Dostajesz konkretny plan, etapy i widełki — zanim zaczniemy."],
-  ["03", "Budowa i wdrożenie", "Projektujemy, kodujemy w Next.js i wypuszczamy stronę produkcyjnie."],
+  { n: "01", title: "Krótka rozmowa", desc: "Ustalamy cel strony, zakres, budżet i termin." },
+  { n: "02", title: "Makieta i wycena", desc: "Dostajesz konkretny plan, etapy i widełki — zanim zaczniemy." },
+  { n: "03", title: "Budowa i wdrożenie", desc: "Projektujemy, kodujemy w Next.js i wypuszczamy stronę produkcyjnie." },
 ];
+
+const webCases = [
+  {
+    slug: "wsafefinanse",
+    angle:
+      "Strona firmowa doradcy finansowego w Next.js. Formularz wysyła zapytanie na e-mail i Telegram, więc właściciel reaguje na lead w kilka minut.",
+  },
+  {
+    slug: "wks-poznan",
+    angle:
+      "Strona klubu sportowego: 7 podstron, profile trenerów, harmonogram i galeria. Szybka, mobile-first i łatwa w samodzielnej aktualizacji.",
+  },
+  {
+    slug: "estalo",
+    angle:
+      "Nasz własny produkt — platforma SaaS CRM w Next.js z AI i integracjami. Dowód, że ogarniamy też złożone systemy webowe, nie tylko wizytówki.",
+  },
+];
+
+const EYEBROW = "text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary";
+const H2 = "font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl";
+const CONTAINER = "mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24";
+const SECTION = "relative bg-surface py-20 md:py-28 lg:py-32";
 
 export default function StronyInternetowePage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <div className="min-h-screen bg-surface text-on-surface">
-        <article className="mx-auto max-w-5xl px-6 pt-28 pb-20 md:px-10 md:pt-32 md:pb-28">
-          <nav
-            aria-label="breadcrumb"
-            className="mb-8 text-xs uppercase tracking-widest text-on-surface-variant"
-          >
-            <Link href="/" className="hover:text-on-surface transition-colors">
-              Programo
-            </Link>
-            <span className="mx-2">/</span>
-            <span>Strony internetowe</span>
-          </nav>
+      <div className="bg-surface text-on-surface">
+        {/* HERO — static (best LCP), full-screen, left-aligned */}
+        <section className="relative flex min-h-[88vh] flex-col justify-center pt-28 pb-16 md:pt-32">
+          <div className={CONTAINER}>
+            <nav aria-label="breadcrumb" className="mb-10 text-xs uppercase tracking-widest text-on-surface-variant">
+              <Link href="/" className="transition-colors hover:text-on-surface">Programo</Link>
+              <span className="mx-2">/</span>
+              <span>Strony internetowe</span>
+            </nav>
 
-          {/* Hero */}
-          <header className="mb-14">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] text-primary">
-              Strony WWW · Poznań · cała Polska
-            </p>
-            <h1 className="mb-6 max-w-3xl font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl">
-              Strony internetowe, które pracują na Twój biznes
-            </h1>
-            <p className="max-w-2xl text-lg leading-relaxed text-on-surface-variant md:text-xl">
-              Projektujemy i budujemy nowoczesne strony firmowe, landing page
-              i serwisy w Next.js — szybkie (Core Web Vitals), pod SEO i pod
-              konwersję. Bez szablonów z półki: strona skrojona pod Twój cel.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#kontakt-main"
-                className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
-              >
-                Bezpłatna wycena
-              </a>
-              <a
-                href="tel:+48509123434"
-                className="rounded-full border border-outline px-6 py-3 text-sm font-medium text-on-surface-variant transition hover:text-on-surface"
-              >
-                Zadzwoń: 509 123 434
-              </a>
-            </div>
-            <p className="mt-5 text-sm text-on-surface-variant">
-              Realizacje: Estalo · WKS Poznań · WSafe Finanse · Jedmar — z
-              bezpośrednim kontaktem z założycielami.
-            </p>
-          </header>
+            <div className="max-w-5xl 2xl:max-w-6xl">
+              <p className={EYEBROW}>Tworzenie stron internetowych · Poznań</p>
+              <h1 className="mt-6 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-7xl 2xl:text-[clamp(4.5rem,5vw,6rem)]">
+                Strony internetowe, które pracują na Twój biznes
+              </h1>
+              <p className="mt-8 max-w-3xl text-xl font-light leading-relaxed text-on-surface/70 md:mt-10 md:text-2xl">
+                Projektujemy i budujemy nowoczesne strony firmowe, landing page
+                i serwisy w Next.js — szybkie (Core Web Vitals), pod SEO i pod
+                konwersję. Pracujesz bezpośrednio z założycielami, bez pośredników.
+              </p>
 
-          {/* Usługi */}
-          <section className="mb-16">
-            <h2 className="mb-8 font-headline text-2xl font-semibold tracking-tight md:text-4xl">
-              Co robimy ze stronami
-            </h2>
-            <div className="grid gap-6 md:grid-cols-2">
-              {services.map((s) => (
-                <div
-                  key={s.title}
-                  className="rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6 transition hover:border-outline"
-                >
-                  <h3 className="mb-3 text-xl font-semibold">{s.title}</h3>
-                  <p className="text-sm leading-relaxed text-on-surface-variant">{s.desc}</p>
-                </div>
-              ))}
-            </div>
-          </section>
+              <div className="mt-12 flex flex-wrap gap-4">
+                <CtaButton href="#szybki-kontakt">Wyceń moją stronę</CtaButton>
+                <CtaButton href="tel:+48509123434" variant="secondary">Zadzwoń: 509 123 434</CtaButton>
+              </div>
 
-          {/* Dlaczego my */}
-          <section className="mb-16 rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:p-12">
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-primary">
-              Dlaczego Programo
-            </p>
-            <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
-              Nowoczesny stack, butikowe podejście
-            </h2>
-            <p className="mb-6 max-w-3xl leading-relaxed text-on-surface-variant">
-              Jesteśmy dwuosobowym studiem z Poznania — pracujesz bezpośrednio z
-              założycielami, bez warstw pośredników. Budujemy w Next.js / React /
-              TypeScript, z naciskiem na szybkość, dostępność i realny efekt
-              biznesowy. Mamy własne produkty (Estalo, Rejestr Pro) — wiemy, jak
-              robić rzeczy, które trzeba potem utrzymać i rozwijać.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Next.js / React",
-                "Core Web Vitals",
-                "SEO techniczne",
-                "CMS do edycji treści",
-                "Wsparcie po wdrożeniu",
-              ].map((chip) => (
-                <span
-                  key={chip}
-                  className="rounded-full border border-outline-variant/60 px-4 py-1.5 text-sm text-on-surface-variant"
-                >
-                  {chip}
+              {/* Trust strip — static, above the fold, no off-ramp links */}
+              <div className="mt-14 flex flex-col gap-5 border-t border-outline-variant/30 pt-8">
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
+                  Zaufali nam
                 </span>
-              ))}
-            </div>
-            <div className="mt-6">
-              <Link
-                href="/projekty"
-                className="text-sm font-medium text-primary underline underline-offset-4 transition hover:text-on-surface"
-              >
-                Zobacz nasze realizacje →
-              </Link>
-            </div>
-          </section>
-
-          {/* Proces */}
-          <section className="mb-16">
-            <h2 className="mb-8 font-headline text-2xl font-semibold tracking-tight md:text-4xl">
-              Jak pracujemy
-            </h2>
-            <div className="grid gap-6 md:grid-cols-3">
-              {steps.map(([num, title, desc]) => (
-                <div key={num} className="rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6">
-                  <div className="mb-3 font-headline text-3xl font-bold text-primary/40">
-                    {num}
-                  </div>
-                  <h3 className="mb-2 text-lg font-semibold">{title}</h3>
-                  <p className="text-sm leading-relaxed text-on-surface-variant">{desc}</p>
+                <div className="flex flex-wrap items-center gap-x-8 gap-y-3 font-headline text-xl font-bold tracking-tight text-on-surface/45 md:text-2xl">
+                  <span>WSafe Finanse</span>
+                  <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
+                  <span>WKS Poznań</span>
+                  <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
+                  <span>Estalo</span>
                 </div>
+                <p className="text-sm text-on-surface-variant">
+                  Bezpośredni kontakt z założycielami · Odpowiadamy w 24 h · Poznań i cała Polska
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* PROBLEM → OUTCOME */}
+        <section className={SECTION}>
+          <div className={CONTAINER}>
+            <Reveal className="max-w-4xl">
+              <p className={EYEBROW}>Dlaczego to ważne</p>
+              <p className="mt-6 font-headline text-2xl font-light leading-snug tracking-tight text-on-surface md:text-4xl">
+                Wolna, szablonowa strona to zapytania, które nigdy nie przyszły.{" "}
+                <span className="text-primary">Szybka, skrojona pod jeden cel pracuje na Ciebie — w Google i w głowie klienta.</span>
+              </p>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* USŁUGI */}
+        <section className={SECTION}>
+          <div className={CONTAINER}>
+            <Reveal className="mb-14 max-w-3xl md:mb-20">
+              <p className={EYEBROW}>Co robimy ze stronami</p>
+              <h2 className={`mt-5 ${H2}`}>Od wizytówki po serwis z CMS-em</h2>
+            </Reveal>
+            <div className="grid gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+              {services.map((s, i) => (
+                <Reveal key={s.n} delay={(i % 3) * 0.1} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
+                  <span className="font-mono text-xs uppercase tracking-widest text-primary">{s.n}</span>
+                  <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">{s.title}</h3>
+                  <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
+                </Reveal>
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* FAQ */}
-          <section className="mb-16">
-            <h2 className="mb-8 font-headline text-2xl font-semibold tracking-tight md:text-4xl">
-              Najczęstsze pytania
-            </h2>
-            <div className="space-y-6">
-              {faqs.map((f) => (
-                <div key={f.q}>
-                  <h3 className="mb-2 text-lg font-semibold">{f.q}</h3>
-                  <p className="leading-relaxed text-on-surface-variant">{f.a}</p>
-                </div>
+        {/* CASE STUDIES */}
+        <CaseStudies
+          eyebrow="Wybrane realizacje"
+          heading="Strony i produkty, które zbudowaliśmy"
+          intro="Pracujesz bezpośrednio z założycielami — bez pośredników. Kilka realnych wdrożeń: od strony klubu sportowego, przez stronę firmową z lead-formularzem, po własną platformę SaaS."
+          items={webCases}
+        />
+
+        {/* SZYBKI KONTAKT — primary conversion gate (hero CTA target) */}
+        <CompactLeadForm
+          formId="strony-compact"
+          anchorId="szybki-kontakt"
+          projectType="Strona / landing"
+          heading="Zostaw numer — oddzwonimy z wyceną"
+        />
+
+        {/* DLACZEGO MY */}
+        <section className={SECTION}>
+          <div className={CONTAINER}>
+            <Reveal className="overflow-hidden rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:p-14">
+              <p className={EYEBROW}>Dlaczego Programo</p>
+              <h2 className={`mt-5 ${H2}`}>Nowoczesny stack, butikowe podejście</h2>
+              <p className="mt-6 max-w-3xl text-lg font-light leading-relaxed text-on-surface/70">
+                Jesteśmy dwuosobowym studiem z Poznania — pracujesz bezpośrednio z
+                założycielami, bez warstw pośredników. Budujemy w Next.js / React /
+                TypeScript, z naciskiem na szybkość, dostępność i realny efekt
+                biznesowy. Mamy własne produkty (Estalo, Rejestr Pro) — wiemy, jak
+                robić rzeczy, które trzeba potem utrzymać i rozwijać.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-2.5">
+                {["Next.js / React", "Core Web Vitals", "SEO techniczne", "CMS do edycji treści", "Wsparcie po wdrożeniu"].map((chip) => (
+                  <span key={chip} className="rounded-full border border-outline-variant/60 px-4 py-1.5 text-sm text-on-surface-variant">{chip}</span>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* PROCES */}
+        <section className={SECTION}>
+          <div className={CONTAINER}>
+            <Reveal className="mb-14 max-w-3xl md:mb-20">
+              <p className={EYEBROW}>Jak pracujemy</p>
+              <h2 className={`mt-5 ${H2}`}>Trzy kroki do gotowej strony</h2>
+            </Reveal>
+            <div className="grid gap-x-10 gap-y-12 md:grid-cols-3">
+              {steps.map((s, i) => (
+                <Reveal key={s.n} delay={i * 0.12} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
+                  <span className="font-headline text-4xl font-bold text-primary/40">{s.n}</span>
+                  <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface">{s.title}</h3>
+                  <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
+                </Reveal>
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* CTA */}
-          <section className="rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:p-12">
-            <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
-              Zróbmy stronę, która sprzedaje
-            </h2>
-            <p className="mb-6 max-w-2xl text-on-surface-variant">
-              Opisz projekt w 2 minuty — wrócimy z planem i wyceną. Poznań,
-              Wielkopolska i cała Polska. Odpowiadamy w ciągu 24 godzin.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#kontakt-main"
-                className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
-              >
-                Bezpłatna wycena
-              </a>
-              <a
-                href="tel:+48509123434"
-                className="rounded-full border border-outline px-6 py-3 text-sm font-medium text-on-surface-variant transition hover:text-on-surface"
-              >
-                Zadzwoń: 509 123 434
-              </a>
+        {/* FAQ */}
+        <section className={SECTION}>
+          <div className={CONTAINER}>
+            <Reveal className="mb-14 max-w-3xl md:mb-20">
+              <p className={EYEBROW}>Najczęstsze pytania</p>
+              <h2 className={`mt-5 ${H2}`}>Zanim napiszesz</h2>
+            </Reveal>
+            <div className="grid gap-x-16 gap-y-10 md:grid-cols-2">
+              {faqs.map((f, i) => (
+                <Reveal key={f.q} delay={(i % 2) * 0.1} className="border-t border-outline-variant/30 pt-6">
+                  <h3 className="font-headline text-xl font-bold tracking-tight text-on-surface md:text-2xl">{f.q}</h3>
+                  <p className="mt-3 font-light leading-relaxed text-on-surface/70">{f.a}</p>
+                </Reveal>
+              ))}
             </div>
-          </section>
-        </article>
+          </div>
+        </section>
 
-        {/* Dowód społeczny: realne wdrożenia + portfolio */}
+        {/* CTA FINALNE */}
+        <section className={SECTION}>
+          <div className={CONTAINER}>
+            <Reveal className="overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:p-16">
+              <h2 className={H2}>Zróbmy stronę, która sprzedaje</h2>
+              <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
+                Opisz projekt w 2 minuty — wrócimy z planem i wyceną. Poznań,
+                Wielkopolska i cała Polska. Odpowiadamy w ciągu 24 godzin.
+              </p>
+              <div className="mt-10 flex flex-wrap justify-center gap-4">
+                <CtaButton href="#kontakt-main">Wyceń moją stronę</CtaButton>
+                <CtaButton href="tel:+48509123434" variant="secondary">Zadzwoń: 509 123 434</CtaButton>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Dowód społeczny + pełny formularz */}
         <TrustBar />
         <ProjectsMarquee />
-
-        {/* Formularz inline — cel kotwicy #kontakt-main z CTA powyżej */}
-        <div className="mx-auto max-w-5xl px-6 md:px-10">
-          <h2 className="font-headline text-2xl font-semibold tracking-tight md:text-3xl">
-            Napisz — wrócimy z wyceną w 24h
-          </h2>
+        <div className={CONTAINER}>
+          <Reveal>
+            <h2 className={H2}>Napisz — wrócimy z wyceną w 24h</h2>
+          </Reveal>
         </div>
         <QuickContact />
       </div>
