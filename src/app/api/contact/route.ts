@@ -4,7 +4,7 @@ import { Resend } from "resend";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email format"),
+  email: z.string().email("Nieprawidłowy adres email").optional().or(z.literal("")),
   phone: z
     .string()
     .max(30, "Phone too long")
@@ -21,8 +21,9 @@ const contactSchema = z.object({
     .default("Inne"),
   message: z
     .string()
-    .min(20, "Message must be at least 20 characters")
-    .max(2000, "Message must be at most 2000 characters"),
+    .max(2000, "Message must be at most 2000 characters")
+    .optional()
+    .or(z.literal("")),
   // Lead qualification (chips on the form) — optional
   projectType: z.string().max(60).optional().or(z.literal("")),
   budget: z.string().max(60).optional().or(z.literal("")),
@@ -40,7 +41,11 @@ const contactSchema = z.object({
   landing_page: z.string().max(500).optional(),
   referrer: z.string().max(500).optional(),
   first_seen: z.string().max(40).optional(),
-});
+})
+  .refine(
+    (d) => Boolean((d.email && d.email.length) || (d.phone && d.phone.length)),
+    { message: "Podaj e-mail lub numer telefonu.", path: ["email"] }
+  );
 
 // In-memory rate limiter: IP -> timestamps[]
 const rateLimitMap = new Map<string, number[]>();
@@ -103,7 +108,8 @@ export async function POST(request: NextRequest) {
 
   const { name, email, phone, subject, message, projectType, budget, consentTimestamp } = result.data;
   const safeName = sanitize(name);
-  const safeMessage = sanitize(message);
+  const safeEmail = email ? sanitize(email) : "";
+  const safeMessage = message ? sanitize(message) : "";
   const safeSubject = sanitize(subject);
   const safePhone = phone ? sanitize(phone) : "";
   const safeProjectType = projectType ? sanitize(projectType) : "";
@@ -149,13 +155,12 @@ export async function POST(request: NextRequest) {
             html: `
               <h2>Nowa wiadomość z formularza kontaktowego</h2>
               <p><strong>Imię:</strong> ${safeName}</p>
-              <p><strong>Email:</strong> ${sanitize(email)}</p>
+              ${safeEmail ? `<p><strong>Email:</strong> ${safeEmail}</p>` : ""}
               ${safePhone ? `<p><strong>Telefon:</strong> ${safePhone}</p>` : ""}
               <p><strong>Temat:</strong> ${safeSubject}</p>
               ${safeProjectType ? `<p><strong>Rodzaj projektu:</strong> ${safeProjectType}</p>` : ""}
               ${safeBudget ? `<p><strong>Budżet:</strong> ${safeBudget}</p>` : ""}
-              <p><strong>Wiadomość:</strong></p>
-              <p>${safeMessage.replace(/\n/g, "<br>")}</p>
+              ${safeMessage ? `<p><strong>Wiadomość:</strong></p><p>${safeMessage.replace(/\n/g, "<br>")}</p>` : ""}
               <hr>
               ${sources.length ? `<p style="color:#444;font-size:13px;"><strong>Źródło leada:</strong><br>${sources.map(([k, v]) => `${k}: ${sanitize(v)}`).join("<br>")}</p>` : ""}
               <p style="color:#666;font-size:12px;">Zgoda RODO zaakceptowana: ${safeConsentAt}</p>
@@ -184,14 +189,12 @@ export async function POST(request: NextRequest) {
             `*Nowa wiadomość — Programo*`,
             ``,
             `*Imię:* ${esc(name)}`,
-            `*Email:* ${esc(email)}`,
+            email ? `*Email:* ${esc(email)}` : "",
             phone ? `*Telefon:* ${esc(phone)}` : "",
             `*Temat:* ${esc(subject)}`,
             projectType ? `*Rodzaj projektu:* ${esc(projectType)}` : "",
             budget ? `*Budżet:* ${esc(budget)}` : "",
-            ``,
-            `*Wiadomość:*`,
-            esc(message),
+            ...(message ? ["", `*Wiadomość:*`, esc(message)] : []),
             ...(srcLines.length ? ["", `*Źródło leada:*`, ...srcLines] : []),
             ``,
             `_Zgoda RODO: ${esc(consentAt)}_`,

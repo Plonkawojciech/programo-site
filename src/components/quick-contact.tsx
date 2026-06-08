@@ -51,15 +51,23 @@ export default function QuickContact() {
       setState("error");
       return;
     }
+    const formData = new FormData(e.currentTarget);
+    const email = String(formData.get("email") || "").trim();
+    const phone = String(formData.get("phone") || "").trim();
+    if (!email && !phone) {
+      setErrorMsg(t("quick.contactRequired"));
+      setState("error");
+      return;
+    }
+
     submittingRef.current = true;
     setState("submitting");
     setErrorMsg("");
 
-    const formData = new FormData(e.currentTarget);
     const payload = {
       name: String(formData.get("name") || ""),
-      email: String(formData.get("email") || ""),
-      phone: String(formData.get("phone") || ""),
+      email,
+      phone,
       message: String(formData.get("message") || ""),
       projectType: projectType ? t(projectType) : "",
       budget: budget ? t(budget) : "",
@@ -277,11 +285,15 @@ export default function QuickContact() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
-                    <label className={labelClass}>{t("quick.email")} *</label>
+                    <label className={labelClass}>
+                      {t("quick.email")}{" "}
+                      <span className="normal-case font-normal text-on-surface-variant/50">
+                        {t("quick.optional")}
+                      </span>
+                    </label>
                     <input
                       type="email"
                       name="email"
-                      required
                       className={inputClass}
                       placeholder="jan@firma.pl"
                     />
@@ -296,20 +308,26 @@ export default function QuickContact() {
                     />
                   </div>
                 </div>
+                <p className="-mt-3 text-xs text-on-surface-variant/70">
+                  {t("quick.contactHint")}
+                </p>
 
                 <div className="flex flex-col gap-2">
-                  <label className={labelClass}>{t("quick.message")} *</label>
+                  <label className={labelClass}>
+                    {t("quick.message")}{" "}
+                    <span className="normal-case font-normal text-on-surface-variant/50">
+                      {t("quick.optional")}
+                    </span>
+                  </label>
                   <textarea
                     name="message"
-                    required
-                    minLength={20}
                     rows={5}
                     className={`${inputClass} resize-none`}
-                    placeholder="Mam pomysł na aplikację / stronę / system..."
+                    placeholder="Mam pomysł na aplikację / stronę / system... (możesz zostawić puste)"
                   />
                 </div>
 
-                <label className="mt-1 flex items-start gap-3 cursor-pointer group">
+                <label className="mt-1 flex items-start gap-3.5 cursor-pointer group rounded-2xl border border-outline-variant/60 bg-surface/70 p-4">
                   <span className="relative shrink-0 mt-0.5">
                     <input
                       type="checkbox"
@@ -323,28 +341,28 @@ export default function QuickContact() {
                         }
                       }}
                       required
-                      className="peer h-[18px] w-[18px] appearance-none rounded-[5px] border border-outline-variant/50 bg-transparent transition-colors checked:bg-primary checked:border-primary hover:border-on-surface/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer"
+                      className="peer h-5 w-5 appearance-none rounded-md border-2 border-outline bg-surface transition-colors checked:bg-primary checked:border-primary hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer"
                     />
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 16 16"
-                      className="pointer-events-none absolute inset-0 m-auto h-[12px] w-[12px] opacity-0 peer-checked:opacity-100 transition-opacity text-on-primary"
+                      className="pointer-events-none absolute inset-0 m-auto h-3.5 w-3.5 opacity-0 peer-checked:opacity-100 transition-opacity text-on-primary"
                     >
                       <path
                         d="M3 8l3.5 3.5L13 5"
                         stroke="currentColor"
-                        strokeWidth="2"
+                        strokeWidth="2.4"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         fill="none"
                       />
                     </svg>
                   </span>
-                  <span className="text-[13px] md:text-sm font-light leading-relaxed text-on-surface-variant group-hover:text-on-surface/90 transition-colors">
+                  <span className="text-sm leading-relaxed text-on-surface/80 group-hover:text-on-surface transition-colors">
                     {t("quick.consentLabel")}{" "}
                     <Link
                       href="/polityka-prywatnosci"
-                      className="underline decoration-on-surface-variant/40 underline-offset-2 hover:text-on-surface"
+                      className="font-medium text-primary underline decoration-primary/40 underline-offset-2 hover:decoration-primary"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {t("quick.privacyLink")}
