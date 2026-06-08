@@ -125,6 +125,9 @@ export default function CompactLeadForm({
               >
                 …albo zadzwoń od razu: 509 123 434
               </a>
+              <p className="mt-6 border-t border-outline-variant/30 pt-5 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
+                Bezpośredni kontakt z założycielami · Odpowiadamy w 24 h
+              </p>
             </div>
 
             {state === "success" ? (

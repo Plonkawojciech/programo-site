@@ -41,7 +41,7 @@ export default function CaseStudies({
   const cols = resolved.length >= 3 ? "md:grid-cols-3" : "md:grid-cols-2";
 
   return (
-    <section className="relative bg-surface py-20 md:py-28 lg:py-32">
+    <section className="relative bg-surface py-24 md:py-32 lg:py-40">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
         <Reveal className="mb-12 max-w-3xl md:mb-16">
           <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">

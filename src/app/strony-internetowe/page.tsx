@@ -130,7 +130,7 @@ const webCases = [
 const EYEBROW = "text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary";
 const H2 = "font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl";
 const CONTAINER = "mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24";
-const SECTION = "relative bg-surface py-20 md:py-28 lg:py-32";
+const SECTION = "relative bg-surface py-24 md:py-32 lg:py-40";
 
 export default function StronyInternetowePage() {
   return (
@@ -170,12 +170,12 @@ export default function StronyInternetowePage() {
                 <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
                   Zaufali nam
                 </span>
-                <div className="flex flex-wrap items-center gap-x-8 gap-y-3 font-headline text-xl font-bold tracking-tight text-on-surface/45 md:text-2xl">
+                <div className="flex flex-wrap items-center gap-x-8 gap-y-3 font-headline text-xl font-bold tracking-tight text-on-surface-variant md:text-2xl">
                   <span>WSafe Finanse</span>
                   <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
                   <span>WKS Poznań</span>
                   <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
-                  <span>Estalo</span>
+                  <span>Jedmar</span>
                 </div>
                 <p className="text-sm text-on-surface-variant">
                   Bezpośredni kontakt z założycielami · Odpowiadamy w 24 h · Poznań i cała Polska
@@ -265,7 +265,7 @@ export default function StronyInternetowePage() {
             <div className="grid gap-x-10 gap-y-12 md:grid-cols-3">
               {steps.map((s, i) => (
                 <Reveal key={s.n} delay={i * 0.12} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
-                  <span className="font-headline text-4xl font-bold text-primary/40">{s.n}</span>
+                  <span className="font-mono text-xs uppercase tracking-widest text-primary">{s.n}</span>
                   <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface">{s.title}</h3>
                   <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
                 </Reveal>
@@ -302,7 +302,7 @@ export default function StronyInternetowePage() {
                 Wielkopolska i cała Polska. Odpowiadamy w ciągu 24 godzin.
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-4">
-                <CtaButton href="#kontakt-main">Wyceń moją stronę</CtaButton>
+                <CtaButton href="#kontakt-main">Opisz projekt szczegółowo</CtaButton>
                 <CtaButton href="tel:+48509123434" variant="secondary">Zadzwoń: 509 123 434</CtaButton>
               </div>
             </Reveal>
@@ -312,11 +312,6 @@ export default function StronyInternetowePage() {
         {/* Dowód społeczny + pełny formularz */}
         <TrustBar />
         <ProjectsMarquee />
-        <div className={CONTAINER}>
-          <Reveal>
-            <h2 className={H2}>Napisz — wrócimy z wyceną w 24h</h2>
-          </Reveal>
-        </div>
         <QuickContact />
       </div>
     </>
