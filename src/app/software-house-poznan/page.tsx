@@ -69,13 +69,6 @@ const serviceJsonLd = {
   description:
     "Software house z Poznania — tworzenie oprogramowania na zamówienie, systemy SaaS, aplikacje webowe i mobilne, integracje AI.",
   url: "https://programo.pl/software-house-poznan",
-  offers: {
-    "@type": "AggregateOffer",
-    priceCurrency: "PLN",
-    lowPrice: "5000",
-    highPrice: "200000",
-    offerCount: "4",
-  },
 };
 
 const services = [
@@ -281,9 +274,10 @@ export default function SoftwareHousePoznanPage() {
                   Ile kosztuje współpraca z software house Programo?
                 </h3>
                 <p className="opacity-75">
-                  Małe aplikacje webowe — od kilku tysięcy złotych. Kompletne
-                  systemy SaaS — od kilkudziesięciu tysięcy. Każdą wycenę robimy
-                  indywidualnie po krótkiej rozmowie o zakresie.
+                  Koszt zależy od zakresu projektu — małą aplikację webową i
+                  rozbudowany system SaaS wyceniamy zupełnie inaczej. Dlatego
+                  każdą wycenę przygotowujemy indywidualnie po krótkiej rozmowie,
+                  z konkretnymi widełkami i bez ukrytych kosztów.
                 </p>
               </div>
               <div>

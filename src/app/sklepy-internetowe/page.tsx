@@ -62,19 +62,12 @@ const serviceJsonLd = {
   description:
     "Tworzenie, migracja i rozwój sklepów internetowych: WooCommerce, Shopify, PrestaShop, headless (Next.js), integracje Allegro/BaseLinker/płatności.",
   url: "https://programo.pl/sklepy-internetowe",
-  offers: {
-    "@type": "AggregateOffer",
-    priceCurrency: "PLN",
-    lowPrice: "6000",
-    highPrice: "60000",
-    offerCount: "6",
-  },
 };
 
 const faqs = [
   {
     q: "Ile kosztuje sklep internetowy?",
-    a: "Prosty sklep zaczyna się od ok. 6 000 zł, rozbudowany e-commerce z integracjami (Allegro, BaseLinker, płatności, ERP) od ok. 15 000 zł. Dokładną wycenę przygotowujemy po krótkiej rozmowie o zakresie.",
+    a: "Koszt zależy od zakresu — liczby produktów, integracji (Allegro, BaseLinker, płatności, ERP) i migracji danych. Każdy sklep wyceniamy indywidualnie po krótkiej rozmowie o zakresie — z konkretnymi widełkami i bez ukrytych kosztów.",
   },
   {
     q: "Ile trwa wdrożenie sklepu?",

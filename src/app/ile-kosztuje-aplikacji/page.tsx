@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Ile kosztuje aplikacja lub strona? Cennik 2026 — Programo",
+  title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy — Programo",
   description:
-    "Ile kosztuje stworzenie aplikacji, strony lub systemu SaaS w 2026 roku? Orientacyjne widełki cenowe, co wpływa na koszt i jak wyceniamy projekty. Software house Programo z Poznania.",
+    "Ile kosztuje stworzenie aplikacji, strony lub systemu SaaS? Wyjaśniamy, co realnie wpływa na koszt i jak wygląda nasza indywidualna wycena. Software house Programo z Poznania.",
   alternates: { canonical: "https://programo.pl/ile-kosztuje-aplikacji" },
   openGraph: {
-    title: "Ile kosztuje aplikacja lub strona? Cennik 2026 — Programo",
+    title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy — Programo",
     description:
-      "Orientacyjne widełki cenowe aplikacji, stron i systemów SaaS oraz to, co realnie wpływa na koszt projektu.",
+      "Co realnie wpływa na koszt aplikacji, strony lub systemu SaaS i jak wygląda nasza indywidualna wycena.",
     url: "https://programo.pl/ile-kosztuje-aplikacji",
     siteName: "Programo",
     locale: "pl_PL",
@@ -29,21 +29,21 @@ export const metadata: Metadata = {
   ],
 };
 
-const priceRows = [
+const projectRows = [
   {
     type: "Landing / prosta strona firmowa",
-    price: "od ok. 6 000 zł",
+    timeline: "2–3 tygodnie",
     note: "Oferta, formularz kontaktowy, SEO lokalne, szybkie wdrożenie.",
   },
   {
     type: "Rozbudowana strona / e-commerce / portal",
-    price: "od ok. 15 000 zł",
+    timeline: "4–6 tygodni",
     note: "Panel treści (CMS), integracje, płatności, konto klienta, wielojęzyczność.",
   },
   {
     type: "Aplikacja webowa / mobilna / system SaaS",
-    price: "wycena indywidualna",
-    note: "Zwykle od kilkudziesięciu tysięcy zł — role, płatności, integracje, AI, utrzymanie.",
+    timeline: "od 6–8 tygodni",
+    note: "Role, płatności, integracje, AI, utrzymanie — zakres ustalamy wspólnie.",
   },
 ];
 
@@ -77,15 +77,15 @@ const factors = [
 const faqs = [
   {
     q: "Ile kosztuje stworzenie aplikacji mobilnej?",
-    a: "Prosta aplikacja (MVP) zaczyna się zwykle od kilkunastu–kilkudziesięciu tysięcy złotych. Rozbudowane aplikacje z backendem, rolami, płatnościami i integracjami wyceniamy indywidualnie po ustaleniu zakresu. Najtaniej wychodzi wspólny kod web + mobile (Capacitor/PWA).",
+    a: "Koszt zależy od zakresu: liczby ekranów, ról, płatności i integracji. Najtaniej wychodzi wspólny kod web + mobile (Capacitor/PWA). Każdą aplikację wyceniamy indywidualnie po ustaleniu zakresu — z konkretnymi widełkami i bez ukrytych kosztów.",
   },
   {
     q: "Ile kosztuje strona internetowa?",
-    a: "Prosta strona firmowa lub landing to wydatek od około 6 000 zł. Rozbudowana strona z panelem treści, sklepem lub portalem klienta zaczyna się od około 15 000 zł.",
+    a: "Koszt zależy od zakresu — liczby podstron, panelu treści (CMS), integracji i wymagań SEO. Nie pracujemy z cennikiem z półki: po krótkiej rozmowie przygotowujemy konkretną, indywidualną wycenę z widełkami.",
   },
   {
     q: "Co to jest MVP i ile kosztuje?",
-    a: "MVP to pierwsza, działająca wersja produktu z najważniejszymi funkcjami — pozwala szybko zweryfikować pomysł na rynku. Zwykle powstaje w 4–8 tygodni, a koszt zaczyna się od kilkunastu tysięcy złotych, zależnie od zakresu.",
+    a: "MVP to pierwsza, działająca wersja produktu z najważniejszymi funkcjami — pozwala szybko zweryfikować pomysł na rynku. Zwykle powstaje w 4–8 tygodni, a jego koszt zależy od zakresu, więc wyceniamy go indywidualnie.",
   },
   {
     q: "Czy dostanę dokładną wycenę z góry?",
@@ -120,7 +120,7 @@ const faqJsonLd = {
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Ile kosztuje aplikacja lub strona? Cennik 2026",
+  headline: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy",
   inLanguage: "pl-PL",
   author: { "@id": "https://programo.pl/#organization" },
   publisher: { "@id": "https://programo.pl/#organization" },
@@ -158,27 +158,26 @@ export default function IleKosztujeAplikacjiPage() {
 
           <header className="mb-12">
             <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] opacity-60">
-              Cennik 2026 · Software house Poznań
+              Wycena · Software house Poznań
             </p>
             <h1 className="mb-6 font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl">
               Ile kosztuje stworzenie aplikacji lub strony?
             </h1>
             <p className="text-lg leading-relaxed opacity-85 md:text-xl">
-              Orientacyjnie: prosta strona firmowa lub landing to wydatek{" "}
-              <strong>od ok. 6 000 zł</strong>, rozbudowana strona, sklep lub portal —{" "}
-              <strong>od ok. 15 000 zł</strong>, a pełna aplikacja webowa/mobilna lub
-              system SaaS wyceniamy <strong>indywidualnie</strong> (zwykle od
-              kilkudziesięciu tysięcy złotych). Ostateczna cena zależy od zakresu,
-              integracji i terminu — niżej tłumaczymy, od czego konkretnie.
+              Krótko: koszt zależy od trzech rzeczy — <strong>zakresu</strong>,{" "}
+              <strong>integracji</strong> i <strong>terminu</strong>. Dlatego nie mamy
+              sztywnego cennika z półki, tylko każdy projekt wyceniamy{" "}
+              <strong>indywidualnie</strong> po krótkiej rozmowie. Niżej tłumaczymy, co
+              konkretnie wpływa na cenę i jak wygląda nasza wycena.
             </p>
           </header>
 
           <section className="mb-14">
             <h2 className="mb-6 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
-              Orientacyjny cennik 2026
+              Co budujemy i ile to zwykle trwa
             </h2>
             <div className="overflow-hidden rounded-2xl border border-current/15">
-              {priceRows.map((row, i) => (
+              {projectRows.map((row, i) => (
                 <div
                   key={row.type}
                   className={`grid gap-2 p-5 md:grid-cols-[1.2fr_0.8fr] md:items-center md:gap-6 ${
@@ -190,17 +189,18 @@ export default function IleKosztujeAplikacjiPage() {
                     <p className="mt-1 text-sm leading-relaxed opacity-70">{row.note}</p>
                   </div>
                   <p className="font-headline text-xl font-bold md:text-right">
-                    {row.price}
+                    {row.timeline}
                   </p>
                 </div>
               ))}
             </div>
             <p className="mt-3 text-sm opacity-60">
-              Widełki orientacyjne, spójne z naszym{" "}
+              Orientacyjne terminy — każdy projekt wyceniamy zawsze indywidualnie.
+              Zobacz, jak podchodzimy do{" "}
               <Link href="/cennik" className="underline hover:opacity-100">
-                cennikiem
+                wyceny
               </Link>
-              . Dokładną wycenę robimy zawsze indywidualnie.
+              .
             </p>
           </section>
 
@@ -226,9 +226,9 @@ export default function IleKosztujeAplikacjiPage() {
               MVP to pierwsza działająca wersja produktu z najważniejszymi funkcjami —
               pozwala szybko sprawdzić pomysł na rynku bez budowania od razu całego
               systemu. W Programo MVP powstaje zwykle w <strong>4–8 tygodni</strong>, a
-              koszt zaczyna się od <strong>kilkunastu tysięcy złotych</strong>, zależnie
-              od zakresu. To najtańszy sposób, by ruszyć i zacząć zbierać realny feedback
-              od użytkowników.
+              jego koszt zależy od zakresu, więc wyceniamy go{" "}
+              <strong>indywidualnie</strong>. To najtańszy sposób, by ruszyć i zacząć
+              zbierać realny feedback od użytkowników.
             </p>
           </section>
 
@@ -271,8 +271,8 @@ export default function IleKosztujeAplikacjiPage() {
               Chcesz poznać koszt swojego projektu?
             </h2>
             <p className="mb-6 max-w-2xl opacity-80">
-              Opisz pomysł w 2 minuty — wrócimy z orientacyjnymi widełkami i pierwszymi
-              krokami. A jeśli masz już stronę, sprawdź ją w naszym bezpłatnym audycie.
+              Opisz pomysł w dwie minuty — wrócimy z konkretnymi widełkami i propozycją
+              pierwszych kroków. Bezpłatnie i bez zobowiązań.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link

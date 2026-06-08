@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Pricing from "@/components/pricing";
 
 export const metadata: Metadata = {
-  title: "Cennik — Programo",
+  title: "Wycena — Programo",
   description:
-    "Przejrzysty model rozliczeń. Orientacyjne zakresy cen dla stron, aplikacji SaaS i projektów customowych.",
+    "Każdy projekt wyceniamy indywidualnie. Po krótkiej rozmowie przygotowujemy konkretną wycenę z widełkami i podziałem na etapy — przejrzyście i bez ukrytych kosztów.",
   alternates: { canonical: "https://programo.pl/cennik" },
 };
 

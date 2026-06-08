@@ -64,7 +64,7 @@ const serviceJsonLd = {
 const faqs = [
   {
     q: "Ile kosztuje strona internetowa?",
-    a: "Prosta strona firmowa zaczyna się od kilku tysięcy złotych, rozbudowana strona z CMS-em, integracjami i wielojęzycznością — od kilkunastu tysięcy. Dokładną wycenę przygotowujemy po krótkiej rozmowie o zakresie.",
+    a: "Koszt zależy od zakresu — liczby podstron, panelu treści (CMS), integracji i wymagań SEO. Nie pracujemy z cennikiem z półki: po krótkiej rozmowie przygotowujemy konkretną, indywidualną wycenę z widełkami. Bez ukrytych kosztów.",
   },
   {
     q: "Ile trwa wykonanie strony?",

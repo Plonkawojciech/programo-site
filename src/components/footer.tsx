@@ -13,7 +13,7 @@ const footerLinks: { href: string; label: { pl: string; en: string } }[] = [
   { href: "/oferta", label: { pl: "Oferta", en: "Services" } },
   { href: "/strony-internetowe", label: { pl: "Strony internetowe", en: "Websites" } },
   { href: "/sklepy-internetowe", label: { pl: "Sklepy internetowe", en: "Online stores" } },
-  { href: "/cennik", label: { pl: "Cennik", en: "Pricing" } },
+  { href: "/cennik", label: { pl: "Wycena", en: "Pricing" } },
   { href: "/projekty", label: { pl: "Projekty", en: "Projects" } },
   { href: "/o-nas", label: { pl: "O nas", en: "About" } },
   { href: "/software-house-poznan", label: { pl: "Software House Poznań", en: "Software House Poznań" } },
