@@ -7,13 +7,14 @@ import {
   type Lead,
   type LeadMeta,
   type LeadStatus,
+  type LeadPatch,
+  type EditableLeadField,
   LEAD_STATUSES,
   DEFAULT_LEAD_STATUS,
 } from "@/lib/leads";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-// Distinct hues that read on both the light + dark CRM surface.
 const STATUS_TEXT: Record<LeadStatus, string> = {
   "Nowy": "text-on-surface-variant border-outline-variant",
   "Zadzwoniono": "text-blue-500 border-blue-500/40",
@@ -31,6 +32,24 @@ const STATUS_DOT: Record<LeadStatus, string> = {
   "Wygrany": "bg-emerald-500",
   "Przegrany": "bg-red-500",
 };
+
+const EDIT_FIELDS: {
+  key: EditableLeadField;
+  label: string;
+  type: "input" | "textarea";
+  inputType?: string;
+}[] = [
+  { key: "name", label: "Imię / nazwa", type: "input" },
+  { key: "email", label: "E-mail", type: "input", inputType: "email" },
+  { key: "phone", label: "Telefon", type: "input", inputType: "tel" },
+  { key: "projectType", label: "Rodzaj projektu", type: "input" },
+  { key: "budget", label: "Budżet", type: "input" },
+  { key: "subject", label: "Temat", type: "input" },
+  { key: "message", label: "Wiadomość", type: "textarea" },
+];
+
+const editInputClass =
+  "w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface outline-none transition-colors focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
 
 function formatAbsolute(iso: string): string {
   const d = new Date(iso);
@@ -98,7 +117,6 @@ function CopyButton({ value, label }: { value: string; label: string }) {
   );
 }
 
-// Sales status dropdown — optimistic update, reverts on failure.
 function StatusControl({ id, initial }: { id: string; initial: LeadStatus }) {
   const [status, setStatus] = useState<LeadStatus>(initial);
   const [saving, setSaving] = useState(false);
@@ -107,7 +125,7 @@ function StatusControl({ id, initial }: { id: string; initial: LeadStatus }) {
   async function change(next: LeadStatus) {
     if (next === status || saving) return;
     const prev = status;
-    setStatus(next); // optimistic
+    setStatus(next);
     setSaving(true);
     setError(false);
     try {
@@ -168,7 +186,6 @@ function StatusControl({ id, initial }: { id: string; initial: LeadStatus }) {
   );
 }
 
-// Free-text note — auto-saves on blur, shows a transient confirmation.
 function NoteField({ id, initial }: { id: string; initial: string }) {
   const [note, setNote] = useState(initial);
   const savedRef = useRef(initial);
@@ -247,17 +264,71 @@ function Chip({ children }: { children: React.ReactNode }) {
   );
 }
 
-function LeadEntry({ lead, meta }: { lead: Lead; meta?: LeadMeta }) {
+function LeadEntry({
+  lead,
+  meta,
+  onDelete,
+  onSave,
+}: {
+  lead: Lead;
+  meta?: LeadMeta;
+  onDelete: (id: string) => Promise<boolean>;
+  onSave: (id: string, patch: LeadPatch) => Promise<boolean>;
+}) {
   const [showSource, setShowSource] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [confirmDel, setConfirmDel] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [actionError, setActionError] = useState("");
+  const [form, setForm] = useState<LeadPatch>({});
+
   const sourcePairs = SOURCE_LABELS.map(
     ([key, label]) => [label, lead[key]] as const
   ).filter(([, v]) => Boolean(v));
+
+  function startEdit() {
+    setForm({
+      name: lead.name || "",
+      email: lead.email || "",
+      phone: lead.phone || "",
+      projectType: lead.projectType || "",
+      budget: lead.budget || "",
+      subject: lead.subject || "",
+      message: lead.message || "",
+    });
+    setActionError("");
+    setConfirmDel(false);
+    setEditing(true);
+  }
+
+  async function saveEdit() {
+    if (!lead.id || busy) return;
+    setBusy(true);
+    setActionError("");
+    const ok = await onSave(lead.id, form);
+    setBusy(false);
+    if (ok) setEditing(false);
+    else setActionError("Nie udało się zapisać. Spróbuj ponownie.");
+  }
+
+  async function doDelete() {
+    if (!lead.id || busy) return;
+    setBusy(true);
+    setActionError("");
+    const ok = await onDelete(lead.id);
+    // On success the parent unmounts this card. On failure we stay and report.
+    if (!ok) {
+      setBusy(false);
+      setConfirmDel(false);
+      setActionError("Nie udało się usunąć. Spróbuj ponownie.");
+    }
+  }
 
   return (
     <article className="border-t border-outline-variant py-9 first:border-t-0 first:pt-0">
       <header className="mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <h2 className="font-headline text-2xl font-medium tracking-tight text-on-surface">
-          {lead.name || "Bez imienia"}
+          {editing ? "Edycja leada" : lead.name || "Bez imienia"}
         </h2>
         <time
           dateTime={lead.ts}
@@ -271,103 +342,202 @@ function LeadEntry({ lead, meta }: { lead: Lead; meta?: LeadMeta }) {
         </time>
       </header>
 
-      {/* Sales status */}
-      {lead.id && (
-        <div className="mb-5">
-          <StatusControl id={lead.id} initial={meta?.status ?? DEFAULT_LEAD_STATUS} />
-        </div>
-      )}
-
-      {(lead.email || lead.phone) && (
-        <div className="mb-4 flex flex-wrap items-center gap-x-8 gap-y-2 text-sm">
-          {lead.email && (
-            <span className="inline-flex items-center gap-2">
-              <a
-                href={`mailto:${lead.email}`}
-                className="text-on-surface underline decoration-outline-variant underline-offset-4 transition-colors hover:text-primary hover:decoration-primary"
+      {editing ? (
+        <div className="flex flex-col gap-3">
+          {EDIT_FIELDS.map((f) => (
+            <div key={f.key} className="flex flex-col gap-1">
+              <label
+                htmlFor={`edit-${lead.id}-${f.key}`}
+                className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant"
               >
-                {lead.email}
-              </a>
-              <CopyButton value={lead.email} label="e-mail" />
-            </span>
-          )}
-          {lead.phone && (
-            <span className="inline-flex items-center gap-2">
-              <a
-                href={`tel:${lead.phone.replace(/\s/g, "")}`}
-                className="text-on-surface underline decoration-outline-variant underline-offset-4 transition-colors hover:text-primary hover:decoration-primary"
-              >
-                {lead.phone}
-              </a>
-              <CopyButton value={lead.phone} label="telefon" />
-            </span>
-          )}
-        </div>
-      )}
-
-      {(lead.subject || lead.projectType || lead.budget) && (
-        <div className="mb-4 flex flex-wrap gap-2">
-          {lead.subject && <Chip>{lead.subject}</Chip>}
-          {lead.projectType && <Chip>{lead.projectType}</Chip>}
-          {lead.budget && <Chip>Budżet: {lead.budget}</Chip>}
-        </div>
-      )}
-
-      {lead.message && (
-        <p className="max-w-2xl whitespace-pre-wrap text-[15px] leading-relaxed text-on-surface-variant">
-          {lead.message}
-        </p>
-      )}
-
-      {/* Note */}
-      {lead.id && <NoteField id={lead.id} initial={meta?.note ?? ""} />}
-
-      {sourcePairs.length > 0 && (
-        <div className="mt-5">
-          <button
-            type="button"
-            onClick={() => setShowSource((v) => !v)}
-            aria-expanded={showSource}
-            className="inline-flex cursor-pointer items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant transition-colors hover:text-primary"
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-              className={`transition-transform duration-300 ${showSource ? "rotate-90" : ""}`}
+                {f.label}
+              </label>
+              {f.type === "textarea" ? (
+                <textarea
+                  id={`edit-${lead.id}-${f.key}`}
+                  value={form[f.key] ?? ""}
+                  onChange={(e) => setForm((s) => ({ ...s, [f.key]: e.target.value }))}
+                  rows={3}
+                  className={`${editInputClass} resize-y leading-relaxed`}
+                />
+              ) : (
+                <input
+                  id={`edit-${lead.id}-${f.key}`}
+                  type={f.inputType ?? "text"}
+                  value={form[f.key] ?? ""}
+                  onChange={(e) => setForm((s) => ({ ...s, [f.key]: e.target.value }))}
+                  className={editInputClass}
+                />
+              )}
+            </div>
+          ))}
+          <div className="mt-2 flex flex-wrap items-center gap-4">
+            <button
+              type="button"
+              onClick={saveEdit}
+              disabled={busy}
+              className="cursor-pointer rounded-full bg-primary px-5 py-2 text-sm font-medium text-on-primary transition-colors hover:bg-primary-container disabled:opacity-50"
             >
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-            Źródło leada
-            <span className="font-normal normal-case tracking-normal text-on-surface-variant/60">
-              {sourcePairs.length}
-            </span>
-          </button>
-          <AnimatePresence initial={false}>
-            {showSource && (
-              <motion.dl
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3, ease: EASE }}
-                className="mt-3 grid grid-cols-1 gap-x-8 gap-y-1.5 overflow-hidden text-xs sm:grid-cols-2"
-              >
-                {sourcePairs.map(([label, value]) => (
-                  <div key={label} className="flex gap-2">
-                    <dt className="shrink-0 text-on-surface-variant">{label}:</dt>
-                    <dd className="break-all text-on-surface">{value}</dd>
-                  </div>
-                ))}
-              </motion.dl>
-            )}
-          </AnimatePresence>
+              {busy ? "Zapisywanie…" : "Zapisz zmiany"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditing(false)}
+              disabled={busy}
+              className="cursor-pointer text-sm text-on-surface-variant transition-colors hover:text-on-surface disabled:opacity-50"
+            >
+              Anuluj
+            </button>
+            {actionError && <span className="text-xs text-red-500">{actionError}</span>}
+          </div>
         </div>
+      ) : (
+        <>
+          {lead.id && (
+            <div className="mb-5">
+              <StatusControl id={lead.id} initial={meta?.status ?? DEFAULT_LEAD_STATUS} />
+            </div>
+          )}
+
+          {(lead.email || lead.phone) && (
+            <div className="mb-4 flex flex-wrap items-center gap-x-8 gap-y-2 text-sm">
+              {lead.email && (
+                <span className="inline-flex items-center gap-2">
+                  <a
+                    href={`mailto:${lead.email}`}
+                    className="text-on-surface underline decoration-outline-variant underline-offset-4 transition-colors hover:text-primary hover:decoration-primary"
+                  >
+                    {lead.email}
+                  </a>
+                  <CopyButton value={lead.email} label="e-mail" />
+                </span>
+              )}
+              {lead.phone && (
+                <span className="inline-flex items-center gap-2">
+                  <a
+                    href={`tel:${lead.phone.replace(/\s/g, "")}`}
+                    className="text-on-surface underline decoration-outline-variant underline-offset-4 transition-colors hover:text-primary hover:decoration-primary"
+                  >
+                    {lead.phone}
+                  </a>
+                  <CopyButton value={lead.phone} label="telefon" />
+                </span>
+              )}
+            </div>
+          )}
+
+          {(lead.subject || lead.projectType || lead.budget) && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {lead.subject && <Chip>{lead.subject}</Chip>}
+              {lead.projectType && <Chip>{lead.projectType}</Chip>}
+              {lead.budget && <Chip>Budżet: {lead.budget}</Chip>}
+            </div>
+          )}
+
+          {lead.message && (
+            <p className="max-w-2xl whitespace-pre-wrap text-[15px] leading-relaxed text-on-surface-variant">
+              {lead.message}
+            </p>
+          )}
+
+          {lead.id && <NoteField id={lead.id} initial={meta?.note ?? ""} />}
+
+          {sourcePairs.length > 0 && (
+            <div className="mt-5">
+              <button
+                type="button"
+                onClick={() => setShowSource((v) => !v)}
+                aria-expanded={showSource}
+                className="inline-flex cursor-pointer items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant transition-colors hover:text-primary"
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                  className={`transition-transform duration-300 ${showSource ? "rotate-90" : ""}`}
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+                Źródło leada
+                <span className="font-normal normal-case tracking-normal text-on-surface-variant/60">
+                  {sourcePairs.length}
+                </span>
+              </button>
+              <AnimatePresence initial={false}>
+                {showSource && (
+                  <motion.dl
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3, ease: EASE }}
+                    className="mt-3 grid grid-cols-1 gap-x-8 gap-y-1.5 overflow-hidden text-xs sm:grid-cols-2"
+                  >
+                    {sourcePairs.map(([label, value]) => (
+                      <div key={label} className="flex gap-2">
+                        <dt className="shrink-0 text-on-surface-variant">{label}:</dt>
+                        <dd className="break-all text-on-surface">{value}</dd>
+                      </div>
+                    ))}
+                  </motion.dl>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* Actions */}
+          {lead.id && (
+            <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-outline-variant/40 pt-4 text-xs">
+              {!confirmDel ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={startEdit}
+                    className="cursor-pointer font-medium uppercase tracking-widest text-on-surface-variant transition-colors hover:text-primary"
+                  >
+                    Edytuj
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setConfirmDel(true);
+                      setActionError("");
+                    }}
+                    className="cursor-pointer font-medium uppercase tracking-widest text-on-surface-variant transition-colors hover:text-red-500"
+                  >
+                    Usuń
+                  </button>
+                </>
+              ) : (
+                <span className="flex flex-wrap items-center gap-3">
+                  <span className="text-on-surface-variant">Usunąć tego leada na stałe?</span>
+                  <button
+                    type="button"
+                    onClick={doDelete}
+                    disabled={busy}
+                    className="cursor-pointer font-medium uppercase tracking-widest text-red-500 transition-opacity hover:opacity-80 disabled:opacity-50"
+                  >
+                    {busy ? "Usuwanie…" : "Tak, usuń"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDel(false)}
+                    disabled={busy}
+                    className="cursor-pointer text-on-surface-variant transition-colors hover:text-on-surface disabled:opacity-50"
+                  >
+                    Anuluj
+                  </button>
+                </span>
+              )}
+              {actionError && <span className="text-red-500">{actionError}</span>}
+            </div>
+          )}
+        </>
       )}
     </article>
   );
@@ -383,6 +553,7 @@ export default function LeadsDashboard({
   configured?: boolean;
 }) {
   const router = useRouter();
+  const [items, setItems] = useState<Lead[]>(leads);
   const [query, setQuery] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -397,20 +568,55 @@ export default function LeadsDashboard({
     router.refresh();
   }
 
+  async function handleDelete(id: string): Promise<boolean> {
+    try {
+      const res = await fetch("/api/leads", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) return false;
+      setItems((cur) => cur.filter((l) => l.id !== id));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async function handleSave(id: string, patch: LeadPatch): Promise<boolean> {
+    const prev = items;
+    setItems((cur) => cur.map((l) => (l.id === id ? { ...l, ...patch } : l)));
+    try {
+      const res = await fetch("/api/leads", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...patch }),
+      });
+      if (!res.ok) {
+        setItems(prev);
+        return false;
+      }
+      return true;
+    } catch {
+      setItems(prev);
+      return false;
+    }
+  }
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return leads;
-    return leads.filter((l) =>
+    if (!q) return items;
+    return items.filter((l) =>
       [l.name, l.email, l.phone, l.message, l.projectType]
         .filter(Boolean)
         .some((field) => field.toLowerCase().includes(q))
     );
-  }, [leads, query]);
+  }, [items, query]);
 
   const countLabel =
-    leads.length === 1
+    items.length === 1
       ? "zgłoszenie"
-      : leads.length >= 2 && leads.length <= 4
+      : items.length >= 2 && items.length <= 4
         ? "zgłoszenia"
         : "zgłoszeń";
 
@@ -428,8 +634,8 @@ export default function LeadsDashboard({
                 Leady
               </h1>
               <p className="mt-3 text-sm text-on-surface-variant">
-                {leads.length} {countLabel}
-                {query.trim() && filtered.length !== leads.length && (
+                {items.length} {countLabel}
+                {query.trim() && filtered.length !== items.length && (
                   <span className="text-on-surface-variant/60">
                     {" "}
                     · {filtered.length} pasujących
@@ -448,7 +654,7 @@ export default function LeadsDashboard({
           </div>
 
           {/* Search */}
-          {configured && leads.length > 0 && (
+          {configured && items.length > 0 && (
             <div className="relative mt-10 border-b border-outline-variant focus-within:border-primary">
               <svg
                 width="16"
@@ -489,7 +695,7 @@ export default function LeadsDashboard({
               pojawiały tutaj.
             </p>
           </div>
-        ) : leads.length === 0 ? (
+        ) : items.length === 0 ? (
           <div className="border-t border-outline-variant py-16 text-center">
             <p className="font-headline text-xl font-medium text-on-surface">
               Brak leadów
@@ -512,6 +718,8 @@ export default function LeadsDashboard({
                 key={lead.id || lead.ts}
                 lead={lead}
                 meta={lead.id ? meta[lead.id] : undefined}
+                onDelete={handleDelete}
+                onSave={handleSave}
               />
             ))}
           </div>

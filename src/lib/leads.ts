@@ -206,3 +206,91 @@ export async function updateLeadMeta(
     return null;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Edit / delete a lead. The leads live in a Redis LIST, so we read the whole
+// list, transform it, and rewrite it (DEL + RPUSH preserving newest-first
+// order). Reliable at this scale (capped at 500, low volume) and avoids the
+// fragility of LREM/LSET against an exact serialized value. Best-effort.
+// ---------------------------------------------------------------------------
+
+/** Lead fields the CRM is allowed to edit (attribution + timestamps stay immutable). */
+export const EDITABLE_LEAD_FIELDS = [
+  "name",
+  "email",
+  "phone",
+  "subject",
+  "message",
+  "projectType",
+  "budget",
+] as const;
+
+export type EditableLeadField = (typeof EDITABLE_LEAD_FIELDS)[number];
+export type LeadPatch = Partial<Record<EditableLeadField, string>>;
+
+/** Read the full list, run `transform`, and rewrite it preserving order. */
+async function rewriteLeads(
+  transform: (leads: Lead[]) => Lead[]
+): Promise<Lead[] | null> {
+  const redis = getRedis();
+  if (!redis) return null;
+  try {
+    const rows = await redis.lrange<string | Lead>(LEADS_KEY, 0, -1);
+    const leads: Lead[] = [];
+    for (const row of rows) {
+      try {
+        const lead = typeof row === "string" ? (JSON.parse(row) as Lead) : row;
+        if (lead && typeof lead === "object") leads.push(lead as Lead);
+      } catch {
+        /* skip unparseable */
+      }
+    }
+    const next = transform(leads);
+    const pipe = redis.multi();
+    pipe.del(LEADS_KEY);
+    if (next.length > 0) {
+      pipe.rpush(LEADS_KEY, ...next.map((l) => JSON.stringify(l)));
+    }
+    await pipe.exec();
+    return next;
+  } catch (e) {
+    console.error("[leads] rewriteLeads failed:", e);
+    return null;
+  }
+}
+
+/** Delete a lead (and its meta) by id. Returns true on success. */
+export async function deleteLead(id: string): Promise<boolean> {
+  const redis = getRedis();
+  if (!redis) return false;
+  const next = await rewriteLeads((leads) => leads.filter((l) => l.id !== id));
+  if (next === null) return false;
+  try {
+    await redis.hdel(LEAD_META_KEY, id);
+  } catch {
+    /* best-effort — orphan meta is harmless */
+  }
+  return true;
+}
+
+/**
+ * Merge-edit a lead's editable fields. Returns the updated lead, or null if
+ * Redis is unavailable / the id was not found.
+ */
+export async function updateLead(id: string, patch: LeadPatch): Promise<Lead | null> {
+  let updated: Lead | null = null;
+  const next = await rewriteLeads((leads) =>
+    leads.map((l) => {
+      if (l.id !== id) return l;
+      const merged: Lead = { ...l };
+      for (const f of EDITABLE_LEAD_FIELDS) {
+        const v = patch[f];
+        if (typeof v === "string") merged[f] = v;
+      }
+      updated = merged;
+      return merged;
+    })
+  );
+  if (next === null) return null;
+  return updated; // null if the id was not present
+}
