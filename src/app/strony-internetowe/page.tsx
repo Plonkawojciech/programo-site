@@ -185,6 +185,14 @@ export default function StronyInternetowePage() {
           </div>
         </section>
 
+        {/* Szybki formularz NA GÓRZE — pierwszy punkt konwersji (cel hero-CTA #szybki-kontakt) */}
+        <CompactLeadForm
+          formId="strony-hero"
+          anchorId="szybki-kontakt"
+          projectType="Strona / landing"
+          heading="Zostaw numer — oddzwonimy z wyceną"
+        />
+
         {/* PROBLEM → OUTCOME */}
         <section className={SECTION}>
           <div className={CONTAINER}>
@@ -225,12 +233,12 @@ export default function StronyInternetowePage() {
           items={webCases}
         />
 
-        {/* SZYBKI KONTAKT — primary conversion gate (hero CTA target) */}
+        {/* Powtórzony szybki formularz — wzmocnienie dla scrollujących (osobny formId = osobny tracking) */}
         <CompactLeadForm
           formId="strony-compact"
-          anchorId="szybki-kontakt"
           projectType="Strona / landing"
-          heading="Zostaw numer — oddzwonimy z wyceną"
+          eyebrow="Bez zobowiązań"
+          heading="Wciąż się zastanawiasz? Zostaw numer"
         />
 
         {/* DLACZEGO MY */}

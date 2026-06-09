@@ -196,6 +196,14 @@ export default function SklepyInternetowePage() {
           </div>
         </section>
 
+        {/* Szybki formularz NA GÓRZE — pierwszy punkt konwersji (cel hero-CTA #szybki-kontakt) */}
+        <CompactLeadForm
+          formId="sklepy-hero"
+          anchorId="szybki-kontakt"
+          projectType="Sklep internetowy"
+          heading="Masz sklep do zbudowania lub przyspieszenia?"
+        />
+
         {/* PROBLEM → OUTCOME */}
         <section className={SECTION}>
           <div className={CONTAINER}>
@@ -263,12 +271,12 @@ export default function SklepyInternetowePage() {
           items={storeCases}
         />
 
-        {/* SZYBKI KONTAKT — primary conversion gate (hero CTA target) */}
+        {/* Powtórzony szybki formularz — wzmocnienie dla scrollujących (osobny formId = osobny tracking) */}
         <CompactLeadForm
           formId="sklepy-compact"
-          anchorId="szybki-kontakt"
           projectType="Sklep internetowy"
-          heading="Masz sklep do zbudowania lub przyspieszenia?"
+          eyebrow="Bez zobowiązań"
+          heading="Wciąż się rozglądasz? Zostaw numer"
         />
 
         {/* PROCES */}
