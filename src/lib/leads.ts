@@ -105,3 +105,104 @@ export async function getLeads(limit = 200): Promise<Lead[]> {
     return [];
   }
 }
+
+// ---------------------------------------------------------------------------
+// Lead meta — mutable per-lead sales state (status + free-text note).
+//
+// Kept SEPARATE from the immutable submission list, in a Redis hash keyed by
+// lead.id, so updating one lead's status/note is a single HSET and never
+// rewrites the whole list. Best-effort, like the rest of this module.
+// ---------------------------------------------------------------------------
+
+const LEAD_META_KEY = "programo:leads:meta";
+
+/** Sales pipeline statuses (PL). Order = pipeline order; first is the default. */
+export const LEAD_STATUSES = [
+  "Nowy",
+  "Zadzwoniono",
+  "Brak kontaktu",
+  "Wycena wysłana",
+  "Wygrany",
+  "Przegrany",
+] as const;
+
+export type LeadStatus = (typeof LEAD_STATUSES)[number];
+
+export const DEFAULT_LEAD_STATUS: LeadStatus = "Nowy";
+
+export type LeadMeta = {
+  status: LeadStatus;
+  note: string;
+  updatedAt: string; // ISO; request-time, never module load
+};
+
+function isLeadStatus(v: unknown): v is LeadStatus {
+  return typeof v === "string" && (LEAD_STATUSES as readonly string[]).includes(v);
+}
+
+function coerceMeta(raw: unknown): LeadMeta | null {
+  let obj: unknown = raw;
+  if (typeof raw === "string") {
+    try {
+      obj = JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+  if (!obj || typeof obj !== "object") return null;
+  const m = obj as Partial<LeadMeta>;
+  return {
+    status: isLeadStatus(m.status) ? m.status : DEFAULT_LEAD_STATUS,
+    note: typeof m.note === "string" ? m.note : "",
+    updatedAt: typeof m.updatedAt === "string" ? m.updatedAt : "",
+  };
+}
+
+/** Fetch all lead meta as a map: lead.id → LeadMeta. {} if no Redis / on error. */
+export async function getLeadMetaMap(): Promise<Record<string, LeadMeta>> {
+  const redis = getRedis();
+  if (!redis) return {};
+  try {
+    const raw = await redis.hgetall<Record<string, string | LeadMeta>>(LEAD_META_KEY);
+    if (!raw) return {};
+    const out: Record<string, LeadMeta> = {};
+    for (const [id, val] of Object.entries(raw)) {
+      const meta = coerceMeta(val);
+      if (meta) out[id] = meta;
+    }
+    return out;
+  } catch (e) {
+    console.error("[leads] getLeadMetaMap failed:", e);
+    return {};
+  }
+}
+
+/**
+ * Merge-update one lead's meta (status and/or note). Best-effort: returns the
+ * saved meta on success, or null if Redis is unavailable / on error.
+ */
+export async function updateLeadMeta(
+  id: string,
+  patch: { status?: LeadStatus; note?: string }
+): Promise<LeadMeta | null> {
+  const redis = getRedis();
+  if (!redis) return null;
+  try {
+    const existing =
+      coerceMeta(await redis.hget<string | LeadMeta>(LEAD_META_KEY, id)) || {
+        status: DEFAULT_LEAD_STATUS,
+        note: "",
+        updatedAt: "",
+      };
+    const next: LeadMeta = {
+      status: patch.status ?? existing.status,
+      note: patch.note ?? existing.note,
+      updatedAt: new Date().toISOString(),
+    };
+    await redis.hset(LEAD_META_KEY, { [id]: JSON.stringify(next) });
+    return next;
+  } catch (e) {
+    console.error("[leads] updateLeadMeta failed:", e);
+    return null;
+  }
+}

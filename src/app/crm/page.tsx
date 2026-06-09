@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { CRM_COOKIE, verifyToken } from "@/lib/crm-auth";
-import { getLeads, isLeadStoreConfigured } from "@/lib/leads";
+import { getLeads, getLeadMetaMap, isLeadStoreConfigured } from "@/lib/leads";
 import LoginForm from "./LoginForm";
 import LeadsDashboard from "./LeadsDashboard";
 
@@ -22,7 +22,9 @@ export default async function CrmPage() {
   }
 
   const configured = isLeadStoreConfigured();
-  const leads = configured ? await getLeads() : [];
+  const [leads, meta] = configured
+    ? await Promise.all([getLeads(), getLeadMetaMap()])
+    : [[], {}];
 
-  return <LeadsDashboard leads={leads} configured={configured} />;
+  return <LeadsDashboard leads={leads} meta={meta} configured={configured} />;
 }

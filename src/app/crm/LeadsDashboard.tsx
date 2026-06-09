@@ -1,11 +1,36 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import type { Lead } from "@/lib/leads";
+import {
+  type Lead,
+  type LeadMeta,
+  type LeadStatus,
+  LEAD_STATUSES,
+  DEFAULT_LEAD_STATUS,
+} from "@/lib/leads";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+// Distinct hues that read on both the light + dark CRM surface.
+const STATUS_TEXT: Record<LeadStatus, string> = {
+  "Nowy": "text-on-surface-variant border-outline-variant",
+  "Zadzwoniono": "text-blue-500 border-blue-500/40",
+  "Brak kontaktu": "text-amber-500 border-amber-500/40",
+  "Wycena wysłana": "text-violet-400 border-violet-400/40",
+  "Wygrany": "text-emerald-500 border-emerald-500/50",
+  "Przegrany": "text-red-500 border-red-500/40",
+};
+
+const STATUS_DOT: Record<LeadStatus, string> = {
+  "Nowy": "bg-on-surface-variant",
+  "Zadzwoniono": "bg-blue-500",
+  "Brak kontaktu": "bg-amber-500",
+  "Wycena wysłana": "bg-violet-400",
+  "Wygrany": "bg-emerald-500",
+  "Przegrany": "bg-red-500",
+};
 
 function formatAbsolute(iso: string): string {
   const d = new Date(iso);
@@ -73,6 +98,134 @@ function CopyButton({ value, label }: { value: string; label: string }) {
   );
 }
 
+// Sales status dropdown — optimistic update, reverts on failure.
+function StatusControl({ id, initial }: { id: string; initial: LeadStatus }) {
+  const [status, setStatus] = useState<LeadStatus>(initial);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
+
+  async function change(next: LeadStatus) {
+    if (next === status || saving) return;
+    const prev = status;
+    setStatus(next); // optimistic
+    setSaving(true);
+    setError(false);
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status: next }),
+      });
+      if (!res.ok) {
+        setStatus(prev);
+        setError(true);
+      }
+    } catch {
+      setStatus(prev);
+      setError(true);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="inline-flex items-center gap-2.5">
+      <span className="relative inline-flex items-center">
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute left-3.5 h-2 w-2 rounded-full ${STATUS_DOT[status]}`}
+        />
+        <select
+          value={status}
+          onChange={(e) => change(e.target.value as LeadStatus)}
+          aria-label="Status leada"
+          className={`cursor-pointer appearance-none rounded-full border bg-surface py-2 pl-8 pr-9 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 ${STATUS_TEXT[status]}`}
+        >
+          {LEAD_STATUSES.map((s) => (
+            <option key={s} value={s} className="bg-surface text-on-surface">
+              {s}
+            </option>
+          ))}
+        </select>
+        <svg
+          aria-hidden="true"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="pointer-events-none absolute right-3 text-on-surface-variant"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </span>
+      {saving && <span className="text-xs text-on-surface-variant">zapisywanie…</span>}
+      {error && <span className="text-xs text-red-500">błąd zapisu</span>}
+    </div>
+  );
+}
+
+// Free-text note — auto-saves on blur, shows a transient confirmation.
+function NoteField({ id, initial }: { id: string; initial: string }) {
+  const [note, setNote] = useState(initial);
+  const savedRef = useRef(initial);
+  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  async function save() {
+    if (note === savedRef.current) return;
+    setState("saving");
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, note }),
+      });
+      if (res.ok) {
+        savedRef.current = note;
+        setState("saved");
+        setTimeout(() => setState((s) => (s === "saved" ? "idle" : s)), 1800);
+      } else {
+        setState("error");
+      }
+    } catch {
+      setState("error");
+    }
+  }
+
+  return (
+    <div className="mt-5">
+      <div className="mb-1.5 flex items-center justify-between">
+        <label
+          htmlFor={`note-${id}`}
+          className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant"
+        >
+          Notatka
+        </label>
+        <span className="text-xs">
+          {state === "saving" && <span className="text-on-surface-variant">zapisywanie…</span>}
+          {state === "saved" && <span className="text-emerald-500">zapisano ✓</span>}
+          {state === "error" && <span className="text-red-500">błąd — spróbuj ponownie</span>}
+        </span>
+      </div>
+      <textarea
+        id={`note-${id}`}
+        value={note}
+        onChange={(e) => {
+          setNote(e.target.value);
+          if (state !== "idle") setState("idle");
+        }}
+        onBlur={save}
+        rows={2}
+        placeholder="Co ustaliliście? Kiedy oddzwonić? Budżet, terminy, kolejny krok…"
+        className="w-full resize-y rounded-xl border border-outline-variant bg-surface px-3.5 py-2.5 text-sm leading-relaxed text-on-surface placeholder:text-on-surface-variant/40 outline-none transition-colors focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+      />
+    </div>
+  );
+}
+
 const SOURCE_LABELS: [keyof Lead, string][] = [
   ["utm_campaign", "Kampania"],
   ["utm_term", "Słowo kluczowe"],
@@ -94,7 +247,7 @@ function Chip({ children }: { children: React.ReactNode }) {
   );
 }
 
-function LeadEntry({ lead }: { lead: Lead }) {
+function LeadEntry({ lead, meta }: { lead: Lead; meta?: LeadMeta }) {
   const [showSource, setShowSource] = useState(false);
   const sourcePairs = SOURCE_LABELS.map(
     ([key, label]) => [label, lead[key]] as const
@@ -117,6 +270,13 @@ function LeadEntry({ lead }: { lead: Lead }) {
           </span>
         </time>
       </header>
+
+      {/* Sales status */}
+      {lead.id && (
+        <div className="mb-5">
+          <StatusControl id={lead.id} initial={meta?.status ?? DEFAULT_LEAD_STATUS} />
+        </div>
+      )}
 
       {(lead.email || lead.phone) && (
         <div className="mb-4 flex flex-wrap items-center gap-x-8 gap-y-2 text-sm">
@@ -158,6 +318,9 @@ function LeadEntry({ lead }: { lead: Lead }) {
           {lead.message}
         </p>
       )}
+
+      {/* Note */}
+      {lead.id && <NoteField id={lead.id} initial={meta?.note ?? ""} />}
 
       {sourcePairs.length > 0 && (
         <div className="mt-5">
@@ -212,9 +375,11 @@ function LeadEntry({ lead }: { lead: Lead }) {
 
 export default function LeadsDashboard({
   leads,
+  meta = {},
   configured = true,
 }: {
   leads: Lead[];
+  meta?: Record<string, LeadMeta>;
   configured?: boolean;
 }) {
   const router = useRouter();
@@ -343,7 +508,11 @@ export default function LeadsDashboard({
         ) : (
           <div>
             {filtered.map((lead) => (
-              <LeadEntry key={lead.id || lead.ts} lead={lead} />
+              <LeadEntry
+                key={lead.id || lead.ts}
+                lead={lead}
+                meta={lead.id ? meta[lead.id] : undefined}
+              />
             ))}
           </div>
         )}
