@@ -141,68 +141,75 @@ export default function SklepyInternetowePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <div className="bg-surface text-on-surface">
-        {/* HERO — static, full-screen, 2-col (text + Jedmar app shot as LCP) */}
-        <section className="relative flex min-h-[88vh] flex-col justify-center pt-28 pb-16 md:pt-32">
+        {/* HERO — static, 2-col: copy + lead form ABOVE THE FOLD. Jedmar app
+            shot moved into the proof strip (stays LCP/proof) so the form — not
+            an image — owns the right column for paid traffic. */}
+        <section className="relative pt-28 pb-16 md:pt-32 md:pb-24">
           <div className={CONTAINER}>
-            <nav aria-label="breadcrumb" className="mb-10 text-xs uppercase tracking-widest text-on-surface-variant">
+            <nav aria-label="breadcrumb" className="mb-8 text-xs uppercase tracking-widest text-on-surface-variant">
               <Link href="/" className="transition-colors hover:text-on-surface">Programo</Link>
               <span className="mx-2">/</span>
               <span>Sklepy internetowe</span>
             </nav>
 
             <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+              {/* Left: copy */}
               <div>
                 <p className={EYEBROW}>Sklepy internetowe · E-commerce · Poznań</p>
-                <h1 className="mt-6 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-7xl 2xl:text-[clamp(4rem,4.6vw,5.5rem)]">
-                  Sklepy internetowe, które naprawdę sprzedają
+                <h1 className="mt-5 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl">
+                  Sklep internetowy, który naprawdę sprzedaje
                 </h1>
-                <p className="mt-8 max-w-2xl text-xl font-light leading-relaxed text-on-surface/70 md:mt-10 md:text-2xl">
+                <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
                   Tworzymy, migrujemy i rozwijamy sklepy: WooCommerce, Shopify,
                   PrestaShop i headless w Next.js — z integracjami (Allegro,
                   BaseLinker, płatności) i naciskiem na szybkość oraz konwersję.
                 </p>
-                <div className="mt-12 flex flex-wrap gap-4">
-                  <CtaButton href="#szybki-kontakt">Chcę sklep internetowy</CtaButton>
+                <div className="mt-8 flex flex-wrap items-center gap-4">
                   <CtaButton href="tel:+48509123434" variant="secondary">Zadzwoń: 509 123 434</CtaButton>
+                  <a href="#realizacje" className="text-sm font-medium text-on-surface-variant underline underline-offset-4 transition-colors hover:text-on-surface">
+                    Zobacz realizacje ↓
+                  </a>
+                </div>
+
+                {/* Trust strip with Jedmar app shot as compact proof */}
+                <div className="mt-10 flex flex-col gap-4 border-t border-outline-variant/30 pt-7">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">Wybrane realizacje</span>
+                  <div className="flex items-center gap-4">
+                    <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border border-outline-variant/40 bg-surface-container-low">
+                      <Image
+                        src="/screenshots/jedmar-hero.webp"
+                        alt="Aplikacja mobilna sklepu Jedmar — natywne iOS i Android zbudowane przez Programo"
+                        fill
+                        priority
+                        sizes="96px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1 font-headline text-lg font-bold tracking-tight text-on-surface-variant">
+                      <span>Jedmar</span>
+                      <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
+                      <span>WKS Poznań</span>
+                      <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
+                      <span>WSafe Finanse</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-on-surface-variant">
+                    Jedmar: natywne aplikacje iOS + Android · Poznań i cała Polska
+                  </p>
                 </div>
               </div>
 
-              <div className="relative aspect-[16/11] overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low">
-                <Image
-                  src="/screenshots/jedmar-hero.webp"
-                  alt="Aplikacja mobilna sklepu Jedmar — natywne iOS i Android zbudowane przez Programo"
-                  fill
-                  priority
-                  sizes="(min-width: 1024px) 45vw, 100vw"
-                  className="object-cover"
-                />
-              </div>
-            </div>
-
-            {/* Trust strip — static, above the fold */}
-            <div className="mt-14 flex flex-col gap-5 border-t border-outline-variant/30 pt-8">
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">Zaufali nam</span>
-              <div className="flex flex-wrap items-center gap-x-8 gap-y-3 font-headline text-xl font-bold tracking-tight text-on-surface-variant md:text-2xl">
-                <span>Jedmar</span>
-                <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
-                <span>WKS Poznań</span>
-                <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
-                <span>WSafe Finanse</span>
-              </div>
-              <p className="text-sm text-on-surface-variant">
-                Bezpośredni kontakt z założycielami · Odpowiadamy w 24 h · Poznań i cała Polska
-              </p>
+              {/* Right: lead form above the fold */}
+              <CompactLeadForm
+                bare
+                formId="sklepy-hero"
+                anchorId="szybki-kontakt"
+                projectType="Sklep internetowy"
+                heading="Masz sklep do zbudowania lub przyspieszenia?"
+              />
             </div>
           </div>
         </section>
-
-        {/* Szybki formularz NA GÓRZE — pierwszy punkt konwersji (cel hero-CTA #szybki-kontakt) */}
-        <CompactLeadForm
-          formId="sklepy-hero"
-          anchorId="szybki-kontakt"
-          projectType="Sklep internetowy"
-          heading="Masz sklep do zbudowania lub przyspieszenia?"
-        />
 
         {/* PROBLEM → OUTCOME */}
         <section className={SECTION}>
@@ -264,6 +271,7 @@ export default function SklepyInternetowePage() {
         </section>
 
         {/* KOMPETENCJE (honest capability proof) */}
+        <div id="realizacje" className="scroll-mt-28" />
         <CaseStudies
           eyebrow="Kompetencje"
           heading="Co jeszcze potrafimy — przydatne w sklepie"

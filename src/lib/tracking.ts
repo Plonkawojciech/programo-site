@@ -102,10 +102,17 @@ export function getAttribution(): Attribution {
  */
 const ADS_CONVERSION_LEAD = "AW-18196600478/tYIqCM3A_rkcEJ6t6ORD";
 
+// Estimated value of one lead, in PLN. This is a Smart Bidding signal, NOT a
+// reported statistic: a conservative expected value (avg project ≈ kilka tys. zł
+// × niska szansa zamknięcia). Required on the GA4 generate_lead event since the
+// April 2026 GA4 change — without value+currency the event silently fails to
+// qualify as a conversion. Adjust as close-rate data accumulates.
+const LEAD_VALUE_PLN = 500;
+
 function trackAdsConversion(): void {
   gtag("event", "conversion", {
     send_to: ADS_CONVERSION_LEAD,
-    value: 1.0,
+    value: LEAD_VALUE_PLN,
     currency: "PLN",
   });
 }
@@ -146,17 +153,31 @@ function markAdsLeadFired(): void {
 export function trackLead(detail: { form: string; method?: string }): void {
   const attr = getAttribution();
   const duplicate = hasAdsLeadFired();
+  // value + currency are REQUIRED for generate_lead to count as a GA4 key event
+  // (GA4 change, April 2026). Without them the event is silently dropped from
+  // conversion counting — a primary cause of the historical "0 konwersji".
   gtag("event", "generate_lead", {
     form_location: detail.form,
     method: detail.method,
     lead_source: attr.utm_source || (attr.gclid ? "google_ads" : "direct"),
     campaign: attr.utm_campaign,
     gclid: attr.gclid,
+    value: LEAD_VALUE_PLN,
+    currency: "PLN",
     duplicate,
   });
   if (!duplicate) {
     trackAdsConversion();
     markAdsLeadFired();
+  } else if (process.env.NODE_ENV !== "production") {
+    // Manual-test aid: a second submit in the same browser session intentionally
+    // skips the Ads conversion (once-per-session guard). Without this note it
+    // looks like a tracking failure. Test the Ads conversion in incognito / a
+    // fresh tab to fire it again.
+    console.info(
+      "[tracking] Ads lead conversion skipped (duplicate within session). " +
+        "Use a fresh tab/incognito to re-fire."
+    );
   }
 }
 

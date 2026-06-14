@@ -140,58 +140,66 @@ export default function StronyInternetowePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <div className="bg-surface text-on-surface">
-        {/* HERO — static (best LCP), full-screen, left-aligned */}
-        <section className="relative flex min-h-[88vh] flex-col justify-center pt-28 pb-16 md:pt-32">
+        {/* HERO — static (best LCP), 2-column: copy + lead form ABOVE THE FOLD.
+            Form in-hero because only ~29% of visitors scrolled past the old
+            88vh hero, so the form was effectively invisible to paid traffic. */}
+        <section className="relative pt-28 pb-16 md:pt-32 md:pb-24">
           <div className={CONTAINER}>
-            <nav aria-label="breadcrumb" className="mb-10 text-xs uppercase tracking-widest text-on-surface-variant">
+            <nav aria-label="breadcrumb" className="mb-8 text-xs uppercase tracking-widest text-on-surface-variant">
               <Link href="/" className="transition-colors hover:text-on-surface">Programo</Link>
               <span className="mx-2">/</span>
               <span>Strony internetowe</span>
             </nav>
 
-            <div className="max-w-5xl 2xl:max-w-6xl">
-              <p className={EYEBROW}>Tworzenie stron internetowych · Poznań</p>
-              <h1 className="mt-6 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-7xl 2xl:text-[clamp(4.5rem,5vw,6rem)]">
-                Strony internetowe, które pracują na Twój biznes
-              </h1>
-              <p className="mt-8 max-w-3xl text-xl font-light leading-relaxed text-on-surface/70 md:mt-10 md:text-2xl">
-                Projektujemy i budujemy nowoczesne strony firmowe, landing page
-                i serwisy w Next.js — szybkie (Core Web Vitals), pod SEO i pod
-                konwersję. Pracujesz bezpośrednio z założycielami, bez pośredników.
-              </p>
-
-              <div className="mt-12 flex flex-wrap gap-4">
-                <CtaButton href="#szybki-kontakt">Wyceń moją stronę</CtaButton>
-                <CtaButton href="tel:+48509123434" variant="secondary">Zadzwoń: 509 123 434</CtaButton>
-              </div>
-
-              {/* Trust strip — static, above the fold, no off-ramp links */}
-              <div className="mt-14 flex flex-col gap-5 border-t border-outline-variant/30 pt-8">
-                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
-                  Zaufali nam
-                </span>
-                <div className="flex flex-wrap items-center gap-x-8 gap-y-3 font-headline text-xl font-bold tracking-tight text-on-surface-variant md:text-2xl">
-                  <span>WSafe Finanse</span>
-                  <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
-                  <span>WKS Poznań</span>
-                  <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
-                  <span>Jedmar</span>
-                </div>
-                <p className="text-sm text-on-surface-variant">
-                  Bezpośredni kontakt z założycielami · Odpowiadamy w 24 h · Poznań i cała Polska
+            <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+              {/* Left: copy */}
+              <div>
+                <p className={EYEBROW}>Tworzenie stron internetowych · Poznań</p>
+                <h1 className="mt-5 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl">
+                  Strona firmowa, która pracuje na Twój biznes
+                </h1>
+                <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
+                  Małe studio z Poznania — pracujesz bezpośrednio z założycielami.
+                  Nowoczesna strona w Next.js, prosta zwykle w 3–4 tygodnie. Wycena
+                  w 24 h, własny kod, bez agencyjnych narzutów.
                 </p>
+
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <CtaButton href="tel:+48509123434" variant="secondary">Zadzwoń: 509 123 434</CtaButton>
+                  <a href="#realizacje" className="text-sm font-medium text-on-surface-variant underline underline-offset-4 transition-colors hover:text-on-surface">
+                    Zobacz realizacje ↓
+                  </a>
+                </div>
+
+                {/* Trust strip — static, above the fold, real clients only */}
+                <div className="mt-10 flex flex-col gap-4 border-t border-outline-variant/30 pt-7">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
+                    Wybrane realizacje
+                  </span>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-headline text-lg font-bold tracking-tight text-on-surface-variant md:text-xl">
+                    <span>Jedmar</span>
+                    <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
+                    <span>WKS Poznań</span>
+                    <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
+                    <span>WSafe Finanse</span>
+                  </div>
+                  <p className="text-sm text-on-surface-variant">
+                    Jedmar: natywne aplikacje iOS + Android · Poznań i cała Polska
+                  </p>
+                </div>
               </div>
+
+              {/* Right: lead form above the fold */}
+              <CompactLeadForm
+                bare
+                formId="strony-hero"
+                anchorId="szybki-kontakt"
+                projectType="Strona / landing"
+                heading="Zostaw numer — oddzwonimy z wyceną"
+              />
             </div>
           </div>
         </section>
-
-        {/* Szybki formularz NA GÓRZE — pierwszy punkt konwersji (cel hero-CTA #szybki-kontakt) */}
-        <CompactLeadForm
-          formId="strony-hero"
-          anchorId="szybki-kontakt"
-          projectType="Strona / landing"
-          heading="Zostaw numer — oddzwonimy z wyceną"
-        />
 
         {/* PROBLEM → OUTCOME */}
         <section className={SECTION}>
@@ -226,6 +234,7 @@ export default function StronyInternetowePage() {
         </section>
 
         {/* CASE STUDIES */}
+        <div id="realizacje" className="scroll-mt-28" />
         <CaseStudies
           eyebrow="Wybrane realizacje"
           heading="Strony i produkty, które zbudowaliśmy"

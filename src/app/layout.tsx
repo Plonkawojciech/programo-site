@@ -127,14 +127,14 @@ export default function RootLayout({
         {/* Google Consent Mode v2 — defaults set BEFORE gtag.js loads */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted',wait_for_update:500});var s=null;try{s=localStorage.getItem('programo-consent-v1');}catch(e){}if(s){try{var c=JSON.parse(s);gtag('consent','update',{ad_storage:c.marketing?'granted':'denied',ad_user_data:c.marketing?'granted':'denied',ad_personalization:c.marketing?'granted':'denied',analytics_storage:c.analytics?'granted':'denied'});}catch(e){}}`,
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted',wait_for_update:500});gtag('set','url_passthrough',true);gtag('set','ads_data_redaction',true);var s=null;try{s=localStorage.getItem('programo-consent-v1');}catch(e){}if(s){try{var c=JSON.parse(s);gtag('consent','update',{ad_storage:c.marketing?'granted':'denied',ad_user_data:c.marketing?'granted':'denied',ad_personalization:c.marketing?'granted':'denied',analytics_storage:c.analytics?'granted':'denied'});}catch(e){}}`,
           }}
         />
         {/* Google tag (gtag.js) — inlined directly in <head> for Search Console verification */}
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
         <script
           dangerouslySetInnerHTML={{
-            __html: `gtag('js', new Date());gtag('config', '${GA_ID}');gtag('config', '${ADS_ID}');`,
+            __html: `gtag('js', new Date());gtag('set','allow_ad_personalization_signals',true);gtag('config', '${GA_ID}');gtag('config', '${ADS_ID}');`,
           }}
         />
         {/* Microsoft Clarity — only loaded if user has granted analytics consent */}
