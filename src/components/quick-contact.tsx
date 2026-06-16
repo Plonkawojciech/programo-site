@@ -93,7 +93,7 @@ export default function QuickContact() {
       // Success branch only (API returned ok) — fire the primary Google Ads "Lead"
       // conversion exactly once per successful submit.
       setState("success");
-      trackLead({ form: "quick-contact" });
+      trackLead({ form: "quick-contact", email, phone });
       (e.target as HTMLFormElement).reset();
       setConsent(false);
       setProjectType(null);

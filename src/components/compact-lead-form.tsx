@@ -110,7 +110,7 @@ export default function CompactLeadForm({
         return;
       }
       setState("success");
-      trackLead({ form: formId });
+      trackLead({ form: formId, phone });
       (e.target as HTMLFormElement).reset();
       setConsent(false);
     } catch {

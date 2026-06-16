@@ -150,7 +150,59 @@ function markAdsLeadFired(): void {
  * signal; a dedicated Ads call-click conversion action can be added later. The Ads conversion
  * fires at most once per browser session; GA4 generate_lead fires on every submit.
  */
-export function trackLead(detail: { form: string; method?: string }): void {
+/** True only if the visitor granted MARKETING consent (Consent Mode v2). */
+function hasMarketingConsent(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const s = window.localStorage.getItem("programo-consent-v1");
+    if (!s) return false;
+    const c = JSON.parse(s);
+    return !!(c && c.marketing);
+  } catch {
+    return false;
+  }
+}
+
+function normEmail(e?: string): string | undefined {
+  if (!e) return undefined;
+  const v = e.trim().toLowerCase();
+  return v.includes("@") && v.length <= 320 ? v : undefined;
+}
+
+/** Normalize a PL/intl phone to E.164 (best-effort) for Enhanced Conversions. */
+function normPhone(p?: string): string | undefined {
+  if (!p) return undefined;
+  let d = p.replace(/[^\d+]/g, "");
+  if (d.startsWith("00")) d = "+" + d.slice(2);
+  if (d.startsWith("+")) return d.length >= 10 ? d : undefined;
+  if (d.length === 9) return "+48" + d; // bare PL national number
+  if (d.startsWith("48") && d.length === 11) return "+" + d;
+  return d.length >= 10 ? "+" + d : undefined;
+}
+
+/**
+ * Enhanced Conversions for Leads — provide user-provided data so Google Ads can
+ * match the lead to the ad click even with cookies denied. gtag hashes it
+ * (SHA-256) before transmission. RODO: only sent when MARKETING consent is
+ * granted; otherwise we send nothing.
+ */
+function setEnhancedUserData(email?: string, phone?: string): void {
+  if (!hasMarketingConsent()) return;
+  const ud: Record<string, string> = {};
+  const e = normEmail(email);
+  if (e) ud.email = e;
+  const ph = normPhone(phone);
+  if (ph) ud.phone_number = ph;
+  if (Object.keys(ud).length === 0) return;
+  gtag("set", "user_data", ud);
+}
+
+export function trackLead(detail: {
+  form: string;
+  method?: string;
+  email?: string;
+  phone?: string;
+}): void {
   const attr = getAttribution();
   const duplicate = hasAdsLeadFired();
   // value + currency are REQUIRED for generate_lead to count as a GA4 key event
@@ -167,6 +219,9 @@ export function trackLead(detail: { form: string; method?: string }): void {
     duplicate,
   });
   if (!duplicate) {
+    // Enhanced Conversions for Leads (set on the Ads side as "Zarządzane za
+    // pomocą tagu Google") — attach hashed user data before the conversion.
+    setEnhancedUserData(detail.email, detail.phone);
     trackAdsConversion();
     markAdsLeadFired();
   } else if (process.env.NODE_ENV !== "production") {
