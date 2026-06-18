@@ -60,6 +60,8 @@ const translations = {
 
   // Sticky mobile CTA
   "sticky.cta": { pl: "Bezpłatna konsultacja", en: "Free consultation" },
+  "sticky.call": { pl: "Zadzwoń", en: "Call" },
+  "sticky.write": { pl: "Napisz", en: "Message" },
 
   // Projects marquee (main page preview strip)
   "realizations.label": { pl: "Portfolio", en: "Portfolio" },
