@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# impeccable (third-party design tool — regenerate with `npx impeccable install`)
+.claude/skills/impeccable/
+.impeccable/
+
+# claude code agent worktrees (local state, not for the repo)
+.claude/worktrees/
