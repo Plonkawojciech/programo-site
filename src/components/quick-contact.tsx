@@ -9,20 +9,23 @@ import { getAttribution, trackLead } from "@/lib/tracking";
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 type FormState = "idle" | "submitting" | "success" | "error";
 
+// Problem-based options — what the client struggles with today.
+// Sent to the API as `projectType` (unchanged field name) for lead routing.
 const PROJECT_TYPES: { key: string; tKey: TKey }[] = [
-  { key: "web", tKey: "quick.type.web" },
-  { key: "saas", tKey: "quick.type.saas" },
-  { key: "mobile", tKey: "quick.type.mobile" },
-  { key: "ai", tKey: "quick.type.ai" },
-  { key: "other", tKey: "quick.type.other" },
+  { key: "leads", tKey: "quick.problem.leads" },
+  { key: "shop", tKey: "quick.problem.shop" },
+  { key: "manual", tKey: "quick.problem.manual" },
+  { key: "system", tKey: "quick.problem.system" },
+  { key: "ai", tKey: "quick.problem.ai" },
+  { key: "other", tKey: "quick.problem.other" },
 ];
 
 const BUDGETS: { key: string; tKey: TKey }[] = [
+  { key: "unsure", tKey: "quick.budget.unsure" },
   { key: "s", tKey: "quick.budget.s" },
   { key: "m", tKey: "quick.budget.m" },
   { key: "l", tKey: "quick.budget.l" },
   { key: "xl", tKey: "quick.budget.xl" },
-  { key: "unsure", tKey: "quick.budget.unsure" },
 ];
 
 const labelClass =
@@ -191,9 +194,10 @@ export default function QuickContact() {
                 <button
                   type="button"
                   onClick={() => setState("idle")}
-                  className="mt-2 inline-flex items-center gap-2 text-sm uppercase tracking-widest font-medium text-primary hover:gap-4 transition-all cursor-pointer"
+                  className="group mt-2 inline-flex items-center gap-2 text-sm uppercase tracking-widest font-medium text-primary transition-colors cursor-pointer"
                 >
-                  {t("quick.successAgain")} <span aria-hidden="true">→</span>
+                  {t("quick.successAgain")}{" "}
+                  <span aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:translate-x-1">→</span>
                 </button>
               </motion.div>
             ) : (
@@ -205,9 +209,9 @@ export default function QuickContact() {
                 transition={{ duration: 0.6 }}
                 className="flex flex-col gap-7 bg-surface-container/40 border border-outline-variant/30 rounded-3xl p-8 md:p-12"
               >
-                {/* Project type chips */}
+                {/* Problem-based chips */}
                 <div className="flex flex-col gap-3">
-                  <span className={labelClass}>{t("quick.typeLabel")}</span>
+                  <span className={labelClass}>{t("quick.problemLabel")}</span>
                   <div className="flex flex-wrap gap-2.5">
                     {PROJECT_TYPES.map((opt) => {
                       const active = projectType === opt.tKey;
@@ -266,30 +270,35 @@ export default function QuickContact() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-2">
-                    <label className={labelClass}>{t("quick.email")} *</label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      className={inputClass}
-                      placeholder="jan@firma.pl"
-                    />
+                <div className="flex flex-col gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-2">
+                      <label className={labelClass}>{t("quick.email")} *</label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        className={inputClass}
+                        placeholder="jan@firma.pl"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className={labelClass}>{t("quick.phone")}</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        className={inputClass}
+                        placeholder="+48 600 000 000"
+                      />
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <label className={labelClass}>{t("quick.phone")}</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      className={inputClass}
-                      placeholder="+48 600 000 000"
-                    />
-                  </div>
+                  <p className="text-xs font-light text-on-surface-variant/80">
+                    {t("quick.contactHint")}
+                  </p>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className={labelClass}>{t("quick.message")} *</label>
+                  <label className={labelClass}>{t("quick.outcomeLabel")} *</label>
                   <textarea
                     name="message"
                     required
@@ -348,10 +357,10 @@ export default function QuickContact() {
                   <button
                     type="submit"
                     disabled={state === "submitting" || !consent}
-                    className="w-full md:w-auto md:self-start inline-flex items-center justify-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:gap-5"
+                    className="group w-full md:w-auto md:self-start inline-flex items-center justify-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {state === "submitting" ? t("quick.sending") : t("quick.send")}{" "}
-                    <span>→</span>
+                    <span className="transition-transform duration-300 ease-out group-hover:translate-x-1">→</span>
                   </button>
 
                   <p className="text-xs font-light text-on-surface-variant/80 leading-relaxed">

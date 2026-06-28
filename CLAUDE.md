@@ -27,20 +27,23 @@ Company portfolio website for Programo — the software studio of Wojciech Plonk
 ```
 src/
   app/
-    page.tsx              # Homepage (Hero, FeaturedWork, About, TechStack, Contact)
-    layout.tsx            # Root layout (metadata, fonts)
+    page.tsx              # Homepage = Hero+Situations+ClientWork+WhyUs+Process+Founders+Services+OwnProducts+Faq+QuickContact
+    layout.tsx            # Root layout — metadata, fonts, ORAZ analityka/reklamy (patrz niżej)
     projects/[slug]/      # Individual project pages
+    (oferta|cennik|projekty|o-nas|kontakt|audyt|sklepy-internetowe|
+     software-house-poznan|ile-kosztuje-aplikacji|stack|polityka-prywatnosci)/
   components/
-    hero.tsx              # Hero section
-    featured-work.tsx     # Project showcase grid
-    about.tsx             # About section
-    tech-stack.tsx        # Technologies section
-    contact.tsx           # Contact form/CTA
-    navbar.tsx            # Navigation bar
-    footer.tsx            # Footer
+    home/                 # Sekcje strony głównej (hero, situations, client-work, why-us,
+                          #   process, founders, services-overview, own-products, faq)
+    quick-contact.tsx     # Główny formularz kontaktowy (NIE contact.tsx) — id="kontakt-main", trackLead
+    navbar.tsx / footer.tsx
+    scroll-progress.tsx   # Tylko mobilny górny pasek postępu (desktopowy SCROLL usunięty)
+    cookie-banner.tsx / analytics-tracker.tsx   # ⚠️ analityka — patrz niżej
   lib/
-    i18n.tsx              # I18nProvider context + translations dictionary
-    projects.ts           # Project data (Estalo, Baulx, Athlix, LearnAI)
+    i18n.tsx              # useI18n() → { lang, toggle, t }
+    motion.ts             # Tokeny ruchu (easeEntry, durationMedium, staggerItem, ...) — UŻYWAJ ich
+    projects.ts           # Project data (Project[])
+    tracking.ts           # ⚠️ atrybucja gclid/UTM — patrz niżej
 ```
 
 ## Running
@@ -59,5 +62,18 @@ npm run lint     # ESLint
 - Statuses: `"live"` | `"development"` | `"planned"`
 - All pages are client components wrapped in `<I18nProvider>`
 - No database, no auth — purely static portfolio site
-- Design: light warm editorial theme (amber/cream palette), pill nav, large typography, framer-motion animations
-- Color system: surface #f9f9f9, primary #775a19 (amber), on-surface #1a1c1c — Material Design 3 naming
+- Design: **dark forest-green theme jako DOMYŚLNY** (light mode opcjonalny przez toggle, `data-theme="light"`). Pill nav (liquid-glass), duża typografia, framer-motion.
+- Paleta (dark, `:root` w globals.css): bg #051F20 (deep forest), text #DAF1DE (mint), accent/sage #8EB69B. Light: bg #FBFDFB, text #051F20, accent #235347.
+- Tokeny semantyczne Tailwind v4 (`@theme inline`): surface, on-surface, on-surface-variant, primary (=accent), primary-container, outline-variant. NIE hardkoduj hexów — używaj tokenów.
+- Fonty: Newsreader (headline) + Plus Jakarta Sans (body). UWAGA: oba są na liście „reflex-reject" impeccable (domyślne fonty AI) — ewentualna zmiana = osobna decyzja właściciela, nie ruszać bez zgody.
+
+## ⚠️ STREFA NIETYKALNA — analityka / reklamy (NIE ruszać bez wyraźnej zgody)
+
+Te elementy liczą wejścia/konwersje i kampanie Google/Meta Ads. Nie modyfikować przy zmianach wizualnych:
+- `src/app/layout.tsx` — `<head>`: GA4 `G-TGLPLMVV91`, Microsoft Clarity `wxezq44wx0`, Google Consent Mode v2, gtag.js, preconnect, JSON-LD.
+- `src/components/cookie-banner.tsx`, `src/components/analytics-tracker.tsx`, `src/lib/tracking.ts` (gclid/UTM, `trackLead`).
+
+## Zainstalowane skille (ładują się przy starcie Claude W TYM folderze)
+
+- **impeccable** (project-scoped, `.claude/skills/impeccable/`) — kombajn UI z pod-komendami: `/impeccable init|critique|audit|polish|animate|craft|...`. Najpierw `init` (tworzy PRODUCT.md/DESIGN.md — jeszcze ich nie ma).
+- **design-taste-frontend**, **emil-design-eng**, **review-animations** (globalne, `~/.claude/skills/`) — anti-slop / polish / przegląd animacji.

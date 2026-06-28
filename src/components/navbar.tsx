@@ -22,16 +22,26 @@ export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
   const ticking = useRef(false);
 
+  // Services dropdown — links to existing service pages
+  const serviceLinks = [
+    { label: t("nav.svc.offer"), desc: t("nav.svc.offer.desc"), href: "/oferta" },
+    { label: t("nav.svc.shops"), desc: t("nav.svc.shops.desc"), href: "/sklepy-internetowe" },
+    { label: t("nav.svc.cost"), desc: t("nav.svc.cost.desc"), href: "/ile-kosztuje-aplikacji" },
+    { label: t("nav.svc.audit"), desc: t("nav.svc.audit.desc"), href: "/audyt" },
+    { label: t("nav.svc.house"), desc: t("nav.svc.house.desc"), href: "/software-house-poznan" },
+  ];
+  const serviceHrefs = serviceLinks.map((l) => l.href);
+
   const navLinks = [
-    { label: t("nav.offer"), href: "/oferta", section: "oferta" },
-    { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
-    { label: t("nav.work"), href: "/projekty", section: "projekty" },
+    { label: t("nav.realizations"), href: "/projekty", section: "projekty" },
+    { label: t("nav.process"), href: "/#jak-pracujemy", section: "jak-pracujemy" },
+    { label: t("nav.quote"), href: "/cennik", section: "cennik" },
     { label: t("nav.about"), href: "/o-nas", section: "o-nas" },
-    { label: t("nav.contact"), href: "/kontakt", section: "kontakt" },
   ];
 
   // --- Track scroll position only to toggle liquid-glass intensity ---
@@ -53,11 +63,18 @@ export default function Navbar() {
 
   // --- Active section from pathname ---
   useEffect(() => {
+    setServicesOpen(false);
     if (!pathname) {
       setActiveSection("");
       return;
     }
-    const match = navLinks.find((l) => pathname === l.href || pathname.startsWith(`${l.href}/`));
+    if (serviceHrefs.some((h) => pathname === h || pathname.startsWith(`${h}/`))) {
+      setActiveSection("uslugi");
+      return;
+    }
+    const match = navLinks.find(
+      (l) => l.href.startsWith("/") && !l.href.includes("#") && (pathname === l.href || pathname.startsWith(`${l.href}/`))
+    );
     setActiveSection(match?.section ?? "");
   }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -119,6 +136,75 @@ export default function Navbar() {
           data-scrolled={scrolled ? "true" : "false"}
         >
           <div className="relative z-10 flex items-center gap-7 px-6 py-2.5">
+            {/* Services dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setServicesOpen(true)}
+              onMouseLeave={() => setServicesOpen(false)}
+            >
+              <button
+                type="button"
+                aria-haspopup="true"
+                aria-expanded={servicesOpen}
+                onClick={() => setServicesOpen((v) => !v)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setServicesOpen(false);
+                }}
+                className={`relative flex items-center gap-1.5 text-[13px] uppercase font-medium transition-colors ${
+                  activeSection === "uslugi"
+                    ? "text-[var(--theme-nav-text)]"
+                    : "text-[rgba(var(--theme-nav-text-rgb),0.72)] hover:text-[var(--theme-nav-text)]"
+                }`}
+                style={{
+                  transitionDuration: `${durationFast * 1000}ms`,
+                  transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
+                }}
+              >
+                {t("nav.services")}
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                  className={`transition-transform duration-300 ${servicesOpen ? "rotate-180" : ""}`}
+                >
+                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {activeSection === "uslugi" && (
+                  <motion.span
+                    layoutId="nav-indicator"
+                    className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-primary rounded-full"
+                    transition={{ type: "spring", ...springGentle }}
+                  />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {servicesOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                    transition={{ duration: durationFast, ease: easeEntry }}
+                    className="absolute left-1/2 top-[calc(100%+1rem)] z-50 w-[20rem] -translate-x-1/2 overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface/95 p-2 shadow-2xl shadow-black/20 backdrop-blur-xl"
+                  >
+                    {serviceLinks.map((s) => (
+                      <Link
+                        key={s.href}
+                        href={s.href}
+                        onClick={() => setServicesOpen(false)}
+                        className="flex flex-col gap-0.5 rounded-xl px-4 py-3 transition-colors hover:bg-surface-container/60"
+                      >
+                        <span className="text-sm font-medium text-on-surface">{s.label}</span>
+                        <span className="text-xs font-light text-on-surface-variant">{s.desc}</span>
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {navLinks.map((link) => {
               const isActive = activeSection === link.section;
               return (
@@ -188,7 +274,7 @@ export default function Navbar() {
           {lang === "pl" ? "EN" : "PL"}
         </button>
         <ContactCtaLink className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all">
-          {t("nav.cta")}
+          {t("nav.cta.project")}
         </ContactCtaLink>
       </motion.div>
 
@@ -280,15 +366,18 @@ export default function Navbar() {
             }}
             className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/98 backdrop-blur-lg md:hidden"
           >
-            <nav className="flex flex-col items-center gap-8">
-              {navLinks.map((link, i) => (
+            <nav className="flex max-h-[80vh] flex-col items-center gap-6 overflow-y-auto px-6">
+              {[
+                { label: t("nav.services"), href: "/oferta" },
+                ...navLinks,
+              ].map((link, i) => (
                 <motion.div
-                  key={link.href}
+                  key={link.href + link.label}
                   initial={{ opacity: 0, x: -30, y: 20 }}
                   animate={{ opacity: 1, x: 0, y: 0 }}
                   exit={{ opacity: 0, x: -30, y: 20 }}
                   transition={{
-                    delay: i * 0.1,
+                    delay: i * 0.08,
                     duration: durationMedium,
                     ease: easeEntry,
                   }}
@@ -306,7 +395,7 @@ export default function Navbar() {
                 onNavigate={() => setMobileOpen(false)}
                 className="mt-4 bg-primary px-8 py-3 rounded-full text-on-primary text-sm tracking-wide font-medium min-h-[44px] flex items-center"
               >
-                {t("nav.cta")}
+                {t("nav.cta.project")}
               </ContactCtaLink>
             </nav>
           </motion.div>
