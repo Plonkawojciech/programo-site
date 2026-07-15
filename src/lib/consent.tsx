@@ -124,6 +124,12 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
       /* ignore quota errors */
     }
     pushConsent(categories);
+    // Clarity has no stop/teardown API. If analytics consent is being withdrawn while
+    // a Clarity session is already recording, a reload is the only way to actually
+    // honour the withdrawal within the same visit (GDPR), so do it after persisting.
+    if (!categories.analytics && typeof window !== "undefined" && "clarity" in window) {
+      window.location.reload();
+    }
   }, []);
 
   const acceptAll = useCallback(() => {

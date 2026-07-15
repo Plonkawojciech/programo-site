@@ -41,7 +41,7 @@ export default function ContactBookend() {
       </div>
 
       {/* Full contact form (embedded as-is) */}
-      <QuickContact />
+      <QuickContact formId="home-bookend" />
     </section>
   );
 }

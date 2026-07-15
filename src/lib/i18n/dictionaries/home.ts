@@ -237,7 +237,7 @@ export const home = {
   "home.faq.title": { pl: "Częste pytania", en: "Frequently asked questions" },
   "home.faq.q1": { pl: "Ile to kosztuje?", en: "How much does it cost?" },
   "home.faq.a1": {
-    pl: "Każdy projekt wyceniamy indywidualnie, bo strona wizytówkowa i system SaaS to zupełnie inne skale pracy. Po pierwszej rozmowie dostajesz widełki w ciągu 24 godzin, a przed startem stałą wycenę z rozpisanym zakresem. Bez ukrytych kosztów w trakcie.",
+    pl: "Każdy projekt wyceniamy indywidualnie, bo strona wizytówkowa i system SaaS to zupełnie inne skale pracy. Po pierwszej rozmowie dostajesz widełki w 24 h, a przed startem stałą wycenę z rozpisanym zakresem. Bez ukrytych kosztów w trakcie.",
     en: "Every project is quoted individually, because a simple website and a SaaS platform are entirely different scales of work. After the first call you get a price range within 24 hours, and before we start, a fixed quote with the scope written out. No hidden costs along the way.",
   },
   "home.faq.q2": { pl: "Jak długo trwa realizacja?", en: "How long does it take?" },
@@ -247,7 +247,7 @@ export const home = {
   },
   "home.faq.q3": { pl: "Jak wygląda start współpracy?", en: "What does getting started look like?" },
   "home.faq.a3": {
-    pl: "Zaczynamy od rozmowy telefonicznej lub spotkania online: opowiadasz, co chcesz osiągnąć, my dopytujemy o szczegóły. W ciągu 24 godzin wysyłamy widełki cenowe i proponowany zakres. Jeśli się zgadzamy, przygotowujemy stałą wycenę i harmonogram, i zaczynamy.",
+    pl: "Zaczynamy od rozmowy telefonicznej lub spotkania online: opowiadasz, co chcesz osiągnąć, my dopytujemy o szczegóły. W 24 h wysyłamy widełki cenowe i proponowany zakres. Jeśli się zgadzamy, przygotowujemy stałą wycenę oraz harmonogram i zaczynamy.",
     en: "We start with a phone call or an online meeting: you tell us what you want to achieve, we ask about the details. Within 24 hours we send a price range and a proposed scope. If we agree, we prepare a fixed quote and a schedule, and we begin.",
   },
   "home.faq.q4": { pl: "Czy pracujecie z małymi firmami?", en: "Do you work with small businesses?" },

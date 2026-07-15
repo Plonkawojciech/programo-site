@@ -16,7 +16,7 @@ export default function KontaktPage() {
       <ContactHero />
       {/* Low-friction 2-field catcher first; full brief below for those who want it. */}
       <CompactLeadForm formId="kontakt-compact" projectType="Zapytanie z /kontakt" />
-      <QuickContact />
+      <QuickContact formId="kontakt-full" />
     </div>
   );
 }

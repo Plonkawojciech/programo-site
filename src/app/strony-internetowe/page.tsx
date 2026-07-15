@@ -78,8 +78,8 @@ const faqs = [
     a: "Tak. Budujemy w Next.js z naciskiem na Core Web Vitals, poprawną strukturę i dane strukturalne. Szybsza, dobrze zbudowana strona to wyższe pozycje w Google i lepsza konwersja.",
   },
   {
-    q: "Czy będę mógł sam edytować treści?",
-    a: "Tak — wpinamy CMS dopasowany do potrzeb (lub panel headless), żebyś mógł samodzielnie aktualizować treści. Po wdrożeniu zostajemy na wsparciu i rozwoju.",
+    q: "Czy mogę samodzielnie edytować treści?",
+    a: "Tak — wpinamy CMS dopasowany do potrzeb (lub panel headless), dzięki któremu samodzielnie aktualizujesz treści. Po wdrożeniu wspieramy stronę i rozwijamy ją dalej.",
   },
 ];
 
@@ -112,17 +112,17 @@ const webCases = [
   {
     slug: "wsafefinanse",
     angle:
-      "Strona firmowa doradcy finansowego w Next.js. Formularz wysyła zapytanie na e-mail i Telegram, więc właściciel reaguje na lead w kilka minut.",
+      "Strona firmowa doradztwa finansowego w Next.js. Formularz wysyła zapytanie na e-mail i Telegram, więc właścicielka reaguje na lead w kilka minut.",
   },
   {
     slug: "wks-poznan",
     angle:
-      "Strona klubu sportowego: 7 podstron, profile trenerów, harmonogram i galeria. Szybka, mobile-first i łatwa w samodzielnej aktualizacji.",
+      "Strona klubu sportowego: 17 podstron, własny CMS, profile trenerów, harmonogram i galeria. Szybka, mobile-first i łatwa w samodzielnej aktualizacji.",
   },
   {
     slug: "estalo",
     angle:
-      "Nasz własny produkt — platforma SaaS CRM w Next.js z AI i integracjami. Dowód, że ogarniamy też złożone systemy webowe, nie tylko wizytówki.",
+      "Nasz własny produkt — platforma SaaS CRM w Next.js z AI i integracjami. Dowód, że budujemy też złożone systemy webowe, nie tylko wizytówki.",
   },
 ];
 
@@ -159,8 +159,8 @@ export default function StronyInternetowePage() {
                 </h1>
                 <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
                   Małe studio z Poznania — pracujesz bezpośrednio z założycielami.
-                  Nowoczesna strona w Next.js, prosta zwykle w 3–4 tygodnie. Wycena
-                  w 24 h, własny kod, bez agencyjnych narzutów.
+                  Nowoczesna strona w Next.js, prosta zwykle gotowa w 2–3 tygodnie.
+                  Odpowiadamy w 24 h, własny kod, bez agencyjnych narzutów.
                 </p>
 
                 <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -180,7 +180,7 @@ export default function StronyInternetowePage() {
                     <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
                     <span>WKS Poznań</span>
                     <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
-                    <span>WSafe Finanse</span>
+                    <span>W. Safe Finance</span>
                   </div>
                   <p className="text-sm text-on-surface-variant">
                     Jedmar: natywne aplikacje iOS + Android · Poznań i cała Polska
@@ -265,8 +265,8 @@ export default function StronyInternetowePage() {
               <p className={EYEBROW}>Dlaczego Programo</p>
               <h2 className={`mt-5 ${H2}`}>Nowoczesny stack, butikowe podejście</h2>
               <p className="mt-6 max-w-3xl text-lg font-light leading-relaxed text-on-surface/70">
-                Jesteśmy dwuosobowym studiem z Poznania — pracujesz bezpośrednio z
-                założycielami, bez warstw pośredników. Budujemy w Next.js / React /
+                Za Programo stoi dwóch inżynierów z Poznania — pracujesz bezpośrednio
+                z założycielami, bez warstw pośredników. Budujemy w Next.js / React /
                 TypeScript, z naciskiem na szybkość, dostępność i realny efekt
                 biznesowy. Mamy własne produkty (Estalo, Rejestr Pro) — wiemy, jak
                 robić rzeczy, które trzeba potem utrzymać i rozwijać.
@@ -324,7 +324,7 @@ export default function StronyInternetowePage() {
               <h2 className={H2}>Zróbmy stronę, która sprzedaje</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
                 Opisz projekt w 2 minuty — wrócimy z planem i wyceną. Poznań,
-                Wielkopolska i cała Polska. Odpowiadamy w ciągu 24 godzin.
+                Wielkopolska i cała Polska. Odpowiadamy w 24 h.
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-4">
                 <CtaButton href="#kontakt-main">Opisz projekt szczegółowo</CtaButton>
@@ -337,7 +337,7 @@ export default function StronyInternetowePage() {
         {/* Dowód społeczny + pełny formularz */}
         <TrustBar />
         <ProjectsMarquee />
-        <QuickContact />
+        <QuickContact formId="strony-full" />
       </div>
     </>
   );

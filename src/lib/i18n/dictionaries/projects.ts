@@ -23,8 +23,8 @@ export const projects = {
   "project.statusDev": { pl: "W realizacji", en: "In Development" },
   "project.statusPlanned": { pl: "Planowany", en: "Planned" },
   "project.interestedCta": {
-    pl: "Zainteresowany czymś podobnym?",
-    en: "Interested in something similar?",
+    pl: "Chcesz zbudować coś podobnego?",
+    en: "Want to build something similar?",
   },
   "project.letsTalk": { pl: "Porozmawiajmy", en: "Let's talk" },
 } as const satisfies Record<string, { pl: string; en: string }>;

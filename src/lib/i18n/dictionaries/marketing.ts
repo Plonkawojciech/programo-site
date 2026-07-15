@@ -95,7 +95,7 @@ export const marketing = {
   },
 
   // --- Cookie / consent banner ---------------------------------------------
-  "cookie.title": { pl: "Cookies & prywatność", en: "Cookies & privacy" },
+  "cookie.title": { pl: "Cookies i prywatność", en: "Cookies & privacy" },
   "cookie.desc": {
     pl: "Używamy plików cookies, aby ulepszać stronę i analizować ruch. Możesz zaakceptować wszystkie, odrzucić nieobowiązkowe lub dostosować preferencje.",
     en: "We use cookies to improve the site and analyze traffic. You can accept all, reject non-essential ones, or customize your preferences.",
@@ -106,7 +106,7 @@ export const marketing = {
   },
   "cookie.privacyLink": { pl: "Polityka prywatności", en: "Privacy policy" },
   "cookie.acceptAll": { pl: "Akceptuj wszystkie", en: "Accept all" },
-  "cookie.rejectAll": { pl: "Tylko niezbędne", en: "Reject all" },
+  "cookie.rejectAll": { pl: "Tylko niezbędne", en: "Essential only" },
   "cookie.customize": { pl: "Dostosuj", en: "Customize" },
   "cookie.savePrefs": { pl: "Zapisz wybór", en: "Save preferences" },
   "cookie.settingsTitle": { pl: "Preferencje cookies", en: "Cookie preferences" },

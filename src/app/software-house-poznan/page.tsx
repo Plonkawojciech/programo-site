@@ -78,15 +78,15 @@ const services = [
   },
   {
     title: "Systemy SaaS",
-    desc: "Multi-tenant SaaS z billingiem, rolami, AI i integracjami. Przykłady: Estalo CRM, Solvio, Rejestr Pro.",
+    desc: "Wielonajemcowe systemy SaaS z płatnościami, rolami, AI i integracjami. Przykłady: Estalo CRM, Solvio, Rejestr Pro.",
   },
   {
     title: "Aplikacje mobilne",
-    desc: "iOS i Android — Capacitor 8, PWA, native. Wspólny kod dla mobile i web.",
+    desc: "iOS i Android natywnie — Swift/SwiftUI i Kotlin/Jetpack Compose. Publikację w App Store i Google Play bierzemy na siebie.",
   },
   {
     title: "Integracje AI",
-    desc: "Azure OpenAI, Anthropic Claude, RAG, OCR, AI agenty. AI-first podejście do każdego produktu.",
+    desc: "Azure OpenAI, Anthropic Claude, RAG, OCR i agenty AI — wpięte w produkty, które pokazujemy w portfolio.",
   },
 ];
 
@@ -118,9 +118,9 @@ const projects = [
     desc: "SaaS do śledzenia wydatków z AI — OCR paragonów, grupy kosztów, porównywarka cen, raporty.",
   },
   {
-    name: "Pool System",
+    name: "PoolTimer",
     slug: "pooltimer",
-    desc: "Innowacyjny system timingowy z aplikacją mobilną — hardware + software. Wkrótce.",
+    desc: "System pomiaru czasu dla klubów pływackich — sprzęt i oprogramowanie. W rozwoju, pilotaż w realnym klubie.",
   },
   {
     name: "Rejestr Pro",
@@ -193,10 +193,10 @@ export default function SoftwareHousePoznanPage() {
                 lokalność z nowoczesnym, międzynarodowym stackiem technologicznym.
               </p>
               <p>
-                Jesteśmy butikowym, dwuosobowym studiem — bez warstw pośredników i
+                Za Programo stoi dwóch inżynierów — bez warstw pośredników i
                 korporacyjnych procesów. Pracujesz bezpośrednio z założycielami:
-                Wojciechem Płonką (Design &amp; Product) i Bartoszem Kolajem
-                (Engineering Lead).
+                Wojciechem Płonką (Design i Produkt) i Bartoszem Kolajem
+                (Inżynieria).
               </p>
             </div>
           </section>
@@ -285,9 +285,10 @@ export default function SoftwareHousePoznanPage() {
                   Co odróżnia Programo od innych software house&apos;ów w Poznaniu?
                 </h3>
                 <p className="opacity-75">
-                  Butikowy zespół, własne produkty SaaS w portfolio (Estalo, Solvio,
-                  Rejestr Pro, Pool System), AI-first podejście, bezpośredni kontakt z założycielami.
-                  Nie jesteśmy outsourcingową fabryką — budujemy partnerstwa.
+                  Zespół dwóch inżynierów, własne produkty SaaS w portfolio (Estalo,
+                  Solvio, Rejestr Pro, PoolTimer) i bezpośredni kontakt z założycielami.
+                  Nie jesteśmy outsourcingową fabryką — projekt prowadzimy od pierwszej
+                  rozmowy po utrzymanie.
                 </p>
               </div>
             </div>
@@ -298,7 +299,7 @@ export default function SoftwareHousePoznanPage() {
               Skontaktuj się z software house Programo
             </h2>
             <p className="mb-6 opacity-80">
-              Poznań · Wielkopolska · cała Polska. Odpowiadamy w ciągu 24 godzin.
+              Poznań · Wielkopolska · cała Polska. Odpowiadamy w 24 h.
             </p>
             <div className="flex flex-col gap-3 text-sm md:flex-row md:gap-6">
               <a href="mailto:biuro@programo.pl" className="hover:underline">

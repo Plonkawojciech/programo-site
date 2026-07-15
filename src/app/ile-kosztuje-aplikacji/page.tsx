@@ -59,7 +59,7 @@ const factors = [
   },
   {
     title: "Web vs aplikacja mobilna",
-    desc: "Aplikacja na iOS i Android (lub wspólny kod Capacitor) to więcej testów i wdrożeń niż sama strona.",
+    desc: "Aplikacja na iOS i Android to więcej testów i wdrożeń niż sama strona; zakres można ograniczyć, zaczynając od jednej platformy.",
   },
   {
     title: "Projekt UX/UI",
@@ -67,7 +67,7 @@ const factors = [
   },
   {
     title: "Termin",
-    desc: "Bardzo krótki deadline zwykle podnosi koszt; spokojny harmonogram pozwala go optymalizować.",
+    desc: "Bardzo krótki termin zwykle podnosi koszt; spokojny harmonogram pozwala go optymalizować.",
   },
   {
     title: "Utrzymanie po wdrożeniu",
@@ -78,7 +78,7 @@ const factors = [
 const faqs = [
   {
     q: "Ile kosztuje stworzenie aplikacji mobilnej?",
-    a: "Koszt zależy od zakresu: liczby ekranów, ról, płatności i integracji. Najtaniej wychodzi wspólny kod web + mobile (Capacitor/PWA). Każdą aplikację wyceniamy indywidualnie po ustaleniu zakresu — z konkretnymi widełkami i bez ukrytych kosztów.",
+    a: "Koszt zależy od zakresu: liczby ekranów, ról, płatności i integracji. Budżet można ograniczyć, zaczynając od jednej platformy albo mniejszego pierwszego etapu. Każdą aplikację wyceniamy indywidualnie po ustaleniu zakresu — z konkretnymi widełkami i bez ukrytych kosztów.",
   },
   {
     q: "Ile kosztuje strona internetowa?",
@@ -239,7 +239,7 @@ export default function IleKosztujeAplikacjiPage() {
               systemu. W Programo MVP powstaje zwykle w <strong>4–8 tygodni</strong>, a
               jego koszt zależy od zakresu, więc wyceniamy go{" "}
               <strong>indywidualnie</strong>. To najtańszy sposób, by ruszyć i zacząć
-              zbierać realny feedback od użytkowników.
+              zbierać opinie od pierwszych użytkowników.
             </p>
           </section>
 

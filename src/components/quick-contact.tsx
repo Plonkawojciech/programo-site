@@ -48,7 +48,7 @@ function Spinner({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
-export default function QuickContact() {
+export default function QuickContact({ formId = "quick-contact" }: { formId?: string } = {}) {
   const { t } = useI18n();
   const [state, setState] = useState<FormState>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -122,7 +122,7 @@ export default function QuickContact() {
       // Success branch only (API returned ok) — fire the primary Google Ads "Lead"
       // conversion exactly once per successful submit.
       setState("success");
-      trackLead({ form: "quick-contact", email, phone });
+      trackLead({ form: formId, email, phone });
       (e.target as HTMLFormElement).reset();
       setConsent(false);
       setProjectType(null);

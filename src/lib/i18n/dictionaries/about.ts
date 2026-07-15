@@ -53,11 +53,11 @@ export const about = {
   "stack.neon": { pl: "Serverless PostgreSQL", en: "Serverless PostgreSQL" },
   "stack.drizzle": { pl: "TypeScript ORM", en: "TypeScript ORM" },
   "stack.vercel": { pl: "Deployment i hosting", en: "Deployment & hosting" },
-  "stack.capacitor": { pl: "Aplikacje mobilne natywne", en: "Native mobile apps" },
+  "stack.capacitor": { pl: "Natywne aplikacje mobilne", en: "Native mobile apps" },
   "stack.azure": { pl: "AI i usługi kognitywne", en: "AI & cognitive services" },
   "stack.anthropic": { pl: "LLM i agenty AI", en: "LLMs & AI agents" },
   "stack.stripe": { pl: "Infrastruktura płatności", en: "Payments infrastructure" },
-  "stack.resend": { pl: "Transakcyjne emaile", en: "Transactional emails" },
+  "stack.resend": { pl: "E-maile transakcyjne", en: "Transactional emails" },
   "stack.threejs": { pl: "Grafika 3D w przeglądarce", en: "3D graphics in browser" },
   "stack.konvajs": { pl: "Canvas 2D framework", en: "2D canvas framework" },
 } as const satisfies Record<string, { pl: string; en: string }>;

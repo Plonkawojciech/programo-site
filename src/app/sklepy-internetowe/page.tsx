@@ -186,7 +186,7 @@ export default function SklepyInternetowePage() {
                       <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
                       <span>WKS Poznań</span>
                       <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
-                      <span>WSafe Finanse</span>
+                      <span>W. Safe Finance</span>
                     </div>
                   </div>
                   <p className="text-sm text-on-surface-variant">
@@ -308,7 +308,7 @@ export default function SklepyInternetowePage() {
               <h2 className={H2}>Porozmawiajmy o Twoim sklepie</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
                 Opisz projekt w 2 minuty — wrócimy z planem, integracjami i wyceną.
-                Poznań, Wielkopolska i cała Polska. Odpowiadamy w ciągu 24 godzin.
+                Poznań, Wielkopolska i cała Polska. Odpowiadamy w 24 h.
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-4">
                 <CtaButton href="#kontakt-main">Opisz projekt szczegółowo</CtaButton>
@@ -321,7 +321,7 @@ export default function SklepyInternetowePage() {
         {/* Dowód społeczny + pełny formularz */}
         <TrustBar />
         <ProjectsMarquee />
-        <QuickContact />
+        <QuickContact formId="sklepy-full" />
       </div>
     </>
   );
