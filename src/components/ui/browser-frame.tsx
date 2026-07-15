@@ -4,9 +4,16 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 
 /**
- * Browser window frame around a desktop screenshot. Chrome bar with three dots
- * and an address field showing the real domain (`url`). Renders `children` if
- * provided, otherwise the `src` screenshot.
+ * Premium browser-window frame around a desktop screenshot.
+ *
+ * Visual construction (outside → in):
+ *  1. gradient bezel ring (hairline, reads as machined edge),
+ *  2. chassis with layered green-tinted shadows (ambient + key + contact),
+ *  3. macOS-style chrome bar: traffic lights, centered address capsule,
+ *  4. content with a top hairline and a faint diagonal glass sheen.
+ *
+ * `tone` switches the chrome bar for dark screenshots ("dark") so frames can
+ * match the product inside (auto = follow site theme tokens).
  */
 export default function BrowserFrame({
   url,
@@ -15,6 +22,8 @@ export default function BrowserFrame({
   width = 1440,
   height = 900,
   priority = false,
+  tone = "auto",
+  sizes = "(max-width: 768px) 100vw, 720px",
   className,
   children,
 }: {
@@ -24,44 +33,93 @@ export default function BrowserFrame({
   width?: number;
   height?: number;
   priority?: boolean;
+  tone?: "auto" | "dark";
+  sizes?: string;
   className?: string;
   children?: ReactNode;
 }) {
-  // Show a clean host (no protocol / trailing slash) in the address field.
   const host = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const dark = tone === "dark";
 
   return (
     <div
-      className={`overflow-hidden rounded-2xl border border-outline-variant/60 bg-surface-container shadow-[0_30px_60px_-25px_rgba(0,0,0,0.45)] ${className ?? ""}`}
+      className={`group/frame rounded-[20px] p-px ${
+        dark
+          ? "bg-gradient-to-b from-white/20 via-white/8 to-black/40"
+          : "bg-gradient-to-b from-white/90 via-outline-variant/40 to-outline-variant/70 dark:from-white/15 dark:via-white/5 dark:to-black/30"
+      } shadow-[0_1px_2px_rgba(5,31,32,0.10),0_12px_24px_-8px_rgba(5,31,32,0.18),0_48px_96px_-24px_rgba(5,31,32,0.30)] ${className ?? ""}`}
     >
-      {/* Chrome bar */}
-      <div className="flex items-center gap-3 border-b border-outline-variant/50 bg-surface-container-high px-4 py-2.5">
-        <div className="flex shrink-0 items-center gap-1.5">
-          <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-          <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-          <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+      <div
+        className={`relative overflow-hidden rounded-[19px] ${
+          dark ? "bg-[#101614]" : "bg-surface-container"
+        }`}
+      >
+        {/* Chrome bar */}
+        <div
+          className={`relative flex items-center px-4 py-2.5 ${
+            dark
+              ? "border-b border-white/[0.07] bg-[#181f1c]"
+              : "border-b border-outline-variant/40 bg-gradient-to-b from-surface-container-high/80 to-surface-container-high/40"
+          }`}
+        >
+          {/* Traffic lights */}
+          <div className="flex shrink-0 items-center gap-[7px]" aria-hidden="true">
+            <span className="h-[11px] w-[11px] rounded-full bg-[radial-gradient(circle_at_35%_30%,#ff8a80,#ff5f57_60%)] shadow-[inset_0_0_1px_rgba(0,0,0,0.25)]" />
+            <span className="h-[11px] w-[11px] rounded-full bg-[radial-gradient(circle_at_35%_30%,#ffd54f,#febc2e_60%)] shadow-[inset_0_0_1px_rgba(0,0,0,0.2)]" />
+            <span className="h-[11px] w-[11px] rounded-full bg-[radial-gradient(circle_at_35%_30%,#69f0ae,#28c840_60%)] shadow-[inset_0_0_1px_rgba(0,0,0,0.2)]" />
+          </div>
+          {/* Centered address capsule (macOS Safari style) */}
+          <div className="pointer-events-none absolute left-1/2 top-1/2 flex max-w-[62%] -translate-x-1/2 -translate-y-1/2 items-center gap-1.5">
+            <span
+              className={`flex min-w-0 items-center gap-1.5 rounded-full px-3.5 py-[5px] text-[11px] leading-none tracking-wide ${
+                dark
+                  ? "bg-white/[0.07] text-white/60 shadow-[inset_0_1px_2px_rgba(0,0,0,0.35)]"
+                  : "bg-surface/90 text-on-surface-variant shadow-[inset_0_1px_2px_rgba(5,31,32,0.08)]"
+              }`}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="h-3 w-3 shrink-0 opacity-70"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                aria-hidden="true"
+              >
+                <rect x="5" y="11" width="14" height="9" rx="2" />
+                <path d="M8 11V7a4 4 0 018 0v4" />
+              </svg>
+              <span className="truncate font-medium">{host}</span>
+            </span>
+          </div>
         </div>
-        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-md bg-surface px-3 py-1.5 text-xs text-on-surface-variant">
-          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <rect x="5" y="11" width="14" height="9" rx="2" />
-            <path d="M8 11V7a4 4 0 018 0v4" />
-          </svg>
-          <span className="truncate">{host}</span>
-        </div>
-      </div>
-      {/* Content */}
-      <div className="relative bg-surface">
-        {children ?? (src && alt ? (
-          <Image
-            src={src}
-            alt={alt}
-            width={width}
-            height={height}
-            priority={priority}
-            sizes="(max-width: 768px) 100vw, 720px"
-            className="h-auto w-full"
+
+        {/* Content */}
+        <div className={`relative ${dark ? "bg-[#0c1210]" : "bg-surface"}`}>
+          {children ??
+            (src && alt ? (
+              <Image
+                src={src}
+                alt={alt}
+                width={width}
+                height={height}
+                priority={priority}
+                sizes={sizes}
+                className="h-auto w-full"
+              />
+            ) : null)}
+          {/* Glass sheen — faint diagonal highlight, never blocks content */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.035)_18%,transparent_34%)] mix-blend-soft-light"
           />
-        ) : null)}
+          {/* Top hairline separating bar from content */}
+          <div
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-x-0 top-0 h-px ${
+              dark ? "bg-white/[0.06]" : "bg-white/60 dark:bg-white/10"
+            }`}
+          />
+        </div>
       </div>
     </div>
   );

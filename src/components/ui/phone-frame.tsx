@@ -3,13 +3,14 @@
 import Image from "next/image";
 
 /**
- * Realistic iPhone frame around a mobile screenshot. Thin metallic edge, deep
- * rounded corners, dynamic island and a soft deep shadow.
+ * Realistic iPhone frame around a mobile screenshot.
  *
- * `scrollOnHover` makes the screenshot ease upward on hover to reveal more of
- * the page (desktop only — the effect is disabled on touch since there is no
- * hover). The screenshot is intentionally taller than the frame so it has room
- * to travel.
+ * Construction (outside → in): titanium edge with a vertical sheen and physical
+ * side buttons, deep green-tinted layered shadow, black inner bezel, screen with
+ * a faint glass glare. Dynamic island sits over the screenshot.
+ *
+ * `scrollOnHover` eases the (taller-than-frame) screenshot upward on hover to
+ * reveal more of the page — desktop only.
  */
 export default function PhoneFrame({
   src,
@@ -30,8 +31,13 @@ export default function PhoneFrame({
 }) {
   return (
     <div className={`group relative aspect-[9/19.5] w-full select-none ${className ?? ""}`}>
-      {/* Metallic outer edge + deep shadow */}
-      <div className="absolute inset-0 rounded-[44px] bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-900 p-[3px] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.55)]">
+      {/* Physical side buttons (behind the chassis edge) */}
+      <div aria-hidden="true" className="absolute -left-[2px] top-[22%] h-[7%] w-[3px] rounded-l-md bg-neutral-700" />
+      <div aria-hidden="true" className="absolute -left-[2px] top-[32%] h-[7%] w-[3px] rounded-l-md bg-neutral-700" />
+      <div aria-hidden="true" className="absolute -right-[2px] top-[26%] h-[11%] w-[3px] rounded-r-md bg-neutral-700" />
+
+      {/* Titanium edge + green-tinted layered shadow */}
+      <div className="absolute inset-0 rounded-[44px] bg-[linear-gradient(180deg,#8a8f8d_0%,#4a4f4d_8%,#2b2f2e_50%,#4a4f4d_92%,#6a6f6d_100%)] p-[3px] shadow-[0_2px_4px_rgba(5,31,32,0.18),0_18px_36px_-12px_rgba(5,31,32,0.35),0_56px_100px_-32px_rgba(5,31,32,0.4)]">
         {/* Inner bezel */}
         <div className="relative h-full w-full overflow-hidden rounded-[41px] bg-black p-[6px]">
           {/* Screen */}
@@ -49,9 +55,16 @@ export default function PhoneFrame({
                   : "h-full object-cover object-top"
               }`}
             />
+            {/* Glass glare — faint corner highlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 rounded-[35px] bg-[linear-gradient(155deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.04)_16%,transparent_32%)] mix-blend-soft-light"
+            />
           </div>
-          {/* Dynamic island */}
-          <div className="pointer-events-none absolute left-1/2 top-[10px] z-10 h-[26px] w-[92px] -translate-x-1/2 rounded-full bg-black" />
+          {/* Dynamic island with camera dot */}
+          <div className="pointer-events-none absolute left-1/2 top-[10px] z-10 flex h-[26px] w-[92px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-[9px]">
+            <span className="h-[8px] w-[8px] rounded-full bg-[#1a2030] shadow-[inset_0_0_2px_rgba(120,140,255,0.5)]" />
+          </div>
         </div>
       </div>
     </div>
