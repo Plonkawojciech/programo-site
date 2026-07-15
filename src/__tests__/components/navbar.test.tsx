@@ -17,12 +17,31 @@ function renderWithI18n() {
 }
 
 describe("Navbar component", () => {
-  it("renders nav links", () => {
+  it("renders the seven main nav links", () => {
     renderWithI18n();
+    expect(screen.getAllByText("Oferta").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Projekty").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Sklepy").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Strony i reklamy").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Wycena").length).toBeGreaterThan(0);
     expect(screen.getAllByText("O nas").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Technologie").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Kontakt").length).toBeGreaterThan(0);
+  });
+
+  it("nav link to the marketing landing points at /strony-tracking-reklamy", () => {
+    renderWithI18n();
+    const links = screen.getAllByRole("link").filter(
+      (l) => l.getAttribute("href") === "/strony-tracking-reklamy"
+    );
+    expect(links.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("shows a clickable phone number on desktop", () => {
+    renderWithI18n();
+    const telLinks = screen.getAllByRole("link").filter(
+      (l) => l.getAttribute("href") === "tel:+48509123434"
+    );
+    expect(telLinks.length).toBeGreaterThanOrEqual(1);
   });
 
   it("language toggle button is visible", () => {
@@ -68,28 +87,13 @@ describe("Navbar component", () => {
     expect(homeLinks.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("mobile menu opens on hamburger click", () => {
+  it("mobile menu shows a phone link at the top when opened", () => {
     renderWithI18n();
     const hamburger = screen.getByLabelText("Toggle menu");
     fireEvent.click(hamburger);
-    // After clicking, mobile menu overlay with CTA link should appear
-    const ctaLinks = screen.getAllByRole("link").filter(
-      (l) => l.getAttribute("href")?.includes("mailto:")
+    const telLinks = screen.getAllByRole("link").filter(
+      (l) => l.getAttribute("href") === "tel:+48509123434"
     );
-    expect(ctaLinks.length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("scroll: background changes on scroll", async () => {
-    renderWithI18n();
-    // Simulate scroll by setting scrollY and dispatching event
-    Object.defineProperty(window, "scrollY", { value: 100, writable: true });
-    fireEvent.scroll(window);
-    // After scroll, the mobile nav should have backdrop-blur class
-    // Wait for state update
-    await vi.waitFor(() => {
-      const navs = screen.getAllByRole("navigation");
-      const mobileNav = navs.find((n) => n.className.includes("md:hidden"));
-      expect(mobileNav?.className).toContain("backdrop-blur");
-    });
+    expect(telLinks.length).toBeGreaterThanOrEqual(1);
   });
 });

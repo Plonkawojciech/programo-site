@@ -141,7 +141,7 @@ export default function SoftwareHousePoznanPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
 
-      <main className="min-h-screen bg-[var(--theme-bg-1,#0a0a0a)] text-[var(--theme-text-1,#fafafa)]">
+      <main className="min-h-screen bg-surface text-on-surface">
         <article className="mx-auto max-w-5xl px-6 py-16 md:px-10 md:py-24">
           <nav aria-label="breadcrumb" className="mb-8 text-xs uppercase tracking-widest opacity-60">
             <Link href="/" className="hover:underline">
@@ -167,7 +167,7 @@ export default function SoftwareHousePoznanPage() {
             <div className="mt-8 flex flex-wrap gap-4">
               <a
                 href="mailto:biuro@programo.pl"
-                className="rounded-full bg-[var(--theme-accent,#ffb547)] px-6 py-3 text-sm font-medium text-black transition hover:opacity-90"
+                className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-on-primary transition hover:bg-primary-container"
               >
                 Bezpłatna wycena
               </a>

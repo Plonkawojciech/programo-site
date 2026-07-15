@@ -26,40 +26,50 @@ function renderWithToggle() {
 }
 
 describe("Footer component", () => {
-  it("renders copyright with current year", () => {
+  it("renders copyright with current year and company name", () => {
     renderWithI18n();
     const year = new Date().getFullYear();
-    expect(screen.getByText(new RegExp(`2024.*${year}.*Programo`))).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`${year}.*Programo`))).toBeInTheDocument();
   });
 
-  it("social links have target=_blank and rel=noopener", () => {
+  it("renders the company data line (Programo s.c., Poznań)", () => {
     renderWithI18n();
-    const githubLink = screen.getByLabelText("GitHub");
-    expect(githubLink).toHaveAttribute("target", "_blank");
-    expect(githubLink).toHaveAttribute("rel", "noopener noreferrer");
-
-    const linkedinLink = screen.getByLabelText("LinkedIn");
-    expect(linkedinLink).toHaveAttribute("target", "_blank");
-    expect(linkedinLink).toHaveAttribute("rel", "noopener noreferrer");
+    expect(screen.getByText("Programo s.c.")).toBeInTheDocument();
+    expect(screen.getByText("Poznań, Polska")).toBeInTheDocument();
   });
 
-  it("location 'Poznań' is visible", () => {
+  it("renders both phone numbers and the email as functional links", () => {
     renderWithI18n();
-    expect(screen.getByText(/Pozna/)).toBeInTheDocument();
+    const bartosz = screen.getByRole("link", { name: "+48 509 123 434" });
+    expect(bartosz).toHaveAttribute("href", "tel:+48509123434");
+    const wojciech = screen.getByRole("link", { name: "+48 797 222 363" });
+    expect(wojciech).toHaveAttribute("href", "tel:+48797222363");
+    const email = screen.getByRole("link", { name: "biuro@programo.pl" });
+    expect(email).toHaveAttribute("href", "mailto:biuro@programo.pl");
   });
 
-  it("links are functional (have href)", () => {
+  it("renders the 'reply within 24h' promise", () => {
     renderWithI18n();
-    const githubLink = screen.getByLabelText("GitHub");
-    expect(githubLink.getAttribute("href")).toContain("github.com");
-
-    const linkedinLink = screen.getByLabelText("LinkedIn");
-    expect(linkedinLink.getAttribute("href")).toContain("linkedin.com");
+    expect(screen.getAllByText("Odpowiadamy w 24 h").length).toBeGreaterThan(0);
   });
 
-  it("copyright text includes 'Programo'", () => {
+  it("renders the four-pillar offer column with a link to /oferta", () => {
     renderWithI18n();
-    expect(screen.getByText(/Programo/)).toBeInTheDocument();
+    const offerLinks = screen.getAllByRole("link").filter((l) => l.getAttribute("href") === "/oferta");
+    expect(offerLinks.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders a top-6 projects column linking to project pages", () => {
+    renderWithI18n();
+    const jedmarLink = screen.getByRole("link", { name: "Jedmar" });
+    expect(jedmarLink).toHaveAttribute("href", "/projects/jedmar");
+  });
+
+  it("renders the company column (about, pricing, contact, privacy policy)", () => {
+    renderWithI18n();
+    expect(screen.getByRole("link", { name: "Wycena" })).toHaveAttribute("href", "/cennik");
+    const privacyLink = screen.getByRole("link", { name: "Polityka prywatności" });
+    expect(privacyLink).toHaveAttribute("href", "/polityka-prywatnosci");
   });
 
   it("uses semantic footer element", () => {
@@ -71,9 +81,9 @@ describe("Footer component", () => {
   it("i18n: location changes to 'Poland' in EN", () => {
     renderWithToggle();
     // Default PL
-    expect(screen.getByText(/Polska/)).toBeInTheDocument();
+    expect(screen.getByText("Poznań, Polska")).toBeInTheDocument();
     // Toggle to EN
     fireEvent.click(screen.getByTestId("toggle-lang"));
-    expect(screen.getByText(/Poland/)).toBeInTheDocument();
+    expect(screen.getByText("Poznan, Poland")).toBeInTheDocument();
   });
 });

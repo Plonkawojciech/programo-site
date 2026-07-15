@@ -8,21 +8,33 @@ import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { useConsent } from "@/lib/consent";
 import { fadeInUp } from "@/lib/motion";
+import { projects } from "@/lib/projects";
 
-const footerLinks: { href: string; label: { pl: string; en: string } }[] = [
-  { href: "/oferta", label: { pl: "Oferta", en: "Services" } },
-  { href: "/strony-internetowe", label: { pl: "Strony internetowe", en: "Websites" } },
-  { href: "/sklepy-internetowe", label: { pl: "Sklepy internetowe", en: "Online stores" } },
-  { href: "/cennik", label: { pl: "Wycena", en: "Pricing" } },
-  { href: "/projekty", label: { pl: "Projekty", en: "Projects" } },
-  { href: "/o-nas", label: { pl: "O nas", en: "About" } },
-  { href: "/software-house-poznan", label: { pl: "Software House Poznań", en: "Software House Poznań" } },
-  { href: "/ile-kosztuje-aplikacji", label: { pl: "Ile kosztuje aplikacja", en: "App cost" } },
-  { href: "/kontakt", label: { pl: "Kontakt", en: "Contact" } },
+type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
+
+// Offer column — same four pillars as /oferta, each linking to its subpage.
+const offerLinks: { titleKey: TKey; href: string }[] = [
+  { titleKey: "offer.pillar1.title", href: "/oferta" },
+  { titleKey: "offer.pillar2.title", href: "/oferta" },
+  { titleKey: "offer.pillar3.title", href: "/sklepy-internetowe" },
+  { titleKey: "offer.pillar4.title", href: "/strony-tracking-reklamy" },
+];
+
+// Projects column — top 6 (content-deck / brief section 5.4 portfolio picks).
+const featuredSlugs = ["jedmar", "estalo", "wks-poznan", "skup-nieruchomosci", "eportal-prawny", "rejestr-pro"];
+const projectLinks = featuredSlugs
+  .map((slug) => projects.find((p) => p.slug === slug))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+const companyLinks: { labelKey: TKey; href: string }[] = [
+  { labelKey: "nav.about", href: "/o-nas" },
+  { labelKey: "nav.pricing", href: "/cennik" },
+  { labelKey: "nav.contact", href: "/kontakt" },
+  { labelKey: "footer.privacy", href: "/polityka-prywatnosci" },
 ];
 
 export default function Footer() {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const { theme } = useTheme();
   const { openSettings } = useConsent();
   const footerRef = useRef<HTMLElement>(null);
@@ -41,9 +53,10 @@ export default function Footer() {
     >
       <motion.div
         style={{ y: contentY }}
-        className="flex flex-col gap-10 px-6 md:px-12 lg:px-24 py-12 md:py-16 2xl:py-24 w-full max-w-[1400px] mx-auto will-change-transform transform-gpu"
+        className="flex flex-col gap-14 px-6 md:px-12 lg:px-24 py-12 md:py-16 2xl:py-24 w-full max-w-[1400px] mx-auto will-change-transform transform-gpu"
       >
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
+          {/* Brand */}
           <div>
             <Image
               key={theme}
@@ -51,46 +64,94 @@ export default function Footer() {
               alt="Programo"
               width={320}
               height={226}
-              className="h-auto w-[220px] md:w-[280px] select-none"
+              className="h-auto w-[200px] select-none"
               loading="lazy"
             />
-            <p className="text-sm text-on-surface-variant mt-6 max-w-xs leading-relaxed">
-              {t("hero.desc")}
+            <p className="mt-6 max-w-xs text-sm leading-relaxed text-on-surface-variant">
+              {t("footer.tagline")}
+            </p>
+            <p className="mt-4 text-xs font-bold uppercase tracking-widest text-primary">
+              {t("footer.reply")}
             </p>
           </div>
-          <div className="flex flex-wrap gap-10 md:gap-16">
-            <nav aria-label="Mapa strony" className="grid grid-cols-2 gap-x-8 gap-y-3">
-              {footerLinks.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className="text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
-                >
-                  {l.label[lang]}
-                </Link>
-              ))}
-            </nav>
-            <div className="flex flex-col gap-3">
-              <a
-                href="https://github.com/programo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
+
+          {/* Offer */}
+          <nav aria-label={t("footer.colOffer")} className="flex flex-col gap-3">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/60">
+              {t("footer.colOffer")}
+            </span>
+            {offerLinks.map((l) => (
+              <Link
+                key={l.titleKey}
+                href={l.href}
+                className="text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
               >
-                GitHub
-              </a>
-              <a
-                href="https://linkedin.com/company/programo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-on-surface-variant hover-underline transition-colors duration-300"
+                {t(l.titleKey)}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Projects */}
+          <nav aria-label={t("footer.colProjects")} className="flex flex-col gap-3">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/60">
+              {t("footer.colProjects")}
+            </span>
+            {projectLinks.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/projects/${p.slug}`}
+                className="text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
               >
-                LinkedIn
-              </a>
-            </div>
-          </div>
+                {p.title}
+              </Link>
+            ))}
+            <Link
+              href="/projekty"
+              className="text-sm font-medium text-primary hover-underline transition-colors duration-300"
+            >
+              {t("footer.allProjects")}
+            </Link>
+          </nav>
+
+          {/* Company */}
+          <nav aria-label={t("footer.colCompany")} className="flex flex-col gap-3">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/60">
+              {t("footer.colCompany")}
+            </span>
+            {companyLinks.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
+              >
+                {t(l.labelKey)}
+              </Link>
+            ))}
+          </nav>
         </div>
 
+        {/* Company data */}
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="flex flex-col gap-4 border-t border-outline-variant/20 pt-8 text-sm text-on-surface-variant md:flex-row md:flex-wrap md:items-center md:gap-x-6 md:gap-y-2"
+        >
+          <span className="font-medium text-on-surface">{t("footer.companyName")}</span>
+          <span>{t("footer.location")}</span>
+          <a href="mailto:biuro@programo.pl" className="hover-underline hover:text-on-surface transition-colors">
+            biuro@programo.pl
+          </a>
+          <a href="tel:+48509123434" className="hover-underline hover:text-on-surface transition-colors">
+            +48 509 123 434
+          </a>
+          <a href="tel:+48797222363" className="hover-underline hover:text-on-surface transition-colors">
+            +48 797 222 363
+          </a>
+        </motion.div>
+
+        {/* Bottom bar */}
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -99,12 +160,9 @@ export default function Footer() {
           className="border-t border-outline-variant/20 pt-8 flex flex-col-reverse md:flex-row justify-between items-start md:items-center gap-4"
         >
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <Link
-              href="/polityka-prywatnosci"
-              className="text-[10px] font-medium text-on-surface-variant/70 uppercase tracking-widest hover-underline hover:text-on-surface transition-colors"
-            >
-              {t("footer.privacy")}
-            </Link>
+            <span className="text-[10px] font-medium text-on-surface-variant/70 uppercase tracking-widest">
+              © {new Date().getFullYear()} {t("footer.copyright")}
+            </span>
             <button
               type="button"
               onClick={openSettings}
@@ -116,7 +174,7 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">
-              {t("footer.location")}
+              {t("footer.reply")}
             </span>
           </div>
         </motion.div>

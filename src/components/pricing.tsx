@@ -1,139 +1,105 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import Reveal from "@/components/ui/reveal";
+import CtaButton from "@/components/ui/cta-button";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
+
+interface Step {
+  n: string;
+  titleKey: TKey;
+  descKey: TKey;
+}
+
+const steps: Step[] = [
+  { n: "01", titleKey: "pricing.step1.title", descKey: "pricing.step1.desc" },
+  { n: "02", titleKey: "pricing.step2.title", descKey: "pricing.step2.desc" },
+  { n: "03", titleKey: "pricing.step3.title", descKey: "pricing.step3.desc" },
+];
 
 interface Factor {
   nameKey: TKey;
   descKey: TKey;
-  features: TKey[];
-  featured?: boolean;
 }
 
-// What actually drives the cost of a project — shown instead of a fixed price
-// list, because every project starts from a different goal and scope.
 const factors: Factor[] = [
-  {
-    nameKey: "pricing.factor1.name",
-    descKey: "pricing.factor1.desc",
-    features: ["pricing.factor1.f1", "pricing.factor1.f2", "pricing.factor1.f3"],
-  },
-  {
-    nameKey: "pricing.factor2.name",
-    descKey: "pricing.factor2.desc",
-    features: ["pricing.factor2.f1", "pricing.factor2.f2", "pricing.factor2.f3"],
-    featured: true,
-  },
-  {
-    nameKey: "pricing.factor3.name",
-    descKey: "pricing.factor3.desc",
-    features: ["pricing.factor3.f1", "pricing.factor3.f2", "pricing.factor3.f3"],
-  },
+  { nameKey: "pricing.factor1.name", descKey: "pricing.factor1.desc" },
+  { nameKey: "pricing.factor2.name", descKey: "pricing.factor2.desc" },
+  { nameKey: "pricing.factor3.name", descKey: "pricing.factor3.desc" },
+  { nameKey: "pricing.factor4.name", descKey: "pricing.factor4.desc" },
+  { nameKey: "pricing.factor5.name", descKey: "pricing.factor5.desc" },
 ];
 
+// /cennik — the quoting process (call → range in 24 h → fixed quote). No
+// invented amounts: content-deck-2026-07.md section 6.
 export default function Pricing() {
   const { t } = useI18n();
 
   return (
     <section className="relative bg-surface py-24 md:py-32 lg:py-40">
-      <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
-        {/* Header */}
-        <div className="mb-20 md:mb-28 flex flex-col gap-6 max-w-4xl">
-          <motion.span
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary"
-          >
+      <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
+        <Reveal className="mb-16 max-w-3xl md:mb-24">
+          <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
             {t("pricing.label")}
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-7xl 2xl:text-[6vw]"
-          >
+          </p>
+          <h1 className="mt-5 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-7xl">
             {t("pricing.title")}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-lg md:text-xl font-light text-on-surface/70 max-w-3xl leading-relaxed"
-          >
-            {t("pricing.desc")}
-          </motion.p>
-        </div>
+          </h1>
+          <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
+            {t("pricing.lead")}
+          </p>
+        </Reveal>
 
-        {/* Cost drivers — what shapes an individual quote */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {factors.map((factor, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-10% 0px" }}
-              transition={{ delay: i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className={`relative flex flex-col rounded-3xl border p-8 md:p-10 ${
-                factor.featured
-                  ? "border-primary bg-primary/5 shadow-[0_20px_60px_rgba(0,0,0,0.12)]"
-                  : "border-outline-variant/30 bg-surface-container/40"
-              }`}
-            >
-              <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-3 font-headline text-2xl md:text-3xl font-bold tracking-tight text-on-surface">
-                {t(factor.nameKey)}
-              </h3>
-              <p className="mt-4 text-on-surface-variant text-sm md:text-base font-light leading-relaxed">
-                {t(factor.descKey)}
-              </p>
-              <ul className="mt-8 flex flex-col gap-4">
-                {factor.features.map((f) => (
-                  <li
-                    key={f}
-                    className="flex items-start gap-3 text-sm md:text-base text-on-surface/80"
-                  >
-                    <span className="mt-1.5 inline-block h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
-                    {t(f)}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
+        {/* Process — 3 steps */}
+        <Reveal className="mb-6 max-w-2xl">
+          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
+            {t("pricing.processLabel")}
+          </p>
+        </Reveal>
+        <div className="grid gap-x-10 gap-y-12 md:grid-cols-3">
+          {steps.map((s, i) => (
+            <Reveal key={s.n} delay={i * 0.1} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
+              <span className="font-mono text-xs uppercase tracking-widest text-primary">{s.n}</span>
+              <h2 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
+                {t(s.titleKey)}
+              </h2>
+              <p className="text-base font-light leading-relaxed text-on-surface/70">{t(s.descKey)}</p>
+            </Reveal>
           ))}
         </div>
 
-        {/* CTA band — the only call to action: get an individual quote */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 md:mt-10 flex flex-col items-start gap-8 rounded-3xl border border-primary/40 bg-primary/5 p-8 md:p-12 lg:flex-row lg:items-center lg:justify-between"
-        >
-          <div className="max-w-2xl">
-            <h2 className="font-headline text-2xl md:text-4xl font-bold tracking-tight text-on-surface">
-              {t("pricing.ctaTitle")}
-            </h2>
-            <p className="mt-3 text-base md:text-lg font-light text-on-surface/70 leading-relaxed">
-              {t("pricing.ctaDesc")}
-            </p>
-            <p className="mt-4 text-sm font-medium text-on-surface-variant">
-              {t("pricing.promise")}
-            </p>
+        {/* What drives the cost */}
+        <Reveal className="mb-6 mt-24 max-w-2xl md:mt-32">
+          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
+            {t("pricing.factorsLabel")}
+          </p>
+        </Reveal>
+        <div className="grid gap-x-10 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+          {factors.map((f, i) => (
+            <Reveal
+              key={f.nameKey}
+              delay={(i % 3) * 0.1}
+              className="rounded-3xl border border-outline-variant/30 bg-surface-container-low p-7"
+            >
+              <h3 className="font-headline text-xl font-bold tracking-tight text-on-surface">{t(f.nameKey)}</h3>
+              <p className="mt-3 text-sm font-light leading-relaxed text-on-surface-variant">{t(f.descKey)}</p>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* CTA band */}
+        <Reveal className="mt-20 overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:mt-28 md:p-16">
+          <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl">
+            {t("pricing.ctaTitle")}
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-lg font-light leading-relaxed text-on-surface/70">
+            {t("pricing.ctaDesc")}
+          </p>
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <CtaButton href="tel:+48509123434">{t("pricing.cta")}</CtaButton>
           </div>
-          <Link
-            href="/kontakt"
-            className="shrink-0 inline-flex items-center justify-center gap-3 rounded-full bg-primary px-8 py-4 text-sm uppercase tracking-widest font-medium text-on-primary transition-all hover:bg-primary-container hover:gap-5"
-          >
-            {t("pricing.cta")} <span aria-hidden="true">→</span>
-          </Link>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );

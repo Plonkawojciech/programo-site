@@ -1,120 +1,131 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import Reveal from "@/components/ui/reveal";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
-interface OfferItem {
+interface Pillar {
+  number: string;
   titleKey: TKey;
   descKey: TKey;
-  number: string;
-  href?: string;
+  exampleKey: TKey;
+  bulletKeys: TKey[];
+  href: string;
 }
 
-const offerItems: OfferItem[] = [
-  { titleKey: "offer.web.title", descKey: "offer.web.desc", number: "01", href: "/strony-internetowe" },
-  { titleKey: "offer.ecommerce.title", descKey: "offer.ecommerce.desc", number: "02", href: "/sklepy-internetowe" },
-  { titleKey: "offer.saas.title", descKey: "offer.saas.desc", number: "03" },
-  { titleKey: "offer.mobile.title", descKey: "offer.mobile.desc", number: "04" },
-  { titleKey: "offer.ai.title", descKey: "offer.ai.desc", number: "05" },
-  { titleKey: "offer.consulting.title", descKey: "offer.consulting.desc", number: "06" },
+// Same four pillars as the homepage (content-deck-2026-07.md section 1.3),
+// expanded here with a "what you get" list and a link to the matching
+// subpage — content-deck section 2.
+const pillars: Pillar[] = [
+  {
+    number: "01",
+    titleKey: "offer.pillar1.title",
+    descKey: "offer.pillar1.desc",
+    exampleKey: "offer.pillar1.example",
+    bulletKeys: ["offer.pillar1.b1", "offer.pillar1.b2", "offer.pillar1.b3", "offer.pillar1.b4", "offer.pillar1.b5"],
+    href: "/oferta",
+  },
+  {
+    number: "02",
+    titleKey: "offer.pillar2.title",
+    descKey: "offer.pillar2.desc",
+    exampleKey: "offer.pillar2.example",
+    bulletKeys: ["offer.pillar2.b1", "offer.pillar2.b2", "offer.pillar2.b3", "offer.pillar2.b4", "offer.pillar2.b5"],
+    href: "/oferta",
+  },
+  {
+    number: "03",
+    titleKey: "offer.pillar3.title",
+    descKey: "offer.pillar3.desc",
+    exampleKey: "offer.pillar3.example",
+    bulletKeys: ["offer.pillar3.b1", "offer.pillar3.b2", "offer.pillar3.b3", "offer.pillar3.b4", "offer.pillar3.b5"],
+    href: "/sklepy-internetowe",
+  },
+  {
+    number: "04",
+    titleKey: "offer.pillar4.title",
+    descKey: "offer.pillar4.desc",
+    exampleKey: "offer.pillar4.example",
+    bulletKeys: ["offer.pillar4.b1", "offer.pillar4.b2", "offer.pillar4.b3", "offer.pillar4.b4", "offer.pillar4.b5"],
+    href: "/strony-tracking-reklamy",
+  },
 ];
 
 export default function Offer() {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
 
   return (
     <section className="relative bg-surface py-24 md:py-32 lg:py-40">
-      <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
-        {/* Header */}
-        <div className="mb-20 md:mb-32 flex flex-col gap-6 max-w-4xl">
-          <motion.span
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary"
-          >
+      <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
+        <Reveal className="mb-16 max-w-3xl md:mb-24">
+          <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
             {t("offer.label")}
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-headline text-5xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]"
-          >
+          </p>
+          <h1 className="mt-5 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-7xl">
             {t("offer.title")}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-xl md:text-2xl font-light text-on-surface/70 max-w-3xl"
-          >
-            {t("offer.desc")}
-          </motion.p>
-        </div>
+          </h1>
+          <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
+            {t("offer.lead")}
+          </p>
+        </Reveal>
 
-        {/* Offer grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-outline-variant/20">
-          {offerItems.map((item, i) => (
-            <motion.div
-              key={item.number}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-10% 0px" }}
-              transition={{ delay: i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative bg-surface p-8 md:p-12 transition-colors hover:bg-surface-container"
+        <div className="flex flex-col gap-16 md:gap-24">
+          {pillars.map((p, i) => (
+            <Reveal
+              key={p.number}
+              delay={Math.min(i * 0.08, 0.3)}
+              className="grid gap-8 border-t border-outline-variant/30 pt-10 md:grid-cols-[auto_1fr] md:gap-14 md:pt-14"
             >
-              <span className="text-[10px] md:text-xs font-mono uppercase tracking-widest text-on-surface-variant">
-                {item.number}
+              <span className="font-mono text-xs uppercase tracking-widest text-primary md:pt-1">
+                {p.number}
               </span>
-              <h2 className="mt-4 font-headline text-3xl md:text-4xl 2xl:text-5xl font-bold tracking-tighter text-on-surface">
-                {t(item.titleKey)}
-              </h2>
-              <p className="mt-6 text-base md:text-lg font-light leading-relaxed text-on-surface/70">
-                {t(item.descKey)}
-              </p>
-              {item.href && (
-                <>
-                  <span className="mt-6 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-primary">
-                    {lang === "pl" ? "Zobacz" : "See"}
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                  </span>
+              <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
+                <div>
+                  <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
+                    {t(p.titleKey)}
+                  </h2>
+                  <p className="mt-5 max-w-2xl text-base font-light leading-relaxed text-on-surface/70 md:text-lg">
+                    {t(p.descKey)}
+                  </p>
                   <Link
-                    href={item.href}
-                    aria-label={t(item.titleKey)}
-                    className="absolute inset-0"
-                  />
-                </>
-              )}
-            </motion.div>
+                    href={p.href}
+                    className="mt-6 inline-flex items-center gap-3 text-sm font-medium uppercase tracking-widest text-primary transition-all hover:gap-5"
+                  >
+                    {t("offer.seeExample")}: {t(p.exampleKey)}
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                </div>
+                <div className="rounded-3xl border border-outline-variant/40 bg-surface-container-low p-6 md:p-8">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
+                    {t("offer.getBullets")}
+                  </p>
+                  <ul className="mt-5 flex flex-col gap-3.5">
+                    {p.bulletKeys.map((k) => (
+                      <li key={k} className="flex items-start gap-3 text-sm leading-relaxed text-on-surface/80 md:text-base">
+                        <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                        {t(k)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Reveal>
           ))}
-
-          {/* CTA cell */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10% 0px" }}
-            transition={{ delay: offerItems.length * 0.1, duration: 0.6 }}
-            className="relative bg-primary p-8 md:p-12 flex flex-col justify-between gap-8"
-          >
-            <span className="text-[10px] md:text-xs font-mono uppercase tracking-widest text-on-primary/70">
-              {String(offerItems.length + 1).padStart(2, "0")}
-            </span>
-            <h2 className="font-headline text-3xl md:text-4xl 2xl:text-5xl font-bold tracking-tighter text-on-primary">
-              {t("main.cta.primary")}
-            </h2>
-            <Link
-              href="/kontakt"
-              className="inline-flex items-center gap-3 text-on-primary text-sm uppercase tracking-widest font-medium group-hover:gap-5 transition-all w-fit border-b border-on-primary/40 pb-1"
-            >
-              {t("nav.cta")} <span>→</span>
-            </Link>
-          </motion.div>
         </div>
+
+        <Reveal className="mt-20 flex flex-col items-start gap-6 rounded-3xl bg-primary p-8 md:mt-28 md:flex-row md:items-center md:justify-between md:p-12">
+          <h2 className="font-headline text-2xl font-bold tracking-tight text-on-primary md:text-4xl">
+            {t("main.cta.primary")}
+          </h2>
+          <Link
+            href="/kontakt#kontakt-main"
+            className="inline-flex shrink-0 items-center gap-3 border-b border-on-primary/40 pb-1 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5"
+          >
+            {t("nav.cta")} <span aria-hidden="true">→</span>
+          </Link>
+        </Reveal>
       </div>
     </section>
   );

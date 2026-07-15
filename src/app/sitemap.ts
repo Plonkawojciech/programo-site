@@ -28,6 +28,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     {
+      url: "https://programo.pl/strony-tracking-reklamy",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
       url: "https://programo.pl/ile-kosztuje-aplikacji",
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -68,6 +74,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.9,
+    },
+    {
+      url: "https://programo.pl/polityka-prywatnosci",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.3,
     },
     // All project / case-study pages, generated from the projects array
     // so the sitemap never drifts (incl. client work: Jedmar, WKS, Posnania…).

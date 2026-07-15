@@ -9,15 +9,14 @@ import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
 
 export const metadata: Metadata = {
-  title:
-    "Tworzenie stron internetowych dla firm — Next.js, React | Programo",
+  title: "Strony internetowe dla firm — projekt i wdrożenie | Programo",
   description:
-    "Projektujemy i budujemy nowoczesne strony internetowe dla firm: strony firmowe, landing page, sklepy. Next.js/React, nacisk na szybkość (Core Web Vitals), SEO i konwersję. Software house z Poznania.",
+    "Szybkie, nowoczesne strony firmowe i landingi zaprojektowane pod kontakt od klienta. Formularz, telefon i pomiar skuteczności od pierwszego dnia.",
   alternates: { canonical: "https://programo.pl/strony-internetowe" },
   openGraph: {
-    title: "Tworzenie stron internetowych dla firm — Programo",
+    title: "Strony internetowe dla firm — projekt i wdrożenie | Programo",
     description:
-      "Nowoczesne strony firmowe, landing page i sklepy w Next.js. Szybkość, SEO, konwersja. Poznań i cała Polska.",
+      "Szybkie, nowoczesne strony firmowe i landingi zaprojektowane pod kontakt od klienta.",
     url: "https://programo.pl/strony-internetowe",
     siteName: "Programo",
     locale: "pl_PL",
@@ -230,6 +229,15 @@ export default function StronyInternetowePage() {
                 </Reveal>
               ))}
             </div>
+            <Reveal className="mt-14 rounded-2xl border border-outline-variant/40 bg-surface-container-low px-6 py-5 md:mt-20">
+              <p className="text-sm text-on-surface-variant">
+                Prowadzimy też kampanie i tracking — pomiar konwersji, Consent Mode v2 i
+                Google Ads, na Twojej stronie albo na nowej.{" "}
+                <Link href="/strony-tracking-reklamy" className="font-medium text-primary underline underline-offset-4 transition hover:text-on-surface">
+                  Zobacz ofertę strony, trackingu i reklam →
+                </Link>
+              </p>
+            </Reveal>
           </div>
         </section>
 
