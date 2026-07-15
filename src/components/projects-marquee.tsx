@@ -2,25 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { projects, type Project } from "@/lib/projects";
+import { trackPortfolioClick } from "@/lib/tracking";
 
 // Curated, ordered subset shown in the homepage strip. Order matters visually.
 const MARQUEE_SLUGS = [
   "estalo",
   "solvio",
   "rejestr-pro",
-  "pool-system",
+  "pooltimer",
   "jedmar",
   "wks-poznan",
   "wsafefinanse",
 ];
 
 function getMarqueeProjects(): Project[] {
-  return MARQUEE_SLUGS.map((slug) => projects.find((p) => p.slug === slug))
-    .filter((p): p is Project => Boolean(p));
+  return MARQUEE_SLUGS.map((slug) => projects.find((p) => p.slug === slug)).filter(
+    (p): p is Project => Boolean(p)
+  );
 }
 
 function ProjectTile({ project }: { project: Project }) {
@@ -30,7 +31,8 @@ function ProjectTile({ project }: { project: Project }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="group relative shrink-0 w-[80vw] sm:w-[360px] md:w-[380px] lg:w-[440px] aspect-[4/3] overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all duration-500 ease-out md:hover:-translate-y-2 md:hover:z-20 md:hover:border-primary/60 md:hover:shadow-2xl md:hover:shadow-black/30 snap-center"
+      onClick={() => trackPortfolioClick(project.slug, `/projects/${project.slug}`)}
+      className="group relative aspect-[4/3] w-[80vw] shrink-0 snap-center overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all duration-500 ease-out sm:w-[360px] md:w-[380px] md:hover:-translate-y-2 md:hover:border-primary/60 md:hover:shadow-2xl md:hover:shadow-black/30 lg:w-[440px]"
       aria-label={`${project.title} — ${project.subtitle[lang]}`}
     >
       {screenshot ? (
@@ -39,13 +41,10 @@ function ProjectTile({ project }: { project: Project }) {
           alt={project.title}
           fill
           sizes="(max-width: 768px) 80vw, (max-width: 1024px) 380px, 440px"
-          className="object-cover opacity-60 transition-all duration-500 ease-out md:group-hover:opacity-100 md:group-hover:scale-105"
+          className="object-cover object-top opacity-70 transition-all duration-500 ease-out md:group-hover:scale-105 md:group-hover:opacity-100"
         />
       ) : (
-        <div
-          className="absolute inset-0"
-          style={{ background: project.bgColor }}
-        />
+        <div className="absolute inset-0" style={{ background: project.bgColor }} />
       )}
 
       {/* Bottom gradient for readability */}
@@ -53,11 +52,11 @@ function ProjectTile({ project }: { project: Project }) {
 
       {/* Accent line on top */}
       <div
-        className="absolute top-0 left-0 right-0 h-1 opacity-80"
+        className="absolute left-0 right-0 top-0 h-1 opacity-80"
         style={{ backgroundColor: project.accentColor }}
       />
 
-      {/* Coming-soon badge for non-live projects */}
+      {/* Status badge for non-live projects */}
       {project.status !== "live" && (
         <span className="absolute right-4 top-4 z-20 rounded-full border border-white/30 bg-black/50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest text-white backdrop-blur-sm">
           {lang === "pl" ? "Wkrótce" : "Coming soon"}
@@ -65,8 +64,8 @@ function ProjectTile({ project }: { project: Project }) {
       )}
 
       {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-7 text-white">
-        <div className="flex items-center gap-2 mb-2">
+      <div className="absolute inset-0 flex flex-col justify-end p-6 text-white md:p-7">
+        <div className="mb-2 flex items-center gap-2">
           <span
             className="text-[10px] font-bold uppercase tracking-[0.3em]"
             style={{ color: project.accentColor }}
@@ -77,15 +76,15 @@ function ProjectTile({ project }: { project: Project }) {
             · {project.year}
           </span>
         </div>
-        <h3 className="font-headline text-3xl md:text-4xl font-bold tracking-tighter text-white">
+        <h3 className="font-headline text-3xl font-bold tracking-tighter text-white md:text-4xl">
           {project.title}
         </h3>
-        <p className="mt-2 text-sm md:text-base font-light text-white/80 leading-snug line-clamp-2">
+        <p className="mt-2 line-clamp-2 text-sm font-light leading-snug text-white/80 md:text-base">
           {project.subtitle[lang]}
         </p>
         {project.metric && (
           <p
-            className="mt-3 inline-flex w-fit items-center gap-2 text-[11px] md:text-xs font-semibold uppercase tracking-wider"
+            className="mt-3 inline-flex w-fit items-center gap-2 text-[11px] font-semibold uppercase tracking-wider md:text-xs"
             style={{ color: project.accentColor }}
           >
             <span aria-hidden="true">▸</span>
@@ -101,80 +100,32 @@ export default function ProjectsMarquee() {
   const { t } = useI18n();
   const items = getMarqueeProjects();
 
-  const trackRef = useRef<HTMLDivElement>(null);
-  const isHoveredRef = useRef(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mqHover = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const mqReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // Touch devices use native horizontal scroll; respect reduced motion
-    if (!mqHover.matches || mqReduced.matches) return;
-
-    const NORMAL_MS_PER_CYCLE = 60000;
-    const NORMAL_SPEED = 1 / NORMAL_MS_PER_CYCLE; // progress units / ms
-    const HOVERED_SPEED = NORMAL_SPEED / 3; // 3× slower
-
-    let raf = 0;
-    let lastTime = performance.now();
-    let progress = 0; // 0..1
-    let currentSpeed = NORMAL_SPEED;
-    // Time constant for speed interpolation (ms) — controls how fast the
-    // marquee eases between fast and slow. Higher = smoother but slower to react.
-    const TAU = 350;
-
-    function step(now: number) {
-      const dt = Math.min(now - lastTime, 64); // clamp big tab-switch jumps
-      lastTime = now;
-
-      const target = isHoveredRef.current ? HOVERED_SPEED : NORMAL_SPEED;
-      const alpha = 1 - Math.exp(-dt / TAU);
-      currentSpeed += (target - currentSpeed) * alpha;
-
-      progress += dt * currentSpeed;
-      if (progress >= 1) progress -= 1;
-
-      if (trackRef.current) {
-        const pct = -progress * 50; // 0% → -50% (half of duplicated track)
-        trackRef.current.style.transform = `translate3d(${pct}%, 0, 0)`;
-      }
-
-      raf = requestAnimationFrame(step);
-    }
-    raf = requestAnimationFrame(step);
-
-    function onVisibility() {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-      } else {
-        lastTime = performance.now();
-        raf = requestAnimationFrame(step);
-      }
-    }
-    document.addEventListener("visibilitychange", onVisibility);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
-  }, []);
-
   if (items.length === 0) return null;
 
   return (
     <section
       id="realizacje"
       aria-labelledby="realizations-heading"
-      className="relative bg-surface py-24 md:py-32 lg:py-40 border-t border-outline-variant/20 overflow-hidden"
+      className="relative overflow-hidden border-t border-outline-variant/20 bg-surface py-24 md:py-32 lg:py-40"
     >
+      {/* Self-contained CSS-keyframes marquee: pauses on hover, static when the
+          visitor prefers reduced motion. No JS animation loop. */}
+      <style>{`
+        @keyframes pmScroll { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+        .pm-track { width: max-content; animation: pmScroll 60s linear infinite; will-change: transform; }
+        .pm-viewport:hover .pm-track,
+        .pm-viewport:focus-within .pm-track { animation-play-state: paused; }
+        @media (prefers-reduced-motion: reduce) { .pm-track { animation: none; } }
+      `}</style>
+
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-16">
+        <div className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
           <div>
             <motion.span
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary"
+              className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary md:text-xs"
             >
               {t("realizations.label")}
             </motion.span>
@@ -183,7 +134,7 @@ export default function ProjectsMarquee() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="mt-6 font-headline text-4xl md:text-6xl 2xl:text-7xl font-bold tracking-tighter text-on-surface"
+              className="mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl"
             >
               {t("realizations.title")}
             </motion.h2>
@@ -192,7 +143,7 @@ export default function ProjectsMarquee() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="mt-4 text-base md:text-lg font-light text-on-surface/70 max-w-xl"
+              className="mt-4 max-w-xl text-base font-light text-on-surface/70 md:text-lg"
             >
               {t("realizations.subtitle")}
             </motion.p>
@@ -200,61 +151,36 @@ export default function ProjectsMarquee() {
 
           <Link
             href="/projekty"
-            className="hidden md:inline-flex items-center gap-3 text-sm uppercase tracking-widest font-medium text-on-surface hover:text-primary transition-all hover:gap-5"
+            className="hidden items-center gap-3 text-sm font-medium uppercase tracking-widest text-on-surface transition-all hover:gap-5 hover:text-primary md:inline-flex"
           >
             {t("realizations.viewAll")} <span>→</span>
           </Link>
         </div>
       </div>
 
-      {/* MOBILE: native swipeable horizontal scroll */}
+      {/* MOBILE: native swipeable horizontal scroll with snap */}
       <div className="md:hidden">
-        <div className="projects-marquee-mobile flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 px-6">
+        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2">
           {items.map((project) => (
             <ProjectTile key={project.slug} project={project} />
           ))}
           {/* Trailing spacer so last tile can snap to centre */}
-          <div className="shrink-0 w-2" aria-hidden="true" />
+          <div className="w-2 shrink-0" aria-hidden="true" />
         </div>
       </div>
 
-      {/* DESKTOP: rAF-driven auto-scroll marquee */}
-      <div
-        className="hidden md:block projects-marquee-desktop relative w-full"
-        onMouseEnter={() => {
-          isHoveredRef.current = true;
-        }}
-        onMouseLeave={() => {
-          isHoveredRef.current = false;
-        }}
-        onFocusCapture={() => {
-          isHoveredRef.current = true;
-        }}
-        onBlurCapture={() => {
-          isHoveredRef.current = false;
-        }}
-      >
+      {/* DESKTOP: CSS-keyframes auto-scroll marquee */}
+      <div className="pm-viewport relative hidden w-full md:block">
         {/* Side fades */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 md:w-32 z-10 bg-gradient-to-r from-surface to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 md:w-32 z-10 bg-gradient-to-l from-surface to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-surface to-transparent md:w-32" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-surface to-transparent md:w-32" />
 
-        <div
-          ref={trackRef}
-          className="flex gap-5 md:gap-7 py-6 will-change-transform"
-          style={{ width: "max-content", transform: "translate3d(0,0,0)" }}
-        >
-          {/* Duplicated twice for seamless loop */}
+        <div className="pm-track flex gap-5 py-6 md:gap-7">
+          {/* Duplicated twice for a seamless loop */}
           {[0, 1].map((dup) => (
-            <div
-              key={dup}
-              className="flex gap-5 md:gap-7 shrink-0"
-              aria-hidden={dup === 1}
-            >
+            <div key={dup} className="flex shrink-0 gap-5 md:gap-7" aria-hidden={dup === 1}>
               {items.map((project) => (
-                <ProjectTile
-                  key={`${dup}-${project.slug}`}
-                  project={project}
-                />
+                <ProjectTile key={`${dup}-${project.slug}`} project={project} />
               ))}
             </div>
           ))}
@@ -262,10 +188,10 @@ export default function ProjectsMarquee() {
       </div>
 
       {/* Mobile-only "view all" link */}
-      <div className="mx-auto max-w-[1400px] px-6 md:hidden mt-10">
+      <div className="mx-auto mt-10 max-w-[1400px] px-6 md:hidden">
         <Link
           href="/projekty"
-          className="inline-flex items-center gap-3 text-sm uppercase tracking-widest font-medium text-on-surface hover:text-primary transition-all"
+          className="inline-flex items-center gap-3 text-sm font-medium uppercase tracking-widest text-on-surface transition-all hover:text-primary"
         >
           {t("realizations.viewAll")} <span>→</span>
         </Link>
