@@ -7,4 +7,15 @@ export const contact = {
     pl: "Masz pomysł na projekt? Chętnie o nim porozmawiamy. Napisz do nas, a odezwiemy się w ciągu 24 godzin.",
     en: "Have a project in mind? We’d love to hear about it. Drop us a line and we’ll get back to you within 24 hours.",
   },
+
+  // /kontakt — short page hero (above the forms)
+  "contactPage.eyebrow": { pl: "Kontakt", en: "Contact" },
+  "contactPage.title": {
+    pl: "Zadzwoń albo zostaw numer — odpowiadamy w 24 h",
+    en: "Call us or leave your number — we reply within 24 hours",
+  },
+  "contactPage.subtitle": {
+    pl: "Rozmawiasz bezpośrednio z osobami, które budują Twój projekt — bez handlowców po drodze.",
+    en: "You talk directly to the people who build your project — no salespeople in between.",
+  },
 } as const satisfies Record<string, { pl: string; en: string }>;

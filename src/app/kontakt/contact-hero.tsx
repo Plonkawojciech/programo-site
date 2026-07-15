@@ -1,0 +1,38 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { useI18n } from "@/lib/i18n";
+
+// Short page hero for /kontakt — sits above CompactLeadForm + QuickContact.
+// Kept minimal on purpose: the forms below do the actual conversion work.
+export default function ContactHero() {
+  const { t } = useI18n();
+  return (
+    <section className="mx-auto w-full max-w-[1400px] px-6 pb-12 md:px-12 md:pb-16 lg:px-24">
+      <motion.p
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary md:text-xs"
+      >
+        {t("contactPage.eyebrow")}
+      </motion.p>
+      <motion.h1
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.05 }}
+        className="mt-4 max-w-3xl font-headline text-4xl font-bold tracking-tight text-on-surface md:text-5xl lg:text-6xl"
+      >
+        {t("contactPage.title")}
+      </motion.h1>
+      <motion.p
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="mt-5 max-w-xl text-lg font-light leading-relaxed text-on-surface/70"
+      >
+        {t("contactPage.subtitle")}
+      </motion.p>
+    </section>
+  );
+}
