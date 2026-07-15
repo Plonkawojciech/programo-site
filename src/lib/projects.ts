@@ -120,8 +120,8 @@ export const projects: Project[] = [
       en: "Programo — design and build of the apps and the diagram module",
     },
     screenshots: [
-      "/screenshots/v2/jedmar-desktop.webp",
-      "/screenshots/v2/jedmar-mobile.webp",
+      "/screenshots/v2/jedmar-schemat-tool-desktop.webp",
+      "/screenshots/v2/jedmar-schematy-mobile.webp",
       "/screenshots/jedmar-app1.webp",
       "/screenshots/jedmar-app2.webp",
       "/screenshots/jedmar-app3.webp",

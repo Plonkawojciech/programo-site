@@ -116,7 +116,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${newsreader.variable} ${jakarta.variable} selection:bg-primary/20 selection:text-primary`}>
+    <html lang="pl" suppressHydrationWarning className={`${newsreader.variable} ${jakarta.variable} selection:bg-primary/20 selection:text-primary`}>
       <head>
         {/* Preconnect to third-party (analytics) origins for faster first contact */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
