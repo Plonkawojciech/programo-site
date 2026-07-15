@@ -21,8 +21,12 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${project.title} — Programo`;
-  const description = project.description.pl.slice(0, 155);
+  // Short subtitle for the title tag — trim to the first clause so the tag stays
+  // scannable. Full description's first sentence is used for the meta description.
+  const shortSubtitle = project.subtitle.pl.split(/[—–:]/)[0].trim();
+  const title = `${project.title} — ${shortSubtitle} | Programo`;
+  const description = project.description.pl.split(/(?<=\.)\s/)[0].slice(0, 160);
+  const ogImage = project.screenshots?.[0];
 
   return {
     title,
@@ -34,11 +38,13 @@ export async function generateMetadata({
       siteName: "Programo",
       locale: "pl_PL",
       type: "website",
+      ...(ogImage && { images: [{ url: ogImage }] }),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      ...(ogImage && { images: [ogImage] }),
     },
     alternates: {
       canonical: `https://programo.pl/projects/${slug}`,

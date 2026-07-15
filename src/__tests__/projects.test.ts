@@ -2,16 +2,21 @@ import { describe, it, expect } from "vitest";
 import { projects, getProjectBySlug, getAdjacentProjects } from "@/lib/projects";
 
 const EXPECTED_SLUGS = [
-  "estalo",
   "jedmar",
+  "estalo",
+  "eportal-prawny",
   "wks-poznan",
-  "wsafefinanse",
-  "solvio",
+  "skup-nieruchomosci",
   "rejestr-pro",
-  "pool-system",
+  "solvio",
+  "wsafefinanse",
+  "domki-poznaniak",
+  "pooltimer",
 ];
 
-const REMOVED_SLUGS = ["baulx", "learnai", "ks-posnania", "athlix"];
+const REMOVED_SLUGS = ["baulx", "learnai", "ks-posnania", "athlix", "pool-system"];
+
+const STATUSES = ["live", "development", "coming-soon", "planned"];
 
 describe("projects data", () => {
   it("contains the expected projects", () => {
@@ -36,11 +41,50 @@ describe("projects data", () => {
       expect(p.subtitle.en).toBeTruthy();
       expect(p.description.pl).toBeTruthy();
       expect(p.description.en).toBeTruthy();
+      expect(p.longDescription.pl).toBeTruthy();
+      expect(p.longDescription.en).toBeTruthy();
       expect(p.tech.length).toBeGreaterThan(0);
       expect(p.features.pl.length).toBeGreaterThan(0);
       expect(p.features.en.length).toBeGreaterThan(0);
-      expect(["live", "development", "planned"]).toContain(p.status);
+      expect(STATUSES).toContain(p.status);
     }
+  });
+
+  it("has at least one coming-soon project (ePortal Prawny)", () => {
+    const comingSoon = projects.filter((p) => p.status === "coming-soon");
+    expect(comingSoon.length).toBeGreaterThanOrEqual(1);
+    expect(comingSoon.map((p) => p.slug)).toContain("eportal-prawny");
+  });
+
+  it("categories use the current taxonomy", () => {
+    const allowed = ["produkty", "dla-klientow", "marketing"];
+    for (const p of projects) {
+      expect(allowed, `${p.slug} has unknown category ${p.category}`).toContain(p.category);
+    }
+  });
+
+  it("PL/EN parity on bilingual fields", () => {
+    for (const p of projects) {
+      expect(Boolean(p.subtitle.pl), `${p.slug} subtitle.pl`).toBe(true);
+      expect(Boolean(p.subtitle.en), `${p.slug} subtitle.en`).toBe(true);
+      expect(p.features.pl.length, `${p.slug} features parity`).toBe(p.features.en.length);
+      if (p.statusLabel) {
+        expect(Boolean(p.statusLabel.pl), `${p.slug} statusLabel.pl`).toBe(true);
+        expect(Boolean(p.statusLabel.en), `${p.slug} statusLabel.en`).toBe(true);
+      }
+      if (p.metrics) {
+        for (const m of p.metrics) {
+          expect(Boolean(m.label.pl), `${p.slug} metric.pl`).toBe(true);
+          expect(Boolean(m.label.en), `${p.slug} metric.en`).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("Solvio credits the collaboration partner", () => {
+    const solvio = getProjectBySlug("solvio");
+    expect(solvio?.partner).toContain("PBDevs");
+    expect(solvio?.partner).toContain("Filip Piątek");
   });
 
   it("all slugs are URL-safe and unique", () => {

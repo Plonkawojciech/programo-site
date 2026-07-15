@@ -55,12 +55,23 @@ describe("SEO", () => {
   });
 
   describe("meta descriptions", () => {
-    it("all project descriptions are under 160 chars", () => {
+    // Card descriptions are full editorial copy; the metadata description is
+    // derived from them (first sentence, capped at 160). Mirror the derivation
+    // used in app/projects/[slug]/page.tsx.
+    const metaDescription = (text: string) => text.split(/(?<=\.)\s/)[0].slice(0, 160);
+
+    it("derived meta descriptions are non-empty and under 160 chars", () => {
       for (const p of projects) {
-        expect(
-          p.description.pl.length,
-          `${p.title} PL desc too long`
-        ).toBeLessThanOrEqual(300); // descriptions used as-is, trimmed at 155 in metadata
+        const desc = metaDescription(p.description.pl);
+        expect(desc.length, `${p.title} derived desc empty`).toBeGreaterThan(0);
+        expect(desc.length, `${p.title} derived desc too long`).toBeLessThanOrEqual(160);
+      }
+    });
+
+    it("raw card descriptions are present and reasonably bounded", () => {
+      for (const p of projects) {
+        expect(p.description.pl.length, `${p.title} PL desc empty`).toBeGreaterThan(0);
+        expect(p.description.pl.length, `${p.title} PL desc absurdly long`).toBeLessThanOrEqual(400);
       }
     });
   });
@@ -154,10 +165,10 @@ describe("SEO", () => {
       const homepageCanonical = "https://programo.pl";
       expect(homepageCanonical).toBe("https://programo.pl");
 
-      // Project page canonicals
+      // Project page canonicals (slugs may contain digits and hyphens)
       for (const project of projects) {
         const canonical = `https://programo.pl/projects/${project.slug}`;
-        expect(canonical).toMatch(/^https:\/\/programo\.pl\/projects\/[a-z]+$/);
+        expect(canonical).toMatch(/^https:\/\/programo\.pl\/projects\/[a-z0-9-]+$/);
       }
     });
   });
