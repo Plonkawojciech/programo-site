@@ -1,115 +1,84 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import ContactCtaLink from "@/components/contact-cta-link";
+import CompactLeadForm from "@/components/compact-lead-form";
 
-type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
-
-interface ValueItem {
-  titleKey: TKey;
-  descKey: TKey;
-  number: string;
-}
-
-const values: ValueItem[] = [
-  {
-    titleKey: "main.values.problem.title",
-    descKey: "main.values.problem.desc",
-    number: "01",
-  },
-  {
-    titleKey: "main.values.craft.title",
-    descKey: "main.values.craft.desc",
-    number: "02",
-  },
-  {
-    titleKey: "main.values.speed.title",
-    descKey: "main.values.speed.desc",
-    number: "03",
-  },
-];
-
+// Conversion-first homepage hero (redesign 2026-07). Two columns on desktop:
+// editorial headline + dual CTA on the left, a short lead-catcher form on the
+// right. On mobile the form drops below, but the headline and at least one CTA
+// stay above the fold. Copy comes 1:1 from the content deck (home.hero.*).
 export default function MainIntro() {
   const { t } = useI18n();
 
   return (
-    <section className="relative bg-surface py-24 md:py-32 lg:py-40">
+    <section className="relative overflow-hidden bg-surface pt-28 pb-16 md:pt-36 md:pb-24">
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
-        {/* Headline */}
-        <div className="max-w-5xl 2xl:max-w-6xl">
-          <motion.span
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary"
-          >
-            {t("main.intro.label")}
-          </motion.span>
-          <motion.h1
-            initial={false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 font-headline text-4xl md:text-7xl 2xl:text-[clamp(4.5rem,5vw,6rem)] font-bold tracking-tighter text-on-surface leading-[1.05]"
-          >
-            {t("main.intro.headline")}
-          </motion.h1>
-          <motion.p
-            initial={false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="mt-10 text-xl md:text-2xl font-light text-on-surface/70 max-w-3xl leading-relaxed"
-          >
-            {t("main.intro.subheadline")}
-          </motion.p>
-
-          {/* CTAs */}
-          <div className="mt-12 flex flex-wrap gap-4">
-            <ContactCtaLink className="inline-flex items-center gap-3 bg-primary text-on-primary px-6 py-3.5 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-all hover:gap-5">
-              {t("main.cta.primary")} <span>→</span>
-            </ContactCtaLink>
-            <Link
-              href="/oferta"
-              className="inline-flex items-center gap-3 border border-on-surface/30 text-on-surface px-6 py-3.5 rounded-full text-sm uppercase tracking-widest font-medium hover:border-primary transition-all hover:gap-5"
+        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          {/* Left: headline + CTAs */}
+          <div>
+            <motion.span
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary"
             >
-              {t("main.cta.offer")} <span>→</span>
-            </Link>
-          </div>
-        </div>
+              {t("home.hero.eyebrow")}
+            </motion.span>
 
-        {/* Values */}
-        <div className="mt-24 md:mt-40">
-          <motion.h3
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-on-surface-variant mb-12 md:mb-20"
-          >
-            {t("main.values.title")}
-          </motion.h3>
+            <motion.h1
+              initial={false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-5 font-headline text-[2rem] leading-[1.08] font-bold tracking-tight text-on-surface md:text-6xl md:tracking-tighter 2xl:text-7xl"
+            >
+              {t("home.hero.h1")}
+            </motion.h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
-            {values.map((v, i) => (
-              <motion.div
-                key={v.number}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-10% 0px" }}
-                transition={{ delay: i * 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8"
+            <motion.p
+              initial={false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="mt-6 max-w-xl text-base md:text-xl font-light leading-relaxed text-on-surface/70"
+            >
+              {t("home.hero.sub")}
+            </motion.p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <a
+                href="tel:+48509123434"
+                className="inline-flex items-center justify-center gap-3 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5 hover:bg-primary-container focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
               >
-                <span className="font-mono text-xs uppercase tracking-widest text-primary">
-                  {v.number}
-                </span>
-                <h4 className="font-headline text-2xl md:text-3xl font-bold tracking-tight text-on-surface">
-                  {t(v.titleKey)}
-                </h4>
-                <p className="text-base md:text-lg font-light leading-relaxed text-on-surface/70">
-                  {t(v.descKey)}
-                </p>
-              </motion.div>
-            ))}
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
+                  <path d="M6.5 3.5l3 1 1 4-2 1.5a11 11 0 005 5l1.5-2 4 1 1 3a2 2 0 01-2 2.3A16 16 0 014.2 6.5 2 2 0 016.5 3.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {t("home.hero.ctaCall")}
+              </a>
+              <a
+                href="#kontakt"
+                className="inline-flex items-center justify-center gap-3 rounded-full border border-on-surface/30 px-6 py-3.5 text-sm font-medium uppercase tracking-widest text-on-surface transition-all hover:gap-5 hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+              >
+                {t("home.hero.ctaConsult")} <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
+            <p className="mt-6 flex items-center gap-2.5 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" aria-hidden="true">
+                  <path d="M4 12.5l5 5L20 6.5" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+              {t("home.reply")}
+            </p>
           </div>
+
+          {/* Right: lead-catcher form (drops below on mobile) */}
+          <CompactLeadForm
+            bare
+            formId="home-hero"
+            anchorId="home-hero"
+            heading={t("home.hero.formHeading")}
+          />
         </div>
       </div>
     </section>
