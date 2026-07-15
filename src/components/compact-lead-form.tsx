@@ -2,12 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 import { getAttribution, trackLead } from "@/lib/tracking";
 
-type FormState = "idle" | "submitting" | "success" | "error";
+type FieldErrors = {
+  name?: string;
+  phone?: string;
+  consent?: string;
+  server?: string;
+};
+type FormState = "idle" | "submitting" | "success";
 
 const inputClass =
-  "w-full rounded-xl border border-outline-variant/60 bg-surface px-4 py-3 text-base text-on-surface outline-none transition placeholder:text-on-surface-variant/50 focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
+  "min-h-[48px] w-full rounded-xl border border-outline-variant/60 bg-surface px-4 py-3 text-base text-on-surface outline-none transition placeholder:text-on-surface-variant/50 focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
 
 const labelClass = "text-sm font-medium text-on-surface";
 
@@ -15,6 +22,15 @@ const labelClass = "text-sm font-medium text-on-surface";
 function isLikelyPhone(v: string): boolean {
   const digits = v.replace(/\D/g, "");
   return digits.length >= 9 && /^[+]?[\d\s()-]+$/.test(v.trim());
+}
+
+function Spinner({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={`animate-spin ${className}`} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" strokeOpacity="0.25" />
+      <path d="M21 12a9 9 0 00-9-9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  );
 }
 
 // A short, low-friction lead-catcher for the Polish Ads landings: name + phone +
@@ -28,9 +44,9 @@ export default function CompactLeadForm({
   anchorId,
   projectType,
   bare = false,
-  eyebrow = "Szybki kontakt",
-  heading = "Zostaw numer — oddzwonimy z wyceną",
-  sub = "Zostaw imię i numer — odezwiemy się tego samego dnia roboczego. Bez zobowiązań i bez spamu.",
+  eyebrow,
+  heading,
+  sub,
 }: {
   /** Unique label for conversion attribution + field ids, e.g. "strony-compact". */
   formId: string;
@@ -40,16 +56,21 @@ export default function CompactLeadForm({
   projectType?: string;
   /** Render only the form card (no <section>/container) — for embedding in a hero. */
   bare?: boolean;
+  /** Overrides the default (i18n) eyebrow / heading / sub — used by Ads landings. */
   eyebrow?: string;
   heading?: string;
   sub?: string;
 }) {
+  const { t } = useI18n();
   const [state, setState] = useState<FormState>("idle");
-  const [error, setError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
+  const [errors, setErrors] = useState<FieldErrors>({});
   const [consent, setConsent] = useState(false);
   const submittingRef = useRef(false);
   const successRef = useRef<HTMLHeadingElement>(null);
+
+  const resolvedEyebrow = eyebrow ?? t("compact.eyebrow");
+  const resolvedHeading = heading ?? t("compact.heading");
+  const resolvedSub = sub ?? t("compact.sub");
 
   // Move focus to the success message so keyboard/screen-reader users (and anyone
   // who scrolled) are told the submission worked, since the form button vanishes.
@@ -65,30 +86,26 @@ export default function CompactLeadForm({
     const name = String(fd.get("name") || "").trim();
     const phone = String(fd.get("phone") || "").trim();
 
-    if (!name) {
-      setError("Podaj imię.");
-      setState("error");
-      return;
+    const nextErrors: FieldErrors = {};
+    if (!name) nextErrors.name = t("compact.errorName");
+    if (!phone) {
+      nextErrors.phone = t("compact.errorPhoneMissing");
+    } else if (!isLikelyPhone(phone)) {
+      nextErrors.phone = t("compact.errorPhoneInvalid");
     }
-    if (!phone || !isLikelyPhone(phone)) {
-      setPhoneError("Sprawdź numer — np. +48 600 000 000.");
-      setError("");
-      setState("error");
-      return;
-    }
-    // Consent is checked LAST and never disables the button — we let the user
+    // Consent is checked last and never disables the button — we let the user
     // click, then highlight the checkbox. The backend stays the hard RODO guard
     // (/api/contact rejects consent !== true with 400).
-    if (!consent) {
-      setError("Zaznacz zgodę, żebyśmy mogli się z Tobą skontaktować.");
-      setState("error");
+    if (!consent) nextErrors.consent = t("compact.errorConsent");
+
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
       return;
     }
 
     submittingRef.current = true;
     setState("submitting");
-    setError("");
-    setPhoneError("");
+    setErrors({});
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -105,8 +122,8 @@ export default function CompactLeadForm({
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setError(data?.error || "Nie udało się wysłać. Spróbuj ponownie lub zadzwoń.");
-        setState("error");
+        setErrors({ server: data?.error || t("compact.errorServer") });
+        setState("idle");
         return;
       }
       setState("success");
@@ -114,11 +131,15 @@ export default function CompactLeadForm({
       (e.target as HTMLFormElement).reset();
       setConsent(false);
     } catch {
-      setError("Nie udało się wysłać. Spróbuj ponownie lub zadzwoń.");
-      setState("error");
+      setErrors({ server: t("compact.errorServer") });
+      setState("idle");
     } finally {
       submittingRef.current = false;
     }
+  }
+
+  function clearFieldError(field: keyof FieldErrors) {
+    setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
   }
 
   const success = (
@@ -134,10 +155,10 @@ export default function CompactLeadForm({
       </span>
       <div>
         <h3 ref={successRef} tabIndex={-1} className="font-semibold text-on-surface outline-none">
-          Dzięki — mamy Twój numer.
+          {t("compact.success")}
         </h3>
         <p className="mt-1 text-sm leading-relaxed text-on-surface-variant">
-          Odezwiemy się tego samego dnia roboczego. Jeśli się spieszysz, zadzwoń: 509 123 434.
+          {t("compact.successBody")}
         </p>
       </div>
     </div>
@@ -148,7 +169,7 @@ export default function CompactLeadForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`${formId}-name`} className={labelClass}>
-            Imię
+            {t("compact.nameLabel")}
           </label>
           <input
             id={`${formId}-name`}
@@ -156,19 +177,16 @@ export default function CompactLeadForm({
             name="name"
             required
             autoComplete="name"
-            placeholder="Jan"
+            placeholder={t("compact.namePlaceholder")}
+            aria-invalid={errors.name ? true : undefined}
             className={inputClass}
-            onChange={() => {
-              if (state === "error") {
-                setState("idle");
-                setError("");
-              }
-            }}
+            onChange={() => clearFieldError("name")}
           />
+          {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`${formId}-phone`} className={labelClass}>
-            Telefon
+            {t("compact.phoneLabel")}
           </label>
           <input
             id={`${formId}-phone`}
@@ -177,26 +195,24 @@ export default function CompactLeadForm({
             required
             autoComplete="tel"
             inputMode="tel"
-            placeholder="+48 600 000 000"
-            aria-invalid={phoneError ? true : undefined}
+            placeholder={t("compact.phonePlaceholder")}
+            aria-invalid={errors.phone ? true : undefined}
             className={inputClass}
             onBlur={(e) => {
               const v = e.target.value.trim();
-              setPhoneError(v && !isLikelyPhone(v) ? "Sprawdź numer — np. +48 600 000 000." : "");
+              if (!v) return;
+              setErrors((prev) => ({
+                ...prev,
+                phone: isLikelyPhone(v) ? undefined : t("compact.errorPhoneInvalid"),
+              }));
             }}
-            onChange={() => {
-              if (phoneError) setPhoneError("");
-              if (state === "error") {
-                setState("idle");
-                setError("");
-              }
-            }}
+            onChange={() => clearFieldError("phone")}
           />
-          {phoneError && <p className="text-xs text-red-500">{phoneError}</p>}
+          {errors.phone && <p className="text-xs text-red-500">{errors.phone}</p>}
         </div>
       </div>
 
-      <label className="flex items-start gap-3 rounded-2xl border border-outline-variant/60 bg-surface/70 p-3.5">
+      <label className="flex min-h-[48px] items-start gap-3 rounded-2xl border border-outline-variant/60 bg-surface/70 p-3.5">
         <span className="relative mt-0.5 shrink-0">
           <input
             type="checkbox"
@@ -204,12 +220,10 @@ export default function CompactLeadForm({
             checked={consent}
             onChange={(e) => {
               setConsent(e.target.checked);
-              if (state === "error") {
-                setState("idle");
-                setError("");
-              }
+              clearFieldError("consent");
             }}
             required
+            aria-invalid={errors.consent ? true : undefined}
             className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-outline bg-surface transition-colors checked:border-primary checked:bg-primary hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           />
           <svg
@@ -221,38 +235,45 @@ export default function CompactLeadForm({
           </svg>
         </span>
         <span className="text-xs leading-relaxed text-on-surface/80">
-          Zgadzam się na kontakt w sprawie zapytania (
+          {t("compact.consentLabel")}{" "}
           <Link href="/polityka-prywatnosci" className="font-medium text-primary underline underline-offset-2">
-            polityka prywatności
+            {t("quick.privacyLink")}
           </Link>
-          ).
+          .
         </span>
       </label>
+      {errors.consent && <p className="-mt-2 text-xs text-red-500">{errors.consent}</p>}
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-3 sm:flex-row">
           <button
             type="submit"
             disabled={state === "submitting"}
-            className="inline-flex items-center justify-center gap-3 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5 hover:bg-primary-container focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex min-h-[48px] items-center justify-center gap-3 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5 hover:bg-primary-container focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {state === "submitting" ? "Wysyłam…" : "Oddzwońcie do mnie"}
-            <span aria-hidden="true">→</span>
+            {state === "submitting" ? (
+              <>
+                <Spinner />
+                {t("compact.submitting")}
+              </>
+            ) : (
+              <>
+                {t("compact.submit")}
+                <span aria-hidden="true">→</span>
+              </>
+            )}
           </button>
           <a
             href="tel:+48509123434"
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-outline-variant/70 px-6 py-3.5 text-sm font-medium text-on-surface transition-colors hover:border-primary hover:text-primary"
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-outline-variant/70 px-6 py-3.5 text-sm font-medium text-on-surface transition-colors hover:border-primary hover:text-primary"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
               <path d="M6.5 3.5l3 1 1 4-2 1.5a11 11 0 005 5l1.5-2 4 1 1 3a2 2 0 01-2 2.3A16 16 0 014.2 6.5 2 2 0 016.5 3.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            Zadzwoń teraz
+            {t("compact.callNow")}
           </a>
         </div>
-        <p className="text-xs text-on-surface-variant">
-          Bez spamu — użyjemy numeru tylko, żeby oddzwonić.
-        </p>
-        {state === "error" && error && <p className="text-sm text-red-500">{error}</p>}
+        {errors.server && <p className="text-sm text-red-500">{errors.server}</p>}
       </div>
     </form>
   );
@@ -262,10 +283,10 @@ export default function CompactLeadForm({
     return (
       <div id={anchorId ?? formId} className="scroll-mt-28 rounded-3xl border border-primary/30 bg-primary/5 p-6 md:p-8">
         <h2 className="font-headline text-2xl font-bold tracking-tight text-on-surface">
-          {heading}
+          {resolvedHeading}
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
-          Odezwiemy się tego samego dnia roboczego — bez zobowiązań.
+          {t("compact.bareSub")}
         </p>
         <div className="mt-6">{state === "success" ? success : form}</div>
       </div>
@@ -280,16 +301,16 @@ export default function CompactLeadForm({
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">
             <div>
               <p className="mb-3 text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
-                {eyebrow}
+                {resolvedEyebrow}
               </p>
               <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
-                {heading}
+                {resolvedHeading}
               </h2>
               <p className="mt-4 max-w-md text-lg font-light leading-relaxed text-on-surface/70">
-                {sub}
+                {resolvedSub}
               </p>
               <p className="mt-6 border-t border-outline-variant/30 pt-5 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
-                Bezpośredni kontakt z założycielami · Odpowiadamy w 24 h
+                {t("compact.directContact")}
               </p>
             </div>
             <div>{state === "success" ? success : form}</div>

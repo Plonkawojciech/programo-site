@@ -22,21 +22,25 @@ function PhoneIcon({ className }: { className?: string }) {
   );
 }
 
+// Fixed scroll threshold (not viewport-relative) — the CTA should appear at a
+// consistent point regardless of hero height across pages/landings.
+const SHOW_AFTER_SCROLL_PX = 400;
+
 /**
  * Persistent contact CTA.
- * - Appears after the user scrolls past the hero.
+ * - Appears once the user has scrolled past SHOW_AFTER_SCROLL_PX.
  * - Hides whenever the contact section (#kontakt-main) is on screen.
  * - Two direct actions: tap-to-call (tracked as contact_click) + scroll-to-form.
  * - Mobile: full-width bottom bar. Desktop: floating pills, bottom-right.
  */
 export default function StickyCta() {
   const { t } = useI18n();
-  const [scrolledPastHero, setScrolledPastHero] = useState(false);
+  const [scrolledPastThreshold, setScrolledPastThreshold] = useState(false);
   const [contactVisible, setContactVisible] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolledPastHero(window.scrollY > window.innerHeight * 0.6);
+      setScrolledPastThreshold(window.scrollY > SHOW_AFTER_SCROLL_PX);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -59,28 +63,29 @@ export default function StickyCta() {
 
   // tel:/mailto: clicks are tracked globally via event delegation in
   // AnalyticsTracker — no per-link onClick here (avoids double contact_click).
-  const show = scrolledPastHero && !contactVisible;
+  const show = scrolledPastThreshold && !contactVisible;
 
   return (
     <AnimatePresence>
       {show && (
         <>
-          {/* Mobile: full-width bottom bar, two big actions */}
+          {/* Mobile: full-width bottom bar, two big actions. Safe-area padding
+              keeps the bar clear of the iOS home indicator. */}
           <motion.div
             initial={{ y: 90, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 90, opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden fixed inset-x-0 bottom-0 z-[var(--z-sticky)] grid grid-cols-2 gap-3 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 bg-gradient-to-t from-surface via-surface/95 to-transparent"
+            className="md:hidden fixed inset-x-0 bottom-0 z-[var(--z-sticky)] grid grid-cols-2 gap-3 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-4 bg-gradient-to-t from-surface via-surface/95 to-transparent backdrop-blur-sm"
           >
             <a
               href={PHONE_HREF}
-              className="flex items-center justify-center gap-2.5 rounded-full bg-primary px-5 py-4 text-base font-semibold text-on-primary shadow-lg shadow-black/20 active:scale-[0.98] transition-transform"
+              className="flex min-h-[48px] items-center justify-center gap-2.5 rounded-full bg-primary px-5 py-4 text-base font-semibold text-on-primary shadow-lg shadow-black/20 transition-transform active:scale-[0.98]"
             >
               <PhoneIcon className="h-5 w-5" />
               {t("sticky.call")}
             </a>
-            <ContactCtaLink className="flex items-center justify-center gap-2 rounded-full border-2 border-primary bg-surface px-5 py-4 text-base font-semibold text-primary shadow-lg shadow-black/10 active:scale-[0.98] transition-transform">
+            <ContactCtaLink className="flex min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-primary bg-surface px-5 py-4 text-base font-semibold text-primary shadow-lg shadow-black/10 transition-transform active:scale-[0.98]">
               {t("sticky.write")} <span aria-hidden="true">→</span>
             </ContactCtaLink>
           </motion.div>
