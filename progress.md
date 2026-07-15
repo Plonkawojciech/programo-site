@@ -143,3 +143,9 @@
 **Weryfikacja:** tsc, 98/98 testów, build; header sprawdzony wizualnie na 768/1024/1280, telefony na detalu Jedmara (3 szt.), /projekty 768 (2 kolumny kart OK), pooltimer 1920 premium. Cache obrazów .next/cache/images czyszczony po podmianie assetów (inaczej serwuje stare wersje!).
 
 **Status:** wdrożone na prod.
+
+## 2026-07-15 — Fix "powiększonych" zrzutów w telefonach
+
+**Przyczyna:** wcześniejsze docięcie góry zrzutów apki (250px) zmieniło ich proporcje (0.508 vs ekran ramki 0.459) — object-cover skalował i przycinał boki = efekt zoomu. **Naprawa:** przywrócone ORYGINALNE zrzuty App Store (1284×2778, z paskiem systemowym i wyspą); geometria PhoneFrame przeliczona tak, by ekran = dokładnie 0.4622 (aspect 100/208.2, padding 3.5cqw) — zrzut pasuje 1:1 bez cropu; nowy prop `ownStatusBar` wyłącza rysowaną wyspę CSS, gdy zrzut ma własną (przekazany we wszystkich call sites przez matcher /-app[-\d]/; naprawiony też stary matcher /-app\d/ w featured-work). Reguła na przyszłość: zrzutów urządzeń NIE docinać — ramka ma pasować do zrzutu, nie odwrotnie.
+
+**Weryfikacja:** tsc, 98/98, build; hero Jedmara — naturalna skala, pasek systemowy 14:11/wifi/bateria, jedna wyspa.

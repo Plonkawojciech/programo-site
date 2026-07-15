@@ -83,6 +83,7 @@ export default function PortfolioGrid() {
                             src={card.src}
                             alt={`${project.title} — aplikacja mobilna`}
                             fadeBottom
+                            ownStatusBar
                           />
                         </div>
                       </div>

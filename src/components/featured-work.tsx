@@ -38,7 +38,7 @@ const STATUS_LABELS: Record<ProjectStatus, { pl: string; en: string }> = {
 // the mobile web capture, then anything.
 function phoneShot(project: Project): string | undefined {
   const shots = project.screenshots ?? [];
-  return shots.find((s) => /-app\d/.test(s)) ?? shots.find((s) => /mobile/.test(s)) ?? shots[0];
+  return shots.find((s) => /-app[-\d]/.test(s)) ?? shots.find((s) => /mobile/.test(s)) ?? shots[0];
 }
 
 // Small overlay pill with the real domain — keeps the "this is live" trust cue
@@ -75,7 +75,7 @@ function CardMedia({ project }: { project: Project }) {
       >
         {src && (
           <div className="w-[46%] max-w-[150px] shrink-0 transition-transform duration-500 ease-out group-hover:-translate-y-1.5">
-            <PhoneFrame src={src} alt={project.title} fadeBottom />
+            <PhoneFrame src={src} alt={project.title} fadeBottom ownStatusBar={/-app[-\d]/.test(src)} />
           </div>
         )}
         {project.liveUrl && <DomainPill url={project.liveUrl} />}

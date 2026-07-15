@@ -108,6 +108,7 @@ function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
               <PhoneFrame
                 src={src}
                 alt={`${project.title} — ${lang === "pl" ? "ekran aplikacji" : "app screen"} ${i + 1}`}
+                ownStatusBar={isAppShot(src)}
                 priority={i === 0}
               />
             </div>
@@ -201,7 +202,7 @@ function Gallery({ project, lang }: { project: Project; lang: Lang }) {
             <Reveal key={src} delay={i * 0.08}>
               {isPhoneShot(src) && !isDesktopShot(src) ? (
                 <div className="mx-auto w-[200px]">
-                  <PhoneFrame src={src} alt={`${project.title} — ${i + 1}`} />
+                  <PhoneFrame src={src} alt={`${project.title} — ${i + 1}`} ownStatusBar={isAppShot(src)} />
                 </div>
               ) : (
                 <BrowserFrame

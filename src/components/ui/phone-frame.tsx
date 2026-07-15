@@ -12,6 +12,12 @@ import Image from "next/image";
  * Dimensions are in container-query units so the phone keeps identical
  * proportions at every rendered width (reference: 286px-wide estalo mockup).
  *
+ * The screen aspect exactly matches a 390×844 / 1284×2778 capture, so the
+ * screenshot fits 1:1 — no crop, no zoom.
+ *
+ * `ownStatusBar` — set for real device captures (App Store shots) that already
+ * include the OS status bar and dynamic island; the frame then skips drawing
+ * its own island so the two never double up.
  * `scrollOnHover` eases the (taller-than-frame) screenshot upward on hover to
  * reveal more of the page — desktop only.
  * `fadeBottom` fades the lower screen edge — used when a card intentionally
@@ -24,6 +30,7 @@ export default function PhoneFrame({
   height = 844,
   scrollOnHover = false,
   fadeBottom = false,
+  ownStatusBar = false,
   priority = false,
   className,
 }: {
@@ -33,6 +40,7 @@ export default function PhoneFrame({
   height?: number;
   scrollOnHover?: boolean;
   fadeBottom?: boolean;
+  ownStatusBar?: boolean;
   priority?: boolean;
   className?: string;
 }) {
@@ -43,7 +51,7 @@ export default function PhoneFrame({
       <div aria-hidden="true" className="absolute -right-[0.7cqw] top-[31%] h-[27%] w-[0.9cqw] rounded-[1cqw] bg-gradient-to-b from-[#51565e] to-[#20242b]" />
 
       {/* Rail: single layer — diagonal graphite gradient + inset rings */}
-      <div className="group relative aspect-[286/600] w-full select-none rounded-[16.4cqw] bg-[linear-gradient(145deg,#4a4f57_0%,#20242b_16%,#0c0e12_50%,#20242b_84%,#4a4f57_100%)] p-[3.5cqw] shadow-[0_2px_3px_rgba(2,6,23,0.14),0_48px_80px_-30px_rgba(2,6,23,0.55),inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_2px_2.5px_rgba(0,0,0,0.5)]">
+      <div className="group relative aspect-[100/208.2] w-full select-none rounded-[16.4cqw] bg-[linear-gradient(145deg,#4a4f57_0%,#20242b_16%,#0c0e12_50%,#20242b_84%,#4a4f57_100%)] p-[3.5cqw] shadow-[0_2px_3px_rgba(2,6,23,0.14),0_48px_80px_-30px_rgba(2,6,23,0.55),inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_2px_2.5px_rgba(0,0,0,0.5)]">
         {/* Screen — set directly in the rail, hairline inset keeps the edge crisp */}
         <div
           className={`relative h-full w-full overflow-hidden rounded-[13.3cqw] bg-surface shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.55)] ${
@@ -66,8 +74,10 @@ export default function PhoneFrame({
             }`}
           />
         </div>
-        {/* Dynamic island */}
-        <div className="pointer-events-none absolute left-1/2 top-[5.6cqw] z-10 h-[8.4cqw] w-[28.7cqw] -translate-x-1/2 rounded-full bg-[#05070a] shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.05)]" />
+        {/* Dynamic island — skipped when the screenshot brings its own status bar */}
+        {!ownStatusBar && (
+          <div className="pointer-events-none absolute left-1/2 top-[5.6cqw] z-10 h-[8.4cqw] w-[28.7cqw] -translate-x-1/2 rounded-full bg-[#05070a] shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.05)]" />
+        )}
       </div>
     </div>
   );
