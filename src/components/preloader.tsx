@@ -11,9 +11,23 @@ export default function Preloader() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    // Skip the branded intro ENTIRELY for paid / campaign traffic. These are
+    // cold visitors costing ~5 zł/click; a 650 ms full-screen gate before the
+    // hero + lead form is pure friction and worsens LCP (Quality Score). If the
+    // URL carries a Google Ads click id or any UTM, paint content immediately.
+    let isPaid = false;
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      isPaid =
+        sp.has("gclid") || sp.has("gbraid") || sp.has("wbraid") ||
+        sp.has("utm_source") || sp.has("utm_medium") || sp.has("utm_campaign");
+    } catch {
+      /* ignore */
+    }
+
     // Show the branded intro only once per session so it never blocks
     // content paint (LCP) on repeat navigations / returning visitors.
-    if (sessionStorage.getItem("programo-preloaded")) {
+    if (isPaid || sessionStorage.getItem("programo-preloaded")) {
       setLoading(false);
       return;
     }

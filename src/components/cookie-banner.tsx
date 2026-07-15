@@ -35,84 +35,74 @@ export default function CookieBanner() {
 
   const showBanner = mounted && !consent.decided && !settingsOpen;
 
-  // Lock body scroll while banner or settings modal is visible
+  // Lock body scroll ONLY while the user-initiated settings modal is open.
+  // The first-touch consent banner is a NON-blocking bottom bar — it must never
+  // lock scroll or cover the hero/lead form. The old full-screen blocking modal
+  // hid the above-the-fold form from 100% of (new) paid traffic = killed leads.
   useEffect(() => {
-    if (showBanner || settingsOpen) {
+    if (settingsOpen) {
       const original = document.body.style.overflow;
       document.body.style.overflow = "hidden";
       return () => {
         document.body.style.overflow = original;
       };
     }
-  }, [showBanner, settingsOpen]);
+  }, [settingsOpen]);
 
   if (!mounted) return null;
 
   return (
     <>
-      {/* Centered modal — blocks page interaction until user decides */}
+      {/* First-touch consent — NON-blocking bottom bar. No full-screen overlay,
+          no scroll lock, never covers the hero/lead form. Three explicit actions
+          incl. a real "Reject all" (RODO-friendly, removes the dark-pattern). */}
       <AnimatePresence>
         {showBanner && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ y: "115%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "115%" }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             role="dialog"
-            aria-modal="true"
             aria-label={t("cookie.title")}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 md:p-6"
+            style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.75rem)" }}
+            className="fixed inset-x-0 bottom-0 z-[100] px-3 pt-3 sm:px-4 sm:pt-4"
           >
-            <motion.div
-              initial={{ y: 40, opacity: 0, scale: 0.96 }}
-              animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: 40, opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 1.5rem)" }}
-              className="w-full max-w-xl rounded-3xl bg-surface-container border-2 border-outline-variant/60 shadow-[0_30px_80px_-12px_rgba(0,0,0,0.8)] p-6 md:p-9"
-            >
-              <div className="mb-4 md:mb-5 inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-primary/10 border border-primary/20">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                  <path d="M12 2a10 10 0 1 0 10 10c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4-5.55 5.4 5.4 0 0 1-2-2A5.4 5.4 0 0 1 12 2Z" />
-                  <path d="M8.5 8.5v.01" />
-                  <path d="M16 15.5v.01" />
-                  <path d="M12 12v.01" />
-                  <path d="M11 17v.01" />
-                  <path d="M7 14v.01" />
-                </svg>
-              </div>
-
-              <h2 className="font-headline text-2xl md:text-3xl font-semibold tracking-tight text-on-surface leading-tight">
-                {t("cookie.title")}
-              </h2>
-              <p className="mt-3 text-sm md:text-base leading-relaxed text-on-surface-variant">
+            <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 rounded-2xl border border-outline-variant/60 bg-surface-container/95 p-4 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)] backdrop-blur-md md:flex-row md:items-center md:gap-6 md:p-5">
+              <p className="flex-1 text-sm leading-relaxed text-on-surface-variant">
                 {t("cookie.desc")}{" "}
                 <Link
                   href="/polityka-prywatnosci"
-                  className="underline decoration-on-surface-variant/60 underline-offset-2 text-on-surface font-medium hover:text-primary transition-colors"
+                  className="font-medium text-on-surface underline decoration-on-surface-variant/60 underline-offset-2 transition-colors hover:text-primary"
                 >
                   {t("cookie.privacyLink")}
                 </Link>
                 .
               </p>
-
-              <div className="mt-6 md:mt-8 flex flex-col-reverse md:flex-row gap-2 md:gap-3">
+              <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
                 <button
                   type="button"
                   onClick={openSettings}
-                  className="flex-1 border-2 border-outline-variant/60 bg-surface text-on-surface px-5 py-3.5 rounded-full text-xs uppercase tracking-widest font-medium hover:bg-on-surface/5 hover:border-outline-variant transition-all"
+                  className="px-2 py-2 text-xs font-medium uppercase tracking-widest text-on-surface-variant underline underline-offset-4 transition-colors hover:text-on-surface"
                 >
                   {t("cookie.customize")}
                 </button>
                 <button
                   type="button"
+                  onClick={rejectAll}
+                  className="rounded-full border-2 border-outline-variant/60 bg-surface px-5 py-2.5 text-xs font-medium uppercase tracking-widest text-on-surface transition-all hover:border-outline-variant hover:bg-on-surface/5"
+                >
+                  {t("cookie.rejectAll")}
+                </button>
+                <button
+                  type="button"
                   onClick={acceptAll}
-                  className="flex-1 bg-primary text-on-primary px-5 py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-primary-container hover:text-on-primary-container transition-all shadow-lg shadow-primary/20"
+                  className="rounded-full bg-primary px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-on-primary shadow-lg shadow-primary/20 transition-all hover:bg-primary-container hover:text-on-primary-container"
                 >
                   {t("cookie.acceptAll")}
                 </button>
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

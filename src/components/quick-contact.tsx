@@ -374,7 +374,7 @@ export default function QuickContact() {
                 <div className="flex flex-col gap-3 mt-1">
                   <button
                     type="submit"
-                    disabled={state === "submitting" || !consent}
+                    disabled={state === "submitting"}
                     className="w-full md:w-auto md:self-start inline-flex items-center justify-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:gap-5"
                   >
                     {state === "submitting" ? t("quick.sending") : t("quick.send")}{" "}
