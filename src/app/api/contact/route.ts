@@ -170,6 +170,44 @@ export async function POST(request: NextRequest) {
     console.error("[contact] storeLead threw unexpectedly:", e);
   }
 
+  // Forward the lead to the internal CRM (crm.programo.pl). Best-effort with a
+  // short timeout: a CRM outage can never affect the contact flow or response.
+  const crmSecret = process.env.CRM_WEBHOOK_SECRET;
+  const crmUrl =
+    process.env.CRM_WEBHOOK_URL || "https://crm.programo.pl/api/forms/programo";
+  if (crmSecret) {
+    try {
+      const utm: Record<string, string> = {};
+      for (const [k, v] of sources) utm[k] = v;
+      const res = await fetch(crmUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Webhook-Secret": crmSecret,
+        },
+        body: JSON.stringify({
+          name,
+          email: email || "",
+          phone: phone || "",
+          subject,
+          message: message || "",
+          projectType: projectType || "",
+          budget: budget || "",
+          source: "programo.pl",
+          utm,
+        }),
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!res.ok) {
+        console.error(`[contact] CRM webhook failed: HTTP ${res.status}`);
+      }
+    } catch (e) {
+      console.error("[contact] CRM webhook error:", e);
+    }
+  } else {
+    console.log("[DEV] No CRM_WEBHOOK_SECRET — skipping CRM forward.");
+  }
+
   const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
 
   // Send email + Telegram in parallel; success if at least one channel delivers
