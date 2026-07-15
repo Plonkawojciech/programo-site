@@ -66,10 +66,14 @@ function ProjectTile({ project }: { project: Project }) {
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-end p-6 text-white md:p-7">
         <div className="mb-2 flex items-center gap-2">
-          <span
-            className="text-[10px] font-bold uppercase tracking-[0.3em]"
-            style={{ color: project.accentColor }}
-          >
+          {/* Tag label uses a fixed brand mint instead of each project's own
+              accentColor — per-project accents (yellow, blue...) read as
+              off-palette noise when used as a tag chip. This tile always sits
+              on the same dark gradient regardless of site theme (like the
+              white title/status-badge text below), so the color is fixed
+              rather than the theme-reactive --color-primary token, which
+              turns dark green in light mode and would lose contrast here. */}
+          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#8EB69B]">
             {project.tags[0] ?? project.category}
           </span>
           <span className="text-[10px] font-medium uppercase tracking-widest text-white/60">

@@ -167,30 +167,35 @@ export default function SklepyInternetowePage() {
                   </a>
                 </div>
 
-                {/* Trust strip with Jedmar app shot as compact proof */}
-                <div className="mt-10 flex flex-col gap-4 border-t border-outline-variant/30 pt-7">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">Wybrane realizacje</span>
-                  <div className="flex items-center gap-4">
-                    <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border border-outline-variant/40 bg-surface-container-low">
-                      <Image
-                        src="/screenshots/jedmar-hero.webp"
-                        alt="Aplikacja mobilna sklepu Jedmar — natywne iOS i Android zbudowane przez Programo"
-                        fill
-                        priority
-                        sizes="96px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1 font-headline text-lg font-bold tracking-tight text-on-surface-variant">
-                      <span>Jedmar</span>
-                      <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
-                      <span>WKS Poznań</span>
-                      <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
-                      <span>W. Safe Finance</span>
+                {/* Trust strip: Jedmar is the flagship store realization, shown
+                    with its app thumbnail. WKS Poznań and W. Safe Finance are
+                    real projects but not stores, so they're labeled and kept
+                    in a smaller, separate line instead of implying they're
+                    e-commerce work. */}
+                <div className="mt-10 flex flex-col gap-5 border-t border-outline-variant/30 pt-7">
+                  <div className="flex flex-col gap-3">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">Realizacja flagowa</span>
+                    <div className="flex items-center gap-4">
+                      <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border border-outline-variant/40 bg-surface-container-low">
+                        <Image
+                          src="/screenshots/jedmar-hero.webp"
+                          alt="Aplikacja mobilna sklepu Jedmar — natywne iOS i Android zbudowane przez Programo"
+                          fill
+                          priority
+                          sizes="96px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div>
+                        <span className="font-headline text-lg font-bold tracking-tight text-on-surface-variant">Jedmar</span>
+                        <p className="text-sm text-on-surface-variant">
+                          Natywne aplikacje iOS + Android · Poznań i cała Polska
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-sm text-on-surface-variant">
-                    Jedmar: natywne aplikacje iOS + Android · Poznań i cała Polska
+                  <p className="text-xs text-on-surface-variant/70">
+                    Inne wdrożenia webowe: WKS Poznań · W. Safe Finance
                   </p>
                 </div>
               </div>

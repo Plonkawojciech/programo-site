@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import { ConsentProvider } from "@/lib/consent";
-import Preloader from "@/components/preloader";
 import PageTransition from "@/components/page-transition";
 import ScrollProgress from "@/components/scroll-progress";
 import Navbar from "@/components/navbar";
@@ -35,7 +34,6 @@ export default function Providers({ children }: { children: ReactNode }) {
               >
                 Przejdź do treści
               </a>
-              <Preloader />
               <ScrollProgress />
               <PageTransition>
                 <Navbar />

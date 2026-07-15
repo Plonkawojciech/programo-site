@@ -59,8 +59,8 @@ export const projects: Project[] = [
       en: "Two native shopping apps for the Jedmar Tool Center in Poznan, wired into the store's existing PrestaShop backend: a catalog of over 1,500 products, 6 payment integrations, InPost parcel lockers, and an EAN barcode scanner. Plus an interactive spare-parts diagram module that runs on the store website and inside both apps.",
     },
     longDescription: {
-      pl: "Jedmar prowadzi w Poznaniu sklep narzędziowy z ponad 1500 produktami na PrestaShop. Sklep działał, ale zakupy z telefonu były uciążliwe, a znalezienie właściwej części zamiennej do gwoździarki wymagało telefonu do obsługi i wertowania PDF-ów producenta. Naszym zadaniem nie była przebudowa sklepu, tylko dołożenie do niego dwóch rzeczy: wygodnych zakupów mobilnych i sensownej sprzedaży części.\n\nZbudowaliśmy dwie w pełni natywne aplikacje: iOS w Swift i SwiftUI oraz Android w Kotlinie z Jetpack Compose. Obie obsługują pełny cykl zakupowy: katalog z ok. 190 kategoriami, wyszukiwarkę z filtrami, koszyk, checkout z wyborem Paczkomatu InPost na mapie i sześcioma metodami płatności (PayU, PayPo, iMoje, Comfino, Caraty, InPost Pay), konto klienta z historią zamówień, skaner kodów EAN, powiadomienia push i logowanie Face ID. Osobno powstał moduł schematów części: interaktywne, eksplodowane rysunki techniczne 73 narzędzi z ok. 7500 klikalnych markerów, z których każdy prowadzi do konkretnej części i przycisku dodania do koszyka.\n\nŹródłem prawdy pozostał istniejący PrestaShop. Aplikacje rozmawiają z nim przez warstwę API na Next.js, a katalog synchronizuje się automatycznie co kilka minut, więc cena zmieniona w sklepie pojawia się w aplikacjach bez niczyjej pracy. Moduł schematów ma jedno źródło danych i trzy miejsca działania: stronę sklepu, aplikację iOS i aplikację Android. Natywność nie była kaprysem, tylko decyzją pod użytkownika, który obsługuje aplikację jedną ręką na budowie i skanuje kod z opakowania zamiast wpisywać nazwę.\n\nObie aplikacje są opublikowane i działają w App Store oraz Google Play, a schematy części są dostępne publicznie na jedmar.pl. Wersję iOS pokrywa 96 testów automatycznych, a cały proces wydawniczy przechodzi przez TestFlight i review sklepów, jak w każdym poważnym produkcie mobilnym.",
-      en: "Jedmar runs a tool store in Poznan with over 1,500 products on PrestaShop. The store worked fine, but shopping from a phone was clumsy, and finding the right spare part for a nail gun meant calling the shop and digging through manufacturer PDFs. Our job was not to rebuild the store. It was to add two things to it: comfortable mobile shopping and a sane way to sell spare parts.\n\nWe built two fully native apps: iOS in Swift and SwiftUI, Android in Kotlin with Jetpack Compose. Both cover the complete purchase cycle: a catalog with around 190 categories, search with filters, cart, checkout with InPost parcel-locker selection on a map and six payment methods (PayU, PayPo, iMoje, Comfino, Caraty, InPost Pay), a customer account with order history, an EAN barcode scanner, push notifications, and Face ID sign-in. Separately, we built the parts diagram module: interactive exploded technical drawings of 73 tools with roughly 7,500 clickable markers, each leading to a specific part and an add-to-cart button.\n\nThe existing PrestaShop remained the source of truth. The apps talk to it through a Next.js API layer, and the catalog syncs automatically every few minutes, so a price changed in the store shows up in the apps with no manual work. The diagram module has one data source and three surfaces: the store website, the iOS app, and the Android app. Going native was not a whim but a decision made for the actual user, who operates the app one-handed on a job site and scans a barcode instead of typing a product name.\n\nBoth apps are published and live on the App Store and Google Play, and the parts diagrams are publicly available on jedmar.pl. The iOS version is covered by 96 automated tests, and every release goes through TestFlight and store review, as any serious mobile product should.",
+      pl: "Jedmar prowadzi w Poznaniu sklep narzędziowy z ponad 1500 produktami na PrestaShop. Sklep działał, ale zakupy z telefonu były uciążliwe, a znalezienie właściwej części zamiennej do gwoździarki wymagało telefonu do obsługi i wertowania PDF-ów producenta. Naszym zadaniem nie była przebudowa sklepu, tylko dołożenie do niego dwóch rzeczy: wygodnych zakupów mobilnych i sensownej sprzedaży części.\n\nZbudowaliśmy dwie w pełni natywne aplikacje: iOS w Swift i SwiftUI oraz Android w Kotlinie z Jetpack Compose. Obie obsługują pełny cykl zakupowy: katalog z ok. 190 kategoriami, wyszukiwarkę z filtrami, koszyk, checkout z wyborem Paczkomatu InPost na mapie i sześcioma metodami płatności (PayU, PayPo, iMoje, Comfino, Caraty, InPost Pay), konto klienta z historią zamówień, skaner kodów EAN, powiadomienia push i logowanie Face ID. Osobno powstał moduł schematów części: interaktywne rysunki złożeniowe 73 narzędzi z ok. 7500 klikalnych markerów, z których każdy prowadzi do konkretnej części i przycisku dodania do koszyka.\n\nŹródłem prawdy pozostał istniejący PrestaShop. Aplikacje rozmawiają z nim przez warstwę API na Next.js, a katalog synchronizuje się automatycznie co kilka minut, więc cena zmieniona w sklepie pojawia się w aplikacjach bez niczyjej pracy. Moduł schematów ma jedno źródło danych i trzy miejsca działania: stronę sklepu, aplikację iOS i aplikację Android. Natywność nie była kaprysem, tylko decyzją pod użytkownika, który obsługuje aplikację jedną ręką na budowie i skanuje kod z opakowania zamiast wpisywać nazwę.\n\nObie aplikacje są opublikowane i działają w App Store oraz Google Play, a schematy części są dostępne publicznie na jedmar.pl. Wersję iOS pokrywa 96 testów automatycznych, a cały proces wydawniczy przechodzi przez TestFlight i review sklepów, jak w każdym poważnym produkcie mobilnym.",
+      en: "Jedmar runs a tool store in Poznan with over 1,500 products on PrestaShop. The store worked fine, but shopping from a phone was clumsy, and finding the right spare part for a nail gun meant calling the shop and digging through manufacturer PDFs. Our job was not to rebuild the store. It was to add two things to it: comfortable mobile shopping and a sane way to sell spare parts.\n\nWe built two fully native apps: iOS in Swift and SwiftUI, Android in Kotlin with Jetpack Compose. Both cover the complete purchase cycle: a catalog with around 190 categories, search with filters, cart, checkout with InPost parcel-locker selection on a map and six payment methods (PayU, PayPo, iMoje, Comfino, Caraty, InPost Pay), a customer account with order history, an EAN barcode scanner, push notifications, and Face ID sign-in. Separately, we built the parts diagram module: interactive assembly drawings of 73 tools with roughly 7,500 clickable markers, each leading to a specific part and an add-to-cart button.\n\nThe existing PrestaShop remained the source of truth. The apps talk to it through a Next.js API layer, and the catalog syncs automatically every few minutes, so a price changed in the store shows up in the apps with no manual work. The diagram module has one data source and three surfaces: the store website, the iOS app, and the Android app. Going native was not a whim but a decision made for the actual user, who operates the app one-handed on a job site and scans a barcode instead of typing a product name.\n\nBoth apps are published and live on the App Store and Google Play, and the parts diagrams are publicly available on jedmar.pl. The iOS version is covered by 96 automated tests, and every release goes through TestFlight and store review, as any serious mobile product should.",
     },
     status: "live",
     statusLabel: {
@@ -122,9 +122,9 @@ export const projects: Project[] = [
     screenshots: [
       "/screenshots/v2/jedmar-schemat-tool-desktop.webp",
       "/screenshots/v2/jedmar-schematy-mobile.webp",
-      "/screenshots/jedmar-app1.webp",
-      "/screenshots/jedmar-app2.webp",
-      "/screenshots/jedmar-app3.webp",
+      "/screenshots/v2/jedmar-app-home.webp",
+      "/screenshots/v2/jedmar-app-category.webp",
+      "/screenshots/v2/jedmar-app-product.webp",
     ],
     subProducts: [
       {
@@ -138,17 +138,17 @@ export const projects: Project[] = [
           en: "Two separate, fully native apps (Swift/SwiftUI and Kotlin/Compose) on a shared API backend. Catalog, cart, payments, parcel lockers, customer account, and an EAN scanner — all running on the existing store's data.",
         },
         screenshots: [
-          "/screenshots/jedmar-app1.webp",
-          "/screenshots/jedmar-app2.webp",
-          "/screenshots/jedmar-app3.webp",
+          "/screenshots/v2/jedmar-app-home.webp",
+          "/screenshots/v2/jedmar-app-category.webp",
+          "/screenshots/v2/jedmar-app-product.webp",
         ],
         accentColor: "#ffd333",
       },
       {
         name: "Moduł schematów części",
         tagline: {
-          pl: "Eksplodowane rysunki techniczne z częściami do kupienia jednym kliknięciem",
-          en: "Exploded technical drawings with parts one click away from the cart",
+          pl: "Rysunki złożeniowe z częściami do kupienia jednym kliknięciem",
+          en: "Assembly technical drawings with parts one click away from the cart",
         },
         description: {
           pl: "Interaktywny wizualizator schematów 73 narzędzi pięciu marek: klikalne markery części, zoom i pinch na mobile, lista części z wyszukiwarką i przycisk dodania do koszyka. Wdrożony na produkcyjnej stronie jedmar.pl i natywnie w obu aplikacjach.",
@@ -244,8 +244,8 @@ export const projects: Project[] = [
     },
     status: "coming-soon",
     statusLabel: {
-      pl: "Premiera wkrótce — strona już publicznie dostępna",
-      en: "Launching soon — the website is already publicly available",
+      pl: "Premiera wkrótce. Wersja podglądowa działa już pod eportalprawny.pl.",
+      en: "Launching soon. A preview version is already live at eportalprawny.pl.",
     },
     category: "produkty",
     liveUrl: "https://eportalprawny.pl",

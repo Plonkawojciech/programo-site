@@ -18,7 +18,7 @@ const CARDS: {
   frame: "phone" | "browser";
   src: string;
 }[] = [
-  { slug: "jedmar", frame: "phone", src: "/screenshots/jedmar-app1.webp" },
+  { slug: "jedmar", frame: "phone", src: "/screenshots/v2/jedmar-app-home.webp" },
   { slug: "estalo", frame: "browser", src: "/screenshots/v2/estalo-desktop.webp" },
   { slug: "eportal-prawny", frame: "browser", src: "/screenshots/v2/eportalprawny-desktop.webp" },
   { slug: "wks-poznan", frame: "browser", src: "/screenshots/v2/wks-desktop.webp" },

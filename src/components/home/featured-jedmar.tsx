@@ -85,7 +85,7 @@ export default function FeaturedJedmar() {
               url="https://jedmar.pl/pl/schematy-narzedzi"
               desktopSrc="/screenshots/v2/jedmar-schemat-tool-desktop.webp"
               desktopAlt="Jedmar — interaktywny schemat narzędzia na jedmar.pl"
-              phoneSrc="/screenshots/jedmar-app1.webp"
+              phoneSrc="/screenshots/v2/jedmar-app-home.webp"
               phoneAlt="Jedmar — natywna aplikacja mobilna"
             />
           </Reveal>

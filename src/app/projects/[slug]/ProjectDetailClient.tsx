@@ -18,7 +18,9 @@ const CATEGORY_LABELS: Record<Project["category"], { pl: string; en: string }> =
 };
 
 const isDesktopShot = (s: string) => /desktop/.test(s);
-const isPhoneShot = (s: string) => /mobile|-app\d/.test(s);
+// App screens use either an "-app-<name>" or "-app<n>" filename convention.
+const isAppShot = (s: string) => /-app[-\d]/.test(s);
+const isPhoneShot = (s: string) => /mobile/.test(s) || isAppShot(s);
 
 function host(url?: string, slug?: string) {
   if (!url) return `programo.pl/projects/${slug}`;
@@ -41,19 +43,27 @@ function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
   const shots = project.screenshots ?? [];
 
   if (project.kind === "mobile-app") {
-    const phones = shots.filter((s) => /-app\d/.test(s)).slice(0, 3);
+    const phones = shots.filter(isAppShot).slice(0, 3);
     const list = phones.length > 0 ? phones : shots.filter(isPhoneShot).slice(0, 3);
+    // On small screens the three phones are wider than the column, so they live
+    // in a self-contained horizontal scroll-snap track — the document itself
+    // never gains a horizontal scrollbar. From md up they fit and center.
     return (
-      <div className="flex items-end justify-center gap-4 sm:gap-6 md:gap-8">
-        {list.map((src, i) => (
-          <PhoneFrame
-            key={src}
-            src={src}
-            alt={`${project.title} — ${lang === "pl" ? "ekran aplikacji" : "app screen"} ${i + 1}`}
-            priority={i === 0}
-            className={`w-[128px] shrink-0 sm:w-[150px] md:w-[168px] ${i === 1 ? "md:-translate-y-6" : ""}`}
-          />
-        ))}
+      <div className="-mx-6 overflow-x-auto px-6 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:overflow-x-visible md:px-0 [&::-webkit-scrollbar]:hidden">
+        <div className="flex snap-x snap-mandatory items-end gap-4 py-2 sm:gap-6 md:justify-center md:gap-8">
+          {list.map((src, i) => (
+            <div
+              key={src}
+              className={`w-[150px] shrink-0 snap-center sm:w-[160px] md:w-[168px] ${i === 1 ? "md:-translate-y-6" : ""}`}
+            >
+              <PhoneFrame
+                src={src}
+                alt={`${project.title} — ${lang === "pl" ? "ekran aplikacji" : "app screen"} ${i + 1}`}
+                priority={i === 0}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -92,7 +102,7 @@ function Gallery({ project, lang }: { project: Project; lang: Lang }) {
   // Screenshots already shown in the hero.
   const used = new Set<string>();
   if (project.kind === "mobile-app") {
-    shots.filter((s) => /-app\d/.test(s)).slice(0, 3).forEach((s) => used.add(s));
+    shots.filter(isAppShot).slice(0, 3).forEach((s) => used.add(s));
   } else {
     const d = shots.find(isDesktopShot) ?? shots[0];
     const p = shots.find((s) => /mobile/.test(s)) ?? shots[1];
@@ -154,7 +164,7 @@ function ProjectContent({ slug }: { slug: string }) {
         : "See preview";
 
   return (
-    <div className="min-h-screen bg-surface text-on-surface">
+    <div className="min-h-screen overflow-x-clip bg-surface text-on-surface">
       {/* Hero */}
       <section className="px-6 pt-28 pb-16 sm:px-8 md:px-12 md:pt-36 md:pb-24 lg:px-24">
         <div className="mx-auto max-w-[1200px]">

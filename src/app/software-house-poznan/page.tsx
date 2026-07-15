@@ -190,7 +190,8 @@ export default function SoftwareHousePoznanPage() {
                 drogę komunikacji, możliwość spotkań na miejscu i partnera, który
                 rozumie polski rynek — od polskich integracji (Otodom, NOE 2.0,
                 Domy.pl) po polskie regulacje (RODO, KSeF, PSD2). Programo łączy
-                lokalność z nowoczesnym, międzynarodowym stackiem technologicznym.
+                lokalność z nowoczesnym stackiem: Next.js, TypeScript, Supabase,
+                natywny Swift i Kotlin.
               </p>
               <p>
                 Za Programo stoi dwóch inżynierów — bez warstw pośredników i

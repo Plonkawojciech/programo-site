@@ -71,7 +71,7 @@ export default function People() {
                   {t(p.descKey)}
                 </p>
 
-                <div className="mt-auto grid grid-cols-1 gap-4 border-t border-outline-variant/30 pt-6 sm:grid-cols-2">
+                <div className="mt-auto border-t border-outline-variant/30 pt-6">
                   <a href={p.phoneHref} className="group flex flex-col gap-1">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                       {t("home.people.phoneLabel")}
@@ -80,19 +80,23 @@ export default function People() {
                       {p.phoneDisplay}
                     </span>
                   </a>
-                  <a href="mailto:biuro@programo.pl" className="group flex flex-col gap-1">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                      {t("home.people.emailLabel")}
-                    </span>
-                    <span className="text-base font-medium text-on-surface transition-colors group-hover:text-primary">
-                      biuro@programo.pl
-                    </span>
-                  </a>
                 </div>
               </div>
             </Reveal>
           ))}
         </div>
+
+        {/* Both founders share one inbox — stated once here instead of repeating
+            biuro@programo.pl under each card. */}
+        <p className="mt-10 text-sm text-on-surface-variant md:mt-12">
+          {t("home.people.sharedEmailLabel")}:{" "}
+          <a
+            href="mailto:biuro@programo.pl"
+            className="font-medium text-on-surface underline decoration-on-surface-variant/40 underline-offset-4 transition-colors hover:text-primary"
+          >
+            biuro@programo.pl
+          </a>
+        </p>
       </div>
     </section>
   );

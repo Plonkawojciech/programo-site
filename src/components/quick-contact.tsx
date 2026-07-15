@@ -269,8 +269,11 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                   </div>
                 </div>
 
-                {/* Data (name, contact, consent, submit) | Message — 2 columns on desktop */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+                {/* Data (name, contact, consent, submit) | Message — 2 columns on desktop.
+                    items-start keeps the right column at its natural height instead of
+                    stretching to match the taller left column (was ~450px of dead space
+                    inside a 7-row textarea). */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 md:items-start">
                   <div className="flex flex-col gap-8">
                     <div className="flex flex-col gap-2">
                       <label htmlFor="quick-name" className={labelClass}>
@@ -363,16 +366,19 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                     <textarea
                       id="quick-message"
                       name="message"
-                      rows={7}
-                      className={`${inputClass} min-h-[168px] resize-none flex-1`}
+                      rows={4}
+                      className={`${inputClass} resize-none`}
                       placeholder={t("quick.messagePlaceholder")}
                     />
                   </div>
                 </div>
 
                 {/* Submit spans full width, always after both columns (name/contact/consent +
-                    message) regardless of viewport — keeps the mobile field order sane. */}
-                <div className="flex flex-col gap-3 border-t border-outline-variant/30 pt-6">
+                    message) regardless of viewport — keeps the mobile field order sane.
+                    No border-t here: with the textarea back to its natural height the
+                    fields end right above this block, so a rule line only reads as an
+                    orphaned stray under it. */}
+                <div className="flex flex-col gap-3">
                   <button
                     type="submit"
                     disabled={state === "submitting"}

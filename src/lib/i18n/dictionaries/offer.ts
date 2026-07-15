@@ -3,7 +3,7 @@
 // with a "what you get" list and a link to the matching subpage. Content:
 // content-deck-2026-07.md section 2.
 export const offer = {
-  "offer.label": { pl: "Oferta", en: "Services" },
+  "offer.label": { pl: "Co robimy i jak pracujemy", en: "What we do and how we work" },
   "offer.title": { pl: "Oferta", en: "Services" },
   "offer.lead": {
     pl: "Cztery obszary, jeden standard: projekt, kod, wdrożenie i pomiar efektu w jednych rękach. Poniżej dokładnie to, co dostajesz w każdym z nich.",

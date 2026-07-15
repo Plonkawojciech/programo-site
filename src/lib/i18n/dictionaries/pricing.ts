@@ -2,7 +2,7 @@
 // drives the cost. Zero invented amounts. Content: content-deck-2026-07.md
 // section 6.
 export const pricing = {
-  "pricing.label": { pl: "Wycena", en: "Pricing" },
+  "pricing.label": { pl: "Przejrzyste zasady wyceny", en: "Transparent pricing rules" },
   "pricing.title": { pl: "Wycena", en: "Pricing" },
   "pricing.lead": {
     pl: "Nie mamy cennika z półki, bo strona wizytówkowa i platforma SaaS różnią się skalą pracy o rząd wielkości. Mamy za to prosty, przewidywalny proces: zanim zapłacisz cokolwiek, wiesz dokładnie, co dostaniesz i za ile.",

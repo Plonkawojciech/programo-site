@@ -109,8 +109,8 @@ export const home = {
   },
   "home.trust.stat3.value": { pl: "24 h", en: "24 h" },
   "home.trust.stat3.label": {
-    pl: "tyle czekasz na naszą odpowiedź",
-    en: "the longest you'll wait for our reply",
+    pl: "maksymalny czas naszej odpowiedzi",
+    en: "maximum response time",
   },
 
   // 1.3 Offer — 4 pillars
@@ -183,8 +183,8 @@ export const home = {
   },
   "home.jedmar.solutionLabel": { pl: "Rozwiązanie", en: "Solution" },
   "home.jedmar.solution": {
-    pl: "Zbudowaliśmy dwie w pełni natywne aplikacje (Swift i Kotlin) spięte z istniejącym sklepem: katalog, koszyk, sześć metod płatności, Paczkomaty InPost i skaner kodów EAN. Do tego interaktywny moduł schematów: eksplodowane rysunki 73 narzędzi, na których każda część jest klikalna i trafia prosto do koszyka. Sklepu nie ruszaliśmy — dołożyliśmy do niego to, czego brakowało.",
-    en: "We built two fully native apps (Swift and Kotlin) wired into the existing store: catalog, cart, six payment methods, InPost parcel lockers, and an EAN barcode scanner. Plus an interactive diagram module: exploded drawings of 73 tools where every part is clickable and goes straight to the cart. We didn't touch the store — we added what it was missing.",
+    pl: "Zbudowaliśmy dwie w pełni natywne aplikacje (Swift i Kotlin) spięte z istniejącym sklepem: katalog, koszyk, sześć metod płatności, Paczkomaty InPost i skaner kodów EAN. Do tego interaktywny moduł schematów: rysunki złożeniowe 73 narzędzi, na których każda część jest klikalna i trafia prosto do koszyka. Sklepu nie ruszaliśmy — dołożyliśmy do niego to, czego brakowało.",
+    en: "We built two fully native apps (Swift and Kotlin) wired into the existing store: catalog, cart, six payment methods, InPost parcel lockers, and an EAN barcode scanner. Plus an interactive diagram module: assembly drawings of 73 tools where every part is clickable and goes straight to the cart. We didn't touch the store — we added what it was missing.",
   },
   "home.jedmar.resultLabel": { pl: "Efekt", en: "Result" },
   "home.jedmar.result": {
@@ -225,6 +225,7 @@ export const home = {
   },
   "home.people.phoneLabel": { pl: "Telefon", en: "Phone" },
   "home.people.emailLabel": { pl: "E-mail", en: "Email" },
+  "home.people.sharedEmailLabel": { pl: "Wspólna skrzynka", en: "Shared inbox" },
 
   // 1.7 In production
   "home.production.eyebrow": { pl: "W produkcji", en: "In production" },

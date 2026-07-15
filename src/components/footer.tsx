@@ -7,7 +7,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { useConsent } from "@/lib/consent";
-import { fadeInUp } from "@/lib/motion";
 import { projects } from "@/lib/projects";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
@@ -130,14 +129,9 @@ export default function Footer() {
           </nav>
         </div>
 
-        {/* Company data */}
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="flex flex-col gap-4 border-t border-outline-variant/20 pt-8 text-sm text-on-surface-variant md:flex-row md:flex-wrap md:items-center md:gap-x-6 md:gap-y-2"
-        >
+        {/* Company data — rendered statically so the contact details are always
+            legible; a whileInView reveal here could freeze at opacity 0. */}
+        <div className="flex flex-col gap-4 border-t border-outline-variant/20 pt-8 text-sm text-on-surface-variant md:flex-row md:flex-wrap md:items-center md:gap-x-6 md:gap-y-2">
           <span className="font-medium text-on-surface">{t("footer.companyName")}</span>
           <span>{t("footer.location")}</span>
           <a href="mailto:biuro@programo.pl" className="hover-underline hover:text-on-surface transition-colors">
@@ -149,16 +143,10 @@ export default function Footer() {
           <a href="tel:+48797222363" className="hover-underline hover:text-on-surface transition-colors">
             +48 797 222 363
           </a>
-        </motion.div>
+        </div>
 
         {/* Bottom bar */}
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="border-t border-outline-variant/20 pt-8 flex flex-col-reverse md:flex-row justify-between items-start md:items-center gap-4"
-        >
+        <div className="border-t border-outline-variant/20 pt-8 flex flex-col-reverse md:flex-row justify-between items-start md:items-center gap-4">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="text-[10px] font-medium text-on-surface-variant/70 uppercase tracking-widest">
               © {new Date().getFullYear()} {t("footer.copyright")}
@@ -177,7 +165,7 @@ export default function Footer() {
               {t("footer.reply")}
             </span>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </footer>
   );

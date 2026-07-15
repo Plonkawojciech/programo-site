@@ -77,7 +77,9 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Desktop logo — fixed top-left, at navbar height */}
+      {/* Desktop header — single fixed container, three zones (logo | pill nav | cluster).
+          Grid cols 1fr/auto/1fr keeps the pill perfectly centered and structurally
+          prevents the zones from ever overlapping. */}
       <motion.div
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -85,123 +87,112 @@ export default function Navbar() {
           duration: durationFast,
           ease: easeEntry,
         }}
-        className="fixed top-5 left-8 z-50 hidden md:flex h-14 items-center"
+        className="fixed top-0 left-0 right-0 z-50 hidden md:grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 lg:px-8 pt-5"
       >
-        <Link
-          href="/"
-          aria-label="Programo — strona główna"
-          className="flex items-center"
-        >
-          <Image
-            key={theme}
-            src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-gradient-full.svg"}
-            alt="Programo"
-            width={300}
-            height={212}
-            priority
-            className="h-auto w-[180px] lg:w-[220px] select-none"
-          />
-        </Link>
-      </motion.div>
-
-      {/* Desktop floating pill nav — centered, compact */}
-      <motion.nav
-        role="navigation"
-        aria-label={t("a11y.mainNav")}
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{
-          duration: durationFast,
-          ease: easeEntry,
-        }}
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden md:block"
-      >
-        <div
-          className="liquid-glass relative rounded-full transition-all duration-500"
-          data-scrolled={scrolled ? "true" : "false"}
-        >
-          <div className="relative z-10 flex items-center gap-7 px-6 py-2.5">
-            {navLinks.map((link) => {
-              const isActive = activeSection === link.section;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`relative text-[13px] uppercase font-medium transition-colors ${
-                    isActive
-                      ? "text-[var(--theme-nav-text)]"
-                      : "text-[rgba(var(--theme-nav-text-rgb),0.72)] hover:text-[var(--theme-nav-text)]"
-                  }`}
-                  style={{
-                    transitionDuration: `${durationFast * 1000}ms`,
-                    transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
-                  }}
-                >
-                  {link.label}
-                  {isActive && (
-                    <motion.span
-                      layoutId="nav-indicator"
-                      className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-primary rounded-full"
-                      transition={{
-                        type: "spring",
-                        ...springGentle,
-                      }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </div>
+        {/* Zone 1 — logo */}
+        <div className="justify-self-start">
+          <Link
+            href="/"
+            aria-label="Programo — strona główna"
+            className="flex items-center"
+          >
+            <Image
+              key={theme}
+              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
+              alt="Programo"
+              width={300}
+              height={212}
+              priority
+              className="h-auto w-[168px] xl:w-[200px] select-none"
+            />
+          </Link>
         </div>
-      </motion.nav>
 
-      {/* Desktop right cluster — theme, lang, CTA */}
-      <motion.div
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{
-          duration: durationFast,
-          ease: easeEntry,
-        }}
-        className="fixed top-6 right-8 z-50 hidden md:flex h-12 items-center gap-4"
-      >
-        <a
-          href="tel:+48509123434"
-          aria-label={`${t("nav.phone")}: 509 123 434`}
-          className="inline-flex items-center gap-2 text-[13px] font-medium text-on-surface-variant transition-colors hover:text-on-surface"
+        {/* Zone 2 — floating pill nav */}
+        <nav
+          role="navigation"
+          aria-label={t("a11y.mainNav")}
+          className="justify-self-center"
         >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
-            <path d="M6.5 3.5l3 1 1 4-2 1.5a11 11 0 005 5l1.5-2 4 1 1 3a2 2 0 01-2 2.3A16 16 0 014.2 6.5 2 2 0 016.5 3.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          509 123 434
-        </a>
-        <button
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          className="flex items-center justify-center w-11 h-11 text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
-        >
-          {theme === "dark" ? (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="4"/>
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          <div
+            className="liquid-glass relative rounded-full transition-all duration-500"
+            data-scrolled={scrolled ? "true" : "false"}
+          >
+            <div className="relative z-10 flex items-center gap-4 lg:gap-6 px-5 lg:px-6 py-2.5">
+              {navLinks.map((link) => {
+                const isActive = activeSection === link.section;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`relative whitespace-nowrap text-[12px] lg:text-[13px] uppercase font-medium transition-colors ${
+                      isActive
+                        ? "text-[var(--theme-nav-text)]"
+                        : "text-[rgba(var(--theme-nav-text-rgb),0.72)] hover:text-[var(--theme-nav-text)]"
+                    }`}
+                    style={{
+                      transitionDuration: `${durationFast * 1000}ms`,
+                      transitionTimingFunction: `cubic-bezier(${easeHover.join(",")})`,
+                    }}
+                  >
+                    {link.label}
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-indicator"
+                        className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-primary rounded-full"
+                        transition={{
+                          type: "spring",
+                          ...springGentle,
+                        }}
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </nav>
+
+        {/* Zone 3 — theme, lang, CTA. Phone: handset link always; number text from 2xl. */}
+        <div className="justify-self-end flex h-12 items-center gap-3 lg:gap-4">
+          <a
+            href="tel:+48509123434"
+            aria-label={`${t("nav.phone")}: 509 123 434`}
+            className="inline-flex items-center gap-2 text-[13px] font-medium text-on-surface-variant transition-colors hover:text-on-surface"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" aria-hidden="true">
+              <path d="M6.5 3.5l3 1 1 4-2 1.5a11 11 0 005 5l1.5-2 4 1 1 3a2 2 0 01-2 2.3A16 16 0 014.2 6.5 2 2 0 016.5 3.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          ) : (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-          )}
-        </button>
-        <button
-          onClick={toggle}
-          aria-label={t("a11y.langToggle")}
-          className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] text-[13px] uppercase font-medium text-on-surface-variant cursor-pointer hover:text-on-surface transition-colors"
-        >
-          {lang === "pl" ? "EN" : "PL"}
-        </button>
-        <ContactCtaLink className="bg-primary px-5 py-2.5 rounded-full text-on-primary text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all">
-          {t("nav.cta")}
-        </ContactCtaLink>
+            <span className="hidden 2xl:inline whitespace-nowrap">509 123 434</span>
+          </a>
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            className="flex items-center justify-center w-11 h-11 text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
+          >
+            {theme === "dark" ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            )}
+          </button>
+          <button
+            onClick={toggle}
+            aria-label={t("a11y.langToggle")}
+            className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] text-[13px] uppercase font-medium text-on-surface-variant cursor-pointer hover:text-on-surface transition-colors"
+          >
+            {lang === "pl" ? "EN" : "PL"}
+          </button>
+          <ContactCtaLink className="whitespace-nowrap bg-primary px-4 lg:px-5 py-2.5 rounded-full text-on-primary text-[12px] lg:text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all">
+            {t("nav.cta")}
+          </ContactCtaLink>
+        </div>
       </motion.div>
 
       {/* Mobile navbar */}
@@ -244,7 +235,7 @@ export default function Navbar() {
           >
             <Image
               key={theme}
-              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-gradient-full.svg"}
+              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
               alt="Programo"
               width={170}
               height={120}
