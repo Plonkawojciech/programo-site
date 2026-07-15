@@ -119,7 +119,7 @@ const projects = [
   },
   {
     name: "Pool System",
-    slug: "pool-system",
+    slug: "pooltimer",
     desc: "Innowacyjny system timingowy z aplikacją mobilną — hardware + software. Wkrótce.",
   },
   {
