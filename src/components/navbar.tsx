@@ -28,10 +28,10 @@ export default function Navbar() {
 
   const navLinks = [
     { label: t("nav.offer"), href: "/oferta", section: "oferta" },
-    { label: t("nav.websites"), href: "/strony-internetowe", section: "strony-internetowe" },
-    { label: t("nav.stores"), href: "/sklepy-internetowe", section: "sklepy-internetowe" },
-    { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
     { label: t("nav.work"), href: "/projekty", section: "projekty" },
+    { label: t("nav.stores"), href: "/sklepy-internetowe", section: "sklepy-internetowe" },
+    { label: t("nav.marketing"), href: "/strony-tracking-reklamy", section: "strony-tracking-reklamy" },
+    { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
     { label: t("nav.about"), href: "/o-nas", section: "o-nas" },
     { label: t("nav.contact"), href: "/kontakt", section: "kontakt" },
   ];
@@ -165,6 +165,16 @@ export default function Navbar() {
         }}
         className="fixed top-6 right-8 z-50 hidden md:flex h-12 items-center gap-4"
       >
+        <a
+          href="tel:+48509123434"
+          aria-label={`${t("nav.phone")}: 509 123 434`}
+          className="inline-flex items-center gap-2 text-[13px] font-medium text-on-surface-variant transition-colors hover:text-on-surface"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
+            <path d="M6.5 3.5l3 1 1 4-2 1.5a11 11 0 005 5l1.5-2 4 1 1 3a2 2 0 01-2 2.3A16 16 0 014.2 6.5 2 2 0 016.5 3.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          509 123 434
+        </a>
         <button
           onClick={toggleTheme}
           aria-label="Toggle theme"
@@ -283,6 +293,19 @@ export default function Navbar() {
             className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/98 backdrop-blur-lg md:hidden"
           >
             <nav className="flex flex-col items-center gap-8">
+              <motion.a
+                href="tel:+48509123434"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: durationMedium, ease: easeEntry }}
+                className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-5 py-2.5 text-sm font-medium uppercase tracking-widest text-primary min-h-[44px]"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
+                  <path d="M6.5 3.5l3 1 1 4-2 1.5a11 11 0 005 5l1.5-2 4 1 1 3a2 2 0 01-2 2.3A16 16 0 014.2 6.5 2 2 0 016.5 3.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                509 123 434
+              </motion.a>
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}

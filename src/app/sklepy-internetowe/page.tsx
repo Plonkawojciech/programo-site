@@ -8,17 +8,18 @@ import CaseStudies from "@/components/case-studies";
 import CompactLeadForm from "@/components/compact-lead-form";
 import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
+import BrowserFrame from "@/components/ui/browser-frame";
 
+// Metadata: content-deck-2026-07.md section 8.
 export const metadata: Metadata = {
-  title:
-    "Sklepy internetowe na zamówienie — WooCommerce, Shopify, PrestaShop | Programo",
+  title: "Sklepy internetowe i aplikacje mobilne do sklepów | Programo",
   description:
-    "Tworzymy i rozwijamy sklepy internetowe: WooCommerce, Shopify, PrestaShop i headless (Next.js). Migracje bez utraty SEO, integracje Allegro/BaseLinker/płatności, aplikacje do sklepów. Software house z Poznania.",
+    "Sklepy od zera (WooCommerce, PrestaShop, headless) i natywne aplikacje mobilne do istniejących sklepów. Płatności, Paczkomaty InPost, migracje bez utraty SEO.",
   alternates: { canonical: "https://programo.pl/sklepy-internetowe" },
   openGraph: {
-    title: "Sklepy internetowe na zamówienie — Programo",
+    title: "Sklepy internetowe i aplikacje mobilne do sklepów | Programo",
     description:
-      "Sklepy WooCommerce/Shopify/PrestaShop i headless, migracje, integracje Allegro/BaseLinker, aplikacje do sklepów.",
+      "Sklepy od zera (WooCommerce, PrestaShop, headless) i natywne aplikacje mobilne do istniejących sklepów.",
     url: "https://programo.pl/sklepy-internetowe",
     siteName: "Programo",
     locale: "pl_PL",
@@ -27,15 +28,13 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   keywords: [
     "sklep internetowy na zamówienie",
-    "tworzenie sklepu internetowego",
+    "aplikacja mobilna do sklepu internetowego",
     "wdrożenie woocommerce",
-    "sklep shopify",
     "sklep prestashop",
     "migracja sklepu internetowego",
     "integracja allegro baselinker",
-    "headless e-commerce",
-    "aplikacja do sklepu internetowego",
-    "sklep b2b na zamówienie",
+    "headless e-commerce next.js",
+    "aplikacja iOS Android sklep",
   ],
 };
 
@@ -56,34 +55,26 @@ const breadcrumbJsonLd = {
 const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
-  serviceType: "Tworzenie sklepów internetowych",
-  name: "Sklepy internetowe na zamówienie — Programo",
+  serviceType: "Tworzenie sklepów internetowych i aplikacji mobilnych do sklepów",
+  name: "Sklepy internetowe i aplikacje mobilne — Programo",
   provider: { "@id": "https://programo.pl/#organization" },
   areaServed: [
     { "@type": "Country", name: "Polska" },
     { "@type": "City", name: "Poznań" },
   ],
   description:
-    "Tworzenie, migracja i rozwój sklepów internetowych: WooCommerce, Shopify, PrestaShop, headless (Next.js), integracje Allegro/BaseLinker/płatności.",
+    "Sklepy od zera (WooCommerce, PrestaShop, headless Next.js) i natywne aplikacje mobilne do istniejących sklepów. Integracje płatności, InPost, Allegro/BaseLinker, migracje bez utraty SEO.",
   url: "https://programo.pl/sklepy-internetowe",
 };
 
 const faqs = [
   {
     q: "Ile kosztuje sklep internetowy?",
-    a: "Koszt zależy od zakresu — liczby produktów, integracji (Allegro, BaseLinker, płatności, ERP) i migracji danych. Każdy sklep wyceniamy indywidualnie po krótkiej rozmowie o zakresie — z konkretnymi widełkami i bez ukrytych kosztów.",
+    a: "Koszt zależy od zakresu: liczby produktów, integracji i tego, czy budujemy od zera, czy rozbudowujemy istniejący sklep. Po pierwszej rozmowie dostajesz widełki w 24 h, a przed startem stałą wycenę.",
   },
   {
-    q: "Ile trwa wdrożenie sklepu?",
-    a: "Prosty sklep zwykle 2–4 tygodnie. Rozbudowany sklep z integracjami i migracją danych — 4–8 tygodni, zależnie od zakresu.",
-  },
-  {
-    q: "Czy migracja sklepu nie zaszkodzi pozycjom w Google?",
-    a: "Nie. Migrujemy z zachowaniem struktury adresów URL i przekierowaniami 301, pilnując pozycji w Google i danych produktów.",
-  },
-  {
-    q: "Z czym integrujecie sklep?",
-    a: "Allegro, BaseLinker, bramki płatności (Przelewy24, Stripe), firmy kurierskie, systemy ERP/magazynowe oraz fakturowanie (w tym KSeF).",
+    q: "Czy muszę przenosić sklep, żeby mieć aplikację mobilną?",
+    a: "Nie. Aplikację budujemy na API Twojego obecnego sklepu — dokładnie tak powstały aplikacje Jedmara, gdzie PrestaShop pozostał nietknięty.",
   },
 ];
 
@@ -97,24 +88,31 @@ const faqJsonLd = {
   })),
 };
 
+// Scope of e-commerce services — content-deck-2026-07.md section 4.3.
 const services = [
-  { n: "01", title: "Sklep na zamówienie", desc: "WooCommerce, Shopify, PrestaShop lub headless (Next.js). Od prostego sklepu po rozbudowany B2B z panelem klienta i rolami." },
-  { n: "02", title: "Migracje sklepów", desc: "Przenosimy sklep między platformami (PrestaShop ↔ WooCommerce ↔ Shopify) bez utraty pozycji w Google i danych produktów." },
-  { n: "03", title: "Integracje", desc: "Allegro, BaseLinker, płatności (Przelewy24, Stripe), kurierzy, systemy ERP i fakturowanie (KSeF). Sklep, który dogaduje się z resztą firmy." },
-  { n: "04", title: "Aplikacje mobilne do sklepów", desc: "Natywne aplikacje iOS + Android dla Twojego sklepu — katalog, koszyk i zamówienia z telefonu, spięte z backendem sklepu." },
-  { n: "05", title: "Headless i wydajność", desc: "Frontend w Next.js na istniejącym backendzie (np. PrestaShop) — szybsze ładowanie, lepsze Core Web Vitals, wyższe konwersje." },
-  { n: "06", title: "Utrzymanie i rozwój", desc: "Opieka po wdrożeniu, aktualizacje, nowe funkcje i optymalizacja konwersji. Stała współpraca, nie znikamy po starcie." },
+  {
+    n: "01",
+    title: "Aplikacje mobilne do istniejących sklepów",
+    desc: "Twój sklep zostaje tam, gdzie jest. My dokładamy natywne aplikacje iOS i Android, które działają na jego danych: katalogu, cenach, stanach magazynowych i zamówieniach. Klient dostaje zakupy na dwa dotknięcia, powiadomienia push i skaner kodów, a Ty jeden system zamiast dwóch.",
+  },
+  {
+    n: "02",
+    title: "Sklepy od zera",
+    desc: "WooCommerce lub PrestaShop, gdy liczy się sprawdzony ekosystem, albo headless na Next.js, gdy sklep ma być szybki jak aplikacja i w pełni pod Twoją kontrolą. Doradzimy uczciwie, która droga pasuje do skali biznesu — czasem ta tańsza.",
+  },
+  {
+    n: "03",
+    title: "Integracje",
+    desc: "Płatności (PayU, PayPo, iMoje, InPost Pay i inne), dostawy z wyborem Paczkomatu na mapie, Allegro i BaseLinker, synchronizacja stanów magazynowych. Integracja ma działać latami, więc budujemy ją z obsługą błędów i automatycznym ponawianiem, nie „na sznurki”.",
+  },
+  {
+    n: "04",
+    title: "Migracje bez utraty SEO",
+    desc: "Przy przenoszeniu sklepu pilnujemy mapy przekierowań, struktury adresów i danych strukturalnych, żeby pozycje wypracowane w Google przetrwały przeprowadzkę. Plan migracji dostajesz na piśmie, zanim cokolwiek ruszymy.",
+  },
 ];
 
-const steps = [
-  { n: "01", title: "Krótka rozmowa", desc: "Ustalamy zakres sklepu, integracje, budżet i termin." },
-  { n: "02", title: "Makieta i wycena", desc: "Dostajesz konkretny plan, etapy i widełki — zanim zaczniemy." },
-  { n: "03", title: "Budowa i wdrożenie", desc: "Projektujemy, kodujemy, integrujemy i wypuszczamy sklep produkcyjnie." },
-];
-
-// Honest e-commerce capability proof. Jedmar (featured above) is our store
-// realization; these are our own platforms whose facts (from projects.ts)
-// demonstrate commerce-grade skills — framed as capability, NOT as deployed stores.
+// Honest e-commerce capability proof, alongside the Jedmar realization above.
 const storeCases = [
   {
     slug: "estalo",
@@ -141,9 +139,7 @@ export default function SklepyInternetowePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <div className="bg-surface text-on-surface">
-        {/* HERO — static, 2-col: copy + lead form ABOVE THE FOLD. Jedmar app
-            shot moved into the proof strip (stays LCP/proof) so the form — not
-            an image — owns the right column for paid traffic. */}
+        {/* HERO — static, 2-col: copy + lead form ABOVE THE FOLD */}
         <section className="relative pt-28 pb-16 md:pt-32 md:pb-24">
           <div className={CONTAINER}>
             <nav aria-label="breadcrumb" className="mb-8 text-xs uppercase tracking-widest text-on-surface-variant">
@@ -157,12 +153,12 @@ export default function SklepyInternetowePage() {
               <div>
                 <p className={EYEBROW}>Sklepy internetowe · E-commerce · Poznań</p>
                 <h1 className="mt-5 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl">
-                  Sklep internetowy, który naprawdę sprzedaje
+                  Sklepy internetowe: od nowego sklepu po aplikację mobilną do tego, który już masz
                 </h1>
                 <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
-                  Tworzymy, migrujemy i rozwijamy sklepy: WooCommerce, Shopify,
-                  PrestaShop i headless w Next.js — z integracjami (Allegro,
-                  BaseLinker, płatności) i naciskiem na szybkość oraz konwersję.
+                  Budujemy sklepy od zera i rozbudowujemy istniejące — bez wymuszania
+                  migracji. Nasza flagowa realizacja to dwie natywne aplikacje i
+                  interaktywne schematy części dla sklepu narzędziowego Jedmar.
                 </p>
                 <div className="mt-8 flex flex-wrap items-center gap-4">
                   <CtaButton href="tel:+48509123434" variant="secondary">Zadzwoń: 509 123 434</CtaButton>
@@ -211,62 +207,62 @@ export default function SklepyInternetowePage() {
           </div>
         </section>
 
-        {/* PROBLEM → OUTCOME */}
+        {/* JEDMAR — flagship realization (deck section 4.2) */}
         <section className={SECTION}>
           <div className={CONTAINER}>
-            <Reveal className="max-w-4xl">
-              <p className={EYEBROW}>Dlaczego to ważne</p>
-              <p className="mt-6 font-headline text-2xl font-light leading-snug tracking-tight text-on-surface md:text-4xl">
-                Sklep, który ładuje się sekundę za długo, traci koszyk.{" "}
-                <span className="text-primary">Szybki, dobrze zintegrowany sprzedaje — i nie znika po wdrożeniu.</span>
+            <Reveal className="mb-14 max-w-3xl md:mb-16">
+              <p className={EYEBROW}>Realizacja flagowa</p>
+              <h2 className={`mt-5 ${H2}`}>Jedmar — sklep, którego nie ruszaliśmy, i dwie aplikacje, których mu brakowało</h2>
+              <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/70">
+                Jedmar miał działający sklep na PrestaShop i nie potrzebował nowego. Potrzebował
+                wygodnych zakupów z telefonu i sensownej sprzedaży części zamiennych.
+                Zbudowaliśmy dwie natywne aplikacje (iOS i Android), które są opublikowane w
+                App Store i Google Play: katalog ponad 1500 produktów, koszyk, sześć metod
+                płatności, Paczkomaty InPost i skaner kodów EAN. Do tego moduł interaktywnych
+                schematów: 73 narzędzia rozrysowane część po części, około 7500 klikalnych
+                markerów, a każda część z przyciskiem dodania do koszyka — na stronie sklepu i
+                w obu aplikacjach, z jednego źródła danych. Katalog synchronizuje się z
+                PrestaShopem automatycznie co kilka minut.
               </p>
             </Reveal>
+            <Reveal delay={0.1}>
+              <BrowserFrame
+                url="jedmar.pl/pl/schematy-narzedzi"
+                src="/screenshots/v2/jedmar-schemat-tool-desktop.webp"
+                alt="Interaktywny moduł schematów części Jedmar — eksplodowane rysunki techniczne z klikalnymi markerami"
+                width={1440}
+                height={900}
+              />
+            </Reveal>
+            <div className="mt-8 flex flex-wrap gap-2.5">
+              {["iOS + Android natywnie", "Swift / SwiftUI", "Kotlin", "PrestaShop API", "73 schematy narzędzi"].map((chip) => (
+                <span key={chip} className="rounded-full border border-outline-variant/60 px-4 py-1.5 text-sm text-on-surface-variant">{chip}</span>
+              ))}
+            </div>
+            <div className="mt-8">
+              <Link href="/projects/jedmar" className="text-sm font-medium text-primary underline underline-offset-4 transition hover:text-on-surface">
+                Zobacz cały projekt Jedmar →
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* USŁUGI */}
+        {/* ZAKRES USŁUG E-COMMERCE */}
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="mb-14 max-w-3xl md:mb-20">
-              <p className={EYEBROW}>Co robimy w e-commerce</p>
-              <h2 className={`mt-5 ${H2}`}>Sklep, migracja, integracje, apka</h2>
+              <p className={EYEBROW}>Zakres usług e-commerce</p>
+              <h2 className={`mt-5 ${H2}`}>Sklep, aplikacja, integracje, migracja</h2>
             </Reveal>
-            <div className="grid gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-x-10 gap-y-12 md:grid-cols-2">
               {services.map((s, i) => (
-                <Reveal key={s.n} delay={(i % 3) * 0.1} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
+                <Reveal key={s.n} delay={(i % 2) * 0.1} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
                   <span className="font-mono text-xs uppercase tracking-widest text-primary">{s.n}</span>
                   <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">{s.title}</h3>
                   <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
                 </Reveal>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* JEDMAR — featured realization */}
-        <section className={SECTION}>
-          <div className={CONTAINER}>
-            <Reveal className="overflow-hidden rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:p-14">
-              <p className={EYEBROW}>Realizacja</p>
-              <h2 className={`mt-5 ${H2}`}>Jedmar — aplikacja mobilna do sklepu narzędziowego</h2>
-              <p className="mt-6 max-w-3xl text-lg font-light leading-relaxed text-on-surface/70">
-                Natywna aplikacja mobilna na iOS i Android dla Jedmar Centrum
-                Narzędziowego — zakupy z telefonu: pełny katalog z kategoriami i
-                markami, koszyk, konto klienta i zamówienia, spięte z backendem
-                sklepu (PrestaShop) przez API. Zlecenie: aplikacja do istniejącego
-                sklepu — nie cały sklep.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-2.5">
-                {["iOS + Android natywnie", "Swift / SwiftUI", "Kotlin", "PrestaShop API", "Mobile-first"].map((chip) => (
-                  <span key={chip} className="rounded-full border border-outline-variant/60 px-4 py-1.5 text-sm text-on-surface-variant">{chip}</span>
-                ))}
-              </div>
-              <div className="mt-8">
-                <Link href="/projects/jedmar" className="text-sm font-medium text-primary underline underline-offset-4 transition hover:text-on-surface">
-                  Zobacz case Jedmar →
-                </Link>
-              </div>
-            </Reveal>
           </div>
         </section>
 
@@ -279,32 +275,13 @@ export default function SklepyInternetowePage() {
           items={storeCases}
         />
 
-        {/* Powtórzony szybki formularz — wzmocnienie dla scrollujących (osobny formId = osobny tracking) */}
+        {/* Powtórzony szybki formularz — wzmocnienie dla scrollujących */}
         <CompactLeadForm
           formId="sklepy-compact"
           projectType="Sklep internetowy"
           eyebrow="Bez zobowiązań"
           heading="Wciąż się rozglądasz? Zostaw numer"
         />
-
-        {/* PROCES */}
-        <section className={SECTION}>
-          <div className={CONTAINER}>
-            <Reveal className="mb-14 max-w-3xl md:mb-20">
-              <p className={EYEBROW}>Jak pracujemy</p>
-              <h2 className={`mt-5 ${H2}`}>Trzy kroki do gotowego sklepu</h2>
-            </Reveal>
-            <div className="grid gap-x-10 gap-y-12 md:grid-cols-3">
-              {steps.map((s, i) => (
-                <Reveal key={s.n} delay={i * 0.12} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary">{s.n}</span>
-                  <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface">{s.title}</h3>
-                  <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* FAQ */}
         <section className={SECTION}>
@@ -328,7 +305,7 @@ export default function SklepyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:p-16">
-              <h2 className={H2}>Zbudujmy lub przyspieszmy Twój sklep</h2>
+              <h2 className={H2}>Porozmawiajmy o Twoim sklepie</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
                 Opisz projekt w 2 minuty — wrócimy z planem, integracjami i wyceną.
                 Poznań, Wielkopolska i cała Polska. Odpowiadamy w ciągu 24 godzin.

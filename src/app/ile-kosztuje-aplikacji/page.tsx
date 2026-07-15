@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import CompactLeadForm from "@/components/compact-lead-form";
 
 export const metadata: Metadata = {
   title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy — Programo",
@@ -143,7 +144,7 @@ export default function IleKosztujeAplikacjiPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
 
-      <main className="min-h-screen bg-[var(--theme-bg-1,#051F20)] text-[var(--theme-text-1,#DAF1DE)]">
+      <main className="min-h-screen bg-surface text-on-surface">
         <article className="mx-auto max-w-3xl px-6 py-16 md:px-10 md:py-24">
           <nav
             aria-label="breadcrumb"
@@ -219,6 +220,16 @@ export default function IleKosztujeAplikacjiPage() {
           </section>
 
           <section className="mb-14">
+            <CompactLeadForm
+              bare
+              formId="koszt-artykul"
+              anchorId="koszt-artykul"
+              projectType="Wycena z artykułu"
+              heading="Poznaj koszt swojego projektu"
+            />
+          </section>
+
+          <section className="mb-14">
             <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
               Ile kosztuje MVP?
             </h2>
@@ -277,7 +288,7 @@ export default function IleKosztujeAplikacjiPage() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/kontakt"
-                className="rounded-full bg-[var(--theme-accent,#235347)] px-6 py-3 text-sm font-semibold text-[var(--theme-bg-1,#051F20)] transition hover:opacity-90"
+                className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
               >
                 Bezpłatna wycena
               </Link>

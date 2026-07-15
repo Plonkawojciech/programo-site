@@ -2,18 +2,28 @@
 // labels and the privacy-policy page.
 export const common = {
   // Navbar
-  "nav.work": { pl: "Projekty", en: "Work" },
-  "nav.about": { pl: "O nas", en: "About" },
-  "nav.stack": { pl: "Technologie", en: "Stack" },
-  "nav.contact": { pl: "Kontakt", en: "Contact" },
   "nav.offer": { pl: "Oferta", en: "Services" },
-  "nav.websites": { pl: "Strony WWW", en: "Websites" },
+  "nav.work": { pl: "Projekty", en: "Projects" },
   "nav.stores": { pl: "Sklepy", en: "Stores" },
+  "nav.marketing": { pl: "Strony i reklamy", en: "Websites & ads" },
   "nav.pricing": { pl: "Wycena", en: "Pricing" },
-  "nav.cta": { pl: "Napisz do nas", en: "Get in touch" },
+  "nav.about": { pl: "O nas", en: "About" },
+  "nav.contact": { pl: "Kontakt", en: "Contact" },
+  "nav.cta": { pl: "Umów rozmowę", en: "Book a call" },
+  "nav.phone": { pl: "Zadzwoń", en: "Call" },
 
   // Footer
-  "footer.location": { pl: "Poznań, Polska", en: "Poznań, Poland" },
+  "footer.tagline": {
+    pl: "Oprogramowanie projektowane i budowane w Poznaniu.",
+    en: "Software designed and built in Poznan.",
+  },
+  "footer.reply": { pl: "Odpowiadamy w 24 h", en: "We reply within 24 hours" },
+  "footer.colOffer": { pl: "Oferta", en: "Services" },
+  "footer.colProjects": { pl: "Projekty", en: "Projects" },
+  "footer.colCompany": { pl: "Firma", en: "Company" },
+  "footer.allProjects": { pl: "Wszystkie projekty", en: "All projects" },
+  "footer.location": { pl: "Poznań, Polska", en: "Poznan, Poland" },
+  "footer.companyName": { pl: "Programo s.c.", en: "Programo s.c." },
   "footer.copyright": { pl: "Programo", en: "Programo" },
   "footer.privacy": { pl: "Polityka prywatności", en: "Privacy policy" },
   "footer.cookies": { pl: "Ustawienia cookies", en: "Cookie settings" },
