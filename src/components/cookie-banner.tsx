@@ -65,12 +65,16 @@ export default function CookieBanner() {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             role="dialog"
             aria-label={t("cookie.title")}
-            style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.75rem)" }}
-            className="fixed inset-x-0 bottom-0 z-[100] px-3 pt-3 sm:px-4 sm:pt-4"
+            style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.5rem)" }}
+            className="fixed inset-x-0 bottom-0 z-[100] px-2 pt-2 sm:px-4 sm:pt-4"
           >
-            <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 rounded-2xl border border-outline-variant/60 bg-surface-container/95 p-4 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)] backdrop-blur-md md:flex-row md:items-center md:gap-6 md:p-5">
-              <p className="flex-1 text-sm leading-relaxed text-on-surface-variant">
-                {t("cookie.desc")}{" "}
+            {/* Compact on mobile: shortened copy on one line + all three actions
+                in a single row, so the bar stays short and never covers the hero
+                CTA at 390×844. Desktop layout is unchanged (full copy, row). */}
+            <div className="mx-auto flex w-full max-w-5xl flex-col gap-2.5 rounded-2xl border border-outline-variant/60 bg-surface-container/95 p-3 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)] backdrop-blur-md md:flex-row md:items-center md:gap-6 md:p-5">
+              <p className="flex-1 text-xs leading-snug text-on-surface-variant md:text-sm md:leading-relaxed">
+                <span className="md:hidden">{t("cookie.descShort")} </span>
+                <span className="hidden md:inline">{t("cookie.desc")} </span>
                 <Link
                   href="/polityka-prywatnosci"
                   className="font-medium text-on-surface underline decoration-on-surface-variant/60 underline-offset-2 transition-colors hover:text-primary"
@@ -79,25 +83,27 @@ export default function CookieBanner() {
                 </Link>
                 .
               </p>
-              <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+              {/* Mobile: normal case, tight tracking so all three actions fit one
+                  row at 375–390px. Desktop restores uppercase + wide tracking. */}
+              <div className="flex shrink-0 items-center gap-2 md:gap-3">
                 <button
                   type="button"
                   onClick={openSettings}
-                  className="px-2 py-2 text-xs font-medium uppercase tracking-widest text-on-surface-variant underline underline-offset-4 transition-colors hover:text-on-surface"
+                  className="shrink-0 px-1 py-2 text-[11px] font-medium text-on-surface-variant underline underline-offset-4 transition-colors hover:text-on-surface md:px-2 md:text-xs md:uppercase md:tracking-widest"
                 >
                   {t("cookie.customize")}
                 </button>
                 <button
                   type="button"
                   onClick={rejectAll}
-                  className="rounded-full border-2 border-outline-variant/60 bg-surface px-5 py-2.5 text-xs font-medium uppercase tracking-widest text-on-surface transition-all hover:border-outline-variant hover:bg-on-surface/5"
+                  className="flex-1 whitespace-nowrap rounded-full border-2 border-outline-variant/60 bg-surface px-3 py-2 text-[11px] font-medium text-on-surface transition-all hover:border-outline-variant hover:bg-on-surface/5 md:flex-none md:px-5 md:py-2.5 md:text-xs md:uppercase md:tracking-widest"
                 >
                   {t("cookie.rejectAll")}
                 </button>
                 <button
                   type="button"
                   onClick={acceptAll}
-                  className="rounded-full bg-primary px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-on-primary shadow-lg shadow-primary/20 transition-all hover:bg-primary-container hover:text-on-primary-container"
+                  className="flex-1 whitespace-nowrap rounded-full bg-primary px-3 py-2 text-[11px] font-semibold text-on-primary shadow-lg shadow-primary/20 transition-all hover:bg-primary-container hover:text-on-primary-container md:flex-none md:px-5 md:py-2.5 md:text-xs md:uppercase md:tracking-widest"
                 >
                   {t("cookie.acceptAll")}
                 </button>

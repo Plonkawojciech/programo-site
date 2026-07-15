@@ -10,9 +10,9 @@ import type { Project } from "@/lib/projects";
 import type { Lang } from "@/lib/i18n";
 
 const CATEGORY_LABELS: Record<Project["category"], { pl: string; en: string }> = {
-  "nasze-systemy": { pl: "Nasze systemy", en: "Our systems" },
-  "strony-zrobione": { pl: "Strony", en: "Websites" },
-  projekty: { pl: "Projekty", en: "Projects" },
+  produkty: { pl: "Produkty Programo", en: "Programo products" },
+  "dla-klientow": { pl: "Dla klientów", en: "Client work" },
+  marketing: { pl: "Tracking i reklamy", en: "Tracking & ads" },
 };
 
 function ProjectCard({
@@ -81,7 +81,7 @@ function ProjectCard({
           {CATEGORY_LABELS[project.category][lang]}
           <span className="text-white/50"> · {project.year}</span>
         </span>
-        {project.category === "strony-zrobione" && project.liveUrl && (
+        {project.liveUrl && (
           <a
             href={project.liveUrl}
             target="_blank"

@@ -22,12 +22,6 @@ export const easeDefault = [0.22, 1, 0.36, 1] as const;
 
 // --- Spring Configs ---
 
-/** Cursor follow spring */
-export const springCursor = { stiffness: 150, damping: 15, mass: 0.1 };
-
-/** Magnetic button spring */
-export const springMagnetic = { stiffness: 150, damping: 15, mass: 0.27 };
-
 /** Gentle spring for layout shifts */
 export const springGentle = { stiffness: 100, damping: 20, mass: 0.5 };
 

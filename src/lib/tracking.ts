@@ -246,3 +246,25 @@ export function trackLead(detail: {
 export function trackContactClick(method: "phone" | "email", url: string): void {
   gtag("event", "contact_click", { method, link_url: url });
 }
+
+/**
+ * GA4 engagement event for clicks on portfolio/project links (cards, "view
+ * project", live-site links). Uses the standard `select_content` event so it
+ * shows up under recommended events. Not a conversion — pure engagement signal
+ * that tells us which projects draw interest.
+ */
+export function trackPortfolioClick(slug: string, url: string): void {
+  gtag("event", "select_content", {
+    content_type: "project",
+    content_id: slug,
+    link_url: url,
+  });
+}
+
+/**
+ * GA4 scroll-depth signal. Fires `scroll_depth` with the crossed threshold
+ * (25/50/75/100). Deduplication and per-page reset live in AnalyticsTracker.
+ */
+export function trackScrollDepth(percent: 25 | 50 | 75 | 100): void {
+  gtag("event", "scroll_depth", { percent });
+}

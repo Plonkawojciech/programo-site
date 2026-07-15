@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import ContactCtaLink from "@/components/contact-cta-link";
-import { trackContactClick } from "@/lib/tracking";
 
 const PHONE = "+48509123434";
 const PHONE_HREF = `tel:${PHONE}`;
@@ -58,8 +57,9 @@ export default function StickyCta() {
     return () => observer.disconnect();
   });
 
+  // tel:/mailto: clicks are tracked globally via event delegation in
+  // AnalyticsTracker — no per-link onClick here (avoids double contact_click).
   const show = scrolledPastHero && !contactVisible;
-  const onCall = () => trackContactClick("phone", PHONE_HREF);
 
   return (
     <AnimatePresence>
@@ -75,7 +75,6 @@ export default function StickyCta() {
           >
             <a
               href={PHONE_HREF}
-              onClick={onCall}
               className="flex items-center justify-center gap-2.5 rounded-full bg-primary px-5 py-4 text-base font-semibold text-on-primary shadow-lg shadow-black/20 active:scale-[0.98] transition-transform"
             >
               <PhoneIcon className="h-5 w-5" />
@@ -96,7 +95,6 @@ export default function StickyCta() {
           >
             <a
               href={PHONE_HREF}
-              onClick={onCall}
               className="flex items-center gap-2.5 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-on-primary shadow-xl shadow-black/25 transition-all hover:gap-3.5 hover:bg-primary-container"
             >
               <PhoneIcon className="h-4.5 w-4.5" />

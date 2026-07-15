@@ -5,16 +5,22 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/lib/theme";
 
+/**
+ * Minimal branded intro. NO percent counter, NO multi-second gate — the homepage
+ * must paint immediately (LCP / Quality Score). We render a brief logo fade
+ * (max 250 ms) once per session, and skip it entirely for paid/campaign traffic
+ * and returning visitors. Content underneath is always rendered; the overlay
+ * simply fades out on top of it.
+ */
+const FADE_MS = 250;
+
 export default function Preloader() {
   const { theme } = useTheme();
-  const [loading, setLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    // Skip the branded intro ENTIRELY for paid / campaign traffic. These are
-    // cold visitors costing ~5 zł/click; a 650 ms full-screen gate before the
-    // hero + lead form is pure friction and worsens LCP (Quality Score). If the
-    // URL carries a Google Ads click id or any UTM, paint content immediately.
+    // Skip the intro for paid / campaign traffic (cold, costly clicks) and for
+    // repeat navigations / returning visitors, so it never delays content paint.
     let isPaid = false;
     try {
       const sp = new URLSearchParams(window.location.search);
@@ -25,78 +31,42 @@ export default function Preloader() {
       /* ignore */
     }
 
-    // Show the branded intro only once per session so it never blocks
-    // content paint (LCP) on repeat navigations / returning visitors.
     if (isPaid || sessionStorage.getItem("programo-preloaded")) {
-      setLoading(false);
+      setVisible(false);
       return;
     }
 
-    // Drive progress off real wall-clock time (not a fixed number of ticks)
-    // and hard-cap the total duration. This keeps the intro from stretching
-    // out — and gating LCP — when the main thread is throttled (e.g. Lighthouse
-    // mobile / slow devices), where tick-based timers drift badly.
-    const DURATION = 650;
-    const start = performance.now();
-    let raf = 0;
-
-    const tick = (now: number) => {
-      const elapsed = now - start;
-      const pct = Math.min(100, Math.round((elapsed / DURATION) * 100));
-      setProgress(pct);
-      if (elapsed >= DURATION) {
-        setLoading(false);
+    const timer = setTimeout(() => {
+      setVisible(false);
+      try {
         sessionStorage.setItem("programo-preloaded", "1");
-        return;
+      } catch {
+        /* ignore */
       }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
+    }, FADE_MS);
 
-    return () => {
-      cancelAnimationFrame(raf);
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <AnimatePresence mode="wait">
-      {loading && (
+    <AnimatePresence>
+      {visible && (
         <motion.div
           key="preloader"
-          className="fixed inset-0 z-[300] flex flex-col items-center justify-center bg-surface text-on-surface"
-          exit={{
-            clipPath: "inset(0 0 100% 0)",
-            transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] }
-          }}
+          className="pointer-events-none fixed inset-0 z-[300] flex items-center justify-center bg-surface"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] } }}
         >
-          {/* Full Programo logo */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-center"
-          >
-            <Image
-              key={theme}
-              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
-              alt="Programo"
-              width={480}
-              height={340}
-              priority
-              className="h-auto w-[240px] md:w-[340px] select-none"
-            />
-          </motion.div>
-
-          {/* Progress Number */}
-          <div className="absolute bottom-12 right-12 flex items-baseline gap-2">
-            <span className="text-[100px] font-bold leading-none tracking-tighter md:text-[180px] text-on-surface/10">
-              {progress}
-            </span>
-            <span className="text-xl font-medium text-primary md:text-3xl">%</span>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="absolute bottom-0 left-0 h-[2px] bg-primary transition-all duration-300 ease-out" style={{ width: `${progress}%` }} />
+          <Image
+            key={theme}
+            src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
+            alt="Programo"
+            width={480}
+            height={340}
+            priority
+            className="h-auto w-[200px] md:w-[280px] select-none"
+          />
         </motion.div>
       )}
     </AnimatePresence>
