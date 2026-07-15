@@ -127,3 +127,11 @@
 **Uwaga środowiskowa:** w trakcie dysk zapełnił się do zera (ENOSPC) — wyczyszczono worktree'y/cache, zasugerowano Wojtkowi pełny offload (chip).
 
 **Status:** wdrożone na prod (push → Vercel auto-deploy).
+
+## 2026-07-15 — Poprawka po feedbacku: proporcjonalny iPhone + przeprojektowane karty /projekty
+
+**Co:** (1) PhoneFrame przepisany na jednostki container-query (cqw) — dynamic island, promienie, ramka i przyciski skalują się z szerokością telefonu; koniec z wielką "pigułą" na małych rozmiarach (sztywne px przy zmiennej szerokości). (2) Karty /projekty bez fałszywego chrome'u przeglądarki ×9 — czysty kadr zrzutu na kanwie w kolorze projektu (ciemne bgColor dla dark produktów, delikatny gradient akcentu dla jasnych), pastylka z realną domeną (zamek + host), hover unosi kadr; telefon Jedmara w sizowanym wrapperze (fix konfliktu w-full vs w-[46%]).
+
+**Weryfikacja:** tsc czysty, 98/98 testów, build 32 stron; wizualnie desktop 1440 (/projekty pełna siatka, /projects/jedmar rząd 3 telefonów) + realny mobile 375 (scrollWidth=375, karta Jedmar z poprawnym telefonem).
+
+**Status:** wdrożone na prod.

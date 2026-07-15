@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import BrowserFrame from "@/components/ui/browser-frame";
+import Image from "next/image";
 import PhoneFrame from "@/components/ui/phone-frame";
 import { useI18n } from "@/lib/i18n";
 import { projects } from "@/lib/projects";
@@ -41,43 +41,71 @@ function phoneShot(project: Project): string | undefined {
   return shots.find((s) => /-app\d/.test(s)) ?? shots.find((s) => /mobile/.test(s)) ?? shots[0];
 }
 
-// Screenshots that are dark-UI captures — their browser chrome switches to the
-// dark tone so the frame matches the product inside.
-const isDarkShot = (s?: string) => !!s && /cockpit|enterprise|wsafe/.test(s);
+// Small overlay pill with the real domain — keeps the "this is live" trust cue
+// without repeating a fake browser chrome on every card.
+function DomainPill({ url }: { url: string }) {
+  const host = url.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+  return (
+    <span className="pointer-events-none absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-full bg-black/55 px-3 py-1.5 text-[10px] font-medium tracking-wide text-white/90 backdrop-blur-sm">
+      <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 opacity-70" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
+        <rect x="5" y="11" width="14" height="9" rx="2" />
+        <path d="M8 11V7a4 4 0 018 0v4" />
+      </svg>
+      {host}
+    </span>
+  );
+}
 
 function CardMedia({ project }: { project: Project }) {
+  const darkCard = project.presentation === "dark" || project.presentation === "mosaic";
+  const canvasStyle = darkCard
+    ? { backgroundColor: project.bgColor }
+    : {
+        background: `linear-gradient(150deg, ${project.accentColor}1f 0%, ${project.accentColor}0a 55%, transparent 100%)`,
+      };
+
   if (project.kind === "mobile-app") {
     const src = phoneShot(project);
     return (
       <div
-        className="relative flex h-[230px] items-start justify-center overflow-hidden rounded-t-2xl pt-6 sm:h-[250px] md:h-[270px]"
-        style={{ background: `radial-gradient(120% 80% at 50% 0%, ${project.accentColor}22, transparent 70%)` }}
+        className="relative flex h-[230px] items-start justify-center overflow-hidden rounded-t-2xl pt-7 sm:h-[250px] md:h-[270px]"
+        style={{
+          background: `radial-gradient(130% 90% at 50% 0%, ${project.accentColor}2e, transparent 72%)`,
+        }}
       >
-        {src && <PhoneFrame src={src} alt={project.title} className="w-[128px] shrink-0" />}
+        {src && (
+          <div className="w-[46%] max-w-[150px] shrink-0 transition-transform duration-500 ease-out group-hover:-translate-y-1.5">
+            <PhoneFrame src={src} alt={project.title} fadeBottom />
+          </div>
+        )}
+        {project.liveUrl && <DomainPill url={project.liveUrl} />}
       </div>
     );
   }
 
   const desktop = project.screenshots?.[0];
-  // Product dashboards (dark / mosaic) get a tile tinted with the project bgColor
-  // so the /projekty grid reads as distinct groups, not one uniform light strip.
-  const darkCard = project.presentation === "dark" || project.presentation === "mosaic";
+  // Clean screenshot panel on a per-project canvas: offset down-right so the
+  // crop reads as a deliberate diagonal peek, no fake browser chrome.
   return (
     <div
       className={`relative h-[230px] overflow-hidden rounded-t-2xl sm:h-[250px] md:h-[270px] ${
-        darkCard ? "" : "bg-surface-container-high"
+        darkCard ? "" : "bg-surface-container-high/40"
       }`}
-      style={darkCard ? { backgroundColor: project.bgColor } : undefined}
+      style={canvasStyle}
     >
-      <div className="absolute inset-x-0 top-0">
-        <BrowserFrame
-          url={project.liveUrl ?? `programo.pl/projects/${project.slug}`}
-          src={desktop}
-          alt={project.title}
-          tone={isDarkShot(desktop) ? "dark" : "auto"}
-          className="rounded-none border-0 shadow-none"
-        />
-      </div>
+      {desktop && (
+        <div className="absolute left-[7%] right-[-5%] top-[13%] overflow-hidden rounded-lg border border-black/10 shadow-[0_10px_30px_-8px_rgba(5,31,32,0.35)] transition-transform duration-500 ease-out group-hover:-translate-y-2 dark:border-white/10">
+          <Image
+            src={desktop}
+            alt={project.title}
+            width={1440}
+            height={900}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 430px"
+            className="h-auto w-full"
+          />
+        </div>
+      )}
+      {project.liveUrl && <DomainPill url={project.liveUrl} />}
     </div>
   );
 }
