@@ -63,7 +63,7 @@ export default function OfferPillars() {
             <Reveal key={p.number} delay={(i % 2) * 0.1}>
               <Link
                 href={p.href}
-                className="group flex h-full flex-col gap-4 border-t border-outline-variant/30 pt-8 transition-colors hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
+                className="group card-hover flex h-full flex-col gap-4 border-t border-outline-variant/30 pt-8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
               >
                 <span className="font-mono text-xs uppercase tracking-widest text-on-surface-variant transition-colors group-hover:text-primary">
                   {p.number}

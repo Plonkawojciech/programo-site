@@ -1,13 +1,67 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import CompactLeadForm from "@/components/compact-lead-form";
+import CtaButton from "@/components/ui/cta-button";
+import { durationMedium, durationSlow, easeEntry, springGentle } from "@/lib/motion";
+
+// Subtle magnetic pull for the primary hero CTA (motion-report.md premium
+// addition #2). Follows the cursor within a small radius via springGentle —
+// disabled under prefers-reduced-motion and on touch/coarse-pointer devices
+// (no real hover there, and mousemove after tap would cause a visible jump).
+function MagneticCta({ children }: { children: ReactNode }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const [canHover, setCanHover] = useState(false);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, springGentle);
+  const springY = useSpring(y, springGentle);
+
+  useEffect(() => {
+    setCanHover(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
+  }, []);
+
+  const active = canHover && !reduce;
+  const maxPull = 6;
+
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!active || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const relX = e.clientX - rect.left - rect.width / 2;
+    const relY = e.clientY - rect.top - rect.height / 2;
+    x.set(Math.max(-maxPull, Math.min(maxPull, relX * 0.25)));
+    y.set(Math.max(-maxPull, Math.min(maxPull, relY * 0.25)));
+  };
+
+  const handleLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      style={active ? { x: springX, y: springY } : undefined}
+      className="inline-block"
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 // Conversion-first homepage hero (redesign 2026-07). Two columns on desktop:
 // editorial headline + dual CTA on the left, a short lead-catcher form on the
 // right. On mobile the form drops below, but the headline and at least one CTA
 // stay above the fold. Copy comes 1:1 from the content deck (home.hero.*).
+//
+// Above-the-fold content uses `initial={false}` throughout (not whileInView),
+// so nothing renders as invisible opacity:0 in SSR HTML before hydration —
+// see docs/audit-visual/motion-report.md P0.
 export default function MainIntro() {
   const { t } = useI18n();
 
@@ -18,9 +72,9 @@ export default function MainIntro() {
           {/* Left: headline + CTAs */}
           <div>
             <motion.span
-              initial={{ opacity: 0, x: -16 }}
+              initial={false}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: durationMedium, ease: easeEntry }}
               className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary"
             >
               {t("home.hero.eyebrow")}
@@ -29,7 +83,7 @@ export default function MainIntro() {
             <motion.h1
               initial={false}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: durationSlow, ease: easeEntry }}
               className="mt-5 font-headline text-[2rem] leading-[1.08] font-bold tracking-tight text-on-surface md:text-6xl md:tracking-tighter 2xl:text-7xl"
             >
               {t("home.hero.h1")}
@@ -38,28 +92,24 @@ export default function MainIntro() {
             <motion.p
               initial={false}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
+              transition={{ duration: durationSlow, delay: 0.1, ease: easeEntry }}
               className="mt-6 max-w-xl text-base md:text-xl font-light leading-relaxed text-on-surface/70"
             >
               {t("home.hero.sub")}
             </motion.p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href="tel:+48509123434"
-                className="inline-flex items-center justify-center gap-3 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5 hover:bg-primary-container focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
-              >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
-                  <path d="M6.5 3.5l3 1 1 4-2 1.5a11 11 0 005 5l1.5-2 4 1 1 3a2 2 0 01-2 2.3A16 16 0 014.2 6.5 2 2 0 016.5 3.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                {t("home.hero.ctaCall")}
-              </a>
-              <a
-                href="#kontakt"
-                className="inline-flex items-center justify-center gap-3 rounded-full border border-on-surface/30 px-6 py-3.5 text-sm font-medium uppercase tracking-widest text-on-surface transition-all hover:gap-5 hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
-              >
-                {t("home.hero.ctaConsult")} <span aria-hidden="true">→</span>
-              </a>
+              <MagneticCta>
+                <CtaButton href="tel:+48509123434" arrow={false}>
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
+                    <path d="M6.5 3.5l3 1 1 4-2 1.5a11 11 0 005 5l1.5-2 4 1 1 3a2 2 0 01-2 2.3A16 16 0 014.2 6.5 2 2 0 016.5 3.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {t("home.hero.ctaCall")}
+                </CtaButton>
+              </MagneticCta>
+              <CtaButton href="#kontakt" variant="secondary">
+                {t("home.hero.ctaConsult")}
+              </CtaButton>
             </div>
 
             <p className="mt-6 flex items-center gap-2.5 text-xs font-medium uppercase tracking-widest text-on-surface-variant">

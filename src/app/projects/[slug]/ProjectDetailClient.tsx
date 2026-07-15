@@ -21,6 +21,37 @@ const isDesktopShot = (s: string) => /desktop/.test(s);
 // App screens use either an "-app-<name>" or "-app<n>" filename convention.
 const isAppShot = (s: string) => /-app[-\d]/.test(s);
 const isPhoneShot = (s: string) => /mobile/.test(s) || isAppShot(s);
+// Screenshots that are themselves dark-UI captures — their browser chrome should
+// switch to the dark tone so the frame matches the product inside.
+const isDarkShot = (s: string) => /cockpit|enterprise|wsafe/.test(s);
+
+// Effective hero variant: falls back to "phones" for mobile-app projects, else "light".
+function presentation(project: Project): NonNullable<Project["presentation"]> {
+  return project.presentation ?? (project.kind === "mobile-app" ? "phones" : "light");
+}
+
+// The screenshots consumed by the hero — kept in sync between HeroDevices and the
+// Gallery so the gallery never repeats what the hero already shows.
+function heroShots(project: Project): string[] {
+  const shots = project.screenshots ?? [];
+  switch (presentation(project)) {
+    case "phones": {
+      const phones = shots.filter(isAppShot).slice(0, 3);
+      return phones.length > 0 ? phones : shots.filter(isPhoneShot).slice(0, 3);
+    }
+    case "mosaic":
+      return shots.filter(isDesktopShot).slice(0, 2);
+    case "dark": {
+      const desktop = shots.find(isDesktopShot) ?? shots[0];
+      return desktop ? [desktop] : [];
+    }
+    default: {
+      const desktop = shots.find(isDesktopShot) ?? shots[0];
+      const phone = shots.find((s) => /mobile/.test(s)) ?? shots[1];
+      return [desktop, phone].filter(Boolean) as string[];
+    }
+  }
+}
 
 function host(url?: string, slug?: string) {
   if (!url) return `programo.pl/projects/${slug}`;
@@ -28,23 +59,41 @@ function host(url?: string, slug?: string) {
 }
 
 // Small labelled fact used in the meta strip below the hero.
-function Fact({ label, children }: { label: string; children: React.ReactNode }) {
+function Fact({
+  label,
+  dark = false,
+  children,
+}: {
+  label: string;
+  dark?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <div className="min-w-0">
-      <dt className="text-[10px] font-bold uppercase tracking-[0.25em] text-on-surface-variant/70">
+      <dt
+        className={`text-[10px] font-bold uppercase tracking-[0.25em] ${
+          dark ? "text-white/50" : "text-on-surface-variant/70"
+        }`}
+      >
         {label}
       </dt>
-      <dd className="mt-1.5 text-sm font-medium leading-snug text-on-surface">{children}</dd>
+      <dd
+        className={`mt-1.5 text-sm font-medium leading-snug ${dark ? "text-white/85" : "text-on-surface"}`}
+      >
+        {children}
+      </dd>
     </div>
   );
 }
 
 function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
-  const shots = project.screenshots ?? [];
+  const url = host(project.liveUrl, project.slug);
+  const desktopAlt = `${project.title} — ${lang === "pl" ? "widok desktop" : "desktop view"}`;
+  const pres = presentation(project);
 
-  if (project.kind === "mobile-app") {
-    const phones = shots.filter(isAppShot).slice(0, 3);
-    const list = phones.length > 0 ? phones : shots.filter(isPhoneShot).slice(0, 3);
+  // Variant C — a row of phone frames for mobile-first products.
+  if (pres === "phones") {
+    const list = heroShots(project);
     // On small screens the three phones are wider than the column, so they live
     // in a self-contained horizontal scroll-snap track — the document itself
     // never gains a horizontal scrollbar. From md up they fit and center.
@@ -68,47 +117,74 @@ function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
     );
   }
 
-  const desktop = shots.find(isDesktopShot) ?? shots[0];
-  const phone = shots.find((s) => /mobile/.test(s)) ?? shots[1];
+  // Variant D — two overlapping browser frames for a multi-surface ecosystem.
+  if (pres === "mosaic") {
+    const [primary, secondary] = heroShots(project);
+    if (!primary) return null;
+    return (
+      <div className="relative">
+        <div className="md:pr-[14%]">
+          <BrowserFrame
+            url={url}
+            src={primary}
+            alt={desktopAlt}
+            tone={isDarkShot(primary) ? "dark" : "auto"}
+            priority
+          />
+        </div>
+        {secondary && (
+          <div className="mt-4 md:-mt-6 md:pl-[14%]">
+            <BrowserFrame
+              url={url}
+              src={secondary}
+              alt={`${project.title} — ${lang === "pl" ? "drugi widok" : "second view"}`}
+              tone={isDarkShot(secondary) ? "dark" : "auto"}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
 
+  // Variant B — a single browser frame floating on the dark canvas.
+  if (pres === "dark") {
+    const [desktop] = heroShots(project);
+    if (!desktop) return null;
+    return (
+      <BrowserFrame
+        url={url}
+        src={desktop}
+        alt={desktopAlt}
+        tone={isDarkShot(desktop) ? "dark" : "auto"}
+        priority
+      />
+    );
+  }
+
+  // Variant A — DeviceDuo (desktop browser + overlapping phone) on the page surface.
+  const [desktop, phone] = heroShots(project);
   if (desktop && phone) {
     return (
       <DeviceDuo
-        url={host(project.liveUrl, project.slug)}
+        url={url}
         desktopSrc={desktop}
-        desktopAlt={`${project.title} — ${lang === "pl" ? "widok desktop" : "desktop view"}`}
+        desktopAlt={desktopAlt}
         phoneSrc={phone}
         phoneAlt={`${project.title} — ${lang === "pl" ? "widok mobilny" : "mobile view"}`}
         priority
       />
     );
   }
-
   if (desktop) {
-    return (
-      <BrowserFrame
-        url={host(project.liveUrl, project.slug)}
-        src={desktop}
-        alt={`${project.title} — ${lang === "pl" ? "widok desktop" : "desktop view"}`}
-        priority
-      />
-    );
+    return <BrowserFrame url={url} src={desktop} alt={desktopAlt} priority />;
   }
   return null;
 }
 
 function Gallery({ project, lang }: { project: Project; lang: Lang }) {
   const shots = project.screenshots ?? [];
-  // Screenshots already shown in the hero.
-  const used = new Set<string>();
-  if (project.kind === "mobile-app") {
-    shots.filter(isAppShot).slice(0, 3).forEach((s) => used.add(s));
-  } else {
-    const d = shots.find(isDesktopShot) ?? shots[0];
-    const p = shots.find((s) => /mobile/.test(s)) ?? shots[1];
-    if (d) used.add(d);
-    if (p) used.add(p);
-  }
+  // Screenshots already shown in the hero — never repeat them here.
+  const used = new Set(heroShots(project));
   const rest = shots.filter((s) => !used.has(s));
   if (rest.length === 0) return null;
 
@@ -163,14 +239,25 @@ function ProjectContent({ slug }: { slug: string }) {
         ? "Zobacz podgląd"
         : "See preview";
 
+  // Variants B (dark) and D (mosaic) render the hero as a full-bleed dark canvas
+  // tinted with the project's own bgColor, with the accent driving the eyebrow.
+  const darkHero = presentation(project) === "dark" || presentation(project) === "mosaic";
+
   return (
     <div className="min-h-screen overflow-x-clip bg-surface text-on-surface">
       {/* Hero */}
-      <section className="px-6 pt-28 pb-16 sm:px-8 md:px-12 md:pt-36 md:pb-24 lg:px-24">
+      <section
+        className="px-6 pt-28 pb-16 sm:px-8 md:px-12 md:pt-36 md:pb-24 lg:px-24"
+        style={darkHero ? { backgroundColor: project.bgColor } : undefined}
+      >
         <div className="mx-auto max-w-[1200px]">
           <Link
             href="/projekty"
-            className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-on-surface-variant transition-colors hover:text-primary"
+            className={`inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest transition-colors ${
+              darkHero
+                ? "text-white/60 hover:text-white"
+                : "text-on-surface-variant hover:text-primary"
+            }`}
           >
             {t("project.backToProjects")}
           </Link>
@@ -178,19 +265,41 @@ function ProjectContent({ slug }: { slug: string }) {
           <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
             {/* Left: title + intro */}
             <div className="lg:col-span-5">
-              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-primary">
-                {CATEGORY_LABELS[project.category][lang]}
-                <span className="text-on-surface-variant/60"> · {project.year}</span>
+              <span
+                className="text-[11px] font-bold uppercase tracking-[0.3em]"
+                style={darkHero ? { color: project.accentColor } : undefined}
+              >
+                <span className={darkHero ? undefined : "text-primary"}>
+                  {CATEGORY_LABELS[project.category][lang]}
+                </span>
+                <span className={darkHero ? "text-white/40" : "text-on-surface-variant/60"}>
+                  {" · "}
+                  {project.year}
+                </span>
               </span>
-              <h1 className="mt-5 font-headline text-5xl font-bold leading-[1.02] tracking-tight text-on-surface md:text-7xl">
+              <h1
+                className={`mt-5 font-headline text-5xl font-bold leading-[1.02] tracking-tight md:text-7xl ${
+                  darkHero ? "text-white" : "text-on-surface"
+                }`}
+              >
                 {project.title}
               </h1>
-              <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/75 md:text-xl">
+              <p
+                className={`mt-6 text-lg font-light leading-relaxed md:text-xl ${
+                  darkHero ? "text-white/70" : "text-on-surface/75"
+                }`}
+              >
                 {project.subtitle[lang]}
               </p>
 
               {project.statusLabel && (
-                <p className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-outline-variant/50 bg-surface-container-low px-4 py-2 text-sm font-medium text-on-surface">
+                <p
+                  className={`mt-8 inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-sm font-medium ${
+                    darkHero
+                      ? "border-white/15 bg-white/[0.06] text-white/90"
+                      : "border-outline-variant/50 bg-surface-container-low text-on-surface"
+                  }`}
+                >
                   <span
                     className="h-2 w-2 shrink-0 rounded-full"
                     style={{ backgroundColor: project.accentColor }}
@@ -207,7 +316,11 @@ function ProjectContent({ slug }: { slug: string }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackPortfolioClick(project.slug, project.liveUrl!)}
-                    className="inline-flex items-center gap-3 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5 hover:bg-primary-container"
+                    className={`inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-sm font-medium uppercase tracking-widest transition-all hover:gap-5 ${
+                      darkHero
+                        ? "bg-white text-[#0a0a0a] hover:bg-white/90"
+                        : "bg-primary text-on-primary hover:bg-primary-container"
+                    }`}
                   >
                     {liveLabel} <span aria-hidden="true">↗</span>
                   </a>
@@ -222,16 +335,26 @@ function ProjectContent({ slug }: { slug: string }) {
           </div>
 
           {/* Meta strip */}
-          <dl className="mt-16 grid grid-cols-2 gap-8 border-t border-outline-variant/30 pt-10 sm:grid-cols-3 lg:grid-cols-4">
-            <Fact label={t("project.role")}>{project.role[lang]}</Fact>
+          <dl
+            className={`mt-16 grid grid-cols-2 gap-8 border-t pt-10 sm:grid-cols-3 lg:grid-cols-4 ${
+              darkHero ? "border-white/10" : "border-outline-variant/30"
+            }`}
+          >
+            <Fact label={t("project.role")} dark={darkHero}>
+              {project.role[lang]}
+            </Fact>
             {project.client && (
-              <Fact label={lang === "pl" ? "Klient" : "Client"}>{project.client[lang]}</Fact>
+              <Fact label={lang === "pl" ? "Klient" : "Client"} dark={darkHero}>
+                {project.client[lang]}
+              </Fact>
             )}
             {project.scope && (
-              <Fact label={lang === "pl" ? "Zakres" : "Scope"}>{project.scope[lang]}</Fact>
+              <Fact label={lang === "pl" ? "Zakres" : "Scope"} dark={darkHero}>
+                {project.scope[lang]}
+              </Fact>
             )}
             {project.partner && (
-              <Fact label={lang === "pl" ? "Współpraca" : "Collaboration"}>
+              <Fact label={lang === "pl" ? "Współpraca" : "Collaboration"} dark={darkHero}>
                 {lang === "pl" ? "We współpracy z " : "In collaboration with "}
                 {project.partner}
               </Fact>
@@ -247,10 +370,13 @@ function ProjectContent({ slug }: { slug: string }) {
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6">
               {project.metrics.map((m) => (
                 <Reveal key={m.label[lang]}>
-                  <div>
+                  {/* In dark variants the metric strip takes the project accent. */}
+                  <div style={darkHero ? { color: project.accentColor } : undefined}>
                     <CountUp
                       value={m.value}
-                      className="font-headline text-4xl font-bold tracking-tight text-primary md:text-5xl"
+                      className={`font-headline text-4xl font-bold tracking-tight md:text-5xl ${
+                        darkHero ? "" : "text-primary"
+                      }`}
                     />
                     <p className="mt-2 text-xs font-medium uppercase tracking-wide leading-snug text-on-surface-variant md:text-sm">
                       {m.label[lang]}

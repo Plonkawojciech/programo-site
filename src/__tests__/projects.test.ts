@@ -117,6 +117,30 @@ describe("projects data", () => {
     }
   });
 
+  it("presentation, when set, uses a known variant", () => {
+    const allowed = ["light", "dark", "phones", "mosaic"];
+    for (const p of projects) {
+      if (p.presentation !== undefined) {
+        expect(allowed, `${p.slug} has unknown presentation ${p.presentation}`).toContain(
+          p.presentation
+        );
+      }
+    }
+  });
+
+  it("hero variants are assigned so the portfolio is not one uniform group", () => {
+    const bySlug = Object.fromEntries(projects.map((p) => [p.slug, p.presentation]));
+    // The mobile-app product leads with phone frames.
+    expect(bySlug["jedmar"]).toBe("phones");
+    // Estalo shows its CRM + Enterprise ecosystem as a mosaic.
+    expect(bySlug["estalo"]).toBe("mosaic");
+    // PoolTimer is presented as a dark product cockpit, not a light landing.
+    expect(bySlug["pooltimer"]).toBe("dark");
+    // More than one distinct variant is in use.
+    const variants = new Set(projects.map((p) => p.presentation ?? "light"));
+    expect(variants.size).toBeGreaterThanOrEqual(3);
+  });
+
   it("getAdjacentProjects handles first and last project", () => {
     const firstSlug = projects[0].slug;
     const lastSlug = projects[projects.length - 1].slug;

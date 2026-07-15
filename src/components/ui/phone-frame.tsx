@@ -11,6 +11,8 @@ import Image from "next/image";
  *
  * `scrollOnHover` eases the (taller-than-frame) screenshot upward on hover to
  * reveal more of the page — desktop only.
+ * `fadeBottom` fades the lower edge of the screen to transparent — used when the
+ * frame is intentionally cropped in a card so the cut reads as a soft peek.
  */
 export default function PhoneFrame({
   src,
@@ -18,6 +20,7 @@ export default function PhoneFrame({
   width = 390,
   height = 844,
   scrollOnHover = false,
+  fadeBottom = false,
   priority = false,
   className,
 }: {
@@ -26,6 +29,7 @@ export default function PhoneFrame({
   width?: number;
   height?: number;
   scrollOnHover?: boolean;
+  fadeBottom?: boolean;
   priority?: boolean;
   className?: string;
 }) {
@@ -41,7 +45,13 @@ export default function PhoneFrame({
         {/* Inner bezel */}
         <div className="relative h-full w-full overflow-hidden rounded-[41px] bg-black p-[6px]">
           {/* Screen */}
-          <div className="relative h-full w-full overflow-hidden rounded-[35px] bg-surface">
+          <div
+            className={`relative h-full w-full overflow-hidden rounded-[35px] bg-surface ${
+              fadeBottom
+                ? "[mask-image:linear-gradient(to_bottom,black_78%,transparent_100%)]"
+                : ""
+            }`}
+          >
             <Image
               src={src}
               alt={alt}
@@ -62,7 +72,7 @@ export default function PhoneFrame({
             />
           </div>
           {/* Dynamic island with camera dot */}
-          <div className="pointer-events-none absolute left-1/2 top-[10px] z-10 flex h-[26px] w-[92px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-[9px]">
+          <div className="pointer-events-none absolute left-1/2 top-[10px] z-10 flex h-[26px] w-[92px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-[9px] ring-1 ring-white/5">
             <span className="h-[8px] w-[8px] rounded-full bg-[#1a2030] shadow-[inset_0_0_2px_rgba(120,140,255,0.5)]" />
           </div>
         </div>

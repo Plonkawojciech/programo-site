@@ -1,14 +1,18 @@
 "use client";
 
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 
 export default function ScrollProgress() {
+  const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll();
-  const scaleY = useSpring(scrollYProgress, {
-    damping: 40,
-    stiffness: 200,
-    mass: 0.3,
-  });
+  // Under reduced-motion the spring lag itself is unwanted extra motion (the
+  // bar should track the scroll position 1:1, not settle into place after
+  // it), so it's tightened to near-instant instead of removed outright — the
+  // indicator still needs to reflect real scroll position.
+  const scaleY = useSpring(
+    scrollYProgress,
+    reduce ? { damping: 100, stiffness: 1000, mass: 0.1 } : { damping: 40, stiffness: 200, mass: 0.3 }
+  );
 
   return (
     <>

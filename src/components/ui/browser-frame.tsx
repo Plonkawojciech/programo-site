@@ -54,12 +54,13 @@ export default function BrowserFrame({
           dark ? "bg-[#101614]" : "bg-surface-container"
         }`}
       >
-        {/* Chrome bar */}
+        {/* Chrome bar — neutral warm off-white, independent of the site theme so it
+            never clashes with the screenshot (dark screenshots use tone="dark"). */}
         <div
           className={`relative flex items-center px-4 py-2.5 ${
             dark
               ? "border-b border-white/[0.07] bg-[#181f1c]"
-              : "border-b border-outline-variant/40 bg-gradient-to-b from-surface-container-high/80 to-surface-container-high/40"
+              : "border-b border-black/[0.07] bg-gradient-to-b from-[#FAF8F4] to-[#EFEBE3] shadow-[inset_0_-1px_0_rgba(255,255,255,0.5)]"
           }`}
         >
           {/* Traffic lights */}
@@ -74,7 +75,7 @@ export default function BrowserFrame({
               className={`flex min-w-0 items-center gap-1.5 rounded-full px-3.5 py-[5px] text-[11px] leading-none tracking-wide ${
                 dark
                   ? "bg-white/[0.07] text-white/60 shadow-[inset_0_1px_2px_rgba(0,0,0,0.35)]"
-                  : "bg-surface/90 text-on-surface-variant shadow-[inset_0_1px_2px_rgba(5,31,32,0.08)]"
+                  : "bg-white/85 text-[#5b6360] shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]"
               }`}
             >
               <svg

@@ -41,6 +41,10 @@ function phoneShot(project: Project): string | undefined {
   return shots.find((s) => /-app\d/.test(s)) ?? shots.find((s) => /mobile/.test(s)) ?? shots[0];
 }
 
+// Screenshots that are dark-UI captures — their browser chrome switches to the
+// dark tone so the frame matches the product inside.
+const isDarkShot = (s?: string) => !!s && /cockpit|enterprise|wsafe/.test(s);
+
 function CardMedia({ project }: { project: Project }) {
   if (project.kind === "mobile-app") {
     const src = phoneShot(project);
@@ -55,13 +59,22 @@ function CardMedia({ project }: { project: Project }) {
   }
 
   const desktop = project.screenshots?.[0];
+  // Product dashboards (dark / mosaic) get a tile tinted with the project bgColor
+  // so the /projekty grid reads as distinct groups, not one uniform light strip.
+  const darkCard = project.presentation === "dark" || project.presentation === "mosaic";
   return (
-    <div className="relative h-[230px] overflow-hidden rounded-t-2xl bg-surface-container-high sm:h-[250px] md:h-[270px]">
+    <div
+      className={`relative h-[230px] overflow-hidden rounded-t-2xl sm:h-[250px] md:h-[270px] ${
+        darkCard ? "" : "bg-surface-container-high"
+      }`}
+      style={darkCard ? { backgroundColor: project.bgColor } : undefined}
+    >
       <div className="absolute inset-x-0 top-0">
         <BrowserFrame
           url={project.liveUrl ?? `programo.pl/projects/${project.slug}`}
           src={desktop}
           alt={project.title}
+          tone={isDarkShot(desktop) ? "dark" : "auto"}
           className="rounded-none border-0 shadow-none"
         />
       </div>
@@ -169,9 +182,10 @@ export default function FeaturedWork() {
             <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary md:text-xs">
               {lang === "pl" ? "Portfolio" : "Portfolio"}
             </span>
-            <h2 className="mt-6 font-headline text-4xl font-bold leading-[1.05] tracking-tight text-on-surface md:text-6xl 2xl:text-7xl">
+            {/* This section is the /projekty route's only content, so it owns the page h1. */}
+            <h1 className="mt-6 font-headline text-4xl font-bold leading-[1.05] tracking-tight text-on-surface md:text-6xl 2xl:text-7xl">
               {lang === "pl" ? "Wybrane realizacje" : "Selected work"}
-            </h2>
+            </h1>
             <p className="mt-5 text-base font-light leading-relaxed text-on-surface/70 md:text-lg">
               {lang === "pl"
                 ? "Uczciwie rozdzielone: nasze własne produkty i praca dla klientów. Każdy projekt możesz kliknąć i sprawdzić."

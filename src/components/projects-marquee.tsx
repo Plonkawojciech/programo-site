@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { projects, type Project } from "@/lib/projects";
 import { trackPortfolioClick } from "@/lib/tracking";
+import Reveal from "@/components/ui/reveal";
 
 // Curated, ordered subset shown in the homepage strip. Order matters visually.
 const MARQUEE_SLUGS = [
@@ -32,7 +32,7 @@ function ProjectTile({ project }: { project: Project }) {
     <Link
       href={`/projects/${project.slug}`}
       onClick={() => trackPortfolioClick(project.slug, `/projects/${project.slug}`)}
-      className="group relative aspect-[4/3] w-[80vw] shrink-0 snap-center overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 transition-all duration-500 ease-out sm:w-[360px] md:w-[380px] md:hover:-translate-y-2 md:hover:border-primary/60 md:hover:shadow-2xl md:hover:shadow-black/30 lg:w-[440px]"
+      className="group relative aspect-[4/3] w-[80vw] shrink-0 snap-center overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 sm:w-[360px] md:w-[380px] md:card-hover lg:w-[440px]"
       aria-label={`${project.title} — ${project.subtitle[lang]}`}
     >
       {screenshot ? (
@@ -124,34 +124,20 @@ export default function ProjectsMarquee() {
 
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         <div className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
-          <div>
-            <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary md:text-xs"
-            >
+          <Reveal>
+            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary md:text-xs">
               {t("realizations.label")}
-            </motion.span>
-            <motion.h2
+            </span>
+            <h2
               id="realizations-heading"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               className="mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl"
             >
               {t("realizations.title")}
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="mt-4 max-w-xl text-base font-light text-on-surface/70 md:text-lg"
-            >
+            </h2>
+            <p className="mt-4 max-w-xl text-base font-light text-on-surface/70 md:text-lg">
               {t("realizations.subtitle")}
-            </motion.p>
-          </div>
+            </p>
+          </Reveal>
 
           <Link
             href="/projekty"

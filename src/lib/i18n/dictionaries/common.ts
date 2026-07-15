@@ -13,9 +13,11 @@ export const common = {
   "nav.phone": { pl: "Zadzwoń", en: "Call" },
 
   // Footer
+  // Non-breaking space before the last word — prevents a single-word orphan
+  // line on this tagline, which repeats on every page (shared footer).
   "footer.tagline": {
-    pl: "Oprogramowanie projektowane i budowane w Poznaniu.",
-    en: "Software designed and built in Poznan.",
+    pl: "Oprogramowanie projektowane i budowane w Poznaniu.",
+    en: "Software designed and built in Poznan.",
   },
   "footer.reply": { pl: "Odpowiadamy w 24 h", en: "We reply within 24 hours" },
   "footer.colOffer": { pl: "Oferta", en: "Services" },

@@ -230,7 +230,7 @@ export default function StronyInternetowePage() {
               ))}
             </div>
             <Reveal className="mt-14 rounded-2xl border border-outline-variant/40 bg-surface-container-low px-6 py-5 md:mt-20">
-              <p className="text-sm text-on-surface-variant">
+              <p className="max-w-2xl text-sm text-on-surface-variant">
                 Prowadzimy też kampanie i tracking — pomiar konwersji, Consent Mode v2 i
                 Google Ads, na Twojej stronie albo na nowej.{" "}
                 <Link href="/strony-tracking-reklamy" className="font-medium text-primary underline underline-offset-4 transition hover:text-on-surface">
@@ -245,7 +245,7 @@ export default function StronyInternetowePage() {
         <div id="realizacje" className="scroll-mt-28" />
         <CaseStudies
           eyebrow="Wybrane realizacje"
-          heading="Strony i produkty, które zbudowaliśmy"
+          heading="Strony i produkty, które zbudowaliśmy"
           intro="Pracujesz bezpośrednio z założycielami — bez pośredników. Kilka realnych wdrożeń: od strony klubu sportowego, przez stronę firmową z lead-formularzem, po własną platformę SaaS."
           items={webCases}
         />
@@ -255,7 +255,7 @@ export default function StronyInternetowePage() {
           formId="strony-compact"
           projectType="Strona / landing"
           eyebrow="Bez zobowiązań"
-          heading="Wciąż się zastanawiasz? Zostaw numer"
+          heading="Wciąż się zastanawiasz? Zostaw numer"
         />
 
         {/* DLACZEGO MY */}

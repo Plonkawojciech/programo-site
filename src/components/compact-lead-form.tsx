@@ -14,7 +14,7 @@ type FieldErrors = {
 type FormState = "idle" | "submitting" | "success";
 
 const inputClass =
-  "min-h-[48px] w-full rounded-xl border border-outline-variant/60 bg-surface px-4 py-3 text-base text-on-surface outline-none transition placeholder:text-on-surface-variant/50 focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
+  "min-h-[48px] w-full rounded-xl border border-outline-variant/60 bg-surface px-4 py-3 text-base text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
 
 const labelClass = "text-sm font-medium text-on-surface";
 
@@ -179,10 +179,15 @@ export default function CompactLeadForm({
             autoComplete="name"
             placeholder={t("compact.namePlaceholder")}
             aria-invalid={errors.name ? true : undefined}
+            aria-describedby={errors.name ? `${formId}-name-error` : undefined}
             className={inputClass}
             onChange={() => clearFieldError("name")}
           />
-          {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
+          {errors.name && (
+            <p id={`${formId}-name-error`} role="alert" className="text-xs text-red-500">
+              {errors.name}
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`${formId}-phone`} className={labelClass}>
@@ -197,6 +202,7 @@ export default function CompactLeadForm({
             inputMode="tel"
             placeholder={t("compact.phonePlaceholder")}
             aria-invalid={errors.phone ? true : undefined}
+            aria-describedby={errors.phone ? `${formId}-phone-error` : undefined}
             className={inputClass}
             onBlur={(e) => {
               const v = e.target.value.trim();
@@ -208,7 +214,11 @@ export default function CompactLeadForm({
             }}
             onChange={() => clearFieldError("phone")}
           />
-          {errors.phone && <p className="text-xs text-red-500">{errors.phone}</p>}
+          {errors.phone && (
+            <p id={`${formId}-phone-error`} role="alert" className="text-xs text-red-500">
+              {errors.phone}
+            </p>
+          )}
         </div>
       </div>
 
@@ -224,6 +234,7 @@ export default function CompactLeadForm({
             }}
             required
             aria-invalid={errors.consent ? true : undefined}
+            aria-describedby={errors.consent ? `${formId}-consent-error` : undefined}
             className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-outline bg-surface transition-colors checked:border-primary checked:bg-primary hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           />
           <svg
@@ -242,7 +253,11 @@ export default function CompactLeadForm({
           .
         </span>
       </label>
-      {errors.consent && <p className="-mt-2 text-xs text-red-500">{errors.consent}</p>}
+      {errors.consent && (
+        <p id={`${formId}-consent-error`} role="alert" className="-mt-2 text-xs text-red-500">
+          {errors.consent}
+        </p>
+      )}
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -273,7 +288,11 @@ export default function CompactLeadForm({
             {t("compact.callNow")}
           </a>
         </div>
-        {errors.server && <p className="text-sm text-red-500">{errors.server}</p>}
+        {errors.server && (
+          <p role="alert" className="text-sm text-red-500">
+            {errors.server}
+          </p>
+        )}
       </div>
     </form>
   );

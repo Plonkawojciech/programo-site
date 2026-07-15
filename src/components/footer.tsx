@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { useConsent } from "@/lib/consent";
@@ -37,13 +37,15 @@ export default function Footer() {
   const { theme } = useTheme();
   const { openSettings } = useConsent();
   const footerRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: footerRef,
     offset: ["start end", "end end"],
   });
 
-  const contentY = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  // Reduced motion: static variant — no scroll-linked parallax.
+  const contentY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [60, 0]);
 
   return (
     <footer
@@ -76,14 +78,14 @@ export default function Footer() {
 
           {/* Offer */}
           <nav aria-label={t("footer.colOffer")} className="flex flex-col gap-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/60">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant">
               {t("footer.colOffer")}
             </span>
             {offerLinks.map((l) => (
               <Link
                 key={l.titleKey}
                 href={l.href}
-                className="text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
+                className="-my-2 py-2 min-h-[32px] text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
               >
                 {t(l.titleKey)}
               </Link>
@@ -92,21 +94,21 @@ export default function Footer() {
 
           {/* Projects */}
           <nav aria-label={t("footer.colProjects")} className="flex flex-col gap-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/60">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant">
               {t("footer.colProjects")}
             </span>
             {projectLinks.map((p) => (
               <Link
                 key={p.slug}
                 href={`/projects/${p.slug}`}
-                className="text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
+                className="-my-2 py-2 min-h-[32px] text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
               >
                 {p.title}
               </Link>
             ))}
             <Link
               href="/projekty"
-              className="text-sm font-medium text-primary hover-underline transition-colors duration-300"
+              className="-my-2 py-2 min-h-[32px] text-sm font-medium text-primary hover-underline transition-colors duration-300"
             >
               {t("footer.allProjects")}
             </Link>
@@ -114,14 +116,14 @@ export default function Footer() {
 
           {/* Company */}
           <nav aria-label={t("footer.colCompany")} className="flex flex-col gap-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/60">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant">
               {t("footer.colCompany")}
             </span>
             {companyLinks.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
+                className="-my-2 py-2 min-h-[32px] text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
               >
                 {t(l.labelKey)}
               </Link>
@@ -148,20 +150,20 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-outline-variant/20 pt-8 flex flex-col-reverse md:flex-row justify-between items-start md:items-center gap-4">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <span className="text-[10px] font-medium text-on-surface-variant/70 uppercase tracking-widest">
+            <span className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest">
               © {new Date().getFullYear()} {t("footer.copyright")}
             </span>
             <button
               type="button"
               onClick={openSettings}
-              className="text-[10px] font-medium text-on-surface-variant/70 uppercase tracking-widest hover-underline hover:text-on-surface transition-colors cursor-pointer"
+              className="-my-2 min-h-[32px] py-2 text-[10px] font-medium text-on-surface-variant uppercase tracking-widest hover-underline hover:text-on-surface transition-colors cursor-pointer"
             >
               {t("footer.cookies")}
             </button>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">
+            <span className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest">
               {t("footer.reply")}
             </span>
           </div>

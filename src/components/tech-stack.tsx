@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
+import Reveal from "@/components/ui/reveal";
 
 interface TechItem {
   name: string;
@@ -31,7 +31,7 @@ function TechCard({ item, index }: { item: TechItem; index: number }) {
 
   return (
     <div
-      className="tech-card-line group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] border border-[var(--theme-border-2)]/30 bg-[var(--theme-bg-3)] p-8 shadow-sm transition-all duration-500 hover:shadow-[0_0_30px_rgba(var(--theme-accent-rgb),0.12)] hover:-translate-y-2.5 md:min-w-[320px] overflow-hidden"
+      className="tech-card-line card-hover group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] border border-[var(--theme-border-2)]/30 bg-[var(--theme-bg-3)] p-8 shadow-sm md:min-w-[320px] overflow-hidden"
       style={{
         animationDelay: `${index * 0.1}s`,
         // @ts-expect-error CSS custom property for tech-card-line hover color
@@ -111,33 +111,15 @@ export default function TechStack() {
   return (
     <section id="stack" className="relative overflow-hidden py-24 md:py-32 lg:py-56 bg-gradient-to-b from-[var(--theme-bg-1)] via-[var(--theme-bg-3)] to-[var(--theme-bg-1)]">
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
-        <div className="mb-20 md:mb-32 2xl:mb-48 flex flex-col items-end text-right">
-          <motion.span
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary"
-          >
+        <Reveal className="mb-20 md:mb-32 2xl:mb-48 flex flex-col items-end text-right">
+          <span className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary">
             {t("stack.label")}
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw] bg-gradient-to-r from-[var(--theme-text-1)] via-[var(--theme-text-2)] to-[var(--theme-text-1)] bg-clip-text text-transparent"
-          >
+          </span>
+          <h2 className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw] bg-gradient-to-r from-[var(--theme-text-1)] via-[var(--theme-text-2)] to-[var(--theme-text-1)] bg-clip-text text-transparent">
             {t("stack.title")}
-          </motion.h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 h-[2px] w-32 md:w-48 bg-gradient-to-r from-transparent via-primary to-transparent origin-right"
-          />
-        </div>
+          </h2>
+          <div className="mt-6 h-[2px] w-32 md:w-48 bg-gradient-to-r from-transparent via-primary to-transparent origin-right" />
+        </Reveal>
 
         {/* Marquee Rows */}
         <div className="flex flex-col gap-8 md:gap-12">

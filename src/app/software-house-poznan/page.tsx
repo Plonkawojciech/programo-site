@@ -141,7 +141,10 @@ export default function SoftwareHousePoznanPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
 
-      <main className="min-h-screen bg-surface text-on-surface">
+      {/* No <main> here — the root layout (Providers) already wraps every page
+          in <main id="main-content">; a second <main> would be an invalid
+          duplicate "main" landmark. */}
+      <div className="min-h-screen bg-surface text-on-surface">
         <article className="mx-auto max-w-5xl px-6 py-16 md:px-10 md:py-24">
           <nav aria-label="breadcrumb" className="mb-8 text-xs uppercase tracking-widest opacity-60">
             <Link href="/" className="hover:underline">
@@ -156,7 +159,7 @@ export default function SoftwareHousePoznanPage() {
               Software House · Poznań · Wielkopolska
             </p>
             <h1 className="mb-6 font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl lg:text-7xl">
-              Software House Poznań — Programo
+              Software House Poznań — Programo
             </h1>
             <p className="max-w-3xl text-lg leading-relaxed opacity-80 md:text-xl">
               Programo to software house z Poznania. Projektujemy i budujemy
@@ -184,7 +187,7 @@ export default function SoftwareHousePoznanPage() {
             <h2 className="mb-6 font-headline text-2xl font-semibold tracking-tight md:text-4xl">
               Dlaczego software house z Poznania?
             </h2>
-            <div className="space-y-4 text-base leading-relaxed opacity-80 md:text-lg">
+            <div className="max-w-3xl space-y-4 text-base leading-relaxed opacity-80 md:text-lg">
               <p>
                 Wybierając lokalny software house w Poznaniu, zyskujesz krótszą
                 drogę komunikacji, możliwość spotkań na miejscu i partnera, który
@@ -210,9 +213,9 @@ export default function SoftwareHousePoznanPage() {
               {services.map((s) => (
                 <div
                   key={s.title}
-                  className="rounded-2xl border border-current/15 p-6 transition hover:border-current/30"
+                  className="rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6 transition hover:border-outline-variant/70"
                 >
-                  <h3 className="mb-3 text-xl font-semibold">{s.title}</h3>
+                  <h3 className="mb-3 font-headline text-xl font-bold tracking-tight">{s.title}</h3>
                   <p className="text-sm leading-relaxed opacity-75">{s.desc}</p>
                 </div>
               ))}
@@ -227,7 +230,7 @@ export default function SoftwareHousePoznanPage() {
               {techStack.map((t) => (
                 <li
                   key={t}
-                  className="rounded-full border border-current/20 px-4 py-1.5 text-sm opacity-80"
+                  className="rounded-full border border-outline-variant/60 px-4 py-1.5 text-sm text-on-surface-variant"
                 >
                   {t}
                 </li>
@@ -244,9 +247,9 @@ export default function SoftwareHousePoznanPage() {
                 <Link
                   key={p.slug}
                   href={`/projects/${p.slug}`}
-                  className="group rounded-2xl border border-current/15 p-6 transition hover:border-current/40"
+                  className="group rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6 transition hover:border-outline-variant/70"
                 >
-                  <h3 className="mb-2 text-xl font-semibold group-hover:underline">
+                  <h3 className="mb-2 font-headline text-xl font-bold tracking-tight group-hover:underline">
                     {p.name}
                   </h3>
                   <p className="text-sm leading-relaxed opacity-75">{p.desc}</p>
@@ -261,20 +264,20 @@ export default function SoftwareHousePoznanPage() {
             </h2>
             <div className="space-y-6">
               <div>
-                <h3 className="mb-2 text-lg font-semibold">
+                <h3 className="mb-2 font-headline text-lg font-bold tracking-tight">
                   Czy realizujecie projekty tylko w Poznaniu?
                 </h3>
-                <p className="opacity-75">
+                <p className="max-w-2xl opacity-75">
                   Siedziba Programo mieści się w Poznaniu, ale realizujemy projekty
                   zdalnie dla klientów z całej Polski oraz z zagranicy. Komunikacja
                   po polsku i angielsku.
                 </p>
               </div>
               <div>
-                <h3 className="mb-2 text-lg font-semibold">
+                <h3 className="mb-2 font-headline text-lg font-bold tracking-tight">
                   Ile kosztuje współpraca z software house Programo?
                 </h3>
-                <p className="opacity-75">
+                <p className="max-w-2xl opacity-75">
                   Koszt zależy od zakresu projektu — małą aplikację webową i
                   rozbudowany system SaaS wyceniamy zupełnie inaczej. Dlatego
                   każdą wycenę przygotowujemy indywidualnie po krótkiej rozmowie,
@@ -282,10 +285,10 @@ export default function SoftwareHousePoznanPage() {
                 </p>
               </div>
               <div>
-                <h3 className="mb-2 text-lg font-semibold">
+                <h3 className="mb-2 font-headline text-lg font-bold tracking-tight">
                   Co odróżnia Programo od innych software house&apos;ów w Poznaniu?
                 </h3>
-                <p className="opacity-75">
+                <p className="max-w-2xl opacity-75">
                   Zespół dwóch inżynierów, własne produkty SaaS w portfolio (Estalo,
                   Solvio, Rejestr Pro, PoolTimer) i bezpośredni kontakt z założycielami.
                   Nie jesteśmy outsourcingową fabryką — projekt prowadzimy od pierwszej
@@ -295,7 +298,7 @@ export default function SoftwareHousePoznanPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-current/15 p-8 md:p-12">
+          <section className="rounded-3xl border border-primary/30 bg-primary/5 p-8 md:p-12">
             <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
               Skontaktuj się z software house Programo
             </h2>
@@ -315,7 +318,7 @@ export default function SoftwareHousePoznanPage() {
             </div>
           </section>
         </article>
-      </main>
+      </div>
     </>
   );
 }

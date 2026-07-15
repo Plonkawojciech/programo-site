@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
@@ -28,7 +28,7 @@ const labelClass =
 const chipBase =
   "min-h-[48px] rounded-full border px-4 py-2 text-sm font-medium transition-colors cursor-pointer";
 const inputClass =
-  "min-h-[48px] w-full bg-transparent border-b border-outline-variant/40 py-3 text-lg text-on-surface placeholder:text-on-surface/30 outline-none focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 transition-colors";
+  "min-h-[48px] w-full bg-transparent border-b border-outline-variant/40 py-3 text-lg text-on-surface placeholder:text-on-surface/70 outline-none focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 transition-colors";
 
 // Loose but useful phone sanity check: at least 9 digits, only phone-ish chars.
 function isLikelyPhone(v: string): boolean {
@@ -57,6 +57,13 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
   // Guards the primary Google Ads "Lead" conversion against a double-fire from a
   // rapid double-submit (before the button's disabled state applies) or any re-render race.
   const submittingRef = useRef(false);
+  const successRef = useRef<HTMLHeadingElement>(null);
+
+  // Move focus to the success message so keyboard/screen-reader users are told
+  // the submission worked, since the form disappears (pattern from compact-lead-form.tsx).
+  useEffect(() => {
+    if (state === "success") successRef.current?.focus();
+  }, [state]);
 
   function clearFieldError(field: keyof FieldErrors) {
     setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
@@ -210,6 +217,8 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
           <div className="lg:col-span-7">
             {state === "success" ? (
               <motion.div
+                role="status"
+                aria-live="polite"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -220,7 +229,11 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                     <path d="M4 12.5l5 5L20 6.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
-                <h3 className="font-headline text-3xl md:text-4xl font-bold tracking-tight text-on-surface">
+                <h3
+                  ref={successRef}
+                  tabIndex={-1}
+                  className="font-headline text-3xl md:text-4xl font-bold tracking-tight text-on-surface outline-none"
+                >
                   {t("quick.successTitle")}
                 </h3>
                 <p className="text-base md:text-lg font-light leading-relaxed text-on-surface/70 max-w-lg">
@@ -286,11 +299,16 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         required
                         autoComplete="name"
                         aria-invalid={errors.name ? true : undefined}
+                        aria-describedby={errors.name ? "quick-name-error" : undefined}
                         className={inputClass}
                         placeholder={t("quick.namePlaceholder")}
                         onChange={() => clearFieldError("name")}
                       />
-                      {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+                      {errors.name && (
+                        <p id="quick-name-error" role="alert" className="text-sm text-red-500">
+                          {errors.name}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -305,11 +323,16 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         autoComplete="tel"
                         inputMode="text"
                         aria-invalid={errors.contact ? true : undefined}
+                        aria-describedby={errors.contact ? "quick-contact-error" : undefined}
                         className={inputClass}
                         placeholder={t("quick.contactPlaceholder")}
                         onChange={() => clearFieldError("contact")}
                       />
-                      {errors.contact && <p className="text-sm text-red-500">{errors.contact}</p>}
+                      {errors.contact && (
+                        <p id="quick-contact-error" role="alert" className="text-sm text-red-500">
+                          {errors.contact}
+                        </p>
+                      )}
                     </div>
 
                     <label className="flex min-h-[48px] items-start gap-3.5 cursor-pointer group rounded-2xl border border-outline-variant/60 bg-surface/70 p-4">
@@ -324,6 +347,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                           }}
                           required
                           aria-invalid={errors.consent ? true : undefined}
+                          aria-describedby={errors.consent ? "quick-consent-error" : undefined}
                           className="peer h-5 w-5 appearance-none rounded-md border-2 border-outline bg-surface transition-colors checked:bg-primary checked:border-primary hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer"
                         />
                         <svg
@@ -353,13 +377,17 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         .
                       </span>
                     </label>
-                    {errors.consent && <p className="-mt-4 text-sm text-red-500">{errors.consent}</p>}
+                    {errors.consent && (
+                      <p id="quick-consent-error" role="alert" className="-mt-4 text-sm text-red-500">
+                        {errors.consent}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-2">
                     <label htmlFor="quick-message" className={labelClass}>
                       {t("quick.message")}{" "}
-                      <span className="normal-case font-normal text-on-surface-variant/50">
+                      <span className="normal-case font-normal text-on-surface-variant">
                         {t("quick.optional")}
                       </span>
                     </label>
@@ -395,7 +423,11 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                       </>
                     )}
                   </button>
-                  {errors.server && <p className="text-sm text-red-500">{errors.server}</p>}
+                  {errors.server && (
+                    <p role="alert" className="text-sm text-red-500">
+                      {errors.server}
+                    </p>
+                  )}
                   <p className="text-xs font-light text-on-surface-variant/80 leading-relaxed">
                     {t("quick.trust")}
                   </p>

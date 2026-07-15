@@ -355,6 +355,36 @@ body {
   transform: translateX(0%);
 }
 
+/* Shared card hover — one lift/shadow/border language for portfolio & tech
+   cards instead of the 5 different variants found in the motion audit
+   (docs/audit-visual/motion-report.md, P1 "Karty portfolio/tech"). Defined as
+   a Tailwind @utility so it participates in the variant system (md:card-hover
+   etc.) like any other utility class. Timing matches lib/motion.ts easeEntry.
+   Reduced-motion: the lift is fully removed (not just sped up) — the global
+   reduced-motion block above already zeroes transition-duration, but that
+   would still leave a near-instant translateY jump, which this overrides. */
+@utility card-hover {
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(var(--theme-accent-rgb), 0.5);
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.15),
+      0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &:hover,
+    &:focus-visible {
+      transform: none;
+    }
+  }
+}
+
 /* Projects marquee — infinite horizontal scroll */
 @keyframes projectsMarquee {
   from { transform: translate3d(0, 0, 0); }

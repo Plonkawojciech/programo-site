@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import ContactCtaLink from "@/components/contact-cta-link";
@@ -23,8 +23,12 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const shouldReduceMotion = useReducedMotion();
 
   const ticking = useRef(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuOverlayRef = useRef<HTMLDivElement>(null);
+  const wasMobileOpenRef = useRef(false);
 
   const navLinks = [
     { label: t("nav.offer"), href: "/oferta", section: "oferta" },
@@ -75,16 +79,66 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  // --- Escape closes the mobile menu overlay, focus is trapped inside it
+  //     while open and returns to the hamburger trigger on close ---
+  useEffect(() => {
+    if (!mobileOpen) {
+      if (wasMobileOpenRef.current) menuButtonRef.current?.focus();
+      wasMobileOpenRef.current = false;
+      return;
+    }
+    wasMobileOpenRef.current = true;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const container = menuOverlayRef.current;
+      if (!container) return;
+      const focusable = container.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+
+    // Move focus into the overlay once it has mounted.
+    const focusTimer = window.setTimeout(() => {
+      menuOverlayRef.current
+        ?.querySelector<HTMLElement>('a[href], button:not([disabled])')
+        ?.focus();
+    }, 50);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      window.clearTimeout(focusTimer);
+    };
+  }, [mobileOpen]);
+
   return (
-    <>
+    // display:contents keeps this a real <header>/"banner" landmark for the whole
+    // site chrome without introducing a box — the fixed-position children below
+    // behave exactly as before.
+    <header className="contents">
       {/* Desktop header — single fixed container, three zones (logo | pill nav | cluster).
           Grid cols 1fr/auto/1fr keeps the pill perfectly centered and structurally
           prevents the zones from ever overlapping. */}
       <motion.div
-        initial={{ y: -30, opacity: 0 }}
+        initial={shouldReduceMotion ? false : { y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{
-          duration: durationFast,
+          duration: shouldReduceMotion ? 0 : durationFast,
           ease: easeEntry,
         }}
         className="fixed top-0 left-0 right-0 z-50 hidden md:grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 lg:px-8 pt-5"
@@ -199,10 +253,10 @@ export default function Navbar() {
       <motion.nav
         role="navigation"
         aria-label={t("a11y.mainNav")}
-        initial={{ y: -20, opacity: 0 }}
+        initial={shouldReduceMotion ? false : { y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{
-          duration: durationFast,
+          duration: shouldReduceMotion ? 0 : durationFast,
           ease: easeEntry,
         }}
         className="fixed top-0 left-0 right-0 z-50 md:hidden flex justify-center"
@@ -212,9 +266,12 @@ export default function Navbar() {
           data-scrolled={scrolled ? "true" : "false"}
         >
           <button
+            ref={menuButtonRef}
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-8 w-8 flex-col items-center justify-center gap-1.5"
+            className="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1.5"
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu-overlay"
           >
             <span
               className={`h-[1.5px] w-5 bg-[var(--theme-nav-text)] transition-all duration-300 ${
@@ -247,7 +304,7 @@ export default function Navbar() {
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className="flex items-center justify-center w-6 h-6 text-[var(--theme-nav-text)] cursor-pointer"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-[var(--theme-nav-text)] cursor-pointer"
           >
             {theme === "dark" ? (
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -263,7 +320,7 @@ export default function Navbar() {
           <button
             onClick={toggle}
             aria-label={t("a11y.langToggle")}
-            className="text-[13px] uppercase text-[var(--theme-nav-text)] font-medium cursor-pointer"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-[13px] uppercase text-[var(--theme-nav-text)] font-medium cursor-pointer"
           >
             {lang === "pl" ? "EN" : "PL"}
           </button>
@@ -274,22 +331,24 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ clipPath: "circle(0% at 90% 5%)" }}
+            id="mobile-menu-overlay"
+            ref={menuOverlayRef}
+            initial={shouldReduceMotion ? false : { clipPath: "circle(0% at 90% 5%)" }}
             animate={{ clipPath: "circle(150% at 90% 5%)" }}
-            exit={{ clipPath: "circle(0% at 90% 5%)" }}
+            exit={shouldReduceMotion ? undefined : { clipPath: "circle(0% at 90% 5%)" }}
             transition={{
-              duration: 0.6,
+              duration: shouldReduceMotion ? 0 : 0.6,
               ease: easeEntry,
             }}
             className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/98 backdrop-blur-lg md:hidden"
           >
-            <nav className="flex flex-col items-center gap-8">
+            <nav aria-label={t("a11y.mainNav")} className="flex flex-col items-center gap-8">
               <motion.a
                 href="tel:+48509123434"
-                initial={{ opacity: 0, y: 20 }}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: durationMedium, ease: easeEntry }}
+                exit={shouldReduceMotion ? undefined : { opacity: 0, y: 20 }}
+                transition={{ duration: shouldReduceMotion ? 0 : durationMedium, ease: easeEntry }}
                 className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-5 py-2.5 text-sm font-medium uppercase tracking-widest text-primary min-h-[44px]"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
@@ -300,12 +359,12 @@ export default function Navbar() {
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
-                  initial={{ opacity: 0, x: -30, y: 20 }}
+                  initial={shouldReduceMotion ? false : { opacity: 0, x: -30, y: 20 }}
                   animate={{ opacity: 1, x: 0, y: 0 }}
-                  exit={{ opacity: 0, x: -30, y: 20 }}
+                  exit={shouldReduceMotion ? undefined : { opacity: 0, x: -30, y: 20 }}
                   transition={{
-                    delay: i * 0.1,
-                    duration: durationMedium,
+                    delay: shouldReduceMotion ? 0 : i * 0.1,
+                    duration: shouldReduceMotion ? 0 : durationMedium,
                     ease: easeEntry,
                   }}
                 >
@@ -328,6 +387,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </header>
   );
 }

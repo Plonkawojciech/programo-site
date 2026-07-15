@@ -23,6 +23,14 @@ export interface Project {
   // Optional presentation hint. "mobile-app" → the detail page shows screenshots
   // inside App-Store-style phone frames instead of the default editorial grid.
   kind?: "mobile-app";
+  // Hero + card presentation variant. Drives how the detail hero and the /projekty
+  // card render, so the portfolio reads as distinct groups instead of near-clones:
+  //  - "light"  : DeviceDuo (desktop browser + overlapping phone) on the page surface — honest client sites.
+  //  - "dark"   : full-bleed dark canvas (bgColor) with a single BrowserFrame — product dashboards.
+  //  - "phones" : a row of phone frames, no browser — mobile-first products.
+  //  - "mosaic" : two browser frames side by side on a dark canvas — multi-surface ecosystems.
+  // Defaults to "phones" when kind === "mobile-app", otherwise "light".
+  presentation?: "light" | "dark" | "phones" | "mosaic";
   category: "produkty" | "dla-klientow" | "marketing";
   // Client name for commissioned work (dla-klientow / marketing).
   client?: { pl: string; en: string };
@@ -68,6 +76,7 @@ export const projects: Project[] = [
       en: "Both apps published on the App Store and Google Play",
     },
     kind: "mobile-app",
+    presentation: "phones",
     category: "dla-klientow",
     client: {
       pl: "Centrum Narzędziowe Jedmar, Poznań",
@@ -180,6 +189,7 @@ export const projects: Project[] = [
       pl: "Web działa z włączonymi płatnościami; aplikacje iOS i Android czekają na zatwierdzenie w sklepach",
       en: "Web live with billing enabled; iOS and Android apps awaiting store approval",
     },
+    presentation: "mosaic",
     category: "produkty",
     liveUrl: "https://estalo.pl",
     metric: {
@@ -225,7 +235,14 @@ export const projects: Project[] = [
       pl: "Programo — własny produkt, projekt i budowa całości",
       en: "Programo — our own product, designed and built end to end",
     },
-    screenshots: ["/screenshots/v2/estalo-desktop.webp", "/screenshots/v2/estalo-mobile.webp"],
+    // Mosaic ecosystem view: Enterprise dashboard (dark) + CRM (light) lead the hero,
+    // the listings portal fills the gallery. The old estalo-mobile.webp was a cropped
+    // desktop layout, not a real phone view, so it is intentionally dropped.
+    screenshots: [
+      "/screenshots/v2/estalo-enterprise-desktop.webp",
+      "/screenshots/v2/estalo-desktop.webp",
+      "/screenshots/v2/estalo-portal-desktop.webp",
+    ],
   },
   {
     slug: "eportal-prawny",
@@ -247,6 +264,7 @@ export const projects: Project[] = [
       pl: "Premiera wkrótce. Wersja podglądowa działa już pod eportalprawny.pl.",
       en: "Launching soon. A preview version is already live at eportalprawny.pl.",
     },
+    presentation: "dark",
     category: "produkty",
     liveUrl: "https://eportalprawny.pl",
     metric: {
@@ -309,6 +327,7 @@ export const projects: Project[] = [
       pl: "Live na wkspoznan.pl",
       en: "Live at wkspoznan.pl",
     },
+    presentation: "light",
     category: "dla-klientow",
     client: {
       pl: "Wielkopolski Klub Sportowy Poznań",
@@ -375,6 +394,7 @@ export const projects: Project[] = [
       pl: "Live na skupnieruchomoscipl.pl",
       en: "Live at skupnieruchomoscipl.pl",
     },
+    presentation: "light",
     category: "dla-klientow",
     client: {
       pl: "Firma skupująca nieruchomości",
@@ -450,6 +470,7 @@ export const projects: Project[] = [
       pl: "Web live; aplikacja iOS w wersji podglądowej",
       en: "Web live; iOS app as a preview build",
     },
+    presentation: "dark",
     category: "produkty",
     liveUrl: "https://rejestr-pro.vercel.app",
     metric: {
@@ -515,6 +536,7 @@ export const projects: Project[] = [
       pl: "W rozwoju — tworzony we współpracy z PBDevs (Filip Piątek)",
       en: "In development — built in collaboration with PBDevs (Filip Piątek)",
     },
+    presentation: "dark",
     category: "produkty",
     partner: "PBDevs (Filip Piątek)",
     liveUrl: "https://solvio-lac.vercel.app",
@@ -580,6 +602,7 @@ export const projects: Project[] = [
       pl: "Live na wsafefinance.pl",
       en: "Live at wsafefinance.pl",
     },
+    presentation: "dark",
     category: "dla-klientow",
     client: {
       pl: "W. Safe Finance, Rokietnica",
@@ -644,6 +667,7 @@ export const projects: Project[] = [
       pl: "Tracking i kampania Google Ads w prowadzeniu",
       en: "Tracking and Google Ads campaign under management",
     },
+    presentation: "light",
     category: "marketing",
     client: {
       pl: "Domki Poznaniak, Wicie",
@@ -711,6 +735,7 @@ export const projects: Project[] = [
       pl: "W rozwoju — pilotaż z realnym klubem pływackim",
       en: "In development — piloting with a real swimming club",
     },
+    presentation: "dark",
     category: "produkty",
     liveUrl: "https://swimplatform.vercel.app",
     metric: {
@@ -753,7 +778,13 @@ export const projects: Project[] = [
       pl: "Programo — hardware, oprogramowanie i wdrożenie pilotażowe",
       en: "Programo — hardware, software, and the pilot deployment",
     },
-    screenshots: ["/screenshots/v2/pooltimer-desktop.webp", "/screenshots/v2/pooltimer-mobile.webp"],
+    // Live coach cockpit (dark) leads the hero — not the marketing landing, which
+    // stays available in the gallery below.
+    screenshots: [
+      "/screenshots/v2/pooltimer-cockpit-desktop.webp",
+      "/screenshots/v2/pooltimer-desktop.webp",
+      "/screenshots/v2/pooltimer-mobile.webp",
+    ],
   },
 ];
 

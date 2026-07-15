@@ -1,10 +1,18 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { I18nProvider, useI18n } from "@/lib/i18n";
 
 function NotFoundContent() {
   const { t } = useI18n();
+
+  // Client component (app router doesn't allow a `metadata` export here) —
+  // set the tab title directly so it doesn't stay stuck on whatever the
+  // previous page set.
+  useEffect(() => {
+    document.title = "Strona nie znaleziona (404) | Programo";
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-surface px-6">

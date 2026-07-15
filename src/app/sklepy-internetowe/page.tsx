@@ -206,7 +206,7 @@ export default function SklepyInternetowePage() {
                 formId="sklepy-hero"
                 anchorId="szybki-kontakt"
                 projectType="Sklep internetowy"
-                heading="Masz sklep do zbudowania lub przyspieszenia?"
+                heading="Masz sklep do zbudowania lub przyspieszenia?"
               />
             </div>
           </div>
@@ -275,7 +275,7 @@ export default function SklepyInternetowePage() {
         <div id="realizacje" className="scroll-mt-28" />
         <CaseStudies
           eyebrow="Kompetencje"
-          heading="Co jeszcze potrafimy — przydatne w sklepie"
+          heading="Co jeszcze potrafimy — przydatne w sklepie"
           intro="Jedmar (wyżej) to nasza realizacja sklepowa. Obok — własne platformy, które dowodzą umiejętności potrzebnych w rozbudowanym e-commerce: płatności, integracje z systemami zewnętrznymi i wydajny frontend."
           items={storeCases}
         />
@@ -285,7 +285,7 @@ export default function SklepyInternetowePage() {
           formId="sklepy-compact"
           projectType="Sklep internetowy"
           eyebrow="Bez zobowiązań"
-          heading="Wciąż się rozglądasz? Zostaw numer"
+          heading="Wciąż się rozglądasz? Zostaw numer"
         />
 
         {/* FAQ */}

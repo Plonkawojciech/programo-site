@@ -70,17 +70,37 @@ export default function PortfolioGrid() {
                   onClick={() => trackPortfolioClick(card.slug, href)}
                   className="group flex h-full flex-col overflow-hidden rounded-3xl border border-outline-variant/40 bg-surface transition-all duration-300 hover:border-primary/50 hover:shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                 >
-                  {/* Media */}
-                  <div className="relative flex h-[280px] justify-center overflow-hidden bg-gradient-to-b from-surface-container-low to-surface px-6 pt-7 md:h-[320px] md:px-8">
+                  {/* Media — frames render as a top-anchored "peek": their own
+                      radius/border/shadow are stripped (browser) or the lower edge is
+                      faded (phone) so nothing is ever cut off on a hard, flat line.
+                      The card's rounded top clips the frame; a bottom gradient softens
+                      the crop. Pattern mirrors featured-work.tsx. */}
+                  <div className="relative h-[280px] overflow-hidden bg-gradient-to-b from-surface-container-low to-surface md:h-[320px]">
                     {card.frame === "phone" ? (
-                      <div className="w-[46%] max-w-[180px] transition-transform duration-500 group-hover:-translate-y-1">
-                        <PhoneFrame src={card.src} alt={`${project.title} — aplikacja mobilna`} />
+                      <div className="absolute inset-x-0 top-8 flex justify-center px-6 md:px-8">
+                        <div className="w-[44%] max-w-[172px] transition-transform duration-500 group-hover:-translate-y-1">
+                          <PhoneFrame
+                            src={card.src}
+                            alt={`${project.title} — aplikacja mobilna`}
+                            fadeBottom
+                          />
+                        </div>
                       </div>
                     ) : (
-                      <div className="w-full max-w-[560px] transition-transform duration-500 group-hover:-translate-y-1">
-                        <BrowserFrame url={domain} src={card.src} alt={`${project.title} — ${domain}`} />
+                      <div className="absolute inset-x-0 top-0 transition-transform duration-500 group-hover:-translate-y-1">
+                        <BrowserFrame
+                          url={domain}
+                          src={card.src}
+                          alt={`${project.title} — ${domain}`}
+                          className="rounded-none border-0 shadow-none"
+                        />
                       </div>
                     )}
+                    {/* Soft bottom fade — the intentional edge of the peek */}
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-surface via-surface/70 to-transparent"
+                    />
                   </div>
 
                   {/* Body */}

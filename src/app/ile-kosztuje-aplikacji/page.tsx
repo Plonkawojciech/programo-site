@@ -144,7 +144,10 @@ export default function IleKosztujeAplikacjiPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
 
-      <main className="min-h-screen bg-surface text-on-surface">
+      {/* No <main> here — the root layout (Providers) already wraps every page
+          in <main id="main-content">; a second <main> would be an invalid
+          duplicate "main" landmark. */}
+      <div className="min-h-screen bg-surface text-on-surface">
         <article className="mx-auto max-w-3xl px-6 py-16 md:px-10 md:py-24">
           <nav
             aria-label="breadcrumb"
@@ -211,8 +214,11 @@ export default function IleKosztujeAplikacjiPage() {
             </h2>
             <div className="grid gap-5 sm:grid-cols-2">
               {factors.map((f) => (
-                <div key={f.title} className="rounded-2xl border border-current/15 p-6">
-                  <h3 className="mb-2 text-lg font-semibold">{f.title}</h3>
+                <div
+                  key={f.title}
+                  className="rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6"
+                >
+                  <h3 className="mb-2 font-headline text-lg font-bold tracking-tight">{f.title}</h3>
                   <p className="text-sm leading-relaxed opacity-75">{f.desc}</p>
                 </div>
               ))}
@@ -270,14 +276,14 @@ export default function IleKosztujeAplikacjiPage() {
             <div className="space-y-6">
               {faqs.map((f) => (
                 <div key={f.q}>
-                  <h3 className="mb-2 text-lg font-semibold">{f.q}</h3>
-                  <p className="leading-relaxed opacity-75">{f.a}</p>
+                  <h3 className="mb-2 font-headline text-lg font-bold tracking-tight">{f.q}</h3>
+                  <p className="max-w-2xl leading-relaxed opacity-75">{f.a}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="rounded-3xl border border-current/15 p-8 md:p-12">
+          <section className="rounded-3xl border border-primary/30 bg-primary/5 p-8 md:p-12">
             <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
               Chcesz poznać koszt swojego projektu?
             </h2>
@@ -301,7 +307,7 @@ export default function IleKosztujeAplikacjiPage() {
             </div>
           </section>
         </article>
-      </main>
+      </div>
     </>
   );
 }

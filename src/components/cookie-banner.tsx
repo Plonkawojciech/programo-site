@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useConsent } from "@/lib/consent";
 
@@ -21,6 +21,9 @@ export default function CookieBanner() {
   const [analytics, setAnalytics] = useState(false);
   const [marketing, setMarketing] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -49,6 +52,57 @@ export default function CookieBanner() {
     }
   }, [settingsOpen]);
 
+  // Escape closes the modal, focus is trapped inside it while open, and
+  // returns to whatever triggered it (footer button, banner "Dostosuj"...)
+  // on close.
+  useEffect(() => {
+    if (settingsOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+    } else if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
+      previousFocusRef.current = null;
+    }
+  }, [settingsOpen]);
+
+  useEffect(() => {
+    if (!settingsOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeSettings();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const container = modalRef.current;
+      if (!container) return;
+      const focusable = container.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], input:not([disabled])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+
+    const focusTimer = window.setTimeout(() => {
+      modalRef.current
+        ?.querySelector<HTMLElement>('button:not([disabled]), a[href], input:not([disabled])')
+        ?.focus();
+    }, 50);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      window.clearTimeout(focusTimer);
+    };
+  }, [settingsOpen, closeSettings]);
+
   if (!mounted) return null;
 
   return (
@@ -59,10 +113,10 @@ export default function CookieBanner() {
       <AnimatePresence>
         {showBanner && (
           <motion.div
-            initial={{ y: "115%" }}
+            initial={shouldReduceMotion ? false : { y: "115%" }}
             animate={{ y: 0 }}
-            exit={{ y: "115%" }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            exit={shouldReduceMotion ? undefined : { y: "115%" }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
             role="dialog"
             aria-label={t("cookie.title")}
             style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.5rem)" }}
@@ -120,15 +174,16 @@ export default function CookieBanner() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
             className="fixed inset-0 z-[110] flex items-end md:items-center justify-center bg-black/70 backdrop-blur-sm p-0 md:p-6"
             onClick={closeSettings}
           >
             <motion.div
-              initial={{ y: 40, opacity: 0 }}
+              ref={modalRef}
+              initial={shouldReduceMotion ? false : { y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 40, opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              exit={shouldReduceMotion ? undefined : { y: 40, opacity: 0 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.35, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
               style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 1.5rem)" }}
               className="w-full max-w-lg rounded-t-3xl md:rounded-3xl bg-surface-container border-2 border-outline-variant/60 shadow-[0_-20px_60px_-12px_rgba(0,0,0,0.6)] md:shadow-2xl p-6 md:p-9 max-h-[90vh] overflow-y-auto"
