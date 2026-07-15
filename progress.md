@@ -135,3 +135,11 @@
 **Weryfikacja:** tsc czysty, 98/98 testów, build 32 stron; wizualnie desktop 1440 (/projekty pełna siatka, /projects/jedmar rząd 3 telefonów) + realny mobile 375 (scrollWidth=375, karta Jedmar z poprawnym telefonem).
 
 **Status:** wdrożone na prod.
+
+## 2026-07-15 — PhoneFrame wg wzorca Estalo + naprawa headera na tabletach
+
+**Co:** (1) PhoneFrame przebudowany 1:1 wg konstrukcji z estalo.pl (.es-iphone): jedna warstwa "titanium rail" (ukośny grafitowy gradient 145° + inset ringi biały/czarny), ekran bez osobnego czarnego bezela, jeden głęboki cień ambientowy + kontaktowy, bez kropki kamery; proporcje w cqw. Zrzuty apki Jedmar dociete o 110px (wypalona wyspa systemowa dublowała naszą). (2) Responsywność: desktopowy header (grid 1fr_auto_1fr) potrzebuje ~1160px — na 768 ucinał CTA, na 1024 chował logo pod pillem. Przełączony md:→xl: (desktop od 1280, tablet = mobilna nawigacja). H1 hero: dodane pośrednie stopnie skali (md:5xl → lg:3.4rem → xl:6xl → 2xl:7xl).
+
+**Weryfikacja:** tsc, 98/98 testów, build; header sprawdzony wizualnie na 768/1024/1280, telefony na detalu Jedmara (3 szt.), /projekty 768 (2 kolumny kart OK), pooltimer 1920 premium. Cache obrazów .next/cache/images czyszczony po podmianie assetów (inaczej serwuje stare wersje!).
+
+**Status:** wdrożone na prod.

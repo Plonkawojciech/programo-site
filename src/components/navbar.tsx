@@ -141,7 +141,7 @@ export default function Navbar() {
           duration: shouldReduceMotion ? 0 : durationFast,
           ease: easeEntry,
         }}
-        className="fixed top-0 left-0 right-0 z-50 hidden md:grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 lg:px-8 pt-5"
+        className="fixed top-0 left-0 right-0 z-50 hidden xl:grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 lg:px-8 pt-5"
       >
         {/* Zone 1 — logo */}
         <div className="justify-self-start">
@@ -259,7 +259,7 @@ export default function Navbar() {
           duration: shouldReduceMotion ? 0 : durationFast,
           ease: easeEntry,
         }}
-        className="fixed top-0 left-0 right-0 z-50 md:hidden flex justify-center"
+        className="fixed top-0 left-0 right-0 z-50 xl:hidden flex justify-center"
       >
         <div
           className="liquid-glass relative rounded-full mt-4 mx-auto max-w-fit px-5 py-0.5 flex items-center gap-5 transition-all duration-500"
@@ -340,7 +340,7 @@ export default function Navbar() {
               duration: shouldReduceMotion ? 0 : 0.6,
               ease: easeEntry,
             }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/98 backdrop-blur-lg md:hidden"
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/98 backdrop-blur-lg xl:hidden"
           >
             <nav aria-label={t("a11y.mainNav")} className="flex flex-col items-center gap-8">
               <motion.a

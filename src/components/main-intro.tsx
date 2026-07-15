@@ -84,7 +84,7 @@ export default function MainIntro() {
               initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: durationSlow, ease: easeEntry }}
-              className="mt-5 font-headline text-[2rem] leading-[1.08] font-bold tracking-tight text-on-surface md:text-6xl md:tracking-tighter 2xl:text-7xl"
+              className="mt-5 font-headline text-[2rem] leading-[1.08] font-bold tracking-tight text-on-surface md:text-5xl md:tracking-tighter lg:text-[3.4rem] xl:text-6xl 2xl:text-7xl"
             >
               {t("home.hero.h1")}
             </motion.h1>
