@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { useClientValue } from "@/lib/use-client-value";
 
 type Theme = "dark" | "light";
 
@@ -12,20 +13,25 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  // Saved theme read via useSyncExternalStore: hydration renders "light" like
+  // the server, then React re-renders once with the stored value — same timing
+  // as the old mount-effect, without setState-in-effect.
+  const saved = useClientValue<Theme>(() => {
+    const s = localStorage.getItem("programo-theme");
+    return s === "dark" ? "dark" : "light";
+  }, "light");
+  const [override, setOverride] = useState<Theme | null>(null);
+  const theme = override ?? saved;
 
+  // Keep the DOM attribute in sync (initial load and every toggle).
   useEffect(() => {
-    const saved = localStorage.getItem("programo-theme") as Theme | null;
-    const initial = saved === "light" || saved === "dark" ? saved : "light";
-    setTheme(initial);
-    document.documentElement.setAttribute("data-theme", initial);
-  }, []);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   const toggle = () => {
     const next = theme === "light" ? "dark" : "light";
-    setTheme(next);
+    setOverride(next);
     localStorage.setItem("programo-theme", next);
-    document.documentElement.setAttribute("data-theme", next);
   };
 
   return (

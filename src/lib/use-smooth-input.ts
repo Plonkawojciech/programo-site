@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useClientValue } from "@/lib/use-client-value";
 
 /**
  * Returns true only on platforms whose scroll input is inherently smooth
@@ -16,23 +16,21 @@ import { useEffect, useState } from "react";
  * Defaults to `true` on the server / first paint (Apple-first, and scroll-linked
  * values are 0 until the user scrolls anyway), then corrects on mount.
  */
+function computeSmooth(): boolean {
+  try {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const ua = navigator.userAgent || "";
+    const plat = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform
+      || navigator.platform
+      || "";
+    const isApple = /Mac|iPhone|iPad|iPod/i.test(plat) || /Macintosh|iPhone|iPad|iPod/i.test(ua);
+    const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+    return !reduced && (isApple || isTouch);
+  } catch {
+    return true;
+  }
+}
+
 export function useSmoothInput(): boolean {
-  const [smooth, setSmooth] = useState(true);
-
-  useEffect(() => {
-    try {
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const ua = navigator.userAgent || "";
-      const plat = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform
-        || navigator.platform
-        || "";
-      const isApple = /Mac|iPhone|iPad|iPod/i.test(plat) || /Macintosh|iPhone|iPad|iPod/i.test(ua);
-      const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
-      setSmooth(!reduced && (isApple || isTouch));
-    } catch {
-      setSmooth(true);
-    }
-  }, []);
-
-  return smooth;
+  return useClientValue(computeSmooth, true);
 }

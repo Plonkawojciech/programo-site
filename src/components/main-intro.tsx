@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { useClientValue } from "@/lib/use-client-value";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import CompactLeadForm from "@/components/compact-lead-form";
@@ -14,15 +15,14 @@ import { durationMedium, durationSlow, easeEntry, springGentle } from "@/lib/mot
 function MagneticCta({ children }: { children: ReactNode }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const [canHover, setCanHover] = useState(false);
+  const canHover = useClientValue(
+    () => window.matchMedia("(hover: hover) and (pointer: fine)").matches,
+    false,
+  );
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const springX = useSpring(x, springGentle);
   const springY = useSpring(y, springGentle);
-
-  useEffect(() => {
-    setCanHover(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
-  }, []);
 
   const active = canHover && !reduce;
   const maxPull = 6;

@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useClientValue } from "@/lib/use-client-value";
 
 export type ConsentCategories = {
   analytics: boolean;
@@ -38,6 +39,21 @@ type ConsentContextValue = {
 };
 
 const ConsentContext = createContext<ConsentContextValue | null>(null);
+
+function readStoredConsent(): ConsentState | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<ConsentState>;
+    return {
+      analytics: !!parsed.analytics,
+      marketing: !!parsed.marketing,
+      decided: true,
+    };
+  } catch {
+    return null; // ignore corrupt storage
+  }
+}
 
 type GtagFn = (...args: unknown[]) => void;
 type ClarityFn = ((...args: unknown[]) => void) & { q?: unknown[] };
@@ -95,29 +111,25 @@ function pushConsent(categories: ConsentCategories) {
 }
 
 export function ConsentProvider({ children }: { children: ReactNode }) {
-  const [consent, setConsent] = useState<ConsentState>(DEFAULT_STATE);
+  // Stored consent read once via useSyncExternalStore (hydration matches the
+  // server, then one re-render with the real value); user actions in this
+  // session override it.
+  const stored = useClientValue<ConsentState | null>(readStoredConsent, null);
+  const [override, setOverride] = useState<ConsentState | null>(null);
+  const consent = override ?? stored ?? DEFAULT_STATE;
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  // Replay stored consent into gtag/Clarity on load (external-system sync —
+  // the legitimate job of an effect; no setState here).
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as Partial<ConsentState>;
-      const next: ConsentState = {
-        analytics: !!parsed.analytics,
-        marketing: !!parsed.marketing,
-        decided: true,
-      };
-      setConsent(next);
-      pushConsent({ analytics: next.analytics, marketing: next.marketing });
-    } catch {
-      /* ignore corrupt storage */
+    if (stored && !override) {
+      pushConsent({ analytics: stored.analytics, marketing: stored.marketing });
     }
-  }, []);
+  }, [stored, override]);
 
   const persist = useCallback((categories: ConsentCategories) => {
     const next: ConsentState = { ...categories, decided: true };
-    setConsent(next);
+    setOverride(next);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     } catch {

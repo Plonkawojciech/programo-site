@@ -53,7 +53,7 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
   return (
     <div className="mt-10">
       <p className="text-sm md:text-base font-light leading-relaxed text-on-surface-variant">
-        Niniejszy dokument opisuje, w jaki sposób Programo Studio (dalej „Programo", „my") przetwarza dane osobowe użytkowników odwiedzających stronę programo.pl oraz kontaktujących się przez formularz lub adres e-mail.
+        Niniejszy dokument opisuje, w jaki sposób Programo Studio (dalej „Programo”, „my”) przetwarza dane osobowe użytkowników odwiedzających stronę programo.pl oraz kontaktujących się przez formularz lub adres e-mail.
       </p>
 
       <Section title="1. Administrator danych">

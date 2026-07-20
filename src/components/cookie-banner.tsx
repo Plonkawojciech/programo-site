@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useClientValue } from "@/lib/use-client-value";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
@@ -20,21 +21,21 @@ export default function CookieBanner() {
 
   const [analytics, setAnalytics] = useState(false);
   const [marketing, setMarketing] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useClientValue(() => true, false);
   const shouldReduceMotion = useReducedMotion();
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
+  // Sync the toggles with stored consent at the moment the modal opens —
+  // render-time state adjustment (react.dev pattern), not an effect.
+  const [prevSettingsOpen, setPrevSettingsOpen] = useState(false);
+  if (settingsOpen !== prevSettingsOpen) {
+    setPrevSettingsOpen(settingsOpen);
     if (settingsOpen) {
       setAnalytics(consent.analytics);
       setMarketing(consent.marketing);
     }
-  }, [settingsOpen, consent.analytics, consent.marketing]);
+  }
 
   const showBanner = mounted && !consent.decided && !settingsOpen;
 

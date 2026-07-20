@@ -50,17 +50,14 @@ export default function StickyCta() {
 
   useEffect(() => {
     const el = document.getElementById("kontakt-main");
-    if (!el) {
-      setContactVisible(false);
-      return;
-    }
+    if (!el) return; // contactVisible already starts as false
     const observer = new IntersectionObserver(
       ([entry]) => setContactVisible(entry.isIntersecting),
       { rootMargin: "0px 0px -20% 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  });
+  }, []);
 
   // tel:/mailto: clicks are tracked globally via event delegation in
   // AnalyticsTracker — no per-link onClick here (avoids double contact_click).

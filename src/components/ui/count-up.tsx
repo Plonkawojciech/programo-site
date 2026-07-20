@@ -37,12 +37,14 @@ export default function CountUp({
   // Start at the final value so SSR and hydration render the truth.
   const [current, setCurrent] = useState(target ?? 0);
 
+  // Reduced motion or out of view: snap to the final value. Render-time state
+  // adjustment (react.dev pattern) instead of a synchronous set in an effect.
+  if (target !== null && (reduce || !inView) && current !== target) {
+    setCurrent(target);
+  }
+
   useEffect(() => {
-    if (target === null) return;
-    if (reduce || !inView) {
-      setCurrent(target);
-      return;
-    }
+    if (target === null || reduce || !inView) return;
     // Sweep only the last ~30% so no intermediate frame reads as a real, lower
     // number (e.g. "20 h" standing in for "24 h").
     const from = Math.round(target * 0.7);
@@ -55,7 +57,6 @@ export default function CountUp({
       setCurrent(Math.round(from + (target - from) * eased));
       if (t < 1) raf = requestAnimationFrame(tick);
     };
-    setCurrent(from);
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [inView, reduce, target, duration]);

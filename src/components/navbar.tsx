@@ -22,7 +22,6 @@ export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
   const shouldReduceMotion = useReducedMotion();
 
   const ticking = useRef(false);
@@ -57,15 +56,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [handleScroll]);
 
-  // --- Active section from pathname ---
-  useEffect(() => {
-    if (!pathname) {
-      setActiveSection("");
-      return;
-    }
-    const match = navLinks.find((l) => pathname === l.href || pathname.startsWith(`${l.href}/`));
-    setActiveSection(match?.section ?? "");
-  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+  // --- Active section: pure derivation from pathname, no state needed ---
+  const activeSection = pathname
+    ? (navLinks.find((l) => pathname === l.href || pathname.startsWith(`${l.href}/`))?.section ?? "")
+    : "";
 
   // --- Lock body scroll when mobile menu open ---
   useEffect(() => {
