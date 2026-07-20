@@ -1,12 +1,6 @@
 # Programo Site
 ---
 
-## 100% AI Codebase — Instrukcja dla agentów
-
-> Ten codebase jest w **100% pisany i utrzymywany przez agenty AI** via Claude Code.
->
-> **OBOWIĄZEK:** Po każdej zmianie zaktualizuj `progress.md` w root projektu (data, co, dlaczego, dotknięte pliki). `progress.md` to semantyczny tracker historii projektu.
-
 Strona firmowa Programo s.c. (Wojciech Płonka + Bartosz Kolaj, Poznań) — landing pod konwersję
 (telefon + formularz) z portfolio jako pokazem umiejętności. Redesign: 2026-07-15
 (brief: `docs/redesign-brief-2026-07.md`, treści: `docs/content-deck-2026-07.md`).
@@ -28,8 +22,11 @@ src/
     oferta/ cennik/ o-nas/ kontakt/ projekty/
     strony-internetowe/ sklepy-internetowe/ strony-tracking-reklamy/   # landingi ofertowe
     software-house-poznan/ ile-kosztuje-aplikacji/                     # SEO
+    stack/ polityka-prywatnosci/
+    projekty/                   # lista portfolio
     projects/[slug]/            # detale projektów (SSG z projects.ts)
     api/contact/ api/leads/     # lead pipeline
+    api/crm-login/ api/crm-logout/
     crm/                        # wewnętrzny panel leadów (noindex)
   components/
     home/                       # sekcje homepage (offer-pillars, portfolio-grid, featured-jedmar, people, faq...)
@@ -57,14 +54,34 @@ src/
 - Jedna obietnica czasu: „Odpowiadamy w 24 h". Zero emotek, zero kursywy w nagłówkach.
 - Screenshoty produktów: `public/screenshots/v2/<slug>-{desktop,mobile}.webp`.
 
+## Landminy
+
+- **`public/screenshots/v2/` ma duplikaty assetów** pod starymi aliasami nazw
+  (np. `eportalprawny-*` obok `eportal-prawny-*`). Przy dodawaniu screenshota sprawdź,
+  czy nie tworzysz trzeciego wariantu tej samej rzeczy.
+- **framer-motion `AnimatePresence` nie usuwa węzłów po exit** — podejrzenie artefaktu
+  headless, niezbadane. Jeśli trafisz na duchy w DOM po animacji wyjścia, to znany problem,
+  nie regresja od Twojej zmiany.
+
 ## Komendy
 
 ```bash
-npm run dev      # http://localhost:3000
-npm run build    # Production build (32 strony)
-npm run test     # vitest (96 testów: i18n parytet, projects, SEO, api kontrakt, komponenty)
-npm run lint
+npm run dev        # http://localhost:3000
+npm run build      # production build
+npm run lint       # eslint
+npm run test       # vitest run (8 plików: i18n parytet, projects, SEO, api kontrakt, komponenty)
+npm run test:watch
+npx tsc --noEmit   # typecheck — NIE jest częścią build, uruchom osobno
 ```
+
+Bramka przed commitem: `npm run build && npx tsc --noEmit && npm run test`.
+
+## Zmienne środowiskowe
+
+Wzór w `.env.example`. Wymagane do pełnego działania lokalnie:
+`RESEND_API_KEY`, `EMAIL_TO` (lead pipeline), `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`
+(powiadomienia), `PAGESPEED_API_KEY`, `NEXT_PUBLIC_BOOKINGS_URL`.
+Bez nich `npm run dev` wstanie, ale wysyłka leada padnie.
 
 ## Deploy
 
