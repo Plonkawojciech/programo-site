@@ -113,7 +113,7 @@ export const projects: Project[] = [
       en: "Athlete Ecosystem",
     },
     description: {
-      pl: "Trzy aplikacje sportowe, które razem tworzą kompletny ekosystem treningowy. TrainPilot to osobisty hub — synchronizacja z Garmin, AI trener i śledzenie żywienia. TrainMate łączy sportowców — znajdź partnera, dołącz do sesji, rywalizuj. Health analizuje regenerację — monitoring tętna, sen i gotowość do treningu.",
+      pl: "Trzy aplikacje tworzące kompletny ekosystem treningowy. TrainPilot — synchronizacja z Garmin, AI trener i żywienie. TrainMate — znajdź partnera, dołącz do sesji, rywalizuj. Health — monitoring tętna, sen i gotowość do treningu.",
       en: "Three sport apps that together create a complete training ecosystem. TrainPilot is a personal hub — Garmin sync, AI coach, and nutrition tracking. TrainMate connects athletes — find a partner, join sessions, compete. Health analyzes recovery — heart rate monitoring, sleep, and training readiness.",
     },
     longDescription: {

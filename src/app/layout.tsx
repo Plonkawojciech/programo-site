@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 
@@ -7,20 +7,18 @@ const GA_ID = "G-TGLPLMVV91";
 const CLARITY_ID = "wxezq44wx0";
 
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+/**
+ * Display face — headlines only. Body, UI and forms run on the system stack
+ * (see --font-body in globals.css), so this is the single webfont on the site.
+ * The `wdth` axis is the contrast mechanism against the system sans: headlines
+ * sit at a semi-expanded width that no system UI font resembles.
+ */
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin", "latin-ext"],
   display: "swap",
   preload: true,
-  style: ["normal", "italic"],
-});
-
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-  preload: true,
-  weight: ["300", "400", "500", "600", "700"],
+  axes: ["wdth"],
 });
 
 export const metadata: Metadata = {
@@ -111,15 +109,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${newsreader.variable} ${jakarta.variable} selection:bg-primary/20 selection:text-primary`}>
+    <html
+      lang="pl"
+      className={`${archivo.variable} selection:bg-primary/20 selection:text-primary`}
+      // The bootstrap script below sets data-theme before React hydrates, so the
+      // server markup will never match. That mismatch is the point of the script.
+      suppressHydrationWarning
+    >
       <head>
         {/* Preconnect to third-party (analytics) origins for faster first contact */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.clarity.ms" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        {/* Theme bootstrap — runs before paint so there is no flash of the wrong
+            theme. Dark is the default: the whole surface ramp is designed in the
+            forest palette, and light is the opt-in alternative behind the toggle. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('programo-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else{document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('programo-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else{document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();`,
           }}
         />
         {/* Google Consent Mode v2 — defaults set BEFORE gtag.js loads */}

@@ -1,23 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  /* Dark mode (default) — exact current colors */
-  --theme-bg-1: #051F20;      /* deepest bg — body, hero, sections */
-  --theme-bg-2: #0A2A28;      /* surface container low */
-  --theme-bg-3: #0B2B26;      /* tech stack, surface container */
-  --theme-bg-4: #163832;      /* surface container high */
-  --theme-border-1: #163832;  /* primary borders */
-  --theme-border-2: #235347;  /* secondary borders */
+  /* Dark mode (default) — five-step depth ramp in one forest hue.
+     Steps are even in perceived lightness (L* ≈ 6 / 10 / 15 / 20 / 26), so each
+     level is a readable change rather than a guess. The old ramp had bg-2 and
+     bg-3 within two points of each other, which is why the page only ever read
+     as two depths no matter how many surface tokens pointed at them. */
+  --theme-bg-0: #031517;      /* sunken — insets, footer well, wells behind media */
+  --theme-bg-1: #051F20;      /* base — body, full-bleed sections */
+  --theme-bg-2: #0A2A28;      /* raised — quiet section bands */
+  --theme-bg-3: #143531;      /* container — cards, panels */
+  --theme-bg-4: #1D453D;      /* high container — hover, active, nested panel */
+  --theme-border-1: #163832;  /* hairline on bg-0…bg-2 */
+  --theme-border-2: #235347;  /* hairline on bg-3…bg-4, and emphasis edges */
   --theme-text-1: #DAF1DE;    /* main text — light mint */
   --theme-text-2: #8EB69B;    /* muted text — sage */
   --theme-accent: #8EB69B;    /* primary brand color */
   --theme-glow: 218, 241, 222;   /* RGB for shadows/glows */
 
   /* RGB variants for rgba() usage with opacity */
+  --theme-bg-0-rgb: 3, 21, 23;
   --theme-bg-1-rgb: 5, 31, 32;
   --theme-bg-2-rgb: 10, 42, 40;
-  --theme-bg-3-rgb: 11, 43, 38;
-  --theme-bg-4-rgb: 22, 56, 50;
+  --theme-bg-3-rgb: 20, 53, 49;
+  --theme-bg-4-rgb: 29, 69, 61;
   --theme-border-1-rgb: 22, 56, 50;
   --theme-border-2-rgb: 35, 83, 71;
   --theme-text-1-rgb: 218, 241, 222;
@@ -33,16 +39,17 @@
   --theme-alt-text-rgb: 26, 24, 22;
   --theme-alt-accent-rgb: 142, 182, 155;
 
-  /* Navbar pill colors — pill is light in dark mode, dark in light mode */
-  --theme-nav-pill: rgba(255, 255, 255, 0.5);
-  --theme-nav-pill-scrolled: rgba(255, 255, 255, 0.8);
-  --theme-nav-pill-mobile: rgba(255, 255, 255, 0.7);
-  --theme-nav-pill-border: rgba(255, 255, 255, 0.1);
-  --theme-nav-pill-border-scrolled: rgba(255, 255, 255, 0.2);
-  --theme-nav-pill-shadow: rgba(26, 28, 28, 0.08);
-  --theme-nav-pill-shadow-soft: rgba(26, 28, 28, 0.04);
-  --theme-nav-text: #051F20;
-  --theme-nav-text-rgb: 5, 31, 32;
+  /* Navbar pill — frosted glass that follows the page instead of inverting it.
+     The pill used to be light in dark mode: a bright slab that outweighed the
+     headline, put inactive links at 3.4:1, and forced a second logo asset for
+     the mobile bar (the mobile logo sits inside the pill). Tinting with the
+     page ink keeps it recessed and gives the nav text ~12:1 to work with. */
+  --theme-nav-pill: rgba(218, 241, 222, 0.07);
+  --theme-nav-pill-scrolled: rgba(218, 241, 222, 0.12);
+  --theme-nav-pill-border: rgba(218, 241, 222, 0.12);
+  --theme-nav-pill-border-scrolled: rgba(218, 241, 222, 0.2);
+  --theme-nav-text: #DAF1DE;
+  --theme-nav-text-rgb: 218, 241, 222;
 
   /* Z-index scale — single source of truth for stacking order.
      Tailwind utilities map to these: z-10 raised, z-40 sticky, z-50 nav. */
@@ -54,14 +61,31 @@
   --z-modal: 200;
   --z-preloader: 300;
   --z-noise: 400;
+
+  /* Type scale — perfect fourth (1.333) at the display end, tightening toward
+     body so long-form copy stays calm. Fluid between 360px and 1440px.
+     Display ceiling is 84px: under the 96px shouting threshold. */
+  --step-display: clamp(2.75rem, 1.63rem + 4.98vw, 5.25rem);
+  --step-h2: clamp(2rem, 1.44rem + 2.49vw, 3.25rem);
+  --step-h3: clamp(1.5rem, 1.22rem + 1.24vw, 2.125rem);
+  --step-h4: clamp(1.125rem, 1.01rem + 0.5vw, 1.375rem);
+  --step-lead: clamp(1.125rem, 0.96rem + 0.75vw, 1.5rem);
+
+  /* Section rhythm — three tiers of importance. Adjacent sections must not
+     share a tier; uniform padding is what made every section weigh the same. */
+  --step-section-major: clamp(6rem, 4rem + 8vw, 11rem);
+  --step-section: clamp(4.5rem, 3.6rem + 3.6vw, 7.5rem);
+  --step-section-tight: clamp(3rem, 2.6rem + 1.6vw, 4.5rem);
 }
 
 [data-theme="light"] {
-  /* Light mode — near-white with green palette accents */
-  --theme-bg-1: #FBFDFB;      /* near-white base with subtle mint hint */
-  --theme-bg-2: #F2F8F3;      /* very light mint */
-  --theme-bg-3: #E6F1E8;      /* light mint container */
-  --theme-bg-4: #DAF1DE;      /* mint from palette */
+  /* Light mode — same five-step ramp, mirrored. "Sunken" reads as paper-white
+     here: the step always moves away from the text colour, never toward it. */
+  --theme-bg-0: #FFFFFF;      /* sunken — insets, footer well */
+  --theme-bg-1: #FBFDFB;      /* base — near-white with a mint hint */
+  --theme-bg-2: #F1F7F2;      /* raised */
+  --theme-bg-3: #E4EFE7;      /* container */
+  --theme-bg-4: #D3E6D9;      /* high container */
   --theme-border-1: #DAF1DE;  /* mint border */
   --theme-border-2: #8EB69B;  /* sage border */
   --theme-text-1: #051F20;    /* deepest dark green — main text */
@@ -70,10 +94,11 @@
   --theme-glow: 35, 83, 71;
 
   /* RGB variants */
+  --theme-bg-0-rgb: 255, 255, 255;
   --theme-bg-1-rgb: 251, 253, 251;
-  --theme-bg-2-rgb: 242, 248, 243;
-  --theme-bg-3-rgb: 230, 241, 232;
-  --theme-bg-4-rgb: 218, 241, 222;
+  --theme-bg-2-rgb: 241, 247, 242;
+  --theme-bg-3-rgb: 228, 239, 231;
+  --theme-bg-4-rgb: 211, 230, 217;
   --theme-border-1-rgb: 218, 241, 222;
   --theme-border-2-rgb: 142, 182, 155;
   --theme-text-1-rgb: 5, 31, 32;
@@ -89,26 +114,28 @@
   --theme-alt-text-rgb: 218, 241, 222;
   --theme-alt-accent-rgb: 142, 182, 155;
 
-  /* Navbar pill colors — dark green pill with light text */
-  --theme-nav-pill: rgba(5, 31, 32, 0.5);
-  --theme-nav-pill-scrolled: rgba(5, 31, 32, 0.85);
-  --theme-nav-pill-mobile: rgba(5, 31, 32, 0.75);
-  --theme-nav-pill-border: rgba(218, 241, 222, 0.15);
-  --theme-nav-pill-border-scrolled: rgba(218, 241, 222, 0.25);
-  --theme-nav-pill-shadow: rgba(5, 31, 32, 0.12);
-  --theme-nav-pill-shadow-soft: rgba(5, 31, 32, 0.08);
-  --theme-nav-text: #DAF1DE;
-  --theme-nav-text-rgb: 218, 241, 222;
+  /* Navbar pill — same rule inverted for the light page: white frost, dark ink.
+     The dark half-transparent pill this replaces washed to mid-grey over the
+     near-white page and left mint links at 2.2:1. */
+  --theme-nav-pill: rgba(255, 255, 255, 0.72);
+  --theme-nav-pill-scrolled: rgba(255, 255, 255, 0.9);
+  --theme-nav-pill-border: rgba(5, 31, 32, 0.1);
+  --theme-nav-pill-border-scrolled: rgba(5, 31, 32, 0.16);
+  --theme-nav-text: #051F20;
+  --theme-nav-text-rgb: 5, 31, 32;
 }
 
 @theme inline {
+  /* Surface tokens map one-to-one onto the depth ramp, in order. Previously
+     three of them pointed at two near-identical hexes and one pointed at the
+     accent, so "elevation" was decorative rather than structural. */
   --color-surface: var(--theme-bg-1);
-  --color-surface-dim: var(--theme-bg-3);
-  --color-surface-container: var(--theme-bg-4);
-  --color-surface-container-low: var(--theme-bg-3);
-  --color-surface-container-high: var(--theme-border-2);
-  --color-surface-container-highest: var(--theme-accent);
+  --color-surface-dim: var(--theme-bg-0);
   --color-surface-container-lowest: var(--theme-bg-1);
+  --color-surface-container-low: var(--theme-bg-2);
+  --color-surface-container: var(--theme-bg-3);
+  --color-surface-container-high: var(--theme-bg-4);
+  --color-surface-container-highest: var(--theme-border-2);
   --color-on-surface: var(--theme-text-1);
   --color-on-surface-variant: var(--theme-text-2);
   --color-primary: var(--theme-accent);
@@ -122,8 +149,23 @@
   --color-inverse-surface: var(--theme-text-1);
   --color-inverse-on-surface: var(--theme-bg-1);
   --color-inverse-primary: var(--theme-border-1);
-  --font-headline: var(--font-newsreader);
-  --font-body: var(--font-jakarta);
+  /* Display face carries headlines only. Everything else runs native: the
+     visitor's own OS font renders instantly, at zero transfer cost. */
+  --font-headline: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  /* Type scale → `text-display`, `text-h2` … utilities. */
+  --text-display: var(--step-display);
+  --text-h2: var(--step-h2);
+  --text-h3: var(--step-h3);
+  --text-h4: var(--step-h4);
+  --text-lead: var(--step-lead);
+
+  /* Section rhythm → `py-section-major`, `py-section`, `py-section-tight`. */
+  --spacing-section-major: var(--step-section-major);
+  --spacing-section: var(--step-section);
+  --spacing-section-tight: var(--step-section-tight);
 }
 
 html {
@@ -134,10 +176,10 @@ html {
 body {
   background: var(--theme-bg-1);
   color: var(--theme-text-1);
-  font-family: var(--font-body), system-ui, sans-serif;
+  font-family: var(--font-body);
   font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.65;
+  letter-spacing: -0.005em;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior-y: none; /* Zapobiega efektowi bounce na macOS dla lepszego feelingu appki */

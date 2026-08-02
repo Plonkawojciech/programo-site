@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { MotionConfig } from "framer-motion";
 import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import { ConsentProvider } from "@/lib/consent";
@@ -15,27 +16,33 @@ import StickyCta from "@/components/sticky-cta";
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <ThemeProvider>
-      <I18nProvider>
-        <ConsentProvider>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary focus:shadow-lg"
-          >
-            Przejdź do treści
-          </a>
-          <Preloader />
-          <ScrollProgress />
-          <PageTransition>
-            <Navbar />
-            <main id="main-content">{children}</main>
-            <Footer />
-          </PageTransition>
-          <StickyCta />
-          <CookieBanner />
-          <AnalyticsTracker />
-        </ConsentProvider>
-      </I18nProvider>
-    </ThemeProvider>
+    // Framer Motion writes inline styles from JS, so the `!important` reduced-motion
+    // block in globals.css cannot reach it. `reducedMotion="user"` is the only
+    // thing that does: it drops transform and layout animation for users who ask
+    // for it, and leaves opacity, so every reveal degrades to a crossfade.
+    <MotionConfig reducedMotion="user">
+      <ThemeProvider>
+        <I18nProvider>
+          <ConsentProvider>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary focus:shadow-lg"
+            >
+              Przejdź do treści
+            </a>
+            <Preloader />
+            <ScrollProgress />
+            <PageTransition>
+              <Navbar />
+              <main id="main-content">{children}</main>
+              <Footer />
+            </PageTransition>
+            <StickyCta />
+            <CookieBanner />
+            <AnalyticsTracker />
+          </ConsentProvider>
+        </I18nProvider>
+      </ThemeProvider>
+    </MotionConfig>
   );
 }

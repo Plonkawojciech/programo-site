@@ -2,9 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { Resend } from "resend";
 
-const contactSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email format"),
+/**
+ * Two shapes of lead arrive here, and the schema has to accept both:
+ *
+ *   1. A written enquiry (the full contact form) — name, email and a real
+ *      message are all required, exactly as before.
+ *   2. A phone lead (the homepage form) — a number is the whole submission.
+ *      That is the site's primary conversion: asking a caller to also write
+ *      twenty characters and hand over an email address is the friction the
+ *      homepage was rebuilt to remove.
+ *
+ * Rather than have the client fake an email address to satisfy a stricter
+ * schema, the requirement is stated where it belongs: everything except the
+ * phone number is optional *when a phone number is present*, and required
+ * otherwise. `superRefine` below carries that rule.
+ */
+const PHONE_MIN_DIGITS = 9;
+
+const contactSchema = z
+  .object({
+  name: z.string().max(120, "Name too long").optional().or(z.literal("")),
+  email: z.string().max(200, "Email too long").optional().or(z.literal("")),
   phone: z
     .string()
     .max(30, "Phone too long")
@@ -21,8 +39,9 @@ const contactSchema = z.object({
     .default("Inne"),
   message: z
     .string()
-    .min(20, "Message must be at least 20 characters")
-    .max(2000, "Message must be at most 2000 characters"),
+    .max(2000, "Message must be at most 2000 characters")
+    .optional()
+    .or(z.literal("")),
   // Lead qualification (chips on the form) — optional
   projectType: z.string().max(60).optional().or(z.literal("")),
   budget: z.string().max(60).optional().or(z.literal("")),
@@ -40,7 +59,26 @@ const contactSchema = z.object({
   landing_page: z.string().max(500).optional(),
   referrer: z.string().max(500).optional(),
   first_seen: z.string().max(40).optional(),
-});
+  })
+  .superRefine((data, ctx) => {
+    // A phone number with enough digits to actually dial is a complete lead.
+    const digits = (data.phone ?? "").replace(/\D/g, "");
+    if (digits.length >= PHONE_MIN_DIGITS) return;
+
+    if (!data.name?.trim()) {
+      ctx.addIssue({ code: "custom", path: ["name"], message: "Name is required" });
+    }
+    if (!z.string().email().safeParse(data.email ?? "").success) {
+      ctx.addIssue({ code: "custom", path: ["email"], message: "Invalid email format" });
+    }
+    if ((data.message ?? "").trim().length < 20) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["message"],
+        message: "Message must be at least 20 characters",
+      });
+    }
+  });
 
 // In-memory rate limiter: IP -> timestamps[]
 const rateLimitMap = new Map<string, number[]>();
@@ -101,7 +139,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: firstError }, { status: 400 });
   }
 
-  const { name, email, phone, subject, message, projectType, budget, consentTimestamp } = result.data;
+  const { phone, subject, projectType, budget, consentTimestamp } = result.data;
+  // A phone lead carries no name and no message. Label it clearly instead of
+  // mailing out empty fields, so the inbox says what kind of lead this is.
+  const name = result.data.name?.trim() || "Kontakt telefoniczny";
+  const email = result.data.email?.trim() || "";
+  const message = result.data.message?.trim() || "Prośba o kontakt telefoniczny.";
   const safeName = sanitize(name);
   const safeMessage = sanitize(message);
   const safeSubject = sanitize(subject);
@@ -149,7 +192,7 @@ export async function POST(request: NextRequest) {
             html: `
               <h2>Nowa wiadomość z formularza kontaktowego</h2>
               <p><strong>Imię:</strong> ${safeName}</p>
-              <p><strong>Email:</strong> ${sanitize(email)}</p>
+              ${email ? `<p><strong>Email:</strong> ${sanitize(email)}</p>` : ""}
               ${safePhone ? `<p><strong>Telefon:</strong> ${safePhone}</p>` : ""}
               <p><strong>Temat:</strong> ${safeSubject}</p>
               ${safeProjectType ? `<p><strong>Rodzaj projektu:</strong> ${safeProjectType}</p>` : ""}
@@ -184,7 +227,7 @@ export async function POST(request: NextRequest) {
             `*Nowa wiadomość — Programo*`,
             ``,
             `*Imię:* ${esc(name)}`,
-            `*Email:* ${esc(email)}`,
+            email ? `*Email:* ${esc(email)}` : "",
             phone ? `*Telefon:* ${esc(phone)}` : "",
             `*Temat:* ${esc(subject)}`,
             projectType ? `*Rodzaj projektu:* ${esc(projectType)}` : "",

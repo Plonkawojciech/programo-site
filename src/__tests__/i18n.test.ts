@@ -47,8 +47,10 @@ describe("i18n translations", () => {
     }
   });
 
+  // The contact form is QuickContact (`qc.*`); the old `contact.form.*` set was
+  // retired with the component that used it.
   it("has both PL and EN for all contact form keys", () => {
-    const contactKeys = allKeys.filter((k) => k.startsWith("contact.form."));
+    const contactKeys = allKeys.filter((k) => k.startsWith("qc."));
     expect(contactKeys.length).toBeGreaterThanOrEqual(15);
     for (const key of contactKeys) {
       expect(translations[key].pl).toBeTruthy();
@@ -87,7 +89,7 @@ describe("i18n translations", () => {
   });
 
   it("nested/dotted keys work correctly", () => {
-    // Keys like "nav.work", "contact.form.name" should all exist and resolve
+    // Keys like "nav.work" or "qc.phoneLabel" should all exist and resolve
     const dottedKeys = allKeys.filter((k) => k.includes("."));
     expect(dottedKeys.length).toBeGreaterThan(20);
     for (const key of dottedKeys) {

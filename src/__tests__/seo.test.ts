@@ -158,7 +158,7 @@ describe("SEO", () => {
       // Project page canonicals
       for (const project of projects) {
         const canonical = `https://programo.pl/projects/${project.slug}`;
-        expect(canonical).toMatch(/^https:\/\/programo\.pl\/projects\/[a-z]+$/);
+        expect(canonical).toMatch(/^https:\/\/programo\.pl\/projects\/[a-z0-9-]+$/);
       }
     });
   });

@@ -24,8 +24,10 @@ describe("TechStack component", () => {
       "Neon", "Drizzle", "Vercel", "Capacitor", "Azure AI",
       "Anthropic", "Stripe", "Resend", "Three.js", "Konva.js",
     ];
+    // Each tech appears 4 times (duplicated array in 2 marquee rows)
     for (const tech of techs) {
-      expect(screen.getByText(tech)).toBeInTheDocument();
+      const matches = screen.getAllByText(tech);
+      expect(matches.length).toBe(4);
     }
   });
 
@@ -40,8 +42,10 @@ describe("TechStack component", () => {
     expect(screen.getByText("Nasze narzędzia")).toBeInTheDocument();
   });
 
-  it("renders description text", () => {
+  it("renders technology descriptions from i18n", () => {
     renderWithI18n();
-    expect(screen.getByText(/Wybieramy narzędzia/)).toBeInTheDocument();
+    // Each tech card includes its i18n description, e.g. t("stack.nextjs") = "Full-stack framework React"
+    const descriptions = screen.getAllByText("Full-stack framework React");
+    expect(descriptions.length).toBeGreaterThanOrEqual(1);
   });
 });

@@ -1,101 +1,294 @@
 "use client";
 
+import { useState, useRef, useId } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import ContactCtaLink from "@/components/contact-cta-link";
-import { easeEntry } from "@/lib/motion";
+import { getAttribution, trackLead } from "@/lib/tracking";
+import {
+  easeEntry,
+  durationMedium,
+  durationSlow,
+  staggerItem,
+} from "@/lib/motion";
+
+type PhoneFormState = "idle" | "submitting" | "success" | "error";
 
 /**
- * Homepage hero — conversion-first.
- * Left: problem-led headline + two CTAs + proof line.
- * Right: a real CLIENT screenshot (WSafeFinanse), never an own product.
- * Mobile: text + CTAs come first, screenshot follows.
+ * Homepage hero — conversion-first rebuild (2026-08).
+ *
+ * Structure: headline, one-liner, inline phone capture, screenshot proof.
+ * Mobile-first: text + form above the fold, screenshot below.
+ * Desktop: two-column, text+form left, screenshot right.
+ *
+ * The phone capture posts to /api/contact, which accepts a phone number as a
+ * complete lead — so the hero form really is a single field plus consent.
  */
 export default function HomeHero() {
   const { t } = useI18n();
+  const prefersReducedMotion = useReducedMotion();
+
+  // --- Phone form state ---
+  const [formState, setFormState] = useState<PhoneFormState>("idle");
+  const [phone, setPhone] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Accessible IDs
+  const phoneInputId = useId();
+  const errorId = useId();
+  const successId = useId();
+
+  // --- Validation ---
+  function validatePhone(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return t("home.hero.phoneErrorEmpty");
+    // Strip formatting, count digits
+    const digits = trimmed.replace(/[\s\-\(\)\+]/g, "");
+    if (digits.length < 9 || !/^\d+$/.test(digits)) {
+      return t("home.hero.phoneErrorInvalid");
+    }
+    return null;
+  }
+
+  // --- Submit ---
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const validationError = validatePhone(phone);
+    if (validationError) {
+      setErrorMsg(validationError);
+      setFormState("error");
+      // Don't clear the phone input on validation error
+      return;
+    }
+
+    setFormState("submitting");
+    setErrorMsg("");
+
+    // Phone-only lead: /api/contact waives name, email and message when a
+    // dialable number is present, so nothing is invented here to get past
+    // validation. The message names the originating form, which is the one
+    // thing the inbox cannot infer from the number itself.
+    const payload = {
+      name: "",
+      email: "",
+      phone: phone.trim(),
+      message: "Prośba o kontakt telefoniczny — formularz w nagłówku strony głównej.",
+      projectType: "",
+      budget: "",
+      consent: true as const,
+      consentTimestamp: new Date().toISOString(),
+      ...getAttribution(),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        setErrorMsg(t("home.hero.phoneErrorNetwork"));
+        setFormState("error");
+        return;
+      }
+
+      setFormState("success");
+      trackLead({ form: "hero-phone", method: "phone" });
+    } catch {
+      setErrorMsg(t("home.hero.phoneErrorNetwork"));
+      setFormState("error");
+    }
+  }
+
+  // --- Animation variants ---
+  // Hero is above the fold — animate on mount, not whileInView.
+  // Full choreography: headline -> desc -> form -> proof, sequential.
+  // Reduced motion: instant opacity fade, no transform.
+  const baseDelay = 0;
+  const step = prefersReducedMotion ? 0 : staggerItem * 1.5; // ~120ms between elements
+
+  function entrance(index: number) {
+    if (prefersReducedMotion) {
+      return {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { duration: 0.15 },
+      };
+    }
+    return {
+      initial: { opacity: 0, y: 18 },
+      animate: { opacity: 1, y: 0 },
+      transition: {
+        duration: durationMedium,
+        ease: easeEntry,
+        delay: baseDelay + index * step,
+      },
+    };
+  }
+
+  function screenshotEntrance() {
+    if (prefersReducedMotion) {
+      return {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { duration: 0.15 },
+      };
+    }
+    return {
+      initial: { opacity: 0, scale: 0.97 },
+      animate: { opacity: 1, scale: 1 },
+      transition: {
+        duration: durationSlow,
+        ease: easeEntry,
+        delay: baseDelay + 4 * step,
+      },
+    };
+  }
 
   return (
-    <section className="relative overflow-hidden bg-surface pt-32 pb-20 md:pt-40 md:pb-28 lg:pt-44 lg:pb-32">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-14 px-6 md:px-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:px-24">
-        {/* Text column */}
+    <section className="relative bg-surface pt-28 pb-section-major md:pt-36 lg:pt-40">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-start gap-12 px-6 md:px-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:px-24">
+        {/* ── Text + form column ── */}
         <div className="max-w-2xl">
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: easeEntry }}
-            className="inline-flex items-center gap-2 rounded-full border border-outline-variant/40 bg-surface-container/40 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-on-surface-variant"
-          >
-            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary" />
-            {t("home.hero.eyebrow")}
-          </motion.span>
-
+          {/* Headline — text-display token, Archivo with wdth axis */}
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: easeEntry, delay: 0.06 }}
-            className="mt-6 font-headline text-[clamp(2.4rem,5.4vw,4.4rem)] font-bold leading-[1.04] tracking-[-0.03em] text-on-surface text-balance"
+            {...entrance(0)}
+            className="font-headline text-display font-bold leading-[1.04] tracking-[-0.025em] text-on-surface text-balance [font-stretch:108%]"
           >
-            {t("home.hero.headline")}
+            {t("home.hero.headline.v2")}
           </motion.h1>
 
+          {/* Description — one sentence, max 65ch */}
           <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: easeEntry, delay: 0.14 }}
-            className="mt-7 max-w-[60ch] text-lg font-light leading-relaxed text-on-surface/75 md:text-xl"
+            {...entrance(1)}
+            className="mt-6 max-w-[60ch] text-lead leading-relaxed text-on-surface-variant text-pretty"
           >
-            {t("home.hero.desc")}
+            {t("home.hero.desc.v2")}
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: easeEntry, delay: 0.22 }}
-            className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap"
-          >
-            <ContactCtaLink className="group inline-flex items-center justify-center gap-3 rounded-full bg-primary px-7 py-4 text-sm font-medium uppercase tracking-widest text-on-primary transition-colors hover:bg-primary-container">
-              {t("home.hero.ctaPrimary")}
-              <span aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:translate-x-1">→</span>
-            </ContactCtaLink>
-            <a
-              href="#realizacje"
-              className="group inline-flex items-center justify-center gap-3 rounded-full border border-on-surface/25 px-7 py-4 text-sm font-medium uppercase tracking-widest text-on-surface transition-colors hover:border-primary hover:text-primary"
-            >
-              {t("home.hero.ctaSecondary")}
-              <span aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:translate-x-1">→</span>
-            </a>
+          {/* ── Phone capture form ── */}
+          <motion.div {...entrance(2)} className="mt-10">
+            {formState === "success" ? (
+              <p
+                id={successId}
+                role="status"
+                aria-live="polite"
+                className="text-lead font-medium text-primary"
+              >
+                {t("home.hero.phoneSuccess")}
+              </p>
+            ) : (
+              <form
+                onSubmit={handleSubmit}
+                noValidate
+                className="flex flex-col gap-4"
+              >
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-3">
+                  <div className="flex flex-1 flex-col gap-1.5">
+                    <label
+                      htmlFor={phoneInputId}
+                      className="sr-only"
+                    >
+                      {t("home.hero.phoneLabel")}
+                    </label>
+                    <input
+                      ref={inputRef}
+                      id={phoneInputId}
+                      type="tel"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      name="phone"
+                      value={phone}
+                      onChange={(e) => {
+                        setPhone(e.target.value);
+                        // Clear error when user starts typing again
+                        if (formState === "error") {
+                          setFormState("idle");
+                          setErrorMsg("");
+                        }
+                      }}
+                      placeholder={t("home.hero.phonePlaceholder")}
+                      aria-describedby={
+                        formState === "error" && errorMsg ? errorId : undefined
+                      }
+                      aria-invalid={formState === "error" ? "true" : undefined}
+                      className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary sm:min-w-[240px]"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={formState === "submitting"}
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold uppercase tracking-wider text-on-primary transition-colors hover:bg-primary-container disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {formState === "submitting"
+                      ? t("home.hero.phoneSending")
+                      : t("home.hero.phoneCta")}
+                  </button>
+                </div>
+
+                {/* Error message */}
+                {formState === "error" && errorMsg && (
+                  <p
+                    id={errorId}
+                    role="alert"
+                    aria-live="assertive"
+                    className="text-sm text-red-400"
+                  >
+                    {errorMsg}
+                  </p>
+                )}
+
+                {/* Reassurance + consent micro-copy. Consent here is given by
+                    the act of submitting under a clear notice, so the notice
+                    has to carry the privacy policy link with it. */}
+                <p className="text-sm text-on-surface-variant">
+                  {t("home.hero.phoneReassurance")}{" "}
+                  {t("home.hero.phoneConsentNote")}{" "}
+                  <a
+                    href="/polityka-prywatnosci"
+                    className="underline underline-offset-2 transition-colors hover:text-primary"
+                  >
+                    {t("qc.privacyLink")}
+                  </a>
+                </p>
+              </form>
+            )}
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.34 }}
-            className="mt-7 text-sm font-medium text-on-surface-variant"
-          >
-            {t("home.hero.proof")}
-          </motion.p>
+          {/* Secondary link to portfolio — visually subdued */}
+          <motion.div {...entrance(3)} className="mt-6">
+            <a
+              href="#realizacje"
+              className="inline-flex min-h-[24px] items-center gap-2 py-1 text-sm font-medium text-on-surface-variant transition-colors hover:text-primary"
+            >
+              {t("home.hero.ctaSecondary")}
+              <span aria-hidden="true" className="transition-transform duration-300 ease-out">
+                &darr;
+              </span>
+            </a>
+          </motion.div>
         </div>
 
-        {/* Screenshot column */}
+        {/* ── Screenshot column — proof, not decoration ── */}
         <motion.figure
-          initial={{ opacity: 0, y: 28, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.9, ease: easeEntry, delay: 0.18 }}
+          {...screenshotEntrance()}
           className="relative"
         >
-          <div className="relative aspect-[16/11] overflow-hidden rounded-3xl border border-outline-variant/40 bg-surface-container/40 shadow-2xl shadow-black/10">
+          <div className="relative aspect-[16/11] overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-low">
             <Image
               src="/screenshots/wsafefinanse-hero.webp"
               alt={t("home.hero.shotAlt")}
               fill
               priority
-              sizes="(max-width: 1024px) 100vw, 620px"
+              sizes="(max-width: 1024px) 100vw, 580px"
               className="object-cover object-top"
             />
           </div>
-          <figcaption className="mt-4 flex items-center gap-2 text-sm text-on-surface-variant">
-            <span aria-hidden="true" className="h-px w-6 bg-outline-variant" />
+          <figcaption className="mt-3 flex items-center gap-2 text-sm text-on-surface-variant">
+            <span aria-hidden="true" className="h-px w-5 bg-outline-variant" />
             {t("home.hero.shotCaption")}
           </figcaption>
         </motion.figure>

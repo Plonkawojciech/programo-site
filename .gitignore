@@ -46,3 +46,16 @@ next-env.d.ts
 
 # claude code agent worktrees (local state, not for the repo)
 .claude/worktrees/
+
+# claude code local state — vendored third-party skills, agent scratch space and
+# the local dev-server config. None of it is project source.
+.claude/skills/
+.claude/launch.json
+.agents/
+skills-lock.json
+
+# design mockups — 5+ MB of source art, not shipped by the site
+public/mockups/
+
+# stray R console history
+.Rhistory

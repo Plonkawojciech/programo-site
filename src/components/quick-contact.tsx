@@ -1,67 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useId } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import { getAttribution, trackLead } from "@/lib/tracking";
+import { getAttribution, trackLead, trackContactClick } from "@/lib/tracking";
+import { easeEntry, durationMedium } from "@/lib/motion";
 
-type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 type FormState = "idle" | "submitting" | "success" | "error";
-
-// Problem-based options — what the client struggles with today.
-// Sent to the API as `projectType` (unchanged field name) for lead routing.
-const PROJECT_TYPES: { key: string; tKey: TKey }[] = [
-  { key: "leads", tKey: "quick.problem.leads" },
-  { key: "shop", tKey: "quick.problem.shop" },
-  { key: "manual", tKey: "quick.problem.manual" },
-  { key: "system", tKey: "quick.problem.system" },
-  { key: "ai", tKey: "quick.problem.ai" },
-  { key: "other", tKey: "quick.problem.other" },
-];
-
-const BUDGETS: { key: string; tKey: TKey }[] = [
-  { key: "unsure", tKey: "quick.budget.unsure" },
-  { key: "s", tKey: "quick.budget.s" },
-  { key: "m", tKey: "quick.budget.m" },
-  { key: "l", tKey: "quick.budget.l" },
-  { key: "xl", tKey: "quick.budget.xl" },
-];
-
-const labelClass =
-  "text-xs font-bold uppercase tracking-widest text-on-surface-variant";
-const chipBase =
-  "rounded-full border px-4 py-2 text-sm font-medium transition-colors cursor-pointer";
-const inputClass =
-  "w-full bg-transparent border-b border-outline-variant/40 py-3 text-lg text-on-surface placeholder:text-on-surface/30 outline-none focus:border-primary transition-colors";
 
 export default function QuickContact() {
   const { t } = useI18n();
+  const prefersReduced = useReducedMotion();
   const [state, setState] = useState<FormState>("idle");
-  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [consent, setConsent] = useState(false);
-  const [projectType, setProjectType] = useState<TKey | null>(null);
-  const [budget, setBudget] = useState<TKey | null>(null);
+
+  const phoneId = useId();
+  const nameId = useId();
+  const contextId = useId();
+  const consentId = useId();
+  const errorId = useId();
+
+  const reveal = prefersReduced
+    ? {}
+    : {
+        initial: { opacity: 0, y: 16 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, margin: "-12% 0px" },
+        transition: { duration: durationMedium, ease: easeEntry },
+      };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!consent) {
-      setErrorMsg(t("quick.consentRequired"));
+      setErrorMsg(t("qc.consentRequired"));
       setState("error");
       return;
     }
     setState("submitting");
     setErrorMsg("");
 
-    const formData = new FormData(e.currentTarget);
+    const fd = new FormData(e.currentTarget);
+    const phone = String(fd.get("phone") || "").trim();
+    const name = String(fd.get("name") || "").trim();
+    const context = String(fd.get("context") || "").trim();
+
+    // The phone number is the whole lead. /api/contact waives name, email and
+    // message whenever a dialable number is present, so nothing is invented
+    // here to get past validation — blank fields are sent blank.
     const payload = {
-      name: String(formData.get("name") || ""),
-      email: String(formData.get("email") || ""),
-      phone: String(formData.get("phone") || ""),
-      message: String(formData.get("message") || ""),
-      projectType: projectType ? t(projectType) : "",
-      budget: budget ? t(budget) : "",
-      consent: true,
+      name,
+      email: "",
+      phone,
+      message: context.slice(0, 2000),
+      projectType: "",
+      budget: "",
+      consent: true as const,
       consentTimestamp: new Date().toISOString(),
       ...getAttribution(),
     };
@@ -75,7 +70,7 @@ export default function QuickContact() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setErrorMsg(data?.error || t("quick.error"));
+        setErrorMsg(data?.error || t("qc.error"));
         setState("error");
         return;
       }
@@ -84,234 +79,163 @@ export default function QuickContact() {
       trackLead({ form: "quick-contact" });
       (e.target as HTMLFormElement).reset();
       setConsent(false);
-      setProjectType(null);
-      setBudget(null);
     } catch {
-      setErrorMsg(t("quick.error"));
+      setErrorMsg(t("qc.error"));
       setState("error");
     }
   }
 
   return (
-    <section id="kontakt-main" className="relative bg-surface py-24 md:py-32 lg:py-40 border-t border-outline-variant/20 scroll-mt-24">
+    <section
+      id="kontakt-main"
+      className="scroll-mt-24 bg-surface py-section-major"
+    >
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-          {/* Left side: heading + alt contacts */}
-          <div className="lg:col-span-5 flex flex-col gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+          {/* Left column: heading + direct contact */}
+          <motion.div {...reveal} className="flex flex-col gap-10">
             <div>
-              <motion.span
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary"
-              >
-                {t("contact.label")}
-              </motion.span>
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="mt-6 font-headline text-4xl md:text-6xl 2xl:text-7xl font-bold tracking-tighter text-on-surface"
-              >
-                {t("quick.title")}
-              </motion.h2>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="mt-6 text-lg md:text-xl font-light text-on-surface/70 leading-relaxed max-w-md"
-              >
-                {t("quick.subtitle")}
-              </motion.p>
+              <h2 className="font-headline text-h2 font-bold tracking-[-0.02em] text-on-surface text-balance">
+                {t("qc.title")}
+              </h2>
+              <p className="mt-5 max-w-[50ch] text-lead text-on-surface-variant leading-relaxed text-pretty">
+                {t("qc.subtitle")}
+              </p>
             </div>
 
-            {/* Alt contact channels */}
-            <div className="flex flex-col gap-6 border-t border-outline-variant/30 pt-10">
+            {/* Direct call alternative */}
+            <div className="flex flex-col gap-5 border-t border-outline-variant pt-8">
+              <p className="text-sm font-medium text-on-surface-variant">
+                {t("qc.orCall")}
+              </p>
+              <a
+                href="tel:+48797222363"
+                onClick={() => trackContactClick("phone", "tel:+48797222363")}
+                className="inline-flex items-center gap-3 font-headline text-h3 font-bold tracking-[-0.02em] text-on-surface transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-5 w-5 shrink-0 text-primary"
+                >
+                  <path d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-.65 1.548l-.654.436a.25.25 0 00-.106.258c.344 1.632 1.543 2.831 3.175 3.175a.25.25 0 00.258-.106l.436-.654a1.5 1.5 0 011.548-.65l3.223.716A1.5 1.5 0 0118 12.352v1.148A1.5 1.5 0 0116.5 15h-1.5A12.5 12.5 0 012 3.5z" />
+                </svg>
+                +48 797 222 363
+              </a>
               <a
                 href="mailto:biuro@programo.pl"
-                className="group flex flex-col gap-1"
+                onClick={() => trackContactClick("email", "mailto:biuro@programo.pl")}
+                className="text-on-surface-variant font-medium transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
               >
-                <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                  Email
-                </span>
-                <span className="font-headline text-xl md:text-2xl font-medium text-on-surface group-hover:text-primary transition-colors">
-                  biuro@programo.pl
-                </span>
+                {t("qc.orEmail")}: biuro@programo.pl
               </a>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
-                <a
-                  href="tel:+48797222363"
-                  className="group flex flex-col gap-1"
-                >
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                    Wojciech
-                  </span>
-                  <span className="text-base font-medium text-on-surface group-hover:text-primary transition-colors">
-                    +48 797 222 363
-                  </span>
-                </a>
-                <a
-                  href="tel:+48509123434"
-                  className="group flex flex-col gap-1"
-                >
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                    Bartosz
-                  </span>
-                  <span className="text-base font-medium text-on-surface group-hover:text-primary transition-colors">
-                    +48 509 123 434
-                  </span>
-                </a>
-              </div>
-
-              <div className="mt-2 text-sm text-on-surface-variant">
-                Poznań, Polska
-              </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right side: form */}
-          <div className="lg:col-span-7">
+          {/* Right column: form */}
+          <motion.div
+            {...(prefersReduced
+              ? {}
+              : {
+                  initial: { opacity: 0, y: 16 },
+                  whileInView: { opacity: 1, y: 0 },
+                  viewport: { once: true, margin: "-8% 0px" },
+                  transition: {
+                    delay: 0.1,
+                    duration: durationMedium,
+                    ease: easeEntry,
+                  },
+                })}
+          >
             {state === "success" ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="flex flex-col items-start gap-6 bg-surface-container/40 border border-primary/40 rounded-3xl p-8 md:p-12"
+              <div
+                className="flex flex-col gap-5"
+                role="status"
+                aria-live="polite"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
-                  <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" aria-hidden="true">
-                    <path d="M4 12.5l5 5L20 6.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <h3 className="font-headline text-3xl md:text-4xl font-bold tracking-tight text-on-surface">
-                  {t("quick.successTitle")}
+                <h3 className="font-headline text-h3 font-bold tracking-[-0.02em] text-on-surface">
+                  {t("qc.successTitle")}
                 </h3>
-                <p className="text-base md:text-lg font-light leading-relaxed text-on-surface/70 max-w-lg">
-                  {t("quick.successBody")}
+                <p className="max-w-[50ch] text-on-surface-variant leading-relaxed text-pretty">
+                  {t("qc.successBody")}
                 </p>
                 <button
                   type="button"
                   onClick={() => setState("idle")}
-                  className="group mt-2 inline-flex items-center gap-2 text-sm uppercase tracking-widest font-medium text-primary transition-colors cursor-pointer"
+                  className="mt-2 self-start text-sm font-medium text-primary transition-colors hover:text-on-surface cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
                 >
-                  {t("quick.successAgain")}{" "}
-                  <span aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:translate-x-1">→</span>
+                  {t("qc.successAgain")}
                 </button>
-              </motion.div>
+              </div>
             ) : (
-              <motion.form
+              <form
                 onSubmit={handleSubmit}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="flex flex-col gap-7 bg-surface-container/40 border border-outline-variant/30 rounded-3xl p-8 md:p-12"
+                noValidate
+                className="flex flex-col gap-6"
               >
-                {/* Problem-based chips */}
-                <div className="flex flex-col gap-3">
-                  <span className={labelClass}>{t("quick.problemLabel")}</span>
-                  <div className="flex flex-wrap gap-2.5">
-                    {PROJECT_TYPES.map((opt) => {
-                      const active = projectType === opt.tKey;
-                      return (
-                        <button
-                          key={opt.key}
-                          type="button"
-                          aria-pressed={active}
-                          onClick={() => setProjectType(active ? null : opt.tKey)}
-                          className={`${chipBase} ${
-                            active
-                              ? "border-primary bg-primary text-on-primary"
-                              : "border-outline-variant/40 text-on-surface-variant hover:border-primary hover:text-on-surface"
-                          }`}
-                        >
-                          {t(opt.tKey)}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Budget chips */}
-                <div className="flex flex-col gap-3">
-                  <span className={labelClass}>{t("quick.budgetLabel")}</span>
-                  <div className="flex flex-wrap gap-2.5">
-                    {BUDGETS.map((opt) => {
-                      const active = budget === opt.tKey;
-                      return (
-                        <button
-                          key={opt.key}
-                          type="button"
-                          aria-pressed={active}
-                          onClick={() => setBudget(active ? null : opt.tKey)}
-                          className={`${chipBase} ${
-                            active
-                              ? "border-primary bg-primary text-on-primary"
-                              : "border-outline-variant/40 text-on-surface-variant hover:border-primary hover:text-on-surface"
-                          }`}
-                        >
-                          {t(opt.tKey)}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
+                {/* Phone — primary field */}
                 <div className="flex flex-col gap-2">
-                  <label className={labelClass}>{t("quick.name")} *</label>
+                  <label
+                    htmlFor={phoneId}
+                    className="text-sm font-medium text-on-surface"
+                  >
+                    {t("qc.phoneLabel")} *
+                  </label>
                   <input
+                    id={phoneId}
+                    type="tel"
+                    name="phone"
+                    required
+                    autoComplete="tel"
+                    inputMode="tel"
+                    placeholder={t("qc.phonePlaceholder")}
+                    className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3.5 text-lg text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+
+                {/* Name — optional */}
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor={nameId}
+                    className="text-sm font-medium text-on-surface-variant"
+                  >
+                    {t("qc.nameLabel")}
+                  </label>
+                  <input
+                    id={nameId}
                     type="text"
                     name="name"
-                    required
-                    className={inputClass}
-                    placeholder="Jan Kowalski"
+                    autoComplete="name"
+                    placeholder={t("qc.namePlaceholder")}
+                    className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                 </div>
 
+                {/* Context — optional, maps to `message` */}
                 <div className="flex flex-col gap-2">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="flex flex-col gap-2">
-                      <label className={labelClass}>{t("quick.email")} *</label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        className={inputClass}
-                        placeholder="jan@firma.pl"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <label className={labelClass}>{t("quick.phone")}</label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        className={inputClass}
-                        placeholder="+48 600 000 000"
-                      />
-                    </div>
-                  </div>
-                  <p className="text-xs font-light text-on-surface-variant/80">
-                    {t("quick.contactHint")}
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className={labelClass}>{t("quick.outcomeLabel")} *</label>
-                  <textarea
-                    name="message"
-                    required
-                    minLength={20}
-                    rows={5}
-                    className={`${inputClass} resize-none`}
-                    placeholder="Mam pomysł na aplikację / stronę / system..."
+                  <label
+                    htmlFor={contextId}
+                    className="text-sm font-medium text-on-surface-variant"
+                  >
+                    {t("qc.contextLabel")}
+                  </label>
+                  <input
+                    id={contextId}
+                    type="text"
+                    name="context"
+                    placeholder={t("qc.contextPlaceholder")}
+                    className="w-full rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                 </div>
 
-                <label className="mt-1 flex items-start gap-3 cursor-pointer group">
+                {/* Consent */}
+                <label
+                  className="flex items-start gap-3 cursor-pointer group"
+                >
                   <span className="relative shrink-0 mt-0.5">
                     <input
+                      id={consentId}
                       type="checkbox"
                       name="consent"
                       checked={consent}
@@ -323,12 +247,13 @@ export default function QuickContact() {
                         }
                       }}
                       required
-                      className="peer h-[18px] w-[18px] appearance-none rounded-[5px] border border-outline-variant/50 bg-transparent transition-colors checked:bg-primary checked:border-primary hover:border-on-surface/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer"
+                      aria-describedby={state === "error" ? errorId : undefined}
+                      className="peer h-5 w-5 appearance-none rounded border border-outline-variant bg-transparent transition-colors checked:bg-primary checked:border-primary hover:border-on-surface-variant focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer"
                     />
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 16 16"
-                      className="pointer-events-none absolute inset-0 m-auto h-[12px] w-[12px] opacity-0 peer-checked:opacity-100 transition-opacity text-on-primary"
+                      className="pointer-events-none absolute inset-0 m-auto h-3 w-3 opacity-0 peer-checked:opacity-100 transition-opacity text-on-primary"
                     >
                       <path
                         d="M3 8l3.5 3.5L13 5"
@@ -340,42 +265,49 @@ export default function QuickContact() {
                       />
                     </svg>
                   </span>
-                  <span className="text-[13px] md:text-sm font-light leading-relaxed text-on-surface-variant group-hover:text-on-surface/90 transition-colors">
-                    {t("quick.consentLabel")}{" "}
+                  <span className="text-sm leading-relaxed text-on-surface-variant group-hover:text-on-surface transition-colors">
+                    {t("qc.consentLabel")}{" "}
                     <Link
                       href="/polityka-prywatnosci"
-                      className="underline decoration-on-surface-variant/40 underline-offset-2 hover:text-on-surface"
+                      className="underline decoration-outline-variant underline-offset-2 hover:text-on-surface transition-colors"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      {t("quick.privacyLink")}
+                      {t("qc.privacyLink")}
                     </Link>
                     .
                   </span>
                 </label>
 
-                <div className="flex flex-col gap-3 mt-1">
+                {/* Submit + trust + error */}
+                <div className="flex flex-col gap-3">
                   <button
                     type="submit"
-                    disabled={state === "submitting" || !consent}
-                    className="group w-full md:w-auto md:self-start inline-flex items-center justify-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    disabled={state === "submitting"}
+                    className="w-full md:w-auto md:self-start inline-flex items-center justify-center gap-2 bg-primary text-on-primary px-8 py-4 rounded-lg text-base font-medium transition-colors hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                   >
-                    {state === "submitting" ? t("quick.sending") : t("quick.send")}{" "}
-                    <span className="transition-transform duration-300 ease-out group-hover:translate-x-1">→</span>
+                    {state === "submitting" ? t("qc.sending") : t("qc.send")}
                   </button>
 
-                  <p className="text-xs font-light text-on-surface-variant/80 leading-relaxed">
-                    {t("quick.trust")}
+                  <p className="text-sm text-on-surface-variant">
+                    {t("qc.trust")}
                   </p>
 
                   {state === "error" && (
-                    <p className="text-sm text-red-500">
-                      {errorMsg || t("quick.error")}
+                    <p
+                      id={errorId}
+                      role="alert"
+                      className="flex items-start gap-2 text-sm font-medium text-red-500"
+                    >
+                      <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 shrink-0">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                      </svg>
+                      {errorMsg || t("qc.error")}
                     </p>
                   )}
                 </div>
-              </motion.form>
+              </form>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

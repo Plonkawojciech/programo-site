@@ -100,21 +100,21 @@ export default function Footer() {
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <Link
               href="/polityka-prywatnosci"
-              className="text-[10px] font-medium text-on-surface-variant/70 uppercase tracking-widest hover-underline hover:text-on-surface transition-colors"
+              className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest hover-underline hover:text-on-surface transition-colors"
             >
               {t("footer.privacy")}
             </Link>
             <button
               type="button"
               onClick={openSettings}
-              className="text-[10px] font-medium text-on-surface-variant/70 uppercase tracking-widest hover-underline hover:text-on-surface transition-colors cursor-pointer"
+              className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest hover-underline hover:text-on-surface transition-colors cursor-pointer"
             >
               {t("footer.cookies")}
             </button>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[10px] font-medium text-on-surface-variant/60 uppercase tracking-widest">
+            <span className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest">
               {t("footer.location")}
             </span>
           </div>

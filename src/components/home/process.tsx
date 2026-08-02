@@ -7,10 +7,17 @@ import { easeEntry, durationMedium, staggerItem } from "@/lib/motion";
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
 const steps: { titleKey: TKey; descKey: TKey }[] = [
-  { titleKey: "home.process.1.title", descKey: "home.process.1.desc" },
-  { titleKey: "home.process.2.title", descKey: "home.process.2.desc" },
-  { titleKey: "home.process.3.title", descKey: "home.process.3.desc" },
-  { titleKey: "home.process.4.title", descKey: "home.process.4.desc" },
+  { titleKey: "home.process.1.title", descKey: "home.process.1.desc.v2" },
+  { titleKey: "home.process.2.title", descKey: "home.process.2.desc.v2" },
+  { titleKey: "home.process.3.title", descKey: "home.process.3.desc.v2" },
+  { titleKey: "home.process.4.title", descKey: "home.process.4.desc.v2" },
+];
+
+const terms: TKey[] = [
+  "home.process.terms.1",
+  "home.process.terms.2",
+  "home.process.terms.3",
+  "home.process.terms.4",
 ];
 
 export default function Process() {
@@ -19,55 +26,84 @@ export default function Process() {
   return (
     <section
       id="jak-pracujemy"
-      className="relative scroll-mt-24 border-t border-outline-variant/20 bg-surface py-20 md:py-28 lg:py-32"
+      aria-labelledby="process-heading"
+      className="scroll-mt-24 bg-surface-container-low py-section-tight"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
-        <div className="max-w-2xl">
-          <motion.span
-            initial={{ opacity: 0, x: -16 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: durationMedium, ease: easeEntry }}
-            className="font-mono text-sm text-primary"
-          >
-            {t("home.process.eyebrow")}
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10% 0px" }}
-            transition={{ duration: durationMedium, ease: easeEntry, delay: 0.05 }}
-            className="mt-4 font-headline text-3xl font-bold tracking-[-0.02em] text-on-surface md:text-5xl text-balance"
-          >
-            {t("home.process.title")}
-          </motion.h2>
-        </div>
+        {/* ---------- heading ---------- */}
+        <motion.h2
+          id="process-heading"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10% 0px" }}
+          transition={{ duration: durationMedium, ease: easeEntry }}
+          style={{ willChange: "opacity, transform" }}
+          className="max-w-2xl font-headline text-h2 tracking-[-0.02em] text-on-surface text-balance"
+        >
+          {t("home.process.title.v2")}
+        </motion.h2>
 
-        <ol className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-outline-variant/30 bg-outline-variant/20 md:grid-cols-2 lg:grid-cols-4">
+        {/* ---------- steps (ordered list — semantics match content) ---------- */}
+        <ol
+          className="mt-10 grid grid-cols-1 gap-y-8 gap-x-10 md:mt-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-x-12"
+          role="list"
+        >
           {steps.map((step, i) => (
             <motion.li
               key={step.titleKey}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-8% 0px" }}
-              transition={{ delay: i * staggerItem, duration: durationMedium, ease: easeEntry }}
-              className="flex flex-col gap-4 bg-surface p-8 md:p-9"
+              transition={{
+                delay: i * staggerItem,
+                duration: durationMedium,
+                ease: easeEntry,
+              }}
+              style={{ willChange: "opacity, transform" }}
+              className="flex flex-col gap-3"
             >
-              <span
-                aria-hidden="true"
-                className="font-headline text-4xl font-bold tracking-tight text-primary/30"
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="font-headline text-xl font-bold tracking-tight text-on-surface md:text-2xl">
+              <h3 className="font-headline text-h4 tracking-[-0.01em] text-on-surface">
+                <span
+                  className="mr-2 text-on-surface-variant"
+                  aria-hidden="true"
+                >
+                  {i + 1}.
+                </span>
                 {t(step.titleKey)}
               </h3>
-              <p className="text-base font-light leading-relaxed text-on-surface/70">
+              <p className="max-w-[50ch] text-base leading-relaxed text-on-surface-variant text-pretty">
                 {t(step.descKey)}
               </p>
             </motion.li>
           ))}
         </ol>
+
+        {/* ---------- terms bar (absorbed from WhyUs) ---------- */}
+        <motion.aside
+          aria-label={t("home.process.terms.label")}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-5% 0px" }}
+          transition={{ duration: durationMedium, ease: easeEntry, delay: 0.1 }}
+          style={{ willChange: "opacity" }}
+          className="mt-10 border-t border-outline-variant pt-6 md:mt-12"
+        >
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-on-surface-variant md:gap-x-8">
+            {terms.map((key, i) => (
+              <li key={key} className="flex items-baseline gap-1.5">
+                {i > 0 && (
+                  <span
+                    aria-hidden="true"
+                    className="hidden text-outline md:inline"
+                  >
+                    /
+                  </span>
+                )}
+                {t(key)}
+              </li>
+            ))}
+          </ul>
+        </motion.aside>
       </div>
     </section>
   );

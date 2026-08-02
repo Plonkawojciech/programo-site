@@ -1,102 +1,110 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import { easeEntry, durationMedium, durationFast } from "@/lib/motion";
+import { easeEntry, durationMedium } from "@/lib/motion";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
+/**
+ * 6 questions, ordered by buyer fear sequence:
+ * 1. Cost (biggest anxiety)
+ * 2. Timeline
+ * 3. "I only have an idea" (permission to call without a spec)
+ * 4. Code ownership (lock-in fear)
+ * 5. Post-launch support (abandonment fear)
+ * 6. How to start (bridge to contact form)
+ *
+ * Cut from original 8:
+ * - "Czy wystawiacie fakturę VAT?" — trivial, not an objection
+ * - "Czy pracujecie zdalnie?" — trivial, not an objection
+ *
+ * Uses native <details>/<summary> so all answers are in the DOM for
+ * SSR, crawlers, and screen readers regardless of open/closed state.
+ */
 const faqs: { q: TKey; a: TKey }[] = [
-  { q: "home.faq.q1", a: "home.faq.a1" },
-  { q: "home.faq.q2", a: "home.faq.a2" },
-  { q: "home.faq.q3", a: "home.faq.a3" },
-  { q: "home.faq.q4", a: "home.faq.a4" },
-  { q: "home.faq.q5", a: "home.faq.a5" },
-  { q: "home.faq.q6", a: "home.faq.a6" },
-  { q: "home.faq.q7", a: "home.faq.a7" },
-  { q: "home.faq.q8", a: "home.faq.a8" },
+  { q: "home.faq.r.q1", a: "home.faq.r.a1" },
+  { q: "home.faq.r.q2", a: "home.faq.r.a2" },
+  { q: "home.faq.r.q3", a: "home.faq.r.a3" },
+  { q: "home.faq.r.q4", a: "home.faq.r.a4" },
+  { q: "home.faq.r.q5", a: "home.faq.r.a5" },
+  { q: "home.faq.r.q6", a: "home.faq.r.a6" },
 ];
 
 export default function Faq() {
   const { t } = useI18n();
-  const [open, setOpen] = useState<number | null>(0);
+  const prefersReduced = useReducedMotion();
+
+  const reveal = prefersReduced
+    ? {}
+    : {
+        initial: { opacity: 0, y: 14 } as const,
+        whileInView: { opacity: 1, y: 0 } as const,
+        viewport: { once: true, margin: "-10% 0px" } as const,
+        transition: { duration: durationMedium, ease: easeEntry } as const,
+      };
 
   return (
-    <section className="relative border-t border-outline-variant/20 bg-surface py-20 md:py-28 lg:py-32">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-12 px-6 md:px-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:px-24">
-        <div className="lg:sticky lg:top-28 lg:self-start">
-          <motion.span
-            initial={{ opacity: 0, x: -16 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: durationMedium, ease: easeEntry }}
-            className="font-mono text-sm text-primary"
-          >
-            {t("home.faq.eyebrow")}
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10% 0px" }}
-            transition={{ duration: durationMedium, ease: easeEntry, delay: 0.05 }}
-            className="mt-4 font-headline text-3xl font-bold tracking-[-0.02em] text-on-surface md:text-5xl text-balance"
-          >
-            {t("home.faq.title")}
-          </motion.h2>
-        </div>
+    <section className="bg-surface-dim py-section-tight">
+      <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
+          {/* Left column: heading */}
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <motion.h2
+              {...reveal}
+              className="font-headline text-h2 font-bold tracking-[-0.02em] text-on-surface text-balance"
+            >
+              {t("home.faq.r.title")}
+            </motion.h2>
+          </div>
 
-        <ul className="flex flex-col">
-          {faqs.map((item, i) => {
-            const isOpen = open === i;
-            const panelId = `faq-panel-${i}`;
-            const btnId = `faq-button-${i}`;
-            return (
-              <li key={item.q} className="border-b border-outline-variant/30 first:border-t">
-                <h3>
-                  <button
-                    id={btnId}
-                    type="button"
-                    aria-expanded={isOpen}
-                    aria-controls={panelId}
-                    onClick={() => setOpen(isOpen ? null : i)}
-                    className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors hover:text-primary"
-                  >
-                    <span className="font-headline text-lg font-bold tracking-tight text-on-surface md:text-xl">
+          {/* Right column: accordion with native <details> */}
+          <div className="flex flex-col">
+            {faqs.map((item, i) => {
+              const isLast = i === faqs.length - 1;
+              return (
+                <details
+                  key={item.q}
+                  className="group border-t border-outline-variant last:border-b"
+                  {...(i === 0 ? { open: true } : {})}
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
+                    <span className="font-headline text-h4 font-bold tracking-tight text-on-surface">
                       {t(item.q)}
                     </span>
                     <span
                       aria-hidden="true"
-                      className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border border-outline-variant/50 text-on-surface-variant transition-transform duration-300 ease-out ${
-                        isOpen ? "rotate-45" : ""
-                      }`}
+                      className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-outline-variant text-on-surface-variant transition-transform duration-300 ease-out group-open:rotate-45"
                     >
                       +
                     </span>
-                  </button>
-                </h3>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      id={panelId}
-                      role="region"
-                      aria-labelledby={btnId}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: durationFast, ease: easeEntry }}
-                      className="overflow-hidden"
-                    >
-                      <p className="max-w-[65ch] pb-6 text-base font-light leading-relaxed text-on-surface/70">
-                        {t(item.a)}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </li>
-            );
-          })}
-        </ul>
+                  </summary>
+                  <div className="pb-6">
+                    <p className="max-w-[65ch] text-base leading-relaxed text-on-surface-variant text-pretty">
+                      {t(item.a)}
+                    </p>
+                    {/* Last question ("Od czego zacząć?") bridges to the contact form */}
+                    {isLast && (
+                      <Link
+                        href="#kontakt-main"
+                        className="group/cta mt-4 inline-flex items-center gap-2 text-base font-medium text-primary transition-colors hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      >
+                        {t("home.faq.r.cta")}
+                        <span
+                          aria-hidden="true"
+                          className="transition-transform duration-300 ease-out group-hover/cta:translate-y-0.5"
+                        >
+                          &darr;
+                        </span>
+                      </Link>
+                    )}
+                  </div>
+                </details>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );

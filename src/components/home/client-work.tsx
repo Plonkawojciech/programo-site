@@ -2,179 +2,218 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { easeEntry, durationMedium, staggerItem } from "@/lib/motion";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
-interface WorkItem {
+interface CaseStudy {
   slug: string;
   image: string;
+  imgAltKey: TKey;
+  name: string;
   categoryKey: TKey;
   problemKey: TKey;
   solutionKey: TKey;
   effectKey: TKey;
-  name: string;
 }
 
-const items: WorkItem[] = [
+const cases: CaseStudy[] = [
   {
     slug: "wsafefinanse",
     image: "/screenshots/wsafefinanse-hero.webp",
+    imgAltKey: "home.work.wsafefinanse.imgAlt",
+    name: "WSafe Finanse",
     categoryKey: "home.work.wsafefinanse.category",
     problemKey: "home.work.wsafefinanse.problem",
     solutionKey: "home.work.wsafefinanse.solution",
     effectKey: "home.work.wsafefinanse.effect",
-    name: "WSafe Finanse",
   },
   {
     slug: "jedmar",
     image: "/screenshots/jedmar-hero.webp",
+    imgAltKey: "home.work.jedmar.imgAlt",
+    name: "Jedmar",
     categoryKey: "home.work.jedmar.category",
     problemKey: "home.work.jedmar.problem",
     solutionKey: "home.work.jedmar.solution",
     effectKey: "home.work.jedmar.effect",
-    name: "Jedmar",
+  },
+  {
+    slug: "wks-poznan",
+    image: "/screenshots/wks-hero.webp",
+    imgAltKey: "home.work.wks.imgAlt",
+    name: "WKS Poznan",
+    categoryKey: "home.work.wks.category",
+    problemKey: "home.work.wks.problem",
+    solutionKey: "home.work.wks.solution",
+    effectKey: "home.work.wks.effect",
   },
 ];
 
+/* ── Narrative block for a single case study ─────────────────────────── */
+
+function CaseNarrative({
+  c,
+  t,
+  reduced,
+}: {
+  c: CaseStudy;
+  t: ReturnType<typeof useI18n>["t"];
+  reduced: boolean;
+}) {
+  const base = reduced
+    ? { opacity: 1, y: 0 }
+    : { opacity: 0, y: 16 };
+  const visible = { opacity: 1, y: 0 };
+  const transition = (d: number) => ({
+    delay: d,
+    duration: durationMedium,
+    ease: easeEntry,
+  });
+
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <h3 className="font-headline text-h3 font-semibold tracking-tight text-on-surface">
+          {c.name}
+        </h3>
+        <span className="text-sm text-on-surface-variant">
+          {t(c.categoryKey)}
+        </span>
+      </div>
+
+      <dl className="flex flex-col gap-4">
+        {(
+          [
+            { label: "home.work.problem" as TKey, value: c.problemKey, accent: false },
+            { label: "home.work.solution" as TKey, value: c.solutionKey, accent: false },
+            { label: "home.work.effect" as TKey, value: c.effectKey, accent: true },
+          ]
+        ).map((row, ri) => (
+          <motion.div
+            key={ri}
+            initial={base}
+            whileInView={visible}
+            viewport={{ once: true, margin: "-5% 0px" }}
+            transition={transition(ri * staggerItem)}
+            className="flex flex-col gap-1"
+          >
+            <dt className="text-sm font-medium text-on-surface-variant">
+              {t(row.label)}
+            </dt>
+            <dd
+              className={
+                row.accent
+                  ? "text-base leading-relaxed text-on-surface"
+                  : "text-base leading-relaxed text-on-surface-variant"
+              }
+            >
+              {t(row.value)}
+            </dd>
+          </motion.div>
+        ))}
+      </dl>
+
+      <Link
+        href={`/projects/${c.slug}`}
+        className="group/link mt-1 inline-flex w-fit items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-on-surface focus-visible:text-on-surface"
+      >
+        {t("home.work.cta")}
+        <span
+          aria-hidden="true"
+          className="transition-transform duration-300 ease-out group-hover/link:translate-x-1"
+        >
+          &rarr;
+        </span>
+      </Link>
+    </div>
+  );
+}
+
+/* ── Main section ────────────────────────────────────────────────────── */
+
 export default function ClientWork() {
   const { t } = useI18n();
+  const reduced = useReducedMotion() ?? false;
+
+  const featured = cases[0];
+  const secondary = cases.slice(1);
 
   return (
     <section
       id="realizacje"
-      className="relative scroll-mt-24 border-t border-outline-variant/20 bg-surface py-20 md:py-28 lg:py-32"
+      className="relative scroll-mt-24 bg-surface-dim py-section-major"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
+        {/* ── Section heading ──────────────────────────────────── */}
         <div className="max-w-2xl">
-          <motion.span
-            initial={{ opacity: 0, x: -16 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: durationMedium, ease: easeEntry }}
-            className="font-mono text-sm text-primary"
-          >
-            {t("home.work.eyebrow")}
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10% 0px" }}
-            transition={{ duration: durationMedium, ease: easeEntry, delay: 0.05 }}
-            className="mt-4 font-headline text-3xl font-bold tracking-[-0.02em] text-on-surface md:text-5xl text-balance"
-          >
-            {t("home.work.title")}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10% 0px" }}
-            transition={{ duration: durationMedium, ease: easeEntry, delay: 0.1 }}
-            className="mt-5 max-w-[60ch] text-lg font-light leading-relaxed text-on-surface/70"
-          >
-            {t("home.work.subtitle")}
-          </motion.p>
+          <h2 className="font-headline text-h2 font-semibold tracking-tight text-on-surface text-balance [font-stretch:110%]">
+            {t("home.work.title.v2")}
+          </h2>
+          <p className="mt-4 max-w-[60ch] text-lead leading-relaxed text-on-surface-variant text-pretty">
+            {t("home.work.subtitle.v2")}
+          </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
-          {items.map((item, i) => (
-            <motion.article
-              key={item.slug}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-8% 0px" }}
-              transition={{ delay: i * staggerItem, duration: durationMedium, ease: easeEntry }}
-              className="group flex flex-col overflow-hidden rounded-3xl border border-outline-variant/30 bg-surface-container/30"
-            >
-              <Link
-                href={`/projects/${item.slug}`}
-                className="relative block aspect-[16/10] overflow-hidden bg-outline-variant/20"
-              >
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 640px"
-                  className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                />
-              </Link>
+        {/* ── Featured case study (larger weight) ─────────────── */}
+        <div className="mt-12 grid grid-cols-1 items-start gap-8 lg:mt-16 lg:grid-cols-[1fr_1fr] lg:gap-12">
+          <Link
+            href={`/projects/${featured.slug}`}
+            className="group relative block aspect-[16/10] overflow-hidden rounded-lg bg-surface-container"
+          >
+            <Image
+              src={featured.image}
+              alt={t(featured.imgAltKey)}
+              fill
+              sizes="(max-width: 1024px) 100vw, 680px"
+              className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+            />
+          </Link>
 
-              <div className="flex flex-1 flex-col gap-6 p-8 md:p-10">
-                <div className="flex flex-wrap items-baseline justify-between gap-3">
-                  <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
-                    {item.name}
-                  </h3>
-                  <span className="font-mono text-xs uppercase tracking-widest text-on-surface-variant">
-                    {t(item.categoryKey)}
-                  </span>
-                </div>
+          <CaseNarrative c={featured} t={t} reduced={reduced} />
+        </div>
 
-                <dl className="flex flex-col gap-5">
-                  <div className="grid grid-cols-1 gap-1 sm:grid-cols-[8rem_1fr] sm:gap-4">
-                    <dt className="font-mono text-xs uppercase tracking-widest text-on-surface-variant pt-0.5">
-                      {t("home.work.problem")}
-                    </dt>
-                    <dd className="text-base font-light leading-relaxed text-on-surface/75">
-                      {t(item.problemKey)}
-                    </dd>
-                  </div>
-                  <div className="grid grid-cols-1 gap-1 sm:grid-cols-[8rem_1fr] sm:gap-4">
-                    <dt className="font-mono text-xs uppercase tracking-widest text-on-surface-variant pt-0.5">
-                      {t("home.work.solution")}
-                    </dt>
-                    <dd className="text-base font-light leading-relaxed text-on-surface/75">
-                      {t(item.solutionKey)}
-                    </dd>
-                  </div>
-                  <div className="grid grid-cols-1 gap-1 sm:grid-cols-[8rem_1fr] sm:gap-4">
-                    <dt className="font-mono text-xs uppercase tracking-widest text-primary pt-0.5">
-                      {t("home.work.effect")}
-                    </dt>
-                    <dd className="text-base font-normal leading-relaxed text-on-surface">
-                      {t(item.effectKey)}
-                    </dd>
-                  </div>
-                </dl>
-
+        {/* ── Secondary case studies (compact rows) ───────────── */}
+        <div className="mt-12 border-t border-outline-variant pt-10 lg:mt-16 lg:pt-12">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12">
+            {secondary.map((c) => (
+              <article key={c.slug} className="flex flex-col gap-5">
                 <Link
-                  href={`/projects/${item.slug}`}
-                  className="group/cta mt-auto inline-flex items-center gap-2 pt-2 text-sm font-medium uppercase tracking-widest text-primary"
+                  href={`/projects/${c.slug}`}
+                  className="group relative block aspect-[16/10] overflow-hidden rounded-lg bg-surface-container"
                 >
-                  {t("home.work.cta")}
-                  <span
-                    aria-hidden="true"
-                    className="transition-transform duration-300 ease-out group-hover/cta:translate-x-1"
-                  >
-                    →
-                  </span>
+                  <Image
+                    src={c.image}
+                    alt={t(c.imgAltKey)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1400px) 50vw, 640px"
+                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  />
                 </Link>
-              </div>
-            </motion.article>
-          ))}
+
+                <CaseNarrative c={c} t={t} reduced={reduced} />
+              </article>
+            ))}
+          </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: durationMedium, ease: easeEntry, delay: 0.1 }}
-          className="mt-12 flex justify-center"
-        >
+        {/* ── View all link ───────────────────────────────────── */}
+        <div className="mt-12 flex justify-center lg:mt-16">
           <Link
             href="/projekty"
-            className="group inline-flex items-center gap-3 rounded-full border border-on-surface/25 px-7 py-3.5 text-sm font-medium uppercase tracking-widest text-on-surface transition-colors hover:border-primary hover:text-primary"
+            className="group inline-flex items-center gap-3 rounded-full border border-outline px-7 py-3.5 text-sm font-medium uppercase tracking-widest text-on-surface transition-colors hover:border-primary hover:text-primary"
           >
             {t("home.work.viewAll")}
             <span
               aria-hidden="true"
               className="transition-transform duration-300 ease-out group-hover:translate-x-1"
             >
-              →
+              &rarr;
             </span>
           </Link>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -26,40 +26,48 @@ function renderWithToggle() {
 }
 
 describe("Footer component", () => {
-  it("renders copyright with current year", () => {
+  it("renders the Programo logo", () => {
     renderWithI18n();
-    const year = new Date().getFullYear();
-    expect(screen.getByText(new RegExp(`2024.*${year}.*Programo`))).toBeInTheDocument();
+    const logo = screen.getByAltText("Programo");
+    expect(logo).toBeInTheDocument();
+    expect(logo).toHaveAttribute("src", "/programo-logo-white.svg");
   });
 
   it("social links have target=_blank and rel=noopener", () => {
     renderWithI18n();
-    const githubLink = screen.getByLabelText("GitHub");
+    const githubLink = screen.getByText("GitHub");
     expect(githubLink).toHaveAttribute("target", "_blank");
     expect(githubLink).toHaveAttribute("rel", "noopener noreferrer");
 
-    const linkedinLink = screen.getByLabelText("LinkedIn");
+    const linkedinLink = screen.getByText("LinkedIn");
     expect(linkedinLink).toHaveAttribute("target", "_blank");
     expect(linkedinLink).toHaveAttribute("rel", "noopener noreferrer");
   });
 
-  it("location 'Poznań' is visible", () => {
+  it("location 'Poznan, Polska' is visible", () => {
     renderWithI18n();
-    expect(screen.getByText(/Pozna/)).toBeInTheDocument();
+    expect(screen.getByText("Pozna\u0144, Polska")).toBeInTheDocument();
   });
 
   it("links are functional (have href)", () => {
     renderWithI18n();
-    const githubLink = screen.getByLabelText("GitHub");
+    const githubLink = screen.getByText("GitHub");
     expect(githubLink.getAttribute("href")).toContain("github.com");
 
-    const linkedinLink = screen.getByLabelText("LinkedIn");
+    const linkedinLink = screen.getByText("LinkedIn");
     expect(linkedinLink.getAttribute("href")).toContain("linkedin.com");
   });
 
-  it("copyright text includes 'Programo'", () => {
+  it("renders footer nav links with correct hrefs", () => {
     renderWithI18n();
-    expect(screen.getByText(/Programo/)).toBeInTheDocument();
+    const nav = screen.getByLabelText("Mapa strony");
+    expect(nav).toBeInTheDocument();
+
+    const ofertaLink = screen.getByText("Oferta");
+    expect(ofertaLink).toHaveAttribute("href", "/oferta");
+
+    const cennikLink = screen.getByText("Cennik");
+    expect(cennikLink).toHaveAttribute("href", "/cennik");
   });
 
   it("uses semantic footer element", () => {
@@ -68,12 +76,21 @@ describe("Footer component", () => {
     expect(footer).toBeInTheDocument();
   });
 
+  it("renders privacy policy link and cookie settings button", () => {
+    renderWithI18n();
+    const privacyLink = screen.getByText("Polityka prywatno\u015bci");
+    expect(privacyLink).toHaveAttribute("href", "/polityka-prywatnosci");
+
+    const cookieButton = screen.getByText("Ustawienia cookies");
+    expect(cookieButton.tagName).toBe("BUTTON");
+  });
+
   it("i18n: location changes to 'Poland' in EN", () => {
     renderWithToggle();
     // Default PL
-    expect(screen.getByText(/Polska/)).toBeInTheDocument();
+    expect(screen.getByText("Pozna\u0144, Polska")).toBeInTheDocument();
     // Toggle to EN
     fireEvent.click(screen.getByTestId("toggle-lang"));
-    expect(screen.getByText(/Poland/)).toBeInTheDocument();
+    expect(screen.getByText("Pozna\u0144, Poland")).toBeInTheDocument();
   });
 });

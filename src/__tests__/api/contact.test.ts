@@ -141,6 +141,48 @@ describe("contact API validation", () => {
   });
 });
 
+// The homepage sells one action: leave a phone number. A dialable number plus
+// consent has to be a complete submission, or that promise is a lie at the API
+// layer and every hero lead 400s.
+describe("phone-only lead", () => {
+  it("phone + consent alone passes", () => {
+    const result = contactSchema.safeParse({
+      phone: "600 123 456",
+      consent: true,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts a formatted international number", () => {
+    const result = contactSchema.safeParse({
+      phone: "+48 600 123 456",
+      consent: true,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("blank name, email and message are accepted alongside a phone", () => {
+    const result = contactSchema.safeParse({
+      name: "",
+      email: "",
+      message: "",
+      phone: "600123456",
+      consent: true,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("still requires consent", () => {
+    const result = contactSchema.safeParse({ phone: "600 123 456" });
+    expect(result.success).toBe(false);
+  });
+
+  it("a number too short to dial falls back to the full-form rules", () => {
+    const result = contactSchema.safeParse({ phone: "600", consent: true });
+    expect(result.success).toBe(false);
+  });
+});
+
 describe("rate limiting", () => {
   beforeEach(() => {
     rateLimitMap.clear();

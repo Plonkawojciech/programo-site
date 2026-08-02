@@ -12,11 +12,13 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  // Dark is the default, matching the bootstrap script in layout.tsx. If these
+  // two disagree the page flips theme on hydration.
+  const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
     const saved = localStorage.getItem("programo-theme") as Theme | null;
-    const initial = saved === "light" || saved === "dark" ? saved : "light";
+    const initial = saved === "light" || saved === "dark" ? saved : "dark";
     setTheme(initial);
     document.documentElement.setAttribute("data-theme", initial);
   }, []);
@@ -39,7 +41,7 @@ export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
   if (!ctx) {
     // Fallback for SSR/unmounted
-    return { theme: "light" as Theme, toggle: () => {} };
+    return { theme: "dark" as Theme, toggle: () => {} };
   }
   return ctx;
 }

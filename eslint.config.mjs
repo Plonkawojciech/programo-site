@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored agent tooling — third-party scripts, not project source. They are
+    // gitignored but still sit in the working tree, so ESLint would otherwise
+    // report ~140 warnings that no one here can act on.
+    ".claude/**",
+    ".agents/**",
   ]),
 ]);
 

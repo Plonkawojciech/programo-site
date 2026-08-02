@@ -8,108 +8,13 @@ const translations = {
   // Navbar
   "nav.work": { pl: "Projekty", en: "Work" },
   "nav.about": { pl: "O nas", en: "About" },
-  "nav.stack": { pl: "Technologie", en: "Stack" },
-  "nav.contact": { pl: "Kontakt", en: "Contact" },
-  "nav.offer": { pl: "Oferta", en: "Services" },
-  "nav.pricing": { pl: "Cennik", en: "Pricing" },
   "nav.cta": { pl: "Napisz do nas", en: "Get in touch" },
 
   // Main page intro section
-  "main.intro.label": { pl: "Programo Studio", en: "Programo Studio" },
-  "main.intro.headline": {
-    pl: "Tworzymy software, który rozwiązuje realne problemy.",
-    en: "We build software that solves real problems.",
-  },
-  "main.intro.subheadline": {
-    pl: "Dwóch inżynierów z Poznania. Od pierwszej rozmowy po wdrożenie na produkcję bierzemy odpowiedzialność za całość — projekt, kod i uruchomienie. Bez pośredników.",
-    en: "Two engineers from Poznań. From the first call to production launch, we own the whole thing — design, code and deployment. No middlemen.",
-  },
-  "main.values.title": { pl: "Co nas wyróżnia", en: "What sets us apart" },
-  "main.values.problem.title": { pl: "Realny problem", en: "Real problem" },
-  "main.values.problem.desc": {
-    pl: "Nie budujemy demo. Budujemy narzędzia, które naprawdę pomagają firmom zarabiać i oszczędzać czas.",
-    en: "We don't build demos. We build tools that actually help businesses earn and save time.",
-  },
-  "main.values.craft.title": { pl: "Pełne zaangażowanie", en: "Full ownership" },
-  "main.values.craft.desc": {
-    pl: "Bez warstw managementu. Architektura, design, kod i wdrożenie — wszystko z naszych rąk.",
-    en: "No management layers. Architecture, design, code and deployment — all hands-on from us.",
-  },
-  "main.values.speed.title": { pl: "Szybkie wdrożenie", en: "Fast delivery" },
-  "main.values.speed.desc": {
-    pl: "Pracujemy szybko, ale bez kompromisów. Nowoczesny stack i sprawdzone wzorce.",
-    en: "We move fast without cutting corners. Modern stack, battle-tested patterns.",
-  },
   "main.cta.primary": { pl: "Porozmawiajmy o projekcie", en: "Let's talk about your project" },
-  "main.cta.secondary": { pl: "Zobacz nasze projekty", en: "See our work" },
-  "main.cta.offer": { pl: "Sprawdź ofertę", en: "Check our offer" },
-  "main.cta.pricing": { pl: "Zobacz cennik", en: "See pricing" },
-
-  // Trust / proof bar (homepage, under hero)
-  "trust.eyebrow": { pl: "Co już zbudowaliśmy", en: "What we've already built" },
-  "trust.stat1.value": { pl: "7", en: "7" },
-  "trust.stat1.label": { pl: "Wdrożonych produktów", en: "Products shipped" },
-  "trust.stat2.value": { pl: "100%", en: "100%" },
-  "trust.stat2.label": { pl: "Własny kod, bez podwykonawców", en: "Own code, no subcontractors" },
-  "trust.stat3.value": { pl: "do 24 h", en: "under 24 h" },
-  "trust.stat3.label": { pl: "Czas pierwszej odpowiedzi", en: "First response time" },
-  "trust.stat4.value": { pl: "PL · EN", en: "PL · EN" },
-  "trust.stat4.label": { pl: "Dwujęzyczne wdrożenia", en: "Bilingual delivery" },
 
   // Sticky mobile CTA
   "sticky.cta": { pl: "Bezpłatna konsultacja", en: "Free consultation" },
-
-  // Projects marquee (main page preview strip)
-  "realizations.label": { pl: "Portfolio", en: "Portfolio" },
-  "realizations.title": { pl: "Nasze realizacje", en: "Our work" },
-  "realizations.subtitle": {
-    pl: "Realne systemy, aplikacje i sklepy, które działają na produkcji. Kliknij, żeby zobaczyć szczegóły.",
-    en: "Real systems, apps and stores running in production. Click to see the details.",
-  },
-  "realizations.viewAll": { pl: "Zobacz wszystkie projekty", en: "See all projects" },
-
-  // Quick contact form (main page)
-  "quick.title": { pl: "Opowiedz, co dziś blokuje Twoją firmę.", en: "Tell us what's blocking your business today." },
-  "quick.subtitle": {
-    pl: "Nie musisz mieć gotowej specyfikacji. Zaznacz, o co chodzi, opisz to w kilku zdaniach — odezwiemy się w ciągu 24 godzin z kolejnym krokiem.",
-    en: "You don't need a finished spec. Pick what it's about, describe it in a few sentences — we'll reply within 24 hours with the next step.",
-  },
-  "quick.name": { pl: "Imię i nazwisko", en: "Your name" },
-  "quick.email": { pl: "Email", en: "Email" },
-  "quick.phone": { pl: "Telefon", en: "Phone" },
-  "quick.message": { pl: "Opisz krótko swoją sytuację i czego potrzebujesz", en: "Briefly describe your situation and what you need" },
-  "quick.send": { pl: "Wyślij zapytanie", en: "Send inquiry" },
-  "quick.sending": { pl: "Wysyłanie...", en: "Sending..." },
-  "quick.sent": { pl: "Wysłano! Odezwiemy się wkrótce.", en: "Sent! We'll be in touch soon." },
-  "quick.error": { pl: "Coś poszło nie tak. Spróbuj ponownie.", en: "Something went wrong. Try again." },
-
-  // Quick contact — project type chips
-  "quick.typeLabel": { pl: "Czego potrzebujesz?", en: "What do you need?" },
-  "quick.type.web": { pl: "Strona / landing", en: "Website / landing" },
-  "quick.type.saas": { pl: "Aplikacja SaaS", en: "SaaS app" },
-  "quick.type.mobile": { pl: "Aplikacja mobilna", en: "Mobile app" },
-  "quick.type.ai": { pl: "Integracja AI", en: "AI integration" },
-  "quick.type.other": { pl: "Coś innego", en: "Something else" },
-
-  // Quick contact — budget chips
-  "quick.budgetLabel": { pl: "Orientacyjny budżet (opcjonalnie)", en: "Approx. budget (optional)" },
-  "quick.budget.s": { pl: "do 10 tys. zł", en: "up to €2.5k" },
-  "quick.budget.m": { pl: "10–30 tys. zł", en: "€2.5k–7k" },
-  "quick.budget.l": { pl: "30–80 tys. zł", en: "€7k–18k" },
-  "quick.budget.xl": { pl: "powyżej 80 tys. zł", en: "€18k+" },
-  "quick.budget.unsure": { pl: "Jeszcze sprawdzamy", en: "Still figuring it out" },
-
-  // Quick contact — trust microcopy + success next-step
-  "quick.trust": {
-    pl: "Odpowiadamy w ciągu 24 h · Konsultacja bez zobowiązań · Twoje dane są bezpieczne (RODO)",
-    en: "We reply within 24 h · No-obligation consultation · Your data is safe (GDPR)",
-  },
-  "quick.successTitle": { pl: "Dziękujemy — wiadomość dotarła.", en: "Thank you — your message arrived." },
-  "quick.successBody": {
-    pl: "Przeczytamy ją osobiście i odezwiemy się w ciągu 24 godzin (zwykle szybciej). Jeśli sprawa jest pilna, zadzwoń — numery masz obok.",
-    en: "We'll read it personally and get back to you within 24 hours (usually sooner). If it's urgent, just call — numbers are next to this form.",
-  },
-  "quick.successAgain": { pl: "Wyślij kolejną wiadomość", en: "Send another message" },
 
   // Offer page
   "offer.label": { pl: "Co robimy", en: "What we do" },
@@ -184,31 +89,19 @@ const translations = {
   "pricing.cta": { pl: "Porozmawiajmy o wycenie", en: "Let's discuss pricing" },
 
   // Hero
-  "hero.label": { pl: "Studio Software", en: "Software Studio" },
   "hero.desc": {
     pl: "Projektujemy i budujemy oprogramowanie, kt\u00f3re rozwi\u0105zuje realne problemy. Od koncepcji po wdro\u017cenie, z dba\u0142o\u015bci\u0105 o ka\u017cdy detal.",
     en: "We design and build software products that solve real problems. From concept to launch, with craft and precision.",
   },
-  "hero.browse": { pl: "Zobacz projekty", en: "Browse our work" },
-  "hero.about": { pl: "O nas", en: "About us" },
-  "hero.contact": { pl: "Kontakt", en: "Get in touch" },
 
   // Featured Work
-  "work.label": { pl: "Wybrane projekty", en: "Selected Projects" },
-  "work.title": { pl: "Nasze realizacje", en: "Featured Work" },
-  "work.viewProject": { pl: "Zobacz projekt", en: "View project" },
   "work.comingSoon": { pl: "Wkr\u00f3tce", en: "Coming Soon" },
   "work.inDevelopment": { pl: "W realizacji", en: "In Development" },
   "work.live": { pl: "Na żywo", en: "Live" },
 
   // About
-  "about.label": { pl: "Kim jeste\u015bmy", en: "Who We Are" },
   "about.title1": { pl: "Dw\u00f3ch builder\u00f3w,", en: "Two builders," },
   "about.title2": { pl: "jedno studio.", en: "one studio." },
-  "about.intro": {
-    pl: "Programo to studio software za\u0142o\u017cone przez {w} i {b} w Poznaniu.",
-    en: "Programo is a software studio founded by {w} and {b} in Pozna\u0144, Poland.",
-  },
   "about.p1": {
     pl: "Budujemy kompletne produkty software\u2019owe \u2014 od wczesnych prototyp\u00f3w po gotowe platformy SaaS. Skupiamy si\u0119 na dostarczaniu narz\u0119dzi, kt\u00f3rych firmy naprawd\u0119 potrzebuj\u0105.",
     en: "We build complete software products \u2014 from early-stage prototypes to production-ready SaaS platforms. Our focus is on shipping thoughtfully crafted tools that businesses actually need, not just technically impressive demos.",
@@ -225,10 +118,6 @@ const translations = {
   // Tech Stack
   "stack.label": { pl: "Nasze narz\u0119dzia", en: "Our Tools" },
   "stack.title": { pl: "Technologie", en: "Tech Stack" },
-  "stack.desc": {
-    pl: "Wybieramy narz\u0119dzia, kt\u00f3re pozwalaj\u0105 nam dzia\u0142a\u0107 szybko bez kompromis\u00f3w na jako\u015bci. Sprawdzone, dobrze udokumentowane, gotowe na produkcj\u0119.",
-    en: "We pick tools that let us move fast without sacrificing quality. Battle-tested, well-documented, production-ready.",
-  },
   "stack.nextjs": { pl: "Full-stack framework React", en: "Full-stack React framework" },
   "stack.react": { pl: "Biblioteka UI", en: "UI library" },
   "stack.typescript": { pl: "Typowany JavaScript", en: "Typed JavaScript" },
@@ -247,40 +136,9 @@ const translations = {
 
   // Contact
   "contact.label": { pl: "Kontakt", en: "Get In Touch" },
-  "contact.title1": { pl: "Zbudujmy co\u015b", en: "Let\u2019s build something" },
-  "contact.title2": { pl: "razem.", en: "together." },
-  "contact.desc": {
-    pl: "Masz pomys\u0142 na projekt? Ch\u0119tnie o nim porozmawiamy. Napisz do nas, a odezwiemy si\u0119 w ci\u0105gu 24 godzin.",
-    en: "Have a project in mind? We\u2019d love to hear about it. Drop us a line and we\u2019ll get back to you within 24 hours.",
-  },
-
-  // Contact Form
-  "contact.form.name": { pl: "Imi\u0119", en: "Name" },
-  "contact.form.namePlaceholder": { pl: "Twoje imi\u0119", en: "Your name" },
-  "contact.form.email": { pl: "Email", en: "Email" },
-  "contact.form.emailPlaceholder": { pl: "twoj@email.pl", en: "your@email.com" },
-  "contact.form.subject": { pl: "Temat", en: "Subject" },
-  "contact.form.subjectPlaceholder": { pl: "Wybierz temat", en: "Choose a subject" },
-  "contact.form.subjectCollab": { pl: "Wsp\u00f3\u0142praca", en: "Collaboration" },
-  "contact.form.subjectQuote": { pl: "Wycena projektu", en: "Project quote" },
-  "contact.form.subjectTech": { pl: "Pytanie techniczne", en: "Technical question" },
-  "contact.form.subjectOther": { pl: "Inne", en: "Other" },
-  "contact.form.message": { pl: "Wiadomo\u015b\u0107", en: "Message" },
-  "contact.form.messagePlaceholder": { pl: "Opisz sw\u00f3j projekt lub pytanie (min. 20 znak\u00f3w)", en: "Describe your project or question (min. 20 characters)" },
-  "contact.form.submit": { pl: "Wy\u015blij", en: "Send" },
-  "contact.form.submitting": { pl: "Wysy\u0142anie...", en: "Sending..." },
-  "contact.form.submitted": { pl: "Wys\u0142ano!", en: "Sent!" },
-  "contact.form.errorRequired": { pl: "To pole jest wymagane", en: "This field is required" },
-  "contact.form.errorEmail": { pl: "Nieprawid\u0142owy adres email", en: "Invalid email address" },
-  "contact.form.errorMinLength": { pl: "Minimum 20 znak\u00f3w", en: "Minimum 20 characters" },
-  "contact.form.errorMaxLength": { pl: "Maksimum 2000 znak\u00f3w", en: "Maximum 2000 characters" },
-  "contact.form.successToast": { pl: "Wiadomo\u015b\u0107 wys\u0142ana!", en: "Message sent!" },
-  "contact.form.errorToast": { pl: "Co\u015b posz\u0142o nie tak", en: "Something went wrong" },
-  "contact.form.rateLimitToast": { pl: "Zbyt wiele wiadomo\u015bci. Spr\u00f3buj p\u00f3\u017aniej.", en: "Too many messages. Try again later." },
 
   // Footer
   "footer.location": { pl: "Pozna\u0144, Polska", en: "Pozna\u0144, Poland" },
-  "footer.copyright": { pl: "Programo", en: "Programo" },
   "footer.privacy": { pl: "Polityka prywatno\u015bci", en: "Privacy policy" },
   "footer.cookies": { pl: "Ustawienia cookies", en: "Cookie settings" },
 
@@ -290,29 +148,13 @@ const translations = {
   "notFound.back": { pl: "Wr\u00f3\u0107 na stron\u0119 g\u0142\u00f3wn\u0105", en: "Back to homepage" },
 
   // Accessibility
-  "a11y.skipToContent": { pl: "Przejd\u017a do tre\u015bci", en: "Skip to content" },
   "a11y.langToggle": { pl: "Zmie\u0144 j\u0119zyk", en: "Change language" },
   "a11y.mainNav": { pl: "Nawigacja g\u0142\u00f3wna", en: "Main navigation" },
 
   // Project Detail Page
-  "project.backToProjects": { pl: "\u2190 Wszystkie projekty", en: "\u2190 All projects" },
-  "project.about": { pl: "O projekcie", en: "About" },
-  "project.whatWeBuilt": { pl: "Co zbudowali\u015bmy", en: "What we built" },
-  "project.role": { pl: "Rola", en: "Role" },
-  "project.status": { pl: "Status", en: "Status" },
-  "project.techStack": { pl: "Technologie", en: "Tech Stack" },
-  "project.year": { pl: "Rok", en: "Year" },
-  "project.visitSite": { pl: "Odwied\u017a stron\u0119", en: "Visit site" },
-  "project.nextProject": { pl: "Nast\u0119pny projekt", en: "Next project" },
-  "project.prevProject": { pl: "Poprzedni projekt", en: "Previous project" },
   "project.statusLive": { pl: "Na \u017cywo", en: "Live" },
   "project.statusDev": { pl: "W realizacji", en: "In Development" },
   "project.statusPlanned": { pl: "Planowany", en: "Planned" },
-  "project.interestedCta": {
-    pl: "Zainteresowany czym\u015b podobnym?",
-    en: "Interested in something similar?",
-  },
-  "project.letsTalk": { pl: "Porozmawiajmy", en: "Let\u2019s talk" },
 
   // Cookie banner / consent
   "cookie.title": { pl: "Cookies & prywatność", en: "Cookies & privacy" },
@@ -346,31 +188,16 @@ const translations = {
     en: "Cookies used by Meta Ads / Google Ads for personalized advertising and conversion measurement.",
   },
 
-  // Contact form consent
-  "quick.consentLabel": {
-    pl: "Wyrażam zgodę na przetwarzanie moich danych osobowych przez Programo Studio w celu odpowiedzi na zapytanie.",
-    en: "I consent to processing of my personal data by Programo Studio for the purpose of responding to my inquiry.",
-  },
-  "quick.consentRequired": {
-    pl: "Akceptacja zgody jest wymagana, żeby wysłać wiadomość.",
-    en: "Consent is required to send the message.",
-  },
-  "quick.privacyLink": {
-    pl: "Zobacz politykę prywatności",
-    en: "See privacy policy",
-  },
-
   // Privacy policy page
   "privacy.title": { pl: "Polityka prywatności", en: "Privacy policy" },
   "privacy.updated": { pl: "Ostatnia aktualizacja", en: "Last updated" },
   "privacy.backHome": { pl: "\u2190 Wr\u00f3\u0107 na stron\u0119 g\u0142\u00f3wn\u0105", en: "\u2190 Back to homepage" },
 
-  // === Navbar (redesigned menu) ===
+  // Navbar: services menu
   "nav.services": { pl: "Usługi", en: "Services" },
   "nav.realizations": { pl: "Realizacje", en: "Work" },
   "nav.process": { pl: "Jak pracujemy", en: "How we work" },
   "nav.quote": { pl: "Wycena", en: "Pricing" },
-  "nav.servicesMenu": { pl: "Co robimy", en: "What we do" },
   "nav.svc.offer": { pl: "Cała oferta", en: "All services" },
   "nav.svc.offer.desc": { pl: "Strony, aplikacje, systemy i AI", en: "Sites, apps, systems and AI" },
   "nav.svc.shops": { pl: "Sklepy internetowe", en: "Online stores" },
@@ -383,60 +210,63 @@ const translations = {
   "nav.svc.house.desc": { pl: "Kim jesteśmy i jak działamy", en: "Who we are and how we work" },
   "nav.cta.project": { pl: "Opowiedz o projekcie", en: "Tell us about your project" },
 
-  // === Home: Hero ===
-  "home.hero.eyebrow": {
-    pl: "Dla firm, które chcą rosnąć bez dokładania chaosu",
-    en: "For companies that want to grow without adding chaos",
-  },
-  "home.hero.headline": {
-    pl: "Zamieniamy ręczne procesy i martwe strony w narzędzia, które pracują na firmę.",
-    en: "We turn manual processes and dead websites into tools that work for your business.",
-  },
-  "home.hero.desc": {
-    pl: "Projektujemy i budujemy strony, sklepy, systemy i automatyzacje AI — od pierwszej rozmowy po wdrożenie na produkcję. Dwóch inżynierów z Poznania, bez pośredników i warstw managementu.",
-    en: "We design and build websites, stores, systems and AI automation — from the first call to production launch. Two engineers from Poznań, no middlemen, no management layers.",
-  },
-  "home.hero.ctaPrimary": { pl: "Opowiedz, co dziś nie działa", en: "Tell us what isn't working" },
+  // Home: hero
   "home.hero.ctaSecondary": { pl: "Zobacz realizacje", en: "See our work" },
-  "home.hero.proof": {
-    pl: "Odpowiedź do 24 h · Widełki przed startem · Bez pośredników",
-    en: "Reply within 24 h · Estimate before we start · No middlemen",
-  },
   "home.hero.shotAlt": { pl: "WSafeFinanse — strona firmowa zbudowana przez Programo", en: "WSafeFinanse — a corporate site built by Programo" },
   "home.hero.shotCaption": {
     pl: "WSafeFinanse — strona z lejkiem leadów (e-mail + Telegram)",
     en: "WSafeFinanse — a site with a lead funnel (email + Telegram)",
   },
+  "home.hero.headline.v2": {
+    pl: "Budujemy narzędzia, które pracują na Twoją firmę",
+    en: "We build tools that work for your business",
+  },
+  "home.hero.desc.v2": {
+    pl: "Strony, sklepy, systemy i automatyzacje AI — od rozmowy po wdrożenie. Dwóch inżynierów z Poznania, bez pośredników.",
+    en: "Websites, stores, systems and AI automation — from conversation to deployment. Two engineers from Poznan, no middlemen.",
+  },
+  "home.hero.phoneLabel": {
+    pl: "Twój numer telefonu",
+    en: "Your phone number",
+  },
+  "home.hero.phonePlaceholder": {
+    pl: "+48 600 000 000",
+    en: "+48 600 000 000",
+  },
+  "home.hero.phoneCta": {
+    pl: "Oddzwonimy",
+    en: "We'll call back",
+  },
+  "home.hero.phoneReassurance": {
+    pl: "Oddzwaniamy w ciągu 24 h. Bez zobowiązań.",
+    en: "We call back within 24 h. No obligation.",
+  },
+  "home.hero.phoneSending": {
+    pl: "Wysyłanie...",
+    en: "Sending...",
+  },
+  "home.hero.phoneSuccess": {
+    pl: "Gotowe — oddzwonimy najszybciej jak się da.",
+    en: "Done — we'll call back as soon as we can.",
+  },
+  "home.hero.phoneErrorEmpty": {
+    pl: "Wpisz numer telefonu.",
+    en: "Enter your phone number.",
+  },
+  "home.hero.phoneErrorInvalid": {
+    pl: "Wpisz poprawny numer telefonu (minimum 9 cyfr).",
+    en: "Enter a valid phone number (at least 9 digits).",
+  },
+  "home.hero.phoneErrorNetwork": {
+    pl: "Nie udało się wysłać. Spróbuj ponownie za chwilę.",
+    en: "Couldn't send. Please try again in a moment.",
+  },
+  "home.hero.phoneConsentNote": {
+    pl: "Wysyłając numer, wyrażasz zgodę na kontakt telefoniczny.",
+    en: "By sending your number, you consent to being contacted by phone.",
+  },
 
-  // === Home: Situations ("Z czym przychodzą do nas firmy") ===
-  "home.sit.title": { pl: "Z czym przychodzą do nas firmy", en: "Why companies come to us" },
-  "home.sit.subtitle": {
-    pl: "Zwykle nie chodzi o „nową stronę”. Chodzi o konkretny problem, który kosztuje czas albo pieniądze.",
-    en: "It's rarely about a \u201Cnew website\u201D. It's about a concrete problem that costs time or money.",
-  },
-  "home.sit.1.title": { pl: "Strona nie przynosi zapytań", en: "The website brings no inquiries" },
-  "home.sit.1.desc": {
-    pl: "Masz stronę, ale telefon milczy. Wygląda przeciętnie, ładuje się wolno i nie prowadzi klienta do kontaktu.",
-    en: "You have a site, but the phone stays silent. It looks average, loads slowly and never guides visitors to get in touch.",
-  },
-  "home.sit.2.title": { pl: "Excele i ręczna robota zżerają czas", en: "Spreadsheets and manual work eat your time" },
-  "home.sit.2.desc": {
-    pl: "Zespół przepisuje dane między arkuszami, mailami i systemami. Powtarzalne zadania da się zautomatyzować.",
-    en: "Your team retypes data between spreadsheets, emails and systems. Repetitive work can be automated.",
-  },
-  "home.sit.3.title": { pl: "Masz pomysł na produkt do sprawdzenia", en: "You have a product idea to validate" },
-  "home.sit.3.desc": {
-    pl: "Chcesz uruchomić aplikację albo system, ale potrzebujesz partnera, który zaprojektuje i zbuduje pierwszą działającą wersję.",
-    en: "You want to launch an app or a system, but you need a partner to design and build the first working version.",
-  },
-
-  // === Home: Client work grid ("Wybrane wdrożenia dla klientów") ===
-  "home.work.eyebrow": { pl: "Realizacje", en: "Case studies" },
-  "home.work.title": { pl: "Wybrane wdrożenia dla klientów", en: "Selected client work" },
-  "home.work.subtitle": {
-    pl: "Realne projekty oddane klientom, które działają na produkcji. Nie demo, nie koncepty.",
-    en: "Real projects delivered to clients and running in production. Not demos, not concepts.",
-  },
+  // Home: work
   "home.work.problem": { pl: "Problem", en: "Problem" },
   "home.work.solution": { pl: "Co zbudowaliśmy", en: "What we built" },
   "home.work.effect": { pl: "Efekt", en: "Outcome" },
@@ -468,172 +298,195 @@ const translations = {
     pl: "1460 produktów i 190 kategorii renderowanych statycznie pod SEO — bez migracji danych i bez ryzyka dla działającego sklepu.",
     en: "1,460 products and 190 categories rendered statically for SEO — with no data migration and no risk to the live store.",
   },
+  "home.products.viewAll": { pl: "Zobacz wszystkie projekty", en: "See all projects" },
+  "home.work.title.v2": { pl: "Wybrane wdrożenia", en: "Selected work" },
+  "home.work.subtitle.v2": {
+    pl: "Realne projekty, które działają na produkcji. Nie demo, nie koncepty — poniżej trzy z nich.",
+    en: "Real projects running in production. Not demos, not concepts — three of them below.",
+  },
+  "home.work.wks.category": { pl: "Strona sportowa · Klub", en: "Sports site · Club" },
+  "home.work.wks.problem": {
+    pl: "Klub sportowy z trzema sekcjami potrzebował strony, na której rodzice szybko znajdą harmonogram treningów, trenerów i kontakt.",
+    en: "A sports club with three sections needed a site where parents quickly find the training schedule, coaches and contact info.",
+  },
+  "home.work.wks.solution": {
+    pl: "7 responsywnych podstron: profile trenerów, galeria, harmonogram, informacje o dotacjach i formularz kontaktowy. Statyczne HTML/CSS/JS, hosting Vercel.",
+    en: "7 responsive pages: trainer profiles, gallery, schedule, grant info and a contact form. Static HTML/CSS/JS, Vercel hosting.",
+  },
+  "home.work.wks.effect": {
+    pl: "Rodzic sprawdza wszystko z telefonu pod halą — zero CMS-a do utrzymania, zero kosztów hostingu.",
+    en: "Parents check everything on their phone outside the gym — zero CMS to maintain, zero hosting costs.",
+  },
+  "home.work.wsafefinanse.imgAlt": {
+    pl: "Strona WSafeFinanse — widok strony głównej",
+    en: "WSafeFinanse website — homepage view",
+  },
+  "home.work.jedmar.imgAlt": {
+    pl: "Sklep Jedmar — widok strony głównej",
+    en: "Jedmar store — homepage view",
+  },
+  "home.work.wks.imgAlt": {
+    pl: "Strona WKS Poznań — widok strony głównej",
+    en: "WKS Poznań website — homepage view",
+  },
+  "home.products.title.v2": { pl: "Budujemy też dla siebie", en: "We build for ourselves too" },
+  "home.products.subtitle.v2": {
+    pl: "Własne systemy, które projektujemy, utrzymujemy i rozwijamy. Najlepszy dowód, że potrafimy zaprojektować i dowieźć produkt od zera.",
+    en: "Our own systems that we design, maintain and grow. The best proof we can design and ship a product from scratch.",
+  },
+  "home.products.estalo.desc": {
+    pl: "CRM dla polskich biur nieruchomości z AI matchmakingiem, integracją portali i aplikacją mobilną.",
+    en: "CRM for Polish real estate agencies with AI matchmaking, portal integrations and a mobile app.",
+  },
+  "home.products.athlix.desc": {
+    pl: "Ekosystem 3 aplikacji sportowych: trening, społeczność i analityka regeneracji z Bluetooth HRV.",
+    en: "An ecosystem of 3 sport apps: training, community and recovery analytics with Bluetooth HRV.",
+  },
+  "home.products.solvio.desc": {
+    pl: "Śledzenie wydatków przez AI: skan paragonu, grupy kosztów, porównanie cen. Web + iOS.",
+    en: "AI expense tracking: receipt scan, cost groups, price comparison. Web + iOS.",
+  },
+  "home.products.rejestr.desc": {
+    pl: "Wyszukiwarka firm z KRS — profile spółek, powiązania osób, sprawozdania finansowe. Web + iOS.",
+    en: "Company registry search — company profiles, people connections, financial filings. Web + iOS.",
+  },
 
-  // === Home: Why us ===
-  "home.why.title": { pl: "Co realnie dostajesz, pracując z nami", en: "What you actually get working with us" },
-  "home.why.1.title": { pl: "Pracujesz wprost z budującymi", en: "You work directly with the builders" },
-  "home.why.1.desc": {
-    pl: "Bez account managerów i głuchego telefonu. Rozmawiasz z ludźmi, którzy projektują i piszą kod.",
-    en: "No account managers, no broken telephone. You talk to the people who design and write the code.",
-  },
-  "home.why.2.title": { pl: "Plan i widełki przed startem", en: "A plan and an estimate before we start" },
-  "home.why.2.desc": {
-    pl: "Zanim cokolwiek zbudujemy, znasz zakres, kolejne kroki i orientacyjny koszt. Bez niespodzianek na fakturze.",
-    en: "Before we build anything, you know the scope, the next steps and a ballpark cost. No surprises on the invoice.",
-  },
-  "home.why.3.title": { pl: "Odpowiedź do 24 godzin", en: "A reply within 24 hours" },
-  "home.why.3.desc": {
-    pl: "Piszesz dziś, kolejny krok znasz najpóźniej jutro. Zwykle szybciej.",
-    en: "Write today, know the next step by tomorrow at the latest. Usually sooner.",
-  },
-  "home.why.4.title": { pl: "Projekt, kod i wdrożenie w jednym miejscu", en: "Design, code and deployment in one place" },
-  "home.why.4.desc": {
-    pl: "Od architektury po uruchomienie na produkcji bierzemy odpowiedzialność za całość. Nie przekazujemy projektu dalej.",
-    en: "From architecture to production launch we own the whole thing. We don't hand your project off.",
-  },
-
-  // === Home: Process ("Jak pracujemy") ===
-  "home.process.eyebrow": { pl: "Jak pracujemy", en: "How we work" },
-  "home.process.title": { pl: "Od problemu do działającego wdrożenia", en: "From problem to a working deployment" },
+  // Home: process
   "home.process.1.title": { pl: "Rozmowa i diagnoza", en: "Call & diagnosis" },
-  "home.process.1.desc": {
-    pl: "Słuchamy, co dziś nie działa i co ma się zmienić po wdrożeniu. Bez zobowiązań.",
-    en: "We listen to what isn't working today and what should change after launch. No commitment.",
-  },
   "home.process.2.title": { pl: "Plan i wycena", en: "Plan & estimate" },
-  "home.process.2.desc": {
-    pl: "Dostajesz zakres, kolejne kroki i widełki kosztów, zanim ruszymy.",
-    en: "You get the scope, the next steps and a cost range before we move.",
-  },
   "home.process.3.title": { pl: "Projekt i development", en: "Design & development" },
-  "home.process.3.desc": {
-    pl: "Projektujemy i budujemy, pokazując postępy na bieżąco — bez znikania na tygodnie.",
-    en: "We design and build, showing progress as we go — no disappearing for weeks.",
-  },
   "home.process.4.title": { pl: "Wdrożenie i wsparcie", en: "Launch & support" },
-  "home.process.4.desc": {
-    pl: "Uruchamiamy na produkcji i zostajemy, żeby dopiąć szczegóły i rozwijać dalej.",
-    en: "We launch to production and stay to polish the details and keep developing.",
+  "home.process.title.v2": { pl: "Co się stanie, jak zadzwonisz", en: "What happens when you call" },
+  "home.process.1.desc.v2": {
+    pl: "Rozmawiasz wprost z ludźmi, którzy zaprojektują i napiszą kod — bez handlowca, bez przekazywania. Słuchamy, co dziś nie działa i co ma się zmienić.",
+    en: "You talk directly to the people who will design and write the code — no salesperson, no handoffs. We listen to what isn't working and what should change.",
   },
+  "home.process.2.desc.v2": {
+    pl: "Zanim cokolwiek ruszymy, dostajesz zakres, kolejne kroki i widełki kosztów. Bez niespodzianek na fakturze.",
+    en: "Before we move on anything, you get the scope, next steps and a cost range. No surprises on the invoice.",
+  },
+  "home.process.3.desc.v2": {
+    pl: "Projekt, kod i wdrożenie — wszystko w jednym miejscu. Pokazujemy postępy na bieżąco, bez znikania na tygodnie.",
+    en: "Design, code and deployment — all in one place. We show progress as we go, no disappearing for weeks.",
+  },
+  "home.process.4.desc.v2": {
+    pl: "Uruchamiamy na produkcji i zostajemy. Poprawki, rozwój i wsparcie techniczne — nie przekazujemy projektu dalej.",
+    en: "We launch to production and stay. Fixes, further development and technical support — we don't hand your project off.",
+  },
+  "home.process.terms.label": { pl: "Na co możesz liczyć", en: "What you can count on" },
+  "home.process.terms.1": { pl: "Bez pośredników — pracujesz z budującymi", en: "No middlemen — you work with the builders" },
+  "home.process.terms.2": { pl: "Widełki kosztów przed startem", en: "Cost estimate before we start" },
+  "home.process.terms.3": { pl: "Odpowiedź do 24 godzin", en: "Reply within 24 hours" },
+  "home.process.terms.4": { pl: "Projekt, kod i wdrożenie w jednym miejscu", en: "Design, code and deployment in one place" },
 
-  // === Home: Founders ("Nie przekazujemy projektu między działami") ===
-  "home.team.title": { pl: "Nie przekazujemy projektu między działami", en: "We don't hand your project between departments" },
-  "home.team.subtitle": {
-    pl: "Programo to dwóch ludzi, którzy prowadzą Twój projekt od początku do końca. Mały zespół to mniej chaosu i jeden punkt kontaktu.",
-    en: "Programo is two people who run your project end to end. A small team means less chaos and a single point of contact.",
-  },
+  // Home: founders & contact
   "home.team.wojtek.name": { pl: "Wojciech Płonka", en: "Wojciech Płonka" },
-  "home.team.wojtek.role": { pl: "Produkt, architektura, development", en: "Product, architecture, development" },
   "home.team.wojtek.desc": {
     pl: "Projektuje architekturę i pisze kod. Odpowiada za to, żeby produkt działał szybko, stabilnie i dawał się rozwijać.",
     en: "Designs the architecture and writes the code. Makes sure the product is fast, stable and easy to grow.",
   },
   "home.team.bartek.name": { pl: "Bartosz Kołaj", en: "Bartosz Kołaj" },
-  "home.team.bartek.role": { pl: "Strategia, komunikacja, wdrożenie biznesowe", en: "Strategy, communication, business rollout" },
   "home.team.bartek.desc": {
     pl: "Tłumaczy cele biznesowe na zakres projektu i prowadzi kontakt. Pilnuje, żeby wdrożenie realnie pomagało firmie.",
     en: "Translates business goals into project scope and owns the contact. Makes sure the build genuinely helps the business.",
   },
+  "founders.title": { pl: "Dwie osoby, cała odpowiedzialność", en: "Two people, full accountability" },
+  "founders.subtitle": {
+    pl: "Programo to Wojciech i Bartosz. Projekt nie przechodzi między działami — od pierwszej rozmowy po utrzymanie pracujesz z tymi samymi ludźmi.",
+    en: "Programo is Wojciech and Bartosz. Your project doesn't pass between departments — from the first call to maintenance you work with the same people.",
+  },
+  "founders.wojtek.focus": { pl: "Architektura, kod, wdrożenie", en: "Architecture, code, deployment" },
+  "founders.bartek.focus": { pl: "Strategia, komunikacja, biznes", en: "Strategy, communication, business" },
+  "founders.location": { pl: "Poznań, Polska", en: "Poznań, Poland" },
+  "qc.title": { pl: "Zostaw numer, oddzwonimy.", en: "Leave your number, we'll call back." },
+  "qc.subtitle": {
+    pl: "Bez formularzy na pół strony. Numer telefonu wystarczy — resztę ustalimy w rozmowie.",
+    en: "No half-page forms. A phone number is enough — we'll sort out the rest on a call.",
+  },
+  "qc.phoneLabel": { pl: "Twój numer telefonu", en: "Your phone number" },
+  "qc.phonePlaceholder": { pl: "+48 600 000 000", en: "+48 600 000 000" },
+  "qc.nameLabel": { pl: "Imię (opcjonalnie)", en: "Name (optional)" },
+  "qc.namePlaceholder": { pl: "Jan", en: "Jan" },
+  "qc.contextLabel": { pl: "O czym chcesz porozmawiać? (opcjonalnie)", en: "What do you want to talk about? (optional)" },
+  "qc.contextPlaceholder": { pl: "np. sklep internetowy, aplikacja, strona...", en: "e.g. online store, app, website..." },
+  "qc.send": { pl: "Poproś o kontakt", en: "Request a call" },
+  "qc.sending": { pl: "Wysyłanie...", en: "Sending..." },
+  "qc.consentLabel": {
+    pl: "Wyrażam zgodę na przetwarzanie danych osobowych w celu kontaktu zwrotnego. Szczegóły w",
+    en: "I consent to processing my personal data for the purpose of getting back to me. Details in the",
+  },
+  "qc.consentRequired": { pl: "Zgoda jest wymagana, żebyśmy mogli oddzwonić.", en: "Consent is required so we can call you back." },
+  "qc.privacyLink": { pl: "polityce prywatności", en: "privacy policy" },
+  "qc.trust": {
+    pl: "Oddzwaniamy w ciągu 24 h. Bez zobowiązań.",
+    en: "We call back within 24 h. No strings attached.",
+  },
+  "qc.successTitle": { pl: "Dziękujemy — mamy Twój numer.", en: "Thanks — we have your number." },
+  "qc.successBody": {
+    pl: "Odezwiemy się w ciągu 24 godzin (zwykle szybciej). Jeśli sprawa jest pilna, zadzwoń do nas bezpośrednio.",
+    en: "We'll reach out within 24 hours (usually sooner). If it's urgent, call us directly.",
+  },
+  "qc.successAgain": { pl: "Wyślij kolejne zapytanie", en: "Send another inquiry" },
+  "qc.error": { pl: "Coś poszło nie tak. Spróbuj ponownie lub zadzwoń.", en: "Something went wrong. Try again or give us a call." },
+  "qc.orCall": { pl: "Wolisz zadzwonić?", en: "Prefer to call?" },
+  "qc.orEmail": { pl: "lub napisz", en: "or write" },
 
-  // === Home: Services ("W czym możemy pomóc") ===
-  "home.services.eyebrow": { pl: "Usługi", en: "Services" },
-  "home.services.title": { pl: "W czym możemy pomóc", en: "How we can help" },
-  "home.services.subtitle": {
-    pl: "Mówimy efektami, nie technologią. Stack pokazujemy niżej i na osobnej stronie.",
-    en: "We talk in outcomes, not tech. The stack lives below and on a dedicated page.",
+  // Home: services & FAQ
+  "home.svc.title": { pl: "Z czym przychodzą do nas firmy", en: "What companies come to us with" },
+  "home.svc.block1.situation": { pl: "Strona nie przynosi zapytań", en: "Your website brings no inquiries" },
+  "home.svc.block1.body": {
+    pl: "Masz stronę, ale telefon milczy. Wygląda przeciętnie, ładuje się wolno i nie prowadzi klienta do kontaktu. Budujemy strony i sklepy, które zarabiają — szybkie, czytelne i zaprojektowane tak, żeby odwiedzający zostawił numer.",
+    en: "You have a site, but the phone stays silent. It looks average, loads slowly and never guides visitors to get in touch. We build websites and stores that earn — fast, clear and designed so visitors leave their number.",
   },
-  "home.services.more": { pl: "Dowiedz się więcej", en: "Learn more" },
-  "home.services.cta": { pl: "Zobacz pełną ofertę", en: "See full services" },
-  "home.services.web.title": { pl: "Strony i landing page", en: "Websites & landing pages" },
-  "home.services.web.desc": {
-    pl: "Szybkie, nowoczesne strony, które prowadzą odwiedzającego prosto do kontaktu.",
-    en: "Fast, modern sites that guide visitors straight to getting in touch.",
+  "home.svc.block1.label": { pl: "Strony, landing page, sklepy internetowe", en: "Websites, landing pages, online stores" },
+  "home.svc.block1.link": { pl: "Sprawdź ofertę stron i sklepów", en: "See our website & store offer" },
+  "home.svc.block2.situation": { pl: "Excele i ręczna robota zżerają czas", en: "Spreadsheets and manual work eat your time" },
+  "home.svc.block2.body": {
+    pl: "Zespół przepisuje dane między arkuszami, mailami i systemami. Powtarzalne zadania da się zautomatyzować — zamiast walki z Excelem budujemy panel, system albo automatyzację, które robią to za Ciebie.",
+    en: "Your team retypes data between spreadsheets, emails and systems. Repetitive work can be automated — instead of fighting Excel we build a panel, system or automation that does it for you.",
   },
-  "home.services.shop.title": { pl: "Sklepy internetowe", en: "Online stores" },
-  "home.services.shop.desc": {
-    pl: "E-commerce gotowy na duży katalog i realną sprzedaż, spięty z Twoim zapleczem.",
-    en: "E-commerce ready for a large catalog and real sales, wired into your back office.",
+  "home.svc.block2.label": { pl: "Systemy, aplikacje SaaS, automatyzacje i AI", en: "Systems, SaaS apps, automation & AI" },
+  "home.svc.block2.link": { pl: "Więcej o systemach i automatyzacji", en: "More on systems & automation" },
+  "home.svc.block3.situation": { pl: "Masz pomysł na produkt do sprawdzenia", en: "You have a product idea to validate" },
+  "home.svc.block3.body": {
+    pl: "Chcesz uruchomić aplikację, ale potrzebujesz partnera, który zaprojektuje i zbuduje pierwszą działającą wersję — bez przepalania budżetu na pełny system. Zaczynamy od MVP: prawdziwych użytkowników, nie slajdów.",
+    en: "You want to launch an app but need a partner to design and build the first working version — without burning the budget on a full system. We start with an MVP: real users, not slides.",
   },
-  "home.services.saas.title": { pl: "Systemy i aplikacje SaaS", en: "Systems & SaaS apps" },
-  "home.services.saas.desc": {
-    pl: "Panele, bazy i platformy szyte pod Twój proces — zamiast walki z arkuszami.",
-    en: "Panels, databases and platforms tailored to your process — instead of fighting spreadsheets.",
-  },
-  "home.services.ai.title": { pl: "Automatyzacje i AI", en: "Automation & AI" },
-  "home.services.ai.desc": {
-    pl: "Zdejmujemy z zespołu powtarzalną, ręczną robotę i wpinamy AI tam, gdzie realnie pomaga.",
-    en: "We take repetitive manual work off your team and add AI where it genuinely helps.",
-  },
-  "home.services.mobile.title": { pl: "Aplikacje mobilne", en: "Mobile apps" },
-  "home.services.mobile.desc": {
-    pl: "iOS i Android z jednego kodu — blisko Twoich klientów, z powiadomieniami push.",
-    en: "iOS and Android from one codebase — close to your customers, with push notifications.",
-  },
-
-  // === Home: Own products ("Budujemy też własne produkty") ===
-  "home.products.eyebrow": { pl: "Własne produkty", en: "Own products" },
-  "home.products.title": { pl: "Budujemy też własne produkty", en: "We build our own products too" },
-  "home.products.subtitle": {
-    pl: "To nie wdrożenia klienckie — to systemy, które tworzymy i utrzymujemy sami. Najlepszy dowód, że potrafimy zaprojektować i dowieźć produkt.",
-    en: "These aren't client projects — they're systems we build and maintain ourselves. The best proof we can design and ship a product.",
-  },
-  "home.products.badge": { pl: "Produkt własny", en: "Own product" },
-  "home.products.viewAll": { pl: "Zobacz wszystkie projekty", en: "See all projects" },
-
-  // === Home: FAQ ===
-  "home.faq.eyebrow": { pl: "FAQ", en: "FAQ" },
-  "home.faq.title": { pl: "Najczęstsze pytania", en: "Frequently asked questions" },
-  "home.faq.q1": { pl: "Ile kosztuje projekt?", en: "How much does a project cost?" },
-  "home.faq.a1": {
+  "home.svc.block3.label": { pl: "Aplikacje webowe, mobilne, MVP", en: "Web apps, mobile apps, MVP" },
+  "home.svc.block3.link": { pl: "Dowiedz się więcej o MVP", en: "Learn more about MVP" },
+  "home.svc.pricing": { pl: "Widełki cenowe i model rozliczeń", en: "Price ranges & billing model" },
+  "home.faq.r.title": { pl: "Zanim zadzwonisz", en: "Before you call" },
+  "home.faq.r.q1": { pl: "Ile kosztuje projekt?", en: "How much does a project cost?" },
+  "home.faq.r.a1": {
     pl: "Każdy projekt wyceniamy indywidualnie po krótkiej rozmowie. Orientacyjne widełki dostajesz, zanim cokolwiek zaczniemy — bez ukrytych kosztów.",
     en: "We price every project individually after a short call. You get a ballpark range before we start anything — with no hidden costs.",
   },
-  "home.faq.q2": { pl: "Ile trwa realizacja?", en: "How long does it take?" },
-  "home.faq.a2": {
+  "home.faq.r.q2": { pl: "Ile trwa realizacja?", en: "How long does it take?" },
+  "home.faq.r.a2": {
     pl: "Zależy od zakresu. Prosta strona to kwestia tygodni, rozbudowany system — dłużej. Realny harmonogram ustalamy na etapie planu.",
     en: "It depends on scope. A simple site takes weeks, a larger system longer. We set a realistic timeline at the planning stage.",
   },
-  "home.faq.q3": { pl: "Co, jeśli mam tylko pomysł, bez specyfikacji?", en: "What if I only have an idea, no spec?" },
-  "home.faq.a3": {
+  "home.faq.r.q3": { pl: "Co, jeśli mam tylko pomysł, bez specyfikacji?", en: "What if I only have an idea, no spec?" },
+  "home.faq.r.a3": {
     pl: "To częsty punkt startu. Pomagamy doprecyzować zakres i zaprojektować pierwszą działającą wersję, zamiast czekać na gotowy dokument.",
     en: "That's a common starting point. We help refine the scope and design the first working version, instead of waiting for a finished document.",
   },
-  "home.faq.q4": { pl: "Czyją własnością jest kod?", en: "Who owns the code?" },
-  "home.faq.a4": {
+  "home.faq.r.q4": { pl: "Czyją własnością jest kod?", en: "Who owns the code?" },
+  "home.faq.r.a4": {
     pl: "Twoją. Po wdrożeniu przekazujemy kod i dostępy — nie zamykamy Cię w naszej technologii.",
     en: "You do. After launch we hand over the code and access — we don't lock you into our technology.",
   },
-  "home.faq.q5": { pl: "Czy wystawiacie fakturę VAT?", en: "Do you issue VAT invoices?" },
-  "home.faq.a5": {
-    pl: "Tak. Działamy jako firma i rozliczamy się fakturą VAT.",
-    en: "Yes. We operate as a company and settle via VAT invoice.",
-  },
-  "home.faq.q6": { pl: "Czy zajmujecie się utrzymaniem po wdrożeniu?", en: "Do you maintain the product after launch?" },
-  "home.faq.a6": {
+  "home.faq.r.q5": { pl: "Czy zajmujecie się utrzymaniem po wdrożeniu?", en: "Do you maintain the product after launch?" },
+  "home.faq.r.a5": {
     pl: "Tak. Po starcie zostajemy do dyspozycji — poprawki, rozwój i wsparcie techniczne.",
     en: "Yes. After launch we stay available — fixes, further development and technical support.",
   },
-  "home.faq.q7": { pl: "Czy pracujecie zdalnie?", en: "Do you work remotely?" },
-  "home.faq.a7": {
-    pl: "Tak. Jesteśmy z Poznania, ale pracujemy zdalnie z klientami z całej Polski. Spotkania na żywo też są możliwe.",
-    en: "Yes. We're based in Poznań but work remotely with clients across Poland. In-person meetings are possible too.",
-  },
-  "home.faq.q8": { pl: "Od czego zacząć?", en: "How do we start?" },
-  "home.faq.a8": {
+  "home.faq.r.q6": { pl: "Od czego zacząć?", en: "How do we start?" },
+  "home.faq.r.a6": {
     pl: "Od krótkiej wiadomości przez formularz albo telefonu. Opisz, co dziś nie działa — odezwiemy się do 24 godzin z kolejnym krokiem.",
     en: "With a short message via the form or a call. Describe what isn't working today — we'll reply within 24 hours with the next step.",
   },
-
-  // === Quick contact — problem-based options (redesigned form) ===
-  "quick.problemLabel": { pl: "Co dziś najbardziej blokuje Twoją firmę?", en: "What's blocking your business most right now?" },
-  "quick.problem.leads": { pl: "Strona nie generuje zapytań", en: "Site doesn't generate inquiries" },
-  "quick.problem.shop": { pl: "Potrzebujemy sklepu", en: "We need an online store" },
-  "quick.problem.manual": { pl: "Mamy ręczne procesy", en: "We have manual processes" },
-  "quick.problem.system": { pl: "Chcemy zbudować system", en: "We want to build a system" },
-  "quick.problem.ai": { pl: "Chcemy wdrożyć AI", en: "We want to deploy AI" },
-  "quick.problem.other": { pl: "Inne", en: "Other" },
-  "quick.outcomeLabel": { pl: "Co ma być inne po wdrożeniu?", en: "What should be different after launch?" },
-  "quick.contactHint": { pl: "Zostaw e-mail lub telefon — wystarczy jeden kontakt.", en: "Leave an email or a phone — one contact is enough." },
+  "home.faq.r.cta": { pl: "Napisz do nas", en: "Get in touch" },
 } as const;
 
 export type TranslationKey = keyof typeof translations;

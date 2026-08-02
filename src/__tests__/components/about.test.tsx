@@ -26,15 +26,16 @@ describe("About component", () => {
 
   it("renders stats with correct values", () => {
     renderWithI18n();
-    expect(screen.getByText("4+")).toBeInTheDocument();
-    expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.getByText("2024")).toBeInTheDocument();
+    expect(screen.getByText("07")).toBeInTheDocument();
+    expect(screen.getByText("02")).toBeInTheDocument();
+    expect(screen.getByText("2026")).toBeInTheDocument();
     expect(screen.getByText("Poznań")).toBeInTheDocument();
   });
 
   it("renders section label", () => {
     renderWithI18n();
-    expect(screen.getByText("Kim jesteśmy")).toBeInTheDocument();
+    // t("about.title1") = "Dwóch builderów,"
+    expect(screen.getByText(/Dwóch builderów/)).toBeInTheDocument();
   });
 
   it("has section id 'about'", () => {

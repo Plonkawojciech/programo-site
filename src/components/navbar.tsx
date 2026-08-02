@@ -153,7 +153,7 @@ export default function Navbar() {
                 className={`relative flex items-center gap-1.5 text-[13px] uppercase font-medium transition-colors ${
                   activeSection === "uslugi"
                     ? "text-[var(--theme-nav-text)]"
-                    : "text-[rgba(var(--theme-nav-text-rgb),0.72)] hover:text-[var(--theme-nav-text)]"
+                    : "text-[rgba(var(--theme-nav-text-rgb),0.88)] hover:text-[var(--theme-nav-text)]"
                 }`}
                 style={{
                   transitionDuration: `${durationFast * 1000}ms`,
@@ -214,7 +214,7 @@ export default function Navbar() {
                   className={`relative text-[13px] uppercase font-medium transition-colors ${
                     isActive
                       ? "text-[var(--theme-nav-text)]"
-                      : "text-[rgba(var(--theme-nav-text-rgb),0.72)] hover:text-[var(--theme-nav-text)]"
+                      : "text-[rgba(var(--theme-nav-text-rgb),0.88)] hover:text-[var(--theme-nav-text)]"
                   }`}
                   style={{
                     transitionDuration: `${durationFast * 1000}ms`,
