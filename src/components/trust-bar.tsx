@@ -8,12 +8,13 @@ import { durationMedium, easeEntry } from "@/lib/motion";
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
 // Real clients (proper nouns — not translated). Content deck 1.2.
+// Ordered by how much we want to be judged on them, not alphabetically.
 const CLIENTS = [
   "Jedmar",
   "WKS Poznań",
-  "W. Safe Finance",
   "Skup Nieruchomości",
   "Domki Poznaniak",
+  "W. Safe Finance",
 ];
 
 const STATS: { valueKey: TKey; labelKey: TKey }[] = [

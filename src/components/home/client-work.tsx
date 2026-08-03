@@ -17,16 +17,11 @@ interface CaseStudy {
   effectKey: TranslationKey;
 }
 
+// Order is the pitch order, not chronology: Jedmar leads because it is the one
+// piece of client work that shipped to the App Store and Google Play, so it
+// carries the most weight with someone comparing vendors. W. Safe Finance
+// closes the section.
 const cases: CaseStudy[] = [
-  {
-    slug: "wsafefinanse",
-    image: "/screenshots/wsafefinanse-hero.webp",
-    imgAltKey: "home.work.wsafefinanse.imgAlt",
-    categoryKey: "home.work.wsafefinanse.category",
-    problemKey: "home.work.wsafefinanse.problem",
-    solutionKey: "home.work.wsafefinanse.solution",
-    effectKey: "home.work.wsafefinanse.effect",
-  },
   {
     slug: "jedmar",
     image: "/screenshots/jedmar-hero.webp",
@@ -46,6 +41,15 @@ const cases: CaseStudy[] = [
     problemKey: "home.work.wks.problem",
     solutionKey: "home.work.wks.solution",
     effectKey: "home.work.wks.effect",
+  },
+  {
+    slug: "wsafefinanse",
+    image: "/screenshots/wsafefinanse-hero.webp",
+    imgAltKey: "home.work.wsafefinanse.imgAlt",
+    categoryKey: "home.work.wsafefinanse.category",
+    problemKey: "home.work.wsafefinanse.problem",
+    solutionKey: "home.work.wsafefinanse.solution",
+    effectKey: "home.work.wsafefinanse.effect",
   },
 ];
 

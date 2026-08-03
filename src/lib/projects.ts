@@ -583,71 +583,6 @@ export const projects: Project[] = [
     screenshots: ["/screenshots/v2/solvio-desktop.webp", "/screenshots/v2/solvio-mobile.webp"],
   },
   {
-    slug: "wsafefinanse",
-    title: "W. Safe Finance",
-    subtitle: {
-      pl: "Strona doradcy finansowego, w której lead nie czeka w skrzynce",
-      en: "A financial advisor's website where leads don't sit in an inbox",
-    },
-    description: {
-      pl: "Strona firmowa doradztwa finansowego W. Safe Finance: oferta kredytów hipotecznych, gotówkowych i firmowych, leasingów oraz ubezpieczeń. Zapytanie z formularza trafia jednocześnie na e-mail i jako powiadomienie push na Telegram, więc właścicielka może zareagować w kilka minut. Dwie wersje językowe i ciemny motyw jako domyślny.",
-      en: "The company website of financial advisory W. Safe Finance: mortgages, cash and business loans, leasing, and insurance. A form inquiry lands simultaneously in the inbox and as a Telegram push notification, so the owner can react within minutes. Two language versions and a dark theme by default.",
-    },
-    longDescription: {
-      pl: "W doradztwie finansowym o zleceniu często decyduje to, kto pierwszy oddzwoni. Dlatego w tym projekcie najważniejszy element jest niewidoczny: zapytanie z formularza wysyła się dwoma kanałami naraz, na firmowy e-mail i jako natychmiastowe powiadomienie na Telegram. Doradczyni widzi nowe zapytanie na telefonie w momencie jego wysłania, nie przy wieczornym sprawdzaniu skrzynki.\n\nSama strona prezentuje pełną ofertę W. Safe Finance: kredyty hipoteczne jako produkt flagowy, kredyty gotówkowe i firmowe, leasingi oraz ubezpieczenia, wraz z formularzem kontaktowym i wymaganą zgodą RODO. Świadomie odwróciliśmy branżowy standard wizualny: zamiast jasnego, korporacyjnego szablonu strona domyślnie działa w ciemnym motywie, z opcją przełączenia na jasny. Do tego pełne wersje polska i angielska.\n\nTechnicznie to Next.js z TypeScriptem i Tailwindem, formularz z walidacją Zod i limitem zapytań chroniącym przed spamem, e-mail transakcyjny przez Resend i Telegram Bot API do powiadomień. Rozwiązanie powiadomień z tego projektu stało się naszym wewnętrznym wzorcem, do którego wracamy przy kolejnych stronach nastawionych na leady.\n\nStrona działa produkcyjnie na wsafefinance.pl i na co dzień obsługuje zapytania klientów doradczyni.",
-      en: "In financial advisory, the deal often goes to whoever calls back first. That is why the most important part of this project is invisible: a form inquiry goes out through two channels at once, to the company inbox and as an instant Telegram push notification. The advisor sees a new inquiry on her phone the moment it is sent, not during an evening inbox check.\n\nThe site itself presents the full W. Safe Finance offer: mortgages as the flagship product, cash and business loans, leasing, and insurance, along with a contact form and the required GDPR consent. We deliberately inverted the industry's visual standard: instead of a bright corporate template, the site runs in a dark theme by default, with a light-mode toggle. Full Polish and English versions round it out.\n\nTechnically it is Next.js with TypeScript and Tailwind, a form with Zod validation and rate limiting against spam, transactional email via Resend, and the Telegram Bot API for notifications. The notification setup from this project became our internal reference pattern, one we return to on every lead-focused site since.\n\nThe site runs in production at wsafefinance.pl and handles the advisor's client inquiries daily.",
-    },
-    status: "live",
-    statusLabel: {
-      pl: "Live na wsafefinance.pl",
-      en: "Live at wsafefinance.pl",
-    },
-    presentation: "dark",
-    category: "dla-klientow",
-    client: {
-      pl: "W. Safe Finance, Rokietnica",
-      en: "W. Safe Finance, Rokietnica",
-    },
-    liveUrl: "https://www.wsafefinance.pl",
-    metric: {
-      pl: "Lead w 2 kanałach · PL/EN",
-      en: "Leads in 2 channels · PL/EN",
-    },
-    metrics: [
-      { value: "2", label: { pl: "kanały powiadomień o zapytaniu: e-mail i Telegram", en: "inquiry notification channels: email and Telegram" } },
-      { value: "2", label: { pl: "pełne wersje językowe", en: "full language versions" } },
-      { value: "5", label: { pl: "linii usług w ofercie", en: "service lines in the offer" } },
-    ],
-    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Zod", "Resend", "Telegram Bot API", "Vercel"],
-    features: {
-      pl: [
-        "Zapytanie z formularza jednocześnie na e-mail i push na Telegram",
-        "Formularz z walidacją Zod i limitem zapytań przeciw spamowi",
-        "Ciemny motyw jako domyślny z przełącznikiem na jasny",
-        "Pełne wersje polska i angielska",
-        "Prezentacja oferty: hipoteki, kredyty, leasingi, ubezpieczenia",
-        "Zgody RODO wpięte w proces wysyłki formularza",
-      ],
-      en: [
-        "Form inquiries sent to email and Telegram push at the same time",
-        "Form with Zod validation and anti-spam rate limiting",
-        "Dark theme by default with a light-mode toggle",
-        "Full Polish and English versions",
-        "Offer presentation: mortgages, loans, leasing, insurance",
-        "GDPR consents wired into the form submission flow",
-      ],
-    },
-    tags: ["Finanse", "Web", "Lead generation"],
-    accentColor: "#2563eb",
-    bgColor: "#0a1025",
-    year: "2026",
-    role: {
-      pl: "Programo — projekt, budowa i wdrożenie",
-      en: "Programo — design, build, and deployment",
-    },
-    screenshots: ["/screenshots/v2/wsafefinanse-desktop.webp", "/screenshots/v2/wsafefinanse-mobile.webp"],
-  },
-  {
     slug: "domki-poznaniak",
     title: "Domki Poznaniak",
     subtitle: {
@@ -785,6 +720,71 @@ export const projects: Project[] = [
       "/screenshots/v2/pooltimer-desktop.webp",
       "/screenshots/v2/pooltimer-mobile.webp",
     ],
+  },
+  {
+    slug: "wsafefinanse",
+    title: "W. Safe Finance",
+    subtitle: {
+      pl: "Strona doradcy finansowego, w której lead nie czeka w skrzynce",
+      en: "A financial advisor's website where leads don't sit in an inbox",
+    },
+    description: {
+      pl: "Strona firmowa doradztwa finansowego W. Safe Finance: oferta kredytów hipotecznych, gotówkowych i firmowych, leasingów oraz ubezpieczeń. Zapytanie z formularza trafia jednocześnie na e-mail i jako powiadomienie push na Telegram, więc właścicielka może zareagować w kilka minut. Dwie wersje językowe i ciemny motyw jako domyślny.",
+      en: "The company website of financial advisory W. Safe Finance: mortgages, cash and business loans, leasing, and insurance. A form inquiry lands simultaneously in the inbox and as a Telegram push notification, so the owner can react within minutes. Two language versions and a dark theme by default.",
+    },
+    longDescription: {
+      pl: "W doradztwie finansowym o zleceniu często decyduje to, kto pierwszy oddzwoni. Dlatego w tym projekcie najważniejszy element jest niewidoczny: zapytanie z formularza wysyła się dwoma kanałami naraz, na firmowy e-mail i jako natychmiastowe powiadomienie na Telegram. Doradczyni widzi nowe zapytanie na telefonie w momencie jego wysłania, nie przy wieczornym sprawdzaniu skrzynki.\n\nSama strona prezentuje pełną ofertę W. Safe Finance: kredyty hipoteczne jako produkt flagowy, kredyty gotówkowe i firmowe, leasingi oraz ubezpieczenia, wraz z formularzem kontaktowym i wymaganą zgodą RODO. Świadomie odwróciliśmy branżowy standard wizualny: zamiast jasnego, korporacyjnego szablonu strona domyślnie działa w ciemnym motywie, z opcją przełączenia na jasny. Do tego pełne wersje polska i angielska.\n\nTechnicznie to Next.js z TypeScriptem i Tailwindem, formularz z walidacją Zod i limitem zapytań chroniącym przed spamem, e-mail transakcyjny przez Resend i Telegram Bot API do powiadomień. Rozwiązanie powiadomień z tego projektu stało się naszym wewnętrznym wzorcem, do którego wracamy przy kolejnych stronach nastawionych na leady.\n\nStrona działa produkcyjnie na wsafefinance.pl i na co dzień obsługuje zapytania klientów doradczyni.",
+      en: "In financial advisory, the deal often goes to whoever calls back first. That is why the most important part of this project is invisible: a form inquiry goes out through two channels at once, to the company inbox and as an instant Telegram push notification. The advisor sees a new inquiry on her phone the moment it is sent, not during an evening inbox check.\n\nThe site itself presents the full W. Safe Finance offer: mortgages as the flagship product, cash and business loans, leasing, and insurance, along with a contact form and the required GDPR consent. We deliberately inverted the industry's visual standard: instead of a bright corporate template, the site runs in a dark theme by default, with a light-mode toggle. Full Polish and English versions round it out.\n\nTechnically it is Next.js with TypeScript and Tailwind, a form with Zod validation and rate limiting against spam, transactional email via Resend, and the Telegram Bot API for notifications. The notification setup from this project became our internal reference pattern, one we return to on every lead-focused site since.\n\nThe site runs in production at wsafefinance.pl and handles the advisor's client inquiries daily.",
+    },
+    status: "live",
+    statusLabel: {
+      pl: "Live na wsafefinance.pl",
+      en: "Live at wsafefinance.pl",
+    },
+    presentation: "dark",
+    category: "dla-klientow",
+    client: {
+      pl: "W. Safe Finance, Rokietnica",
+      en: "W. Safe Finance, Rokietnica",
+    },
+    liveUrl: "https://www.wsafefinance.pl",
+    metric: {
+      pl: "Lead w 2 kanałach · PL/EN",
+      en: "Leads in 2 channels · PL/EN",
+    },
+    metrics: [
+      { value: "2", label: { pl: "kanały powiadomień o zapytaniu: e-mail i Telegram", en: "inquiry notification channels: email and Telegram" } },
+      { value: "2", label: { pl: "pełne wersje językowe", en: "full language versions" } },
+      { value: "5", label: { pl: "linii usług w ofercie", en: "service lines in the offer" } },
+    ],
+    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Zod", "Resend", "Telegram Bot API", "Vercel"],
+    features: {
+      pl: [
+        "Zapytanie z formularza jednocześnie na e-mail i push na Telegram",
+        "Formularz z walidacją Zod i limitem zapytań przeciw spamowi",
+        "Ciemny motyw jako domyślny z przełącznikiem na jasny",
+        "Pełne wersje polska i angielska",
+        "Prezentacja oferty: hipoteki, kredyty, leasingi, ubezpieczenia",
+        "Zgody RODO wpięte w proces wysyłki formularza",
+      ],
+      en: [
+        "Form inquiries sent to email and Telegram push at the same time",
+        "Form with Zod validation and anti-spam rate limiting",
+        "Dark theme by default with a light-mode toggle",
+        "Full Polish and English versions",
+        "Offer presentation: mortgages, loans, leasing, insurance",
+        "GDPR consents wired into the form submission flow",
+      ],
+    },
+    tags: ["Finanse", "Web", "Lead generation"],
+    accentColor: "#2563eb",
+    bgColor: "#0a1025",
+    year: "2026",
+    role: {
+      pl: "Programo — projekt, budowa i wdrożenie",
+      en: "Programo — design, build, and deployment",
+    },
+    screenshots: ["/screenshots/v2/wsafefinanse-desktop.webp", "/screenshots/v2/wsafefinanse-mobile.webp"],
   },
 ];
 

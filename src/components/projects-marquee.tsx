@@ -7,13 +7,14 @@ import { projects, type Project } from "@/lib/projects";
 import { trackPortfolioClick } from "@/lib/tracking";
 import Reveal from "@/components/ui/reveal";
 
-// Curated, ordered subset shown in the homepage strip. Order matters visually.
+// Curated, ordered subset. Order matters visually, and it is the pitch order:
+// the two we most want to be judged on lead, W. Safe Finance closes.
 const MARQUEE_SLUGS = [
+  "jedmar",
   "estalo",
   "solvio",
   "rejestr-pro",
   "pooltimer",
-  "jedmar",
   "wks-poznan",
   "wsafefinanse",
 ];
