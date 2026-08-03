@@ -24,17 +24,17 @@ export const about = {
   },
   "about.wojciech.role": { pl: "Design i Produkt", en: "Design and Product" },
   "about.wojciech.desc": {
-    pl: "Projektuje interfejsy i prowadzi produkty od pomysłu do wdrożenia. Zaprojektował m.in. moduł schematów części, z którego Jedmar korzysta na produkcji.",
-    en: "Designs interfaces and takes products from idea to launch. His work includes the parts diagram module Jedmar runs in production.",
+    pl: "",
+    en: "",
   },
   "about.bartosz.role": { pl: "Inżynieria", en: "Engineering" },
   "about.bartosz.desc": {
-    pl: "Odpowiada za architekturę i kod, od natywnych aplikacji Jedmara w App Store i Google Play po backendy z twardą izolacją danych.",
-    en: "Owns architecture and code, from Jedmar's native apps on the App Store and Google Play to backends with strict data isolation.",
+    pl: "",
+    en: "",
   },
   "about.company.title": { pl: "Dane firmy", en: "Company details" },
   "about.company.line": {
-    pl: "Programo s.c., Poznań · biuro@programo.pl · 509 123 434",
+    pl: "Programo s.j., Poznań · biuro@programo.pl · 509 123 434",
     en: "Programo s.c., Poznan, Poland · biuro@programo.pl · +48 509 123 434",
   },
 

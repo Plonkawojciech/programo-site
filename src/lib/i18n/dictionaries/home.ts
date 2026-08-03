@@ -104,7 +104,7 @@ export const home = {
   },
   "home.trust.stat2.value": { pl: "10+", en: "10+" },
   "home.trust.stat2.label": {
-    pl: "produktów i wdrożeń",
+    pl: "produktów i realizacji",
     en: "products and deployments",
   },
   "home.trust.stat3.value": { pl: "24 h", en: "24 h" },
@@ -147,7 +147,7 @@ export const home = {
     pl: "Jedmar - aplikacje i interaktywne schematy części do istniejącego sklepu",
     en: "Jedmar - apps and interactive parts diagrams for an existing store",
   },
-  "home.offer.p4.title": { pl: "Strony, tracking i reklamy Google", en: "Websites, tracking, and Google Ads" },
+  "home.offer.p4.title": { pl: "", en: "" },
   "home.offer.p4.desc": {
     pl: "Strona, która ma dzwonić telefonem, a nie zbierać kurz. Wpinamy pomiar konwersji zgodny z RODO, budujemy kampanię Google Ads i mówimy Ci wprost, co działa, a co wyłączamy.",
     en: "A website that makes your phone ring instead of gathering dust. We wire in GDPR-compliant conversion tracking, build the Google Ads campaign, and tell you plainly what works and what we're switching off.",
@@ -161,7 +161,7 @@ export const home = {
   "home.portfolio.eyebrow": { pl: "Portfolio", en: "Portfolio" },
   "home.portfolio.title": { pl: "Wybrane realizacje", en: "Selected work" },
   "home.portfolio.sub": {
-    pl: "Uczciwie rozdzielone: nasze własne produkty i praca dla klientów. Każdy projekt możesz kliknąć i sprawdzić.",
+    pl: "nasze własne produkty i praca dla klientów. Każdy projekt możesz kliknąć i sprawdzić.",
     en: "Honestly separated: our own products and client work. Every project is one click away from verification.",
   },
   "home.portfolio.all": { pl: "Wszystkie projekty", en: "All projects" },
@@ -296,13 +296,13 @@ export const home = {
     en: "Websites, stores, systems and AI automation. From the first call to launch the project stays with two engineers in Poznan, with nobody in between.",
   },
   "home.hero.ctaSecondary": { pl: "Zobacz realizacje", en: "See our work" },
-  "home.hero.shotAlt": {
-    pl: "WSafeFinanse - strona firmowa zbudowana przez Programo",
-    en: "WSafeFinanse - a corporate site built by Programo",
+  "home.hero.showcaseAlt": {
+    pl: "Cztery wdrożenia Programo na ekranach: sklep Jedmar na laptopie, strona W. Safe Finance na laptopie, CRM Estalo na tablecie i aplikacja Jedmar na telefonie",
+    en: "Four Programo builds on screen: the Jedmar store on a laptop, the W. Safe Finance site on a laptop, the Estalo CRM on a tablet and the Jedmar app on a phone",
   },
-  "home.hero.shotCaption": {
-    pl: "WSafeFinanse - strona z lejkiem leadów (e-mail + Telegram)",
-    en: "WSafeFinanse - a site with a lead funnel (email + Telegram)",
+  "home.hero.showcaseCaption": {
+    pl: "",
+    en: "",
   },
 
   /* --- Homepage redesign: hero callback form --- */
@@ -468,17 +468,17 @@ export const home = {
   "home.process.title.v2": { pl: "Co się stanie, jak zadzwonisz", en: "What happens when you call" },
   "home.process.1.title": { pl: "Rozmowa i diagnoza", en: "Call & diagnosis" },
   "home.process.1.desc.v2": {
-    pl: "Rozmawiasz od razu z ludźmi, którzy zaprojektują i napiszą kod. Nie ma handlowca ani przekazywania sprawy dalej. Słuchamy, co dziś nie działa i co ma się zmienić.",
+    pl: "Rozmawiasz od razu z ludźmi, którzy zaprojektują i napiszą kod. ",
     en: "You talk straight to the people who will design and write the code. No salesperson, no handoffs. We listen to what isn't working and what should change.",
   },
   "home.process.2.title": { pl: "Plan i wycena", en: "Plan & estimate" },
   "home.process.2.desc.v2": {
-    pl: "Zanim cokolwiek ruszymy, dostajesz zakres, kolejne kroki i widełki kosztów. Bez niespodzianek na fakturze.",
+    pl: "Zanim cokolwiek ruszymy, dostajesz zakres, kolejne kroki i widełki kosztów. ",
     en: "Before we move on anything, you get the scope, next steps and a cost range. No surprises on the invoice.",
   },
   "home.process.3.title": { pl: "Projekt i development", en: "Design & development" },
   "home.process.3.desc.v2": {
-    pl: "Projekt, kod i wdrożenie robimy w jednym miejscu. Postępy widzisz na bieżąco, nie znikamy na tygodnie.",
+    pl: "Projekt, kod i wdrożenie robimy w jednym miejscu. Postępy widzisz na bieżąco.",
     en: "Design, code and deployment all happen in one place. You see progress as we go; we don't disappear for weeks.",
   },
   "home.process.4.title": { pl: "Wdrożenie i wsparcie", en: "Launch & support" },
@@ -487,7 +487,7 @@ export const home = {
     en: "We launch to production and stay. Fixes, further development and technical support remain on our side.",
   },
   "home.process.terms.label": { pl: "Na co możesz liczyć", en: "What you can count on" },
-  "home.process.terms.1": { pl: "Pracujesz z tymi, którzy budują", en: "You work with the people who build it" },
+  "home.process.terms.1": { pl: "", en: "" },
   "home.process.terms.2": { pl: "Widełki kosztów przed startem", en: "Cost estimate before we start" },
   "home.process.terms.3": { pl: "Odpowiedź do 24 godzin", en: "Reply within 24 hours" },
   "home.process.terms.4": { pl: "Projekt, kod i wdrożenie w jednym miejscu", en: "Design, code and deployment in one place" },
@@ -495,20 +495,20 @@ export const home = {
   /* --- Homepage redesign: founders --- */
   "founders.title": { pl: "Kto to robi", en: "Who does the work" },
   "founders.subtitle": {
-    pl: "Programo to Wojciech i Bartosz. Nie ma działów, między którymi wędruje projekt. Od pierwszej rozmowy po utrzymanie rozmawiasz z tymi samymi dwiema osobami.",
+    pl: "Programo to Wojciech i Bartosz. Nie ma działów, między którymi wędruje projekt. Od pierwszej rozmowy po utrzymanie rozmawiasz z tymi samymi osobami.",
     en: "Programo is Wojciech and Bartosz. There are no departments for a project to travel between. From the first call to maintenance you talk to the same two people.",
   },
   "founders.location": { pl: "Poznań, Polska", en: "Poznań, Poland" },
-  "founders.wojtek.focus": { pl: "Architektura, kod, wdrożenie", en: "Architecture, code, deployment" },
-  "founders.bartek.focus": { pl: "Strategia, komunikacja, biznes", en: "Strategy, communication, business" },
+  "founders.wojtek.focus": { pl: "", en: "" },
+  "founders.bartek.focus": { pl: "", en: "" },
   "home.team.wojtek.name": { pl: "Wojciech Płonka", en: "Wojciech Płonka" },
   "home.team.wojtek.desc": {
-    pl: "Projektuje architekturę i pisze kod. Odpowiada za to, żeby produkt działał szybko, stabilnie i dawał się rozwijać.",
-    en: "Designs the architecture and writes the code. Makes sure the product is fast, stable and easy to grow.",
+    pl: "",
+    en: "",
   },
   "home.team.bartek.name": { pl: "Bartosz Kołaj", en: "Bartosz Kołaj" },
   "home.team.bartek.desc": {
-    pl: "Tłumaczy cele biznesowe na zakres projektu i prowadzi kontakt. Pilnuje, żeby wdrożenie realnie pomagało firmie.",
-    en: "Translates business goals into project scope and owns the contact. Makes sure the build genuinely helps the business.",
+    pl: "",
+    en: "",
   },
 } as const satisfies Record<string, { pl: string; en: string }>;

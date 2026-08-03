@@ -87,7 +87,12 @@ export default function Process() {
           className="mt-10 border-t border-outline-variant pt-6 md:mt-12"
         >
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-on-surface-variant md:gap-x-8">
-            {terms.map((key, i) => (
+            {/* Filter before mapping, not inside it: the separator keys off the
+                index, so a term cleared from the editor would otherwise leave an
+                empty <li> and push a leading "/" onto the next one. */}
+            {terms
+              .filter((key) => t(key).trim())
+              .map((key, i) => (
               <li key={key} className="flex items-baseline gap-1.5">
                 {i > 0 && (
                   <span
@@ -99,7 +104,7 @@ export default function Process() {
                 )}
                 {t(key)}
               </li>
-            ))}
+              ))}
           </ul>
         </motion.aside>
       </div>

@@ -16,16 +16,16 @@ export const common = {
   // Non-breaking space before the last word — prevents a single-word orphan
   // line on this tagline, which repeats on every page (shared footer).
   "footer.tagline": {
-    pl: "Oprogramowanie projektowane i budowane w Poznaniu.",
-    en: "Software designed and built in Poznan.",
+    pl: "",
+    en: "",
   },
-  "footer.reply": { pl: "Odpowiadamy w 24 h", en: "We reply within 24 hours" },
+  "footer.reply": { pl: "", en: "" },
   "footer.colOffer": { pl: "Oferta", en: "Services" },
   "footer.colProjects": { pl: "Projekty", en: "Projects" },
   "footer.colCompany": { pl: "Firma", en: "Company" },
   "footer.allProjects": { pl: "Wszystkie projekty", en: "All projects" },
   "footer.location": { pl: "Poznań, Polska", en: "Poznan, Poland" },
-  "footer.companyName": { pl: "Programo s.c.", en: "Programo s.c." },
+  "footer.companyName": { pl: "Programo s.j.", en: "Programo s.c." },
   "footer.copyright": { pl: "Programo", en: "Programo" },
   "footer.privacy": { pl: "Polityka prywatności", en: "Privacy policy" },
   "footer.cookies": { pl: "Ustawienia cookies", en: "Cookie settings" },

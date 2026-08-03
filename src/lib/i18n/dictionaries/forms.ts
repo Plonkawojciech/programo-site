@@ -6,7 +6,7 @@ export const forms = {
   // --- CompactLeadForm (imię + telefon + zgoda) --------------------------------
   "compact.eyebrow": { pl: "Szybki kontakt", en: "Quick contact" },
   "compact.heading": {
-    pl: "Zostaw numer, a oddzwonimy w 24 h z konkretami.",
+    pl: "Zostaw numer, a oddzwonimy w 24 h.",
     en: "Leave your number and we'll call back within 24 hours with specifics.",
   },
   "compact.sub": {
@@ -18,8 +18,8 @@ export const forms = {
     en: "We reply within 24 hours, no obligation.",
   },
   "compact.directContact": {
-    pl: "Bezpośredni kontakt z założycielami · Odpowiadamy w 24 h",
-    en: "Direct contact with the founders · We reply within 24 hours",
+    pl: "",
+    en: "",
   },
   "compact.nameLabel": { pl: "Imię", en: "First name" },
   "compact.namePlaceholder": { pl: "Jak masz na imię?", en: "What's your first name?" },

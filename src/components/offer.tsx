@@ -83,9 +83,14 @@ export default function Offer() {
               </span>
               <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
                 <div>
-                  <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
-                    {t(p.titleKey)}
-                  </h2>
+                  {/* Owner-editable: an empty <h2> still occupies a line box
+                      at 36-40px and breaks the heading outline for screen
+                      readers, so drop the element rather than render it blank. */}
+                  {t(p.titleKey).trim() && (
+                    <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
+                      {t(p.titleKey)}
+                    </h2>
+                  )}
                   <p className="mt-5 max-w-2xl text-base font-light leading-relaxed text-on-surface/70 md:text-lg">
                     {t(p.descKey)}
                   </p>

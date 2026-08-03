@@ -32,6 +32,14 @@ export default function Founders() {
   const { t } = useI18n();
   const prefersReduced = useReducedMotion();
 
+  // The 64/80px rhythm below was set for founder blocks carrying a focus line
+  // and a bio - roughly 150px tall. With both cleared each block collapses to a
+  // single 41px baseline, and the same gap turns from rhythm into a hole. Let
+  // the spacing follow the content instead of hard-coding one of the two states.
+  const hasBios = founders.some(
+    (f) => t(f.focusKey).trim() || t(f.descKey).trim(),
+  );
+
   const reveal = prefersReduced
     ? {}
     : {
@@ -58,7 +66,11 @@ export default function Founders() {
         </motion.div>
 
         {/* Founders — stacked, not in matching cards */}
-        <div className="mt-16 flex flex-col gap-16 md:gap-20">
+        <div
+          className={`mt-16 flex flex-col ${
+            hasBios ? "gap-16 md:gap-20" : "gap-6 md:gap-8"
+          }`}
+        >
           {founders.map((f, i) => (
             <motion.div
               key={f.nameKey}
@@ -81,12 +93,18 @@ export default function Founders() {
                 <h3 className="font-headline text-h3 font-bold tracking-[-0.02em] text-on-surface">
                   {t(f.nameKey)}
                 </h3>
-                <p className="mt-2 text-on-surface-variant text-base">
-                  {t(f.focusKey)}
-                </p>
-                <p className="mt-4 max-w-[50ch] text-on-surface-variant leading-relaxed text-pretty">
-                  {t(f.descKey)}
-                </p>
+                {/* Both lines are owner-editable; an empty <p> keeps its margin
+                    and leaves the name floating above dead space. */}
+                {t(f.focusKey).trim() && (
+                  <p className="mt-2 text-on-surface-variant text-base">
+                    {t(f.focusKey)}
+                  </p>
+                )}
+                {t(f.descKey).trim() && (
+                  <p className="mt-4 max-w-[50ch] text-on-surface-variant leading-relaxed text-pretty">
+                    {t(f.descKey)}
+                  </p>
+                )}
               </div>
 
               {/* Right: direct phone */}

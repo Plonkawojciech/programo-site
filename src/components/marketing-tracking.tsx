@@ -68,9 +68,13 @@ export default function MarketingTrackingLanding() {
                   {t("mkt.cases.title")} ↓
                 </a>
               </div>
-              <p className="mt-8 border-t border-outline-variant/30 pt-6 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
-                {t("footer.reply")}
-              </p>
+              {/* The rule belongs to this line; without it the border floats
+                  under the CTA row with nothing beneath it. */}
+              {t("footer.reply").trim() && (
+                <p className="mt-8 border-t border-outline-variant/30 pt-6 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
+                  {t("footer.reply")}
+                </p>
+              )}
             </div>
 
             <CompactLeadForm

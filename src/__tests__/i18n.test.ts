@@ -20,11 +20,18 @@ describe("i18n translations", () => {
     }
   });
 
-  it("no empty translation values", () => {
+  // Blank is a legitimate state: the owner clears copy from the localhost editor
+  // when a line should stop rendering, and the key has to stay so the editor can
+  // still find it. What is never legitimate is clearing one language only - that
+  // ships a visible string to one audience and a hole to the other. So the rule
+  // is parity, not non-emptiness.
+  it("a cleared string is cleared in both languages", () => {
     for (const key of allKeys) {
       const entry = translations[key];
-      expect(entry.pl, `PL value for "${key}" is empty`).not.toBe("");
-      expect(entry.en, `EN value for "${key}" is empty`).not.toBe("");
+      expect(
+        entry.en === "",
+        `"${key}" is blank in PL but still set in EN - clear both or neither`,
+      ).toBe(entry.pl === "");
     }
   });
 
@@ -98,12 +105,14 @@ describe("i18n translations", () => {
   });
 
   it("nested/dotted keys work correctly", () => {
-    // Keys like "nav.work", "contact.form.name" should all exist and resolve
+    // Resolution, not content. Whether a key carries copy is the owner's call
+    // (the parity test above covers that); what must always hold is that a
+    // dotted key resolves to a string in both languages, never undefined.
     const dottedKeys = allKeys.filter((k) => k.includes("."));
     expect(dottedKeys.length).toBeGreaterThan(20);
     for (const key of dottedKeys) {
-      expect(translations[key].pl).toBeTruthy();
-      expect(translations[key].en).toBeTruthy();
+      expect(typeof translations[key].pl).toBe("string");
+      expect(typeof translations[key].en).toBe("string");
     }
   });
 });

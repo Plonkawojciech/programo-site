@@ -61,7 +61,12 @@ export default function About() {
                 <h3 className="font-headline text-3xl font-bold tracking-tighter text-on-surface md:text-4xl">
                   {f.name}
                 </h3>
-                <p className="max-w-sm text-base font-light leading-relaxed text-on-surface/70">{t(f.descKey)}</p>
+                {/* Owner-editable: the column is a flex stack with gap-4, so a
+                    cleared bio would still open a 16px hole between the name
+                    and the phone number. */}
+                {t(f.descKey).trim() && (
+                  <p className="max-w-sm text-base font-light leading-relaxed text-on-surface/70">{t(f.descKey)}</p>
+                )}
                 <a
                   href={`tel:${f.tel}`}
                   className="mt-1 inline-flex w-fit items-center gap-2 text-sm font-medium text-primary underline underline-offset-4 transition hover:text-on-surface"

@@ -59,7 +59,7 @@ export const offer = {
   "offer.pillar3.b5": { pl: "Migrację bez utraty pozycji w Google", en: "Migration without losing Google rankings" },
 
   // Pillar 4 — Websites, tracking & Google Ads
-  "offer.pillar4.title": { pl: "Strony, tracking i reklamy Google", en: "Websites, tracking, and Google Ads" },
+  "offer.pillar4.title": { pl: "", en: "" },
   "offer.pillar4.desc": {
     pl: "Strona, na którą nikt nie wchodzi i której nikt nie mierzy, to wydatek bez zwrotu. Dlatego stronę lub landing, pomiar konwersji i kampanię Google Ads prowadzimy razem. Dla Skupu Nieruchomości zbudowaliśmy kompletny lejek: sześć podstron dopasowanych do treści reklam, dwukrokowy widżet oddzwonienia i pełny tracking z enhanced conversions. Dla Domków Poznaniak weszliśmy na istniejącą stronę WordPress, wpięliśmy pomiar i prowadzimy kampanię. Nie musisz mieć strony od nas, żebyśmy zajęli się Twoimi reklamami.",
     en: "A website nobody visits and nobody measures is money spent for nothing. That's why we handle the site or landing page, conversion tracking, and the Google Ads campaign together. For Skup Nieruchomości we built a complete funnel: six pages matched to ad copy, a two-step callback widget, and full tracking with enhanced conversions. For Domki Poznaniak we stepped into an existing WordPress site, wired up measurement, and now run the campaign. You don't need a website built by us for us to take over your ads.",

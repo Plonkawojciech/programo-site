@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Footer from "@/components/footer";
-import { I18nProvider, useI18n } from "@/lib/i18n";
+import { I18nProvider, useI18n, translations } from "@/lib/i18n";
 
 function renderWithI18n() {
   return render(
@@ -32,10 +32,17 @@ describe("Footer component", () => {
     expect(screen.getByText(new RegExp(`${year}.*Programo`))).toBeInTheDocument();
   });
 
-  it("renders the company data line (Programo s.c., Poznań)", () => {
+  // Asserted against the dictionary, not a copy literal: the legal form and the
+  // location are owner-editable, and the point of this test is that the company
+  // data line renders at all.
+  it("renders the company data line", () => {
     renderWithI18n();
-    expect(screen.getByText("Programo s.c.")).toBeInTheDocument();
-    expect(screen.getByText("Poznań, Polska")).toBeInTheDocument();
+    expect(
+      screen.getByText(translations["footer.companyName"].pl),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(translations["footer.location"].pl),
+    ).toBeInTheDocument();
   });
 
   it("renders both phone numbers and the email as functional links", () => {
@@ -48,9 +55,15 @@ describe("Footer component", () => {
     expect(email).toHaveAttribute("href", "mailto:biuro@programo.pl");
   });
 
-  it("renders the 'reply within 24h' promise", () => {
-    renderWithI18n();
-    expect(screen.getAllByText("Odpowiadamy w 24 h").length).toBeGreaterThan(0);
+  // The promise is owner-editable and currently cleared. The green dot is
+  // decoration for that label, so on its own it is a coloured blob with no
+  // meaning — the invariant worth holding is that the two appear together.
+  it("pairs the status dot with the reply promise", () => {
+    const { container } = renderWithI18n();
+    const promise = translations["footer.reply"].pl.trim();
+    expect(Boolean(container.querySelector(".bg-emerald-500"))).toBe(
+      Boolean(promise),
+    );
   });
 
   it("renders the four-pillar offer column with a link to /oferta", () => {

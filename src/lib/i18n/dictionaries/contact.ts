@@ -11,7 +11,7 @@ export const contact = {
   // /kontakt — short page hero (above the forms)
   "contactPage.eyebrow": { pl: "Kontakt", en: "Contact" },
   "contactPage.title": {
-    pl: "Zadzwoń albo zostaw numer. Odpowiadamy w 24 h",
+    pl: "Zadzwoń albo zostaw numer. Odpowiadamy w 24h",
     en: "Call us or leave your number. We reply within 24 hours",
   },
   "contactPage.subtitle": {

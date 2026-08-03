@@ -328,9 +328,13 @@ export default function CompactLeadForm({
               <p className="mt-4 max-w-md text-lg font-light leading-relaxed text-on-surface/70">
                 {resolvedSub}
               </p>
-              <p className="mt-6 border-t border-outline-variant/30 pt-5 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
-                {t("compact.directContact")}
-              </p>
+              {/* The rule belongs to this line, so a cleared string would leave
+                  a border floating above nothing. */}
+              {t("compact.directContact").trim() && (
+                <p className="mt-6 border-t border-outline-variant/30 pt-5 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
+                  {t("compact.directContact")}
+                </p>
+              )}
             </div>
             <div>{state === "success" ? success : form}</div>
           </div>

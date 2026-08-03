@@ -54,6 +54,8 @@ describe("About component", () => {
 
   it("renders the company data line", () => {
     renderWithI18n();
-    expect(screen.getByText(/Programo s\.c\., Poznań/)).toBeInTheDocument();
+    expect(
+      screen.getByText(translations["about.company.line"].pl),
+    ).toBeInTheDocument();
   });
 });

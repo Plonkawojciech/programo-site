@@ -8,23 +8,27 @@ import { getAttribution, trackLead } from "@/lib/tracking";
 type PhoneFormState = "idle" | "submitting" | "success" | "error";
 
 /**
- * Homepage hero — conversion-first rebuild (2026-08).
+ * Homepage hero - conversion-first rebuild (2026-08).
  *
- * Structure: headline, one-liner, inline phone capture, screenshot proof.
- * Mobile-first: text + form above the fold, screenshot below.
- * Desktop: two-column, text+form left, screenshot right.
+ * Structure: headline, one-liner, inline phone capture, then a full-width shot
+ * of four shipped projects. Single column at every breakpoint.
+ *
+ * The proof image replaced a single WSafeFinanse screenshot (2026-08-03): one
+ * client's site is weaker evidence than four, and that particular project is
+ * not one we lead with. Don't put it back in a right-hand column - see the
+ * comment on the `figure` for the measurements.
  *
  * The phone capture posts to /api/contact with a number and nothing else. That
  * shape is only valid because the route waives the `name` requirement when the
  * phone carries >= 9 digits (see the `superRefine` in api/contact/route.ts and
  * the "phone-only lead" tests). Don't reinstate a required name there without
- * changing this form too — the failure is silent, a 400 the visitor reads as
+ * changing this form too - the failure is silent, a 400 the visitor reads as
  * "the form is broken" while we never see the lead at all.
  *
- * Nothing here animates from `opacity: 0`. This is the LCP surface and it holds
- * the only conversion control on the page, so it renders complete in the SSR
- * HTML; the single entrance is a CSS transform on the screenshot. See
- * `.hero-figure-settle` in globals.css for the reasoning.
+ * Nothing here animates. This is the LCP surface and it holds the only
+ * conversion control on the page, so it renders complete in the SSR HTML. An
+ * opacity or transform gate here would cost money twice: it delays LCP past
+ * hydration, and it hides the form from anyone whose JS is slow or blocked.
  */
 export default function HomeHero() {
   const { t } = useI18n();
@@ -104,22 +108,26 @@ export default function HomeHero() {
 
   return (
     <section className="relative bg-surface pt-28 pb-section-major md:pt-36 lg:pt-40">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-start gap-12 px-6 md:px-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:px-24">
-        {/* ── Text + form column ── */}
-        <div className="max-w-2xl">
-          {/* Headline — text-display token (carries its own 1.04 leading),
+      <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
+        {/* ── Text + form ── */}
+        {/* 4xl, not 3xl: at the display size the headline breaks to four lines
+            below ~890px and to three above it. */}
+        <div className="max-w-4xl">
+          {/* Headline - text-display token (carries its own 1.04 leading),
               Archivo with wdth axis */}
           <h1 className="font-headline text-display font-bold tracking-[-0.025em] text-on-surface text-balance [font-stretch:108%]">
             {t("home.hero.headline.v2")}
           </h1>
 
-          {/* Description — one sentence, max 65ch */}
+          {/* Description - one sentence, max 65ch */}
           <p className="mt-6 max-w-[60ch] text-lead leading-relaxed text-on-surface-variant text-pretty">
             {t("home.hero.desc.v2")}
           </p>
 
           {/* ── Phone capture form ── */}
-          <div className="mt-10">
+          {/* Capped narrower than the headline: a single phone field stretched
+              to 896px reads as an unfinished layout. */}
+          <div className="mt-10 max-w-2xl">
             {formState === "success" ? (
               <p
                 id={successId}
@@ -207,7 +215,7 @@ export default function HomeHero() {
             )}
           </div>
 
-          {/* Secondary link to portfolio — visually subdued */}
+          {/* Secondary link to portfolio - visually subdued */}
           <div className="mt-6">
             <a
               href="#realizacje"
@@ -221,22 +229,36 @@ export default function HomeHero() {
           </div>
         </div>
 
-        {/* ── Screenshot column — proof, not decoration ── */}
-        <figure className="hero-figure-settle relative">
-          <div className="relative aspect-[16/11] overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-low">
-            <Image
-              src="/screenshots/wsafefinanse-hero.webp"
-              alt={t("home.hero.shotAlt")}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 580px"
-              className="object-cover object-top"
-            />
-          </div>
-          <figcaption className="mt-3 flex items-center gap-2 text-sm text-on-surface-variant">
-            <span aria-hidden="true" className="h-px w-5 bg-outline-variant" />
-            {t("home.hero.shotCaption")}
-          </figcaption>
+        {/* ── Proof strip - four shipped projects, seen without scrolling ──
+            Full width rather than a right-hand column: at the display size the
+            headline needs ~890px to stay on three lines, so a two-column split
+            pushes it to five, and four devices squeezed into a 600px column are
+            too small to read as real work. */}
+        <figure className="mt-14 lg:mt-16">
+          {/* Full-bleed on phones. Inside the 24px gutter the four devices come
+              out ~90px wide each and read as blur; the extra 48px is the
+              difference between "some screens" and legible product shots on the
+              screen most of this audience arrives on.
+              calc(100%+3rem), not w-screen: 100vw counts the classic scrollbar
+              that clientWidth doesn't, so on Windows/Linux Chrome it overflows
+              by ~15px. Percentages measure the container, which is correct. */}
+          <Image
+            src="/screenshots/realizacje-hero.webp"
+            alt={t("home.hero.showcaseAlt")}
+            width={1672}
+            height={941}
+            priority
+            sizes="(max-width: 1400px) 100vw, 1400px"
+            className="-mx-6 w-[calc(100%+3rem)] max-w-none md:mx-0 md:w-full md:rounded-2xl"
+          />
+          {/* Conditional because this string is owner-editable from the dev
+              editor; cleared copy would otherwise leave a floating rule. */}
+          {t("home.hero.showcaseCaption").trim() && (
+            <figcaption className="mt-4 flex items-center gap-2 text-sm text-on-surface-variant">
+              <span aria-hidden="true" className="h-px w-5 bg-outline-variant" />
+              {t("home.hero.showcaseCaption")}
+            </figcaption>
+          )}
         </figure>
       </div>
     </section>

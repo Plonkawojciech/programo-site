@@ -72,12 +72,19 @@ export default function Footer() {
               className="w-[200px] aspect-[841.89/121.3] object-cover select-none"
               loading="lazy"
             />
-            <p className="mt-6 max-w-xs text-sm leading-relaxed text-on-surface-variant">
-              {t("footer.tagline")}
-            </p>
-            <p className="mt-4 text-xs font-bold uppercase tracking-widest text-primary">
-              {t("footer.reply")}
-            </p>
+            {/* Conditional: these are owner-editable, and an empty <p> still
+                carries its top margin, so a cleared line leaves a gap under the
+                logo that reads as a rendering bug. */}
+            {t("footer.tagline").trim() && (
+              <p className="mt-6 max-w-xs text-sm leading-relaxed text-on-surface-variant">
+                {t("footer.tagline")}
+              </p>
+            )}
+            {t("footer.reply").trim() && (
+              <p className="mt-4 text-xs font-bold uppercase tracking-widest text-primary">
+                {t("footer.reply")}
+              </p>
+            )}
           </div>
 
           {/* Offer */}
@@ -85,7 +92,12 @@ export default function Footer() {
             <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant">
               {t("footer.colOffer")}
             </span>
-            {offerLinks.map((l) => (
+            {/* A cleared title would render <a href> with no text: invisible to
+                sighted users and a WCAG 2.4.4 failure (link with no accessible
+                name). Drop the entry instead of shipping an empty link. */}
+            {offerLinks
+              .filter((l) => t(l.titleKey).trim())
+              .map((l) => (
               <Link
                 key={l.titleKey}
                 href={l.href}
@@ -93,7 +105,7 @@ export default function Footer() {
               >
                 {t(l.titleKey)}
               </Link>
-            ))}
+              ))}
           </nav>
 
           {/* Projects */}
@@ -165,12 +177,16 @@ export default function Footer() {
               {t("footer.cookies")}
             </button>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest">
-              {t("footer.reply")}
-            </span>
-          </div>
+          {/* Guard the dot with the text: the dot is decoration for the label,
+              so on its own it is a green blob with no meaning. */}
+          {t("footer.reply").trim() && (
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest">
+                {t("footer.reply")}
+              </span>
+            </div>
+          )}
         </div>
       </motion.div>
     </footer>

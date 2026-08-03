@@ -242,34 +242,6 @@ body {
   border-radius: 4px;
 }
 
-/* Hero proof screenshot — settles into place instead of fading in.
-   Deliberately animates transform only: the hero is the LCP surface and holds
-   the phone form, so nothing in it may start at `opacity: 0`. An opacity gate
-   there costs real money twice — the element stops being an LCP candidate until
-   the fade finishes (moving LCP from "SSR paint" to "hydration + delay + fade"),
-   and the conversion form is invisible to anyone whose JS is slow, blocked, or
-   never runs. CSS rather than framer-motion so it plays off first paint rather
-   than waiting for hydration. */
-@keyframes heroFigureSettle {
-  from {
-    transform: scale(0.985);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-.hero-figure-settle {
-  animation: heroFigureSettle 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: transform;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-figure-settle {
-    animation: none;
-  }
-}
-
 .editorial-shadow {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
