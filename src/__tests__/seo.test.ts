@@ -56,15 +56,45 @@ describe("SEO", () => {
 
   describe("meta descriptions", () => {
     // Card descriptions are full editorial copy; the metadata description is
-    // derived from them (first sentence, capped at 160). Mirror the derivation
+    // derived from them (whole sentences up to 160 chars). Mirror the derivation
     // used in app/projects/[slug]/page.tsx.
-    const metaDescription = (text: string) => text.split(/(?<=\.)\s/)[0].slice(0, 160);
+    const metaDescription = (text: string) => {
+      const sentences = text.split(/(?<=(?<!\b[A-ZĄĆĘŁŃÓŚŹŻ])\.)\s/);
+      let desc =
+        sentences[0].length > 160
+          ? `${sentences[0].slice(0, 157).replace(/\s+\S*$/, "")}...`
+          : sentences[0];
+      for (let i = 1; i < sentences.length; i++) {
+        const next = `${desc} ${sentences[i]}`;
+        if (next.length > 160) break;
+        desc = next;
+      }
+      return desc;
+    };
 
     it("derived meta descriptions are non-empty and under 160 chars", () => {
       for (const p of projects) {
         const desc = metaDescription(p.description.pl);
         expect(desc.length, `${p.title} derived desc empty`).toBeGreaterThan(0);
         expect(desc.length, `${p.title} derived desc too long`).toBeLessThanOrEqual(160);
+      }
+    });
+
+    // The "W. Safe Finance" stub was a silent 39-char meta description on a live
+    // page: the old split treated the initial as a sentence end. Guard the rule
+    // rather than that one string, so any client name with an initial is safe.
+    it("derived meta descriptions do not end on an initial", () => {
+      for (const p of projects) {
+        const desc = metaDescription(p.description.pl);
+        expect(desc, `${p.title} desc ends mid-name`).not.toMatch(/\b[A-ZĄĆĘŁŃÓŚŹŻ]\.$/);
+      }
+    });
+
+    it("derived meta descriptions never end mid-word", () => {
+      for (const p of projects) {
+        const desc = metaDescription(p.description.pl);
+        // Either a finished sentence or an explicit ellipsis on a word boundary.
+        expect(desc, `${p.title} desc is cut mid-word`).toMatch(/(\.|\.\.\.)$/);
       }
     });
 

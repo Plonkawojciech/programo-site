@@ -21,13 +21,26 @@ export async function generateMetadata({
     };
   }
 
-  // Short subtitle for the title tag — trim to the first clause so the tag stays
+  // Short subtitle for the title tag - trim to the first clause so the tag stays
   // scannable. Splits on a colon or a spaced dash (hyphen, en, em) so hyphenated
-  // words like "mobile-first" survive. Full description's first sentence is used
-  // for the meta description.
+  // words like "mobile-first" survive.
   const shortSubtitle = project.subtitle.pl.split(/:|\s[-\u2013\u2014]\s/)[0].trim();
   const title = `${project.title} - ${shortSubtitle} | Programo`;
-  const description = project.description.pl.split(/(?<=\.)\s/)[0].slice(0, 160);
+  // Meta description: whole sentences up to the 160-char limit, never a cut-off
+  // fragment. The inner lookbehind keeps initials from ending a sentence -
+  // without it "W. Safe Finance" splits after the "W." and the description for
+  // that project is a 39-char stub. Only complete sentences are appended, so a
+  // short description is short rather than trailing off mid-clause.
+  const sentences = project.description.pl.split(/(?<=(?<!\b[A-ZĄĆĘŁŃÓŚŹŻ])\.)\s/);
+  let description =
+    sentences[0].length > 160
+      ? `${sentences[0].slice(0, 157).replace(/\s+\S*$/, "")}...`
+      : sentences[0];
+  for (let i = 1; i < sentences.length; i++) {
+    const next = `${description} ${sentences[i]}`;
+    if (next.length > 160) break;
+    description = next;
+  }
   const ogImage = project.screenshots?.[0];
 
   return {
