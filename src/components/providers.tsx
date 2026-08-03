@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
@@ -12,6 +13,16 @@ import Footer from "@/components/footer";
 import CookieBanner from "@/components/cookie-banner";
 import AnalyticsTracker from "@/components/analytics-tracker";
 import StickyCta from "@/components/sticky-cta";
+
+// Localhost source editor. The ternary is evaluated at module scope against a
+// literal the bundler inlines, so in a production build this is `() => null`
+// and the `import()` below is never reachable — the editor's code lands in a
+// lazy chunk that production never requests. `ssr: false` because the whole
+// thing reads the live DOM.
+const DevEditor =
+  process.env.NODE_ENV === "development"
+    ? dynamic(() => import("@/components/dev/dev-editor"), { ssr: false })
+    : () => null;
 
 export default function Providers({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -43,6 +54,7 @@ export default function Providers({ children }: { children: ReactNode }) {
               <StickyCta />
               <CookieBanner />
               <AnalyticsTracker />
+              <DevEditor />
             </>
           )}
         </ConsentProvider>
