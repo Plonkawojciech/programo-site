@@ -135,15 +135,28 @@ export default function Navbar() {
           duration: shouldReduceMotion ? 0 : durationFast,
           ease: easeEntry,
         }}
-        className="fixed top-0 left-0 right-0 z-50 hidden xl:grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 lg:px-8 pt-5"
+        className="fixed top-0 left-0 right-0 z-50 hidden xl:grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 lg:px-8 pt-5 pb-4"
       >
+        {/* Shared ground for all three zones once the page moves. Sits behind
+            them (the grid children are position:relative) and is inert. */}
+        <div className="nav-band" data-scrolled={scrolled ? "true" : "false"} aria-hidden="true" />
+
         {/* Zone 1 — logo */}
-        <div className="justify-self-start">
+        <div className="relative justify-self-start">
           <Link
             href="/"
             aria-label="Programo — strona główna"
             className="flex items-center"
           >
+            {/* The SVG is an A4 art-board (viewBox 841.89x595.28) with the
+                wordmark centred in it, so the ink is only 121.3 units tall —
+                20% of the canvas. Rendered at `h-auto` the box came out 141px
+                tall against ~29px of visible logo, which inflated this fixed
+                header to 177px: an invisible full-width strip that swallowed
+                pointer events over the top of the hero, and far too tall a
+                ground for the scroll band. Cropping to the ink's aspect with
+                object-cover leaves the rendered wordmark pixel-identical (both
+                scale by width) and drops the dead space. */}
             <Image
               key={theme}
               src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
@@ -151,7 +164,7 @@ export default function Navbar() {
               width={300}
               height={212}
               priority
-              className="h-auto w-[168px] xl:w-[200px] select-none"
+              className="w-[168px] xl:w-[200px] aspect-[841.89/121.3] object-cover select-none"
             />
           </Link>
         </div>
@@ -160,12 +173,11 @@ export default function Navbar() {
         <nav
           role="navigation"
           aria-label={t("a11y.mainNav")}
-          className="justify-self-center"
+          className="relative justify-self-center"
         >
-          <div
-            className="liquid-glass relative rounded-full transition-all duration-500"
-            data-scrolled={scrolled ? "true" : "false"}
-          >
+          {/* No `data-scrolled` here on purpose — the band behind it now owns the
+              scrolled state, so the pill keeps one constant treatment. */}
+          <div className="liquid-glass relative rounded-full">
             <div className="relative z-10 flex items-center gap-4 lg:gap-6 px-5 lg:px-6 py-2.5">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.section;
@@ -202,7 +214,7 @@ export default function Navbar() {
         </nav>
 
         {/* Zone 3 — theme, lang, CTA. Phone: handset link always; number text from 2xl. */}
-        <div className="justify-self-end flex h-12 items-center gap-3 lg:gap-4">
+        <div className="relative justify-self-end flex h-12 items-center gap-3 lg:gap-4">
           <a
             href="tel:+48509123434"
             aria-label={`${t("nav.phone")}: 509 123 434`}
@@ -291,7 +303,7 @@ export default function Navbar() {
               width={170}
               height={120}
               priority
-              className="h-auto w-[78px] select-none"
+              className="w-[78px] aspect-[841.89/121.3] object-cover select-none"
             />
           </Link>
 

@@ -2,6 +2,11 @@
 
 :root {
   /* Dark mode (default) — exact current colors */
+  --theme-bg-0: #031517;      /* sunken — the one step BELOW the body, for
+                                 recessed section bands. Everything else in this
+                                 ramp goes lighter than the body, so before this
+                                 existed a section could only be marked as
+                                 "different" by being raised. */
   --theme-bg-1: #051F20;      /* deepest bg — body, hero, sections */
   --theme-bg-2: #0A2A28;      /* surface container low */
   --theme-bg-3: #0B2B26;      /* tech stack, surface container */
@@ -17,6 +22,7 @@
   --theme-glow: 218, 241, 222;   /* RGB for shadows/glows */
 
   /* RGB variants for rgba() usage with opacity */
+  --theme-bg-0-rgb: 3, 21, 23;
   --theme-bg-1-rgb: 5, 31, 32;
   --theme-bg-2-rgb: 10, 42, 40;
   --theme-bg-3-rgb: 11, 43, 38;
@@ -47,6 +53,12 @@
   --theme-nav-text: #051F20;
   --theme-nav-text-rgb: 5, 31, 32;
 
+  /* Desktop header band — surface-coloured, unlike the pill, which is
+     deliberately inverted. The band has to read as the page continuing behind
+     the chrome; inverting it too would put a light slab across a dark page. */
+  --theme-nav-band: rgba(5, 31, 32, 0.72);
+  --theme-nav-band-border: rgba(218, 241, 222, 0.10);
+
   /* Z-index scale — single source of truth for stacking order.
      Tailwind utilities map to these: z-10 raised, z-40 sticky, z-50 nav. */
   --z-base: 0;
@@ -57,10 +69,29 @@
   --z-modal: 200;
   --z-preloader: 300;
   --z-noise: 400;
+
+  /* Type scale — perfect fourth (1.333) at the display end, tightening toward
+     body so long-form copy stays calm. Fluid between 360px and 1440px.
+     Display ceiling is 84px: under the 96px shouting threshold. Font-size only;
+     every consumer sets its own `leading-*`, because a 84px headline and a
+     24px lead want opposite line-heights. */
+  --step-display: clamp(2.75rem, 1.63rem + 4.98vw, 5.25rem);
+  --step-h2: clamp(2rem, 1.44rem + 2.49vw, 3.25rem);
+  --step-h3: clamp(1.5rem, 1.22rem + 1.24vw, 2.125rem);
+  --step-h4: clamp(1.125rem, 1.01rem + 0.5vw, 1.375rem);
+  --step-lead: clamp(1.125rem, 0.96rem + 0.75vw, 1.5rem);
+
+  /* Section rhythm — three tiers of importance. Adjacent sections must not
+     share a tier; uniform padding is what made every section weigh the same. */
+  --step-section-major: clamp(6rem, 4rem + 8vw, 11rem);
+  --step-section: clamp(4.5rem, 3.6rem + 3.6vw, 7.5rem);
+  --step-section-tight: clamp(3rem, 2.6rem + 1.6vw, 4.5rem);
 }
 
 [data-theme="light"] {
   /* Light mode — near-white with green palette accents */
+  --theme-bg-0: #FFFFFF;      /* sunken — reads as paper-white here: the step
+                                 always moves AWAY from the text colour. */
   --theme-bg-1: #FBFDFB;      /* near-white base with subtle mint hint */
   --theme-bg-2: #F2F8F3;      /* very light mint */
   --theme-bg-3: #E6F1E8;      /* light mint container */
@@ -74,6 +105,7 @@
   --theme-glow: 35, 83, 71;
 
   /* RGB variants */
+  --theme-bg-0-rgb: 255, 255, 255;
   --theme-bg-1-rgb: 251, 253, 251;
   --theme-bg-2-rgb: 242, 248, 243;
   --theme-bg-3-rgb: 230, 241, 232;
@@ -103,11 +135,18 @@
   --theme-nav-pill-shadow-soft: rgba(5, 31, 32, 0.08);
   --theme-nav-text: #DAF1DE;
   --theme-nav-text-rgb: 218, 241, 222;
+
+  --theme-nav-band: rgba(251, 253, 251, 0.78);
+  --theme-nav-band-border: rgba(5, 31, 32, 0.08);
 }
 
 @theme inline {
   --color-surface: var(--theme-bg-1);
-  --color-surface-dim: var(--theme-bg-3);
+  /* Sunken, not "a slightly different container". It pointed at bg-3 — a raised
+     step — which made `surface-dim` a synonym for `surface-container` and left
+     the page with no way to recess a band. Nothing consumed it at the time of
+     the change, so the remap has no callers to break. */
+  --color-surface-dim: var(--theme-bg-0);
   --color-surface-container: var(--theme-bg-4);
   --color-surface-container-low: var(--theme-bg-3);
   --color-surface-container-high: var(--theme-border-2);
@@ -132,6 +171,18 @@
   --font-headline: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
+
+  /* Type scale → `text-display`, `text-h2` … utilities. */
+  --text-display: var(--step-display);
+  --text-h2: var(--step-h2);
+  --text-h3: var(--step-h3);
+  --text-h4: var(--step-h4);
+  --text-lead: var(--step-lead);
+
+  /* Section rhythm → `py-section-major`, `py-section`, `py-section-tight`. */
+  --spacing-section-major: var(--step-section-major);
+  --spacing-section: var(--step-section);
+  --spacing-section-tight: var(--step-section-tight);
 }
 
 html {
@@ -172,6 +223,34 @@ body {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Hero proof screenshot — settles into place instead of fading in.
+   Deliberately animates transform only: the hero is the LCP surface and holds
+   the phone form, so nothing in it may start at `opacity: 0`. An opacity gate
+   there costs real money twice — the element stops being an LCP candidate until
+   the fade finishes (moving LCP from "SSR paint" to "hydration + delay + fade"),
+   and the conversion form is invisible to anyone whose JS is slow, blocked, or
+   never runs. CSS rather than framer-motion so it plays off first paint rather
+   than waiting for hydration. */
+@keyframes heroFigureSettle {
+  from {
+    transform: scale(0.985);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.hero-figure-settle {
+  animation: heroFigureSettle 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-figure-settle {
+    animation: none;
+  }
 }
 
 .editorial-shadow {
@@ -263,7 +342,6 @@ body {
   background: var(--theme-nav-pill);
   border: 1px solid var(--theme-nav-pill-border);
   backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
   box-shadow:
     inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
     inset 0 -1px 0 0 rgba(var(--theme-text-1-rgb), 0.04),
@@ -278,7 +356,6 @@ body {
   background: var(--theme-nav-pill-scrolled);
   border-color: var(--theme-nav-pill-border-scrolled);
   backdrop-filter: blur(28px) saturate(200%);
-  -webkit-backdrop-filter: blur(28px) saturate(200%);
   box-shadow:
     inset 0 1px 0 0 rgba(255, 255, 255, 0.28),
     inset 0 -1px 0 0 rgba(var(--theme-text-1-rgb), 0.06),
@@ -286,6 +363,42 @@ body {
     0 12px 32px rgba(var(--theme-text-1-rgb), 0.12),
     0 0 48px rgba(var(--theme-accent-rgb), 0.22),
     0 0 80px rgba(var(--theme-accent-rgb), 0.12);
+}
+
+/* Desktop header band.
+   The desktop header is a three-zone grid — logo | pill | contact cluster — but
+   only the pill ever had a background. That left the logo and the whole
+   right-hand cluster (phone, theme, language, CTA) sitting directly on top of
+   whatever section happened to be scrolling underneath, so they washed out the
+   moment the page moved. The band gives all three zones one shared ground.
+
+   It carries the blur for the header. The pill deliberately no longer escalates
+   on scroll (see the desktop nav in navbar.tsx): stacking a second
+   backdrop-filter on top of this one costs a second full-viewport-width filter
+   pass on a fixed element during scroll, and a glowing pill on an opaque band
+   reads as noise rather than hierarchy. */
+.nav-band {
+  position: absolute;
+  inset: 0;
+  background: var(--theme-nav-band);
+  border-bottom: 1px solid transparent;
+  /* No hand-written -webkit- prefix here. Lightning CSS dedupes an authored
+     prefix against the standard property and keeps only the prefixed one, which
+     silently drops the blur in Firefox. Letting it prefix from targets emits
+     both. */
+  backdrop-filter: blur(20px) saturate(180%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, border-color 0.35s ease;
+}
+
+.nav-band[data-scrolled="true"] {
+  opacity: 1;
+  border-bottom-color: var(--theme-nav-band-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-band { transition: none; }
 }
 
 /* Subtle top-edge specular highlight (liquid refraction) */

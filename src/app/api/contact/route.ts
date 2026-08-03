@@ -3,8 +3,15 @@ import { z } from "zod/v4";
 import { Resend } from "resend";
 import { storeLead } from "@/lib/leads";
 
+// A phone number with enough digits to actually dial is a complete lead on its
+// own — the homepage hero asks for a number first and treats every other field
+// as a bonus. Below this threshold the normal rules apply.
+const PHONE_MIN_DIGITS = 9;
+
 const contactSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  // Required in practice, but enforced in the superRefine below so it can be
+  // waived for a dialable phone. See the `name` rule at the bottom.
+  name: z.string().max(120, "Name too long").optional().or(z.literal("")),
   email: z.string().email("Nieprawidłowy adres email").optional().or(z.literal("")),
   phone: z
     .string()
@@ -46,7 +53,17 @@ const contactSchema = z.object({
   .refine(
     (d) => Boolean((d.email && d.email.length) || (d.phone && d.phone.length)),
     { message: "Podaj e-mail lub numer telefonu.", path: ["email"] }
-  );
+  )
+  .superRefine((d, ctx) => {
+    // A dialable phone is a complete lead on its own, so the name becomes a
+    // bonus. Everything else stays exactly as it was: this rule only ever
+    // widens what the endpoint accepts, never narrows it.
+    const digits = (d.phone ?? "").replace(/\D/g, "");
+    if (digits.length >= PHONE_MIN_DIGITS) return;
+    if (!d.name?.trim()) {
+      ctx.addIssue({ code: "custom", path: ["name"], message: "Name is required" });
+    }
+  });
 
 // In-memory rate limiter: IP -> timestamps[]
 const rateLimitMap = new Map<string, number[]>();
@@ -108,7 +125,10 @@ export async function POST(request: NextRequest) {
   }
 
   const { name, email, phone, subject, message, projectType, budget, consentTimestamp } = result.data;
-  const safeName = sanitize(name);
+  // A phone-only lead legitimately has no name, so the notifications need a
+  // label instead of a dangling "od ". The CRM keeps the field genuinely empty.
+  const displayName = name?.trim() || "(bez nazwiska)";
+  const safeName = sanitize(displayName);
   const safeEmail = email ? sanitize(email) : "";
   const safeMessage = message ? sanitize(message) : "";
   const safeSubject = sanitize(subject);
@@ -146,7 +166,7 @@ export async function POST(request: NextRequest) {
     await storeLead({
       id: crypto.randomUUID(),
       ts: requestTs,
-      name,
+      name: name || "",
       email: email || "",
       phone: phone || "",
       subject,
@@ -186,7 +206,7 @@ export async function POST(request: NextRequest) {
           "X-Webhook-Secret": crmSecret,
         },
         body: JSON.stringify({
-          name,
+          name: name || "",
           email: email || "",
           phone: phone || "",
           subject,
@@ -259,7 +279,7 @@ export async function POST(request: NextRequest) {
           const lines = [
             `*Nowa wiadomość — Programo*`,
             ``,
-            `*Imię:* ${esc(name)}`,
+            `*Imię:* ${esc(displayName)}`,
             email ? `*Email:* ${esc(email)}` : "",
             phone ? `*Telefon:* ${esc(phone)}` : "",
             `*Temat:* ${esc(subject)}`,

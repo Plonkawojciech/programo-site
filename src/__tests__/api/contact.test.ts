@@ -196,3 +196,54 @@ describe("sanitize function", () => {
     expect(sanitize('"quotes"')).toContain("&quot;");
   });
 });
+
+/**
+ * The homepage hero asks for a phone number and nothing else — that single
+ * field IS the site's conversion goal. These lock in the rule that lets it
+ * through, because the failure mode is silent: a 400 the visitor reads as
+ * "the form is broken" and we never see the lead at all.
+ */
+describe("phone-only lead (homepage hero)", () => {
+  const heroPayload = (phone: string) => ({
+    name: "",
+    email: "",
+    phone,
+    message: "Prośba o kontakt telefoniczny — formularz w nagłówku strony głównej.",
+    consent: true as const,
+  });
+
+  it("accepts a dialable phone with no name", () => {
+    const result = contactSchema.safeParse(heroPayload("509 123 434"));
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts a phone written with +48 and punctuation", () => {
+    const result = contactSchema.safeParse(heroPayload("+48 509-123-434"));
+    expect(result.success).toBe(true);
+  });
+
+  it("still demands a name when the phone is too short to dial", () => {
+    const result = contactSchema.safeParse(heroPayload("12345678"));
+    expect(result.success).toBe(false);
+    expect(result.error?.issues.some((i) => i.path[0] === "name")).toBe(true);
+  });
+
+  it("still demands a name for an email-only submission", () => {
+    const result = contactSchema.safeParse({
+      name: "",
+      email: "jan@example.com",
+      subject: "Inne",
+      message: "Wiadomość testowa.",
+      consent: true,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("still rejects a phone-only lead without consent", () => {
+    const result = contactSchema.safeParse({
+      ...heroPayload("509 123 434"),
+      consent: false,
+    });
+    expect(result.success).toBe(false);
+  });
+});

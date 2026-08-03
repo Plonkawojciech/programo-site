@@ -59,13 +59,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
           {/* Brand */}
           <div>
+            {/* Same A4 art-board as the navbar logo: a 141px-tall box for a 29px
+                wordmark, so ~112px of dead space sat between the logo and the
+                tagline. Cropping to the ink's aspect renders the wordmark
+                identically (both scale by width) and closes the gap. */}
             <Image
               key={theme}
               src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-gradient.svg"}
               alt="Programo"
               width={320}
               height={226}
-              className="h-auto w-[200px] select-none"
+              className="w-[200px] aspect-[841.89/121.3] object-cover select-none"
               loading="lazy"
             />
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-on-surface-variant">
