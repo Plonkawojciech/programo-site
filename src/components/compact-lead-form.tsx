@@ -184,7 +184,7 @@ export default function CompactLeadForm({
             onChange={() => clearFieldError("name")}
           />
           {errors.name && (
-            <p id={`${formId}-name-error`} role="alert" className="text-xs text-red-500">
+            <p id={`${formId}-name-error`} role="alert" className="text-xs text-error">
               {errors.name}
             </p>
           )}
@@ -215,7 +215,7 @@ export default function CompactLeadForm({
             onChange={() => clearFieldError("phone")}
           />
           {errors.phone && (
-            <p id={`${formId}-phone-error`} role="alert" className="text-xs text-red-500">
+            <p id={`${formId}-phone-error`} role="alert" className="text-xs text-error">
               {errors.phone}
             </p>
           )}
@@ -254,7 +254,7 @@ export default function CompactLeadForm({
         </span>
       </label>
       {errors.consent && (
-        <p id={`${formId}-consent-error`} role="alert" className="-mt-2 text-xs text-red-500">
+        <p id={`${formId}-consent-error`} role="alert" className="-mt-2 text-xs text-error">
           {errors.consent}
         </p>
       )}
@@ -289,7 +289,7 @@ export default function CompactLeadForm({
           </a>
         </div>
         {errors.server && (
-          <p role="alert" className="text-sm text-red-500">
+          <p role="alert" className="text-sm text-error">
             {errors.server}
           </p>
         )}

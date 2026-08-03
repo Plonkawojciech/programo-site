@@ -11,6 +11,9 @@
   --theme-text-1: #DAF1DE;    /* main text — light mint */
   --theme-text-2: #8EB69B;    /* muted text — sage */
   --theme-accent: #8EB69B;    /* primary brand color */
+  /* Error text. Per-theme because no single red clears 4.5:1 against both
+     #051F20 and #FBFDFB — the two constraints are disjoint. 6.2:1 here. */
+  --theme-error: #F87171;
   --theme-glow: 218, 241, 222;   /* RGB for shadows/glows */
 
   /* RGB variants for rgba() usage with opacity */
@@ -67,6 +70,7 @@
   --theme-text-1: #051F20;    /* deepest dark green — main text */
   --theme-text-2: #235347;    /* medium dark green — muted text */
   --theme-accent: #235347;    /* dark green accent for strong contrast on white */
+  --theme-error: #B91C1C;     /* 6.3:1 on --theme-bg-1 */
   --theme-glow: 35, 83, 71;
 
   /* RGB variants */
@@ -117,13 +121,17 @@
   --color-on-primary-container: var(--theme-text-1);
   --color-outline: var(--theme-border-2);
   --color-outline-variant: var(--theme-border-1);
+  --color-error: var(--theme-error);
   --color-secondary: var(--theme-accent);
   --color-tertiary: var(--theme-text-1);
   --color-inverse-surface: var(--theme-text-1);
   --color-inverse-on-surface: var(--theme-bg-1);
   --color-inverse-primary: var(--theme-border-1);
-  --font-headline: var(--font-newsreader);
-  --font-body: var(--font-jakarta);
+  /* Display face carries headlines only. Everything else runs native: the
+     visitor's own OS font renders instantly, at zero transfer cost. */
+  --font-headline: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 }
 
 html {
@@ -134,10 +142,11 @@ html {
 body {
   background: var(--theme-bg-1);
   color: var(--theme-text-1);
-  font-family: var(--font-body), system-ui, sans-serif;
+  font-family: var(--font-body);
   font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.65;
+  /* Tuned for the system stack, which sets tighter and taller than Jakarta did. */
+  letter-spacing: -0.005em;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior-y: none; /* Zapobiega efektowi bounce na macOS dla lepszego feelingu appki */

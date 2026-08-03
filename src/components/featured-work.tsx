@@ -46,7 +46,9 @@ function phoneShot(project: Project): string | undefined {
 function DomainPill({ url }: { url: string }) {
   const host = url.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
   return (
-    <span className="pointer-events-none absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-full bg-black/55 px-3 py-1.5 text-[10px] font-medium tracking-wide text-white/90 backdrop-blur-sm">
+    // black/55 + white/90 measured 4.2:1 over a white screenshot, under the 4.5:1
+    // this 10px text needs. black/70 composites to #4D4D4D and carries white at 8.4:1.
+    <span className="pointer-events-none absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-full bg-black/70 px-3 py-1.5 text-[10px] font-medium tracking-wide text-white backdrop-blur-sm">
       <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 opacity-70" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
         <rect x="5" y="11" width="14" height="9" rx="2" />
         <path d="M8 11V7a4 4 0 018 0v4" />

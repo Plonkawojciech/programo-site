@@ -47,8 +47,11 @@ function ProjectTile({ project }: { project: Project }) {
         <div className="absolute inset-0" style={{ background: project.bgColor }} />
       )}
 
-      {/* Bottom gradient for readability */}
-      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+      {/* Bottom scrim — the tile's copy sits on a photograph, so this is what
+          buys the contrast ratio. Sized for the worst case: a screenshot that
+          is pure white behind the text and hovered (image at opacity-100). At
+          black/75 that composites to #404040, which carries the copy at 7.3:1. */}
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/95 via-black/75 to-transparent" />
 
       {/* Accent line on top */}
       <div
@@ -76,7 +79,7 @@ function ProjectTile({ project }: { project: Project }) {
           <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#8EB69B]">
             {project.tags[0] ?? project.category}
           </span>
-          <span className="text-[10px] font-medium uppercase tracking-widest text-white/60">
+          <span className="text-[10px] font-medium uppercase tracking-widest text-white/80">
             · {project.year}
           </span>
         </div>
@@ -108,7 +111,9 @@ export default function ProjectsMarquee() {
 
   return (
     <section
-      id="realizacje"
+      // No `id="realizacje"` here: every page that renders this component also
+      // declares that anchor at the point it actually wants the jump to land.
+      // Duplicating it made the document invalid and the target ambiguous.
       aria-labelledby="realizations-heading"
       className="relative overflow-hidden border-t border-outline-variant/20 bg-surface py-24 md:py-32 lg:py-40"
     >

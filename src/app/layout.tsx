@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 
@@ -9,20 +9,18 @@ const ADS_ID = "AW-18196600478";
 const CLARITY_ID = "wxezq44wx0";
 
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+/**
+ * Display face — headlines only. Body, UI and forms run on the system stack
+ * (see --font-body in globals.css), so this is the single webfont on the site.
+ * The `wdth` axis is the contrast mechanism against the system sans: headlines
+ * sit at a semi-expanded width that no system UI font resembles.
+ */
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin", "latin-ext"],
   display: "swap",
   preload: true,
-  style: ["normal", "italic"],
-});
-
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-  preload: true,
-  weight: ["300", "400", "500", "600", "700"],
+  axes: ["wdth"],
 });
 
 export const metadata: Metadata = {
@@ -116,7 +114,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" suppressHydrationWarning className={`${newsreader.variable} ${jakarta.variable} selection:bg-primary/20 selection:text-primary`}>
+    <html lang="pl" suppressHydrationWarning className={`${archivo.variable} selection:bg-primary/20 selection:text-primary`}>
       <head>
         {/* Preconnect to third-party (analytics) origins for faster first contact */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />

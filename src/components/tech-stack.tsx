@@ -115,9 +115,16 @@ export default function TechStack() {
           <span className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary">
             {t("stack.label")}
           </span>
-          <h2 className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw] bg-gradient-to-r from-[var(--theme-text-1)] via-[var(--theme-text-2)] to-[var(--theme-text-1)] bg-clip-text text-transparent">
+          {/* h1, not h2: this component is only ever mounted by /stack, where it
+              is the page title. As an h2 the route shipped with no h1 at all.
+              Solid fill, not the previous bg-clip-text gradient: `text-transparent`
+              means the glyphs exist only as a mask over a background image, so in
+              forced-colors mode — where UA styles drop background images — the
+              page's only h1 rendered invisible. The gradient ran text-1 → text-2
+              → text-1, a shimmer nobody reads as meaning. */}
+          <h1 className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]">
             {t("stack.title")}
-          </h2>
+          </h1>
           <div className="mt-6 h-[2px] w-32 md:w-48 bg-gradient-to-r from-transparent via-primary to-transparent origin-right" />
         </Reveal>
 

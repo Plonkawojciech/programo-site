@@ -305,7 +305,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         onChange={() => clearFieldError("name")}
                       />
                       {errors.name && (
-                        <p id="quick-name-error" role="alert" className="text-sm text-red-500">
+                        <p id="quick-name-error" role="alert" className="text-sm text-error">
                           {errors.name}
                         </p>
                       )}
@@ -329,7 +329,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         onChange={() => clearFieldError("contact")}
                       />
                       {errors.contact && (
-                        <p id="quick-contact-error" role="alert" className="text-sm text-red-500">
+                        <p id="quick-contact-error" role="alert" className="text-sm text-error">
                           {errors.contact}
                         </p>
                       )}
@@ -378,7 +378,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                       </span>
                     </label>
                     {errors.consent && (
-                      <p id="quick-consent-error" role="alert" className="-mt-4 text-sm text-red-500">
+                      <p id="quick-consent-error" role="alert" className="-mt-4 text-sm text-error">
                         {errors.consent}
                       </p>
                     )}
@@ -424,7 +424,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                     )}
                   </button>
                   {errors.server && (
-                    <p role="alert" className="text-sm text-red-500">
+                    <p role="alert" className="text-sm text-error">
                       {errors.server}
                     </p>
                   )}
