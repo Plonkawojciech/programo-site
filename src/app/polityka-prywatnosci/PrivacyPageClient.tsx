@@ -73,9 +73,9 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="3. Cele i podstawa prawna">
         <ul className="list-disc pl-5 flex flex-col gap-2">
-          <li>Odpowiedź na zapytanie z formularza — art. 6 ust. 1 lit. a RODO (zgoda) oraz lit. b (działania przed zawarciem umowy).</li>
-          <li>Analiza ruchu i poprawa strony — art. 6 ust. 1 lit. a RODO (zgoda na cookies analityczne).</li>
-          <li>Marketing własny i remarketing — art. 6 ust. 1 lit. a RODO (zgoda na cookies marketingowe).</li>
+          <li>Odpowiedź na zapytanie z formularza - art. 6 ust. 1 lit. a RODO (zgoda) oraz lit. b (działania przed zawarciem umowy).</li>
+          <li>Analiza ruchu i poprawa strony - art. 6 ust. 1 lit. a RODO (zgoda na cookies analityczne).</li>
+          <li>Marketing własny i remarketing - art. 6 ust. 1 lit. a RODO (zgoda na cookies marketingowe).</li>
         </ul>
       </Section>
 
@@ -87,7 +87,7 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="5. Odbiorcy danych">
         <p>
-          Korzystamy z zaufanych dostawców — Vercel (hosting), Resend (transakcyjny e-mail), Telegram (powiadomienia wewnętrzne), Google Analytics 4 (analityka — tylko po zgodzie). Nie sprzedajemy danych podmiotom trzecim.
+          Korzystamy z zaufanych dostawców - Vercel (hosting), Resend (transakcyjny e-mail), Telegram (powiadomienia wewnętrzne), Google Analytics 4 (analityka - tylko po zgodzie). Nie sprzedajemy danych podmiotom trzecim.
         </p>
       </Section>
 
@@ -96,7 +96,7 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
           <li>Dostęp do danych i otrzymania ich kopii.</li>
           <li>Sprostowanie, usunięcie lub ograniczenie przetwarzania.</li>
           <li>Wniesienie sprzeciwu wobec przetwarzania w celach marketingowych.</li>
-          <li>Wycofanie zgody w dowolnym momencie — nie wpływa to na legalność przetwarzania wcześniej.</li>
+          <li>Wycofanie zgody w dowolnym momencie - nie wpływa to na legalność przetwarzania wcześniej.</li>
           <li>Skarga do Prezesa UODO (ul. Stawki 2, Warszawa).</li>
         </ul>
         <p>
@@ -104,7 +104,7 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
         </p>
       </Section>
 
-      <Section title="7. Cookies — zarządzanie zgodą">
+      <Section title="7. Cookies - zarządzanie zgodą">
         <p>
           Stosujemy Google Consent Mode v2. Domyślnie wszystkie nieobowiązkowe pliki cookies są wyłączone. Możesz w dowolnym momencie zmienić swoje preferencje:
         </p>
@@ -144,9 +144,9 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="3. Purpose and legal basis">
         <ul className="list-disc pl-5 flex flex-col gap-2">
-          <li>Responding to form inquiries — Art. 6(1)(a) GDPR (consent) and (b) (pre-contractual measures).</li>
-          <li>Traffic analytics and site improvement — Art. 6(1)(a) GDPR (consent to analytical cookies).</li>
-          <li>Own marketing and remarketing — Art. 6(1)(a) GDPR (consent to marketing cookies).</li>
+          <li>Responding to form inquiries - Art. 6(1)(a) GDPR (consent) and (b) (pre-contractual measures).</li>
+          <li>Traffic analytics and site improvement - Art. 6(1)(a) GDPR (consent to analytical cookies).</li>
+          <li>Own marketing and remarketing - Art. 6(1)(a) GDPR (consent to marketing cookies).</li>
         </ul>
       </Section>
 
@@ -158,7 +158,7 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="5. Data recipients">
         <p>
-          We use trusted providers — Vercel (hosting), Resend (transactional e-mail), Telegram (internal notifications), Google Analytics 4 (analytics — only after consent). We do not sell data to third parties.
+          We use trusted providers - Vercel (hosting), Resend (transactional e-mail), Telegram (internal notifications), Google Analytics 4 (analytics - only after consent). We do not sell data to third parties.
         </p>
       </Section>
 
@@ -167,7 +167,7 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
           <li>Access to your data and obtaining a copy.</li>
           <li>Rectification, deletion, or restriction of processing.</li>
           <li>Objection to processing for marketing purposes.</li>
-          <li>Withdrawal of consent at any time — without affecting prior lawful processing.</li>
+          <li>Withdrawal of consent at any time - without affecting prior lawful processing.</li>
           <li>Complaint to the Polish DPA (UODO, Stawki 2, Warsaw).</li>
         </ul>
         <p>
@@ -175,7 +175,7 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
         </p>
       </Section>
 
-      <Section title="7. Cookies — consent management">
+      <Section title="7. Cookies - consent management">
         <p>
           We use Google Consent Mode v2. By default, all non-essential cookies are disabled. You can change your preferences at any time:
         </p>

@@ -24,7 +24,7 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
-  title: "Programo — Studio Software z Poznania",
+  title: "Programo - Studio Software z Poznania",
   description:
     "Projektujemy i budujemy oprogramowanie. Studio software Wojciecha Płonki i Bartosza Kolaja z Poznania.",
   metadataBase: new URL("https://programo.pl"),
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     { name: "Bartosz Kolaj" },
   ],
   openGraph: {
-    title: "Programo — Studio Software z Poznania",
+    title: "Programo - Studio Software z Poznania",
     description:
       "Projektujemy i budujemy oprogramowanie. Studio software Wojciecha Płonki i Bartosza Kolaja z Poznania.",
     url: "https://programo.pl",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Programo — Studio Software z Poznania",
+    title: "Programo - Studio Software z Poznania",
     description:
       "Projektujemy i budujemy oprogramowanie. Studio software z Poznania.",
   },
@@ -79,7 +79,7 @@ const jsonLd = {
   name: "Programo",
   alternateName: ["Programo Software House", "Programo Studio"],
   description:
-    "Software house z Poznania — oprogramowanie na zamówienie: strony, aplikacje webowe i mobilne, systemy SaaS oraz integracje AI.",
+    "Software house z Poznania. Oprogramowanie na zamówienie: strony, aplikacje webowe i mobilne, systemy SaaS oraz integracje AI.",
   url: "https://programo.pl",
   logo: "https://programo.pl/programo-logo-gradient.svg",
   image: "https://programo.pl/opengraph-image",

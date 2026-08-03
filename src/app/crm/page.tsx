@@ -6,7 +6,7 @@ import LoginForm from "./LoginForm";
 import LeadsDashboard from "./LeadsDashboard";
 
 export const metadata: Metadata = {
-  title: "CRM — Programo",
+  title: "CRM - Programo",
   robots: { index: false, follow: false },
 };
 

@@ -88,7 +88,7 @@ function Fact({
 
 function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
   const url = host(project.liveUrl, project.slug);
-  const desktopAlt = `${project.title} — ${lang === "pl" ? "widok desktop" : "desktop view"}`;
+  const desktopAlt = `${project.title} - ${lang === "pl" ? "widok desktop" : "desktop view"}`;
   const pres = presentation(project);
 
   // Variant C — a row of phone frames for mobile-first products.
@@ -107,7 +107,7 @@ function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
             >
               <PhoneFrame
                 src={src}
-                alt={`${project.title} — ${lang === "pl" ? "ekran aplikacji" : "app screen"} ${i + 1}`}
+                alt={`${project.title} - ${lang === "pl" ? "ekran aplikacji" : "app screen"} ${i + 1}`}
                 ownStatusBar={isAppShot(src)}
                 priority={i === 0}
               />
@@ -138,7 +138,7 @@ function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
             <BrowserFrame
               url={url}
               src={secondary}
-              alt={`${project.title} — ${lang === "pl" ? "drugi widok" : "second view"}`}
+              alt={`${project.title} - ${lang === "pl" ? "drugi widok" : "second view"}`}
               tone={isDarkShot(secondary) ? "dark" : "auto"}
             />
           </div>
@@ -171,7 +171,7 @@ function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
         desktopSrc={desktop}
         desktopAlt={desktopAlt}
         phoneSrc={phone}
-        phoneAlt={`${project.title} — ${lang === "pl" ? "widok mobilny" : "mobile view"}`}
+        phoneAlt={`${project.title} - ${lang === "pl" ? "widok mobilny" : "mobile view"}`}
         priority
       />
     );
@@ -202,13 +202,13 @@ function Gallery({ project, lang }: { project: Project; lang: Lang }) {
             <Reveal key={src} delay={i * 0.08}>
               {isPhoneShot(src) && !isDesktopShot(src) ? (
                 <div className="mx-auto w-[200px]">
-                  <PhoneFrame src={src} alt={`${project.title} — ${i + 1}`} ownStatusBar={isAppShot(src)} />
+                  <PhoneFrame src={src} alt={`${project.title} - ${i + 1}`} ownStatusBar={isAppShot(src)} />
                 </div>
               ) : (
                 <BrowserFrame
                   url={host(project.liveUrl, project.slug)}
                   src={src}
-                  alt={`${project.title} — ${i + 1}`}
+                  alt={`${project.title} - ${i + 1}`}
                 />
               )}
             </Reveal>

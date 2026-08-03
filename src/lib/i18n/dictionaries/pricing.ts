@@ -5,8 +5,8 @@ export const pricing = {
   "pricing.label": { pl: "Przejrzyste zasady wyceny", en: "Transparent pricing rules" },
   "pricing.title": { pl: "Wycena", en: "Pricing" },
   "pricing.lead": {
-    pl: "Nie mamy cennika z półki, bo strona wizytówkowa i platforma SaaS różnią się skalą pracy o rząd wielkości. Mamy za to prosty, przewidywalny proces: zanim zapłacisz cokolwiek, wiesz dokładnie, co dostaniesz i za ile.",
-    en: "We don't have an off-the-shelf price list, because a simple website and a SaaS platform differ in scale by an order of magnitude. What we have is a simple, predictable process: before you pay anything, you know exactly what you'll get and for how much.",
+    pl: "Strony wizytówkowej i platformy SaaS nie da się wycenić z jednego cennika, bo skala pracy różni się o rząd wielkości. Dlatego wyceniamy każdy projekt osobno, a zanim zapłacisz pierwszą złotówkę, wiesz, co dostaniesz i za ile.",
+    en: "You can't price a simple website and a SaaS platform off the same list, because the scale of work differs by an order of magnitude. So we quote every project separately, and before you pay anything you know what you'll get and for how much.",
   },
 
   "pricing.processLabel": { pl: "Jak wygląda proces", en: "How the process works" },
@@ -23,8 +23,8 @@ export const pricing = {
   },
   "pricing.step3.title": { pl: "Stała wycena", en: "A fixed quote" },
   "pricing.step3.desc": {
-    pl: "Przed startem dostajesz stałą wycenę z rozpisanym zakresem, etapami i terminami. Cena nie rośnie w trakcie, chyba że wspólnie zmienimy zakres — wtedy najpierw aktualizujemy wycenę, potem pracujemy.",
-    en: "Before we start, you get a fixed quote with the scope, stages, and deadlines written out. The price doesn't grow mid-project unless we change the scope together — in which case we update the quote first, then do the work.",
+    pl: "Przed startem dostajesz stałą wycenę z rozpisanym zakresem, etapami i terminami. Cena nie rośnie w trakcie, chyba że wspólnie zmienimy zakres. Wtedy aktualizujemy wycenę, zanim zabierzemy się do pracy.",
+    en: "Before we start, you get a fixed quote with the scope, stages, and deadlines written out. The price doesn't grow mid-project unless we change the scope together. In that case we update the quote before doing the work.",
   },
 
   "pricing.factorsLabel": { pl: "Co wpływa na cenę", en: "What drives the cost" },

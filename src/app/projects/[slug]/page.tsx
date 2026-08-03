@@ -16,15 +16,17 @@ export async function generateMetadata({
 
   if (!project) {
     return {
-      title: "Programo — Projekt nie znaleziony",
+      title: "Programo - Projekt nie znaleziony",
       description: "Projekt nie został znaleziony.",
     };
   }
 
   // Short subtitle for the title tag — trim to the first clause so the tag stays
-  // scannable. Full description's first sentence is used for the meta description.
-  const shortSubtitle = project.subtitle.pl.split(/[—–:]/)[0].trim();
-  const title = `${project.title} — ${shortSubtitle} | Programo`;
+  // scannable. Splits on a colon or a spaced dash (hyphen, en, em) so hyphenated
+  // words like "mobile-first" survive. Full description's first sentence is used
+  // for the meta description.
+  const shortSubtitle = project.subtitle.pl.split(/:|\s[-\u2013\u2014]\s/)[0].trim();
+  const title = `${project.title} - ${shortSubtitle} | Programo`;
   const description = project.description.pl.split(/(?<=\.)\s/)[0].slice(0, 160);
   const ogImage = project.screenshots?.[0];
 

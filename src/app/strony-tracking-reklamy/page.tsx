@@ -47,7 +47,7 @@ const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
   serviceType: "Strony internetowe, tracking konwersji i kampanie Google Ads",
-  name: "Strony, tracking i reklamy Google — Programo",
+  name: "Strony, tracking i reklamy Google - Programo",
   provider: { "@id": "https://programo.pl/#organization" },
   areaServed: [
     { "@type": "Country", name: "Polska" },
@@ -61,7 +61,7 @@ const serviceJsonLd = {
 const faqs = [
   {
     q: "Mam już stronę. Czy musicie budować nową?",
-    a: "Nie. Jeśli Twoja strona działa, wpinamy pomiar i prowadzimy kampanię na tym, co masz — dokładnie tak pracujemy z Domkami Poznaniak. Nową stronę proponujemy tylko wtedy, gdy obecna realnie blokuje konwersję, i wtedy pokazujemy dlaczego.",
+    a: "Nie. Jeśli Twoja strona działa, wpinamy pomiar i prowadzimy kampanię na tym, co masz - dokładnie tak pracujemy z Domkami Poznaniak. Nową stronę proponujemy tylko wtedy, gdy obecna realnie blokuje konwersję, i wtedy pokazujemy dlaczego.",
   },
   {
     q: "Czy tracking jest zgodny z RODO?",

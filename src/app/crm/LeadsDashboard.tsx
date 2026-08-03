@@ -53,7 +53,7 @@ const editInputClass =
 
 function formatAbsolute(iso: string): string {
   const d = new Date(iso);
-  if (isNaN(d.getTime())) return iso || "—";
+  if (isNaN(d.getTime())) return iso || "-";
   return new Intl.DateTimeFormat("pl-PL", {
     day: "2-digit",
     month: "long",
@@ -224,7 +224,7 @@ function NoteField({ id, initial }: { id: string; initial: string }) {
         <span className="text-xs">
           {state === "saving" && <span className="text-on-surface-variant">zapisywanie…</span>}
           {state === "saved" && <span className="text-emerald-500">zapisano ✓</span>}
-          {state === "error" && <span className="text-red-500">błąd — spróbuj ponownie</span>}
+          {state === "error" && <span className="text-red-500">błąd - spróbuj ponownie</span>}
         </span>
       </div>
       <textarea

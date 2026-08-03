@@ -3,12 +3,12 @@ import Link from "next/link";
 import CompactLeadForm from "@/components/compact-lead-form";
 
 export const metadata: Metadata = {
-  title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy — Programo",
+  title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy - Programo",
   description:
-    "Ile kosztuje stworzenie aplikacji, strony lub systemu SaaS? Wyjaśniamy, co realnie wpływa na koszt i jak wygląda nasza indywidualna wycena. Software house Programo z Poznania.",
+    "Ile kosztuje aplikacja, strona lub system SaaS? Tłumaczymy, co podnosi i co obniża koszt oraz jak przygotowujemy wycenę. Programo, software house z Poznania.",
   alternates: { canonical: "https://programo.pl/ile-kosztuje-aplikacji" },
   openGraph: {
-    title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy — Programo",
+    title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy - Programo",
     description:
       "Co realnie wpływa na koszt aplikacji, strony lub systemu SaaS i jak wygląda nasza indywidualna wycena.",
     url: "https://programo.pl/ile-kosztuje-aplikacji",
@@ -34,63 +34,63 @@ const projectRows = [
   {
     type: "Landing / prosta strona firmowa",
     timeline: "2–3 tygodnie",
-    note: "Oferta, formularz kontaktowy, SEO lokalne, szybkie wdrożenie.",
+    note: "Oferta, formularz kontaktowy i lokalne SEO.",
   },
   {
     type: "Rozbudowana strona / e-commerce / portal",
     timeline: "4–6 tygodni",
-    note: "Panel treści (CMS), integracje, płatności, konto klienta, wielojęzyczność.",
+    note: "Panel treści (CMS), płatności, konto klienta, integracje, czasem druga wersja językowa.",
   },
   {
     type: "Aplikacja webowa / mobilna / system SaaS",
     timeline: "od 6–8 tygodni",
-    note: "Role, płatności, integracje, AI, utrzymanie — zakres ustalamy wspólnie.",
+    note: "Role użytkowników, płatności, integracje, AI i utrzymanie po wdrożeniu. Zakres ustalamy wspólnie.",
   },
 ];
 
 const factors = [
   {
     title: "Zakres funkcji i liczba ekranów",
-    desc: "Im więcej widoków, ról użytkowników i logiki biznesowej, tym większy nakład pracy.",
+    desc: "Każdy dodatkowy widok i każda nowa rola użytkownika to kolejne ścieżki do zaprojektowania i przetestowania.",
   },
   {
     title: "Integracje",
-    desc: "Płatności (Stripe, Przelewy24), API zewnętrzne, ERP, AI/LLM, OCR — każda integracja to dodatkowy czas.",
+    desc: "Płatności (Stripe, Przelewy24), zewnętrzne API, ERP, AI/LLM, OCR. Każde takie połączenie to osobna praca, także po stronie testów.",
   },
   {
     title: "Web vs aplikacja mobilna",
-    desc: "Aplikacja na iOS i Android to więcej testów i wdrożeń niż sama strona; zakres można ograniczyć, zaczynając od jednej platformy.",
+    desc: "Aplikacja na iOS i Androida to dwa wydania, dwa sklepy i dwa razy więcej testów. Można zacząć od jednej platformy.",
   },
   {
     title: "Projekt UX/UI",
-    desc: "Gotowy system designu przyspiesza pracę; projekt od zera pod markę wydłuża etap projektowy.",
+    desc: "Jeśli masz gotowy system designu, idzie szybciej. Projekt od zera, pod konkretną markę, wydłuża etap makiet.",
   },
   {
     title: "Termin",
-    desc: "Bardzo krótki termin zwykle podnosi koszt; spokojny harmonogram pozwala go optymalizować.",
+    desc: "Bardzo krótki termin zwykle podnosi cenę. Przy spokojnym harmonogramie jest miejsce, żeby ją obniżyć.",
   },
   {
     title: "Utrzymanie po wdrożeniu",
-    desc: "Hosting, monitoring, poprawki i rozwój to osobny, zwykle miesięczny koszt.",
+    desc: "Hosting, monitoring, poprawki i dalszy rozwój liczymy osobno, zwykle w cyklu miesięcznym.",
   },
 ];
 
 const faqs = [
   {
     q: "Ile kosztuje stworzenie aplikacji mobilnej?",
-    a: "Koszt zależy od zakresu: liczby ekranów, ról, płatności i integracji. Budżet można ograniczyć, zaczynając od jednej platformy albo mniejszego pierwszego etapu. Każdą aplikację wyceniamy indywidualnie po ustaleniu zakresu — z konkretnymi widełkami i bez ukrytych kosztów.",
+    a: "Koszt aplikacji mobilnej zależy od liczby ekranów, ról użytkowników, płatności i integracji. Budżet da się ograniczyć, zaczynając od jednej platformy albo od mniejszego pierwszego etapu. Wycenę z widełkami przygotowujemy po ustaleniu zakresu, bez ukrytych kosztów.",
   },
   {
     q: "Ile kosztuje strona internetowa?",
-    a: "Koszt zależy od zakresu — liczby podstron, panelu treści (CMS), integracji i wymagań SEO. Nie pracujemy z cennikiem z półki: po krótkiej rozmowie przygotowujemy konkretną, indywidualną wycenę z widełkami.",
+    a: "Na cenę strony wpływa liczba podstron, panel treści (CMS), integracje i wymagania SEO. Prosta wizytówka firmowa i portal z kontem klienta to dwie różne rozmowy, dlatego widełki podajemy po ustaleniu, co ma się na stronie znaleźć.",
   },
   {
     q: "Co to jest MVP i ile kosztuje?",
-    a: "MVP to pierwsza, działająca wersja produktu z najważniejszymi funkcjami — pozwala szybko zweryfikować pomysł na rynku. Zwykle powstaje w 4–8 tygodni, a jego koszt zależy od zakresu, więc wyceniamy go indywidualnie.",
+    a: "MVP to pierwsza działająca wersja produktu, zawężona do najważniejszych funkcji. Służy do tego, żeby sprawdzić pomysł na użytkownikach, zanim wyda się na niego cały budżet. U nas MVP powstaje zwykle w 4–8 tygodni, a koszt zależy od tego, ile funkcji trafi do tej pierwszej wersji.",
   },
   {
     q: "Czy dostanę dokładną wycenę z góry?",
-    a: "Tak. Po krótkiej rozmowie i makiecie przedstawiamy konkretny plan z etapami i widełkami, zanim zaczniemy budowę. Pracujemy etapami, więc masz kontrolę nad budżetem.",
+    a: "Tak. Po rozmowie i makiecie dostajesz plan z etapami i widełkami, jeszcze zanim zaczniemy budowę. Pracujemy etapami, więc po każdym z nich widzisz efekt i decydujesz o kolejnym kroku.",
   },
 ];
 
@@ -168,11 +168,11 @@ export default function IleKosztujeAplikacjiPage() {
               Ile kosztuje stworzenie aplikacji lub strony?
             </h1>
             <p className="text-lg leading-relaxed opacity-85 md:text-xl">
-              Krótko: koszt zależy od trzech rzeczy — <strong>zakresu</strong>,{" "}
-              <strong>integracji</strong> i <strong>terminu</strong>. Dlatego nie mamy
-              sztywnego cennika z półki, tylko każdy projekt wyceniamy{" "}
-              <strong>indywidualnie</strong> po krótkiej rozmowie. Niżej tłumaczymy, co
-              konkretnie wpływa na cenę i jak wygląda nasza wycena.
+              Na cenę wpływa przede wszystkim <strong>zakres</strong>, zaraz po nim{" "}
+              <strong>integracje</strong> i <strong>termin</strong>. Ten sam pomysł da
+              się zbudować na kilka sposobów, a każdy z nich kosztuje inaczej. Dlatego
+              wycenę przygotowujemy <strong>indywidualnie</strong>, po krótkiej
+              rozmowie. Poniżej opisujemy, co podbija koszt, a co pozwala go obniżyć.
             </p>
           </header>
 
@@ -199,8 +199,8 @@ export default function IleKosztujeAplikacjiPage() {
               ))}
             </div>
             <p className="mt-3 text-sm opacity-60">
-              Orientacyjne terminy — każdy projekt wyceniamy zawsze indywidualnie.
-              Zobacz, jak podchodzimy do{" "}
+              To terminy orientacyjne, konkret zależy od zakresu. Zobacz, jak
+              podchodzimy do{" "}
               <Link href="/cennik" className="underline hover:opacity-100">
                 wyceny
               </Link>
@@ -231,7 +231,7 @@ export default function IleKosztujeAplikacjiPage() {
               formId="koszt-artykul"
               anchorId="koszt-artykul"
               projectType="Wycena z artykułu"
-              heading="Poznaj koszt swojego projektu"
+              heading="Zapytaj o wycenę"
             />
           </section>
 
@@ -240,12 +240,12 @@ export default function IleKosztujeAplikacjiPage() {
               Ile kosztuje MVP?
             </h2>
             <p className="text-base leading-relaxed opacity-85 md:text-lg">
-              MVP to pierwsza działająca wersja produktu z najważniejszymi funkcjami —
-              pozwala szybko sprawdzić pomysł na rynku bez budowania od razu całego
-              systemu. W Programo MVP powstaje zwykle w <strong>4–8 tygodni</strong>, a
-              jego koszt zależy od zakresu, więc wyceniamy go{" "}
-              <strong>indywidualnie</strong>. To najtańszy sposób, by ruszyć i zacząć
-              zbierać opinie od pierwszych użytkowników.
+              MVP to wersja produktu ograniczona do{" "}
+              <strong>najważniejszych funkcji</strong>. Budujesz mniej, wypuszczasz
+              wcześniej i szybciej dowiadujesz się od pierwszych użytkowników, czego im
+              brakuje. U nas taka wersja powstaje zwykle w{" "}
+              <strong>4–8 tygodni</strong>, a jej koszt zależy od tego, ile z tych
+              funkcji trafi do pierwszego wydania.
             </p>
           </section>
 
@@ -255,16 +255,16 @@ export default function IleKosztujeAplikacjiPage() {
             </h2>
             <ol className="space-y-4 text-base leading-relaxed opacity-85 md:text-lg">
               <li>
-                <strong>1. Krótka rozmowa</strong> — ustalamy cel, zakres, ryzyka i
-                budżet.
+                <strong>1. Rozmowa.</strong> Ustalamy, po co powstaje projekt, co ma
+                robić i jakim budżetem dysponujesz.
               </li>
               <li>
-                <strong>2. Makieta i widełki</strong> — dostajesz konkretny plan z
-                etapami i priorytetami, zanim zaczniemy kodować.
+                <strong>2. Makieta i widełki.</strong> Dostajesz plan z etapami i
+                priorytetami, zanim ktokolwiek napisze linijkę kodu.
               </li>
               <li>
-                <strong>3. Budowa i wdrożenie</strong> — projektujemy, kodujemy,
-                testujemy i wypuszczamy produkcyjnie, etapami.
+                <strong>3. Budowa i wdrożenie.</strong> Pracujemy etapami i po każdym
+                pokazujemy działającą wersję, aż do wdrożenia produkcyjnego.
               </li>
             </ol>
           </section>
@@ -288,8 +288,8 @@ export default function IleKosztujeAplikacjiPage() {
               Chcesz poznać koszt swojego projektu?
             </h2>
             <p className="mb-6 max-w-2xl opacity-80">
-              Opisz pomysł w dwie minuty — wrócimy z konkretnymi widełkami i propozycją
-              pierwszych kroków. Bezpłatnie i bez zobowiązań.
+              Opisz w kilku zdaniach, co chcesz zbudować. Wrócimy z widełkami i
+              propozycją pierwszych kroków, bezpłatnie i bez zobowiązań.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link

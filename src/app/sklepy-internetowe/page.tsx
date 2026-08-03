@@ -14,12 +14,12 @@ import BrowserFrame from "@/components/ui/browser-frame";
 export const metadata: Metadata = {
   title: "Sklepy internetowe i aplikacje mobilne do sklepów | Programo",
   description:
-    "Sklepy od zera (WooCommerce, PrestaShop, headless) i natywne aplikacje mobilne do istniejących sklepów. Płatności, Paczkomaty InPost, migracje bez utraty SEO.",
+    "Sklepy internetowe na WooCommerce, PrestaShop i headless oraz aplikacje mobilne do sklepów, które już działają. Płatności, InPost, migracja bez utraty SEO.",
   alternates: { canonical: "https://programo.pl/sklepy-internetowe" },
   openGraph: {
     title: "Sklepy internetowe i aplikacje mobilne do sklepów | Programo",
     description:
-      "Sklepy od zera (WooCommerce, PrestaShop, headless) i natywne aplikacje mobilne do istniejących sklepów.",
+      "Sklepy internetowe na WooCommerce, PrestaShop i headless oraz natywne aplikacje mobilne do sklepów, które już działają.",
     url: "https://programo.pl/sklepy-internetowe",
     siteName: "Programo",
     locale: "pl_PL",
@@ -56,7 +56,7 @@ const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
   serviceType: "Tworzenie sklepów internetowych i aplikacji mobilnych do sklepów",
-  name: "Sklepy internetowe i aplikacje mobilne — Programo",
+  name: "Sklepy internetowe i aplikacje mobilne - Programo",
   provider: { "@id": "https://programo.pl/#organization" },
   areaServed: [
     { "@type": "Country", name: "Polska" },
@@ -70,11 +70,11 @@ const serviceJsonLd = {
 const faqs = [
   {
     q: "Ile kosztuje sklep internetowy?",
-    a: "Koszt zależy od zakresu: liczby produktów, integracji i tego, czy budujemy od zera, czy rozbudowujemy istniejący sklep. Po pierwszej rozmowie dostajesz widełki w 24 h, a przed startem stałą wycenę.",
+    a: "Na cenę wpływa liczba produktów, zestaw integracji oraz to, czy budujemy sklep od zera, czy rozbudowujemy ten, który masz. Widełki wysyłamy w 24 h od pierwszej rozmowy, a stałą wycenę przed startem prac.",
   },
   {
     q: "Czy muszę przenosić sklep, żeby mieć aplikację mobilną?",
-    a: "Nie. Aplikację budujemy na API Twojego obecnego sklepu — dokładnie tak powstały aplikacje Jedmara, gdzie PrestaShop pozostał nietknięty.",
+    a: "Nie. Aplikacja korzysta z API sklepu, który już masz. Tak powstały aplikacje Jedmara, gdzie PrestaShop został dokładnie taki, jaki był.",
   },
 ];
 
@@ -93,22 +93,22 @@ const services = [
   {
     n: "01",
     title: "Aplikacje mobilne do istniejących sklepów",
-    desc: "Twój sklep zostaje tam, gdzie jest. My dokładamy natywne aplikacje iOS i Android, które działają na jego danych: katalogu, cenach, stanach magazynowych i zamówieniach. Klient dostaje zakupy na dwa dotknięcia, powiadomienia push i skaner kodów, a Ty jeden system zamiast dwóch.",
+    desc: "Twój sklep zostaje tam, gdzie jest. Dokładamy do niego natywne aplikacje iOS i Android, które czytają ten sam katalog, ceny, stany magazynowe i zamówienia. Klient kupuje z telefonu, dostaje powiadomienia push i skanuje kody, a Ty nadal pracujesz na jednym panelu.",
   },
   {
     n: "02",
     title: "Sklepy od zera",
-    desc: "WooCommerce lub PrestaShop, gdy liczy się sprawdzony ekosystem, albo headless na Next.js, gdy sklep ma być szybki jak aplikacja i w pełni pod Twoją kontrolą. Doradzimy uczciwie, która droga pasuje do skali biznesu — czasem ta tańsza.",
+    desc: "WooCommerce albo PrestaShop, jeśli zależy Ci na sprawdzonym ekosystemie i gotowych wtyczkach. Headless na Next.js, jeśli sklep ma się otwierać tak szybko jak aplikacja. Powiemy, która droga pasuje do Twojej skali, nawet jeśli będzie to ta tańsza.",
   },
   {
     n: "03",
     title: "Integracje",
-    desc: "Płatności (PayU, PayPo, iMoje, InPost Pay i inne), dostawy z wyborem Paczkomatu na mapie, Allegro i BaseLinker, synchronizacja stanów magazynowych. Integracja ma działać latami, więc budujemy ją z obsługą błędów i automatycznym ponawianiem, nie „na sznurki”.",
+    desc: "Płatności (PayU, PayPo, iMoje, InPost Pay i inne), wybór Paczkomatu na mapie, Allegro i BaseLinker, synchronizacja stanów magazynowych. Piszemy je z obsługą błędów i automatycznym ponawianiem, żeby nikt nie musiał ich pilnować ręcznie.",
   },
   {
     n: "04",
     title: "Migracje bez utraty SEO",
-    desc: "Przy przenoszeniu sklepu pilnujemy mapy przekierowań, struktury adresów i danych strukturalnych, żeby pozycje wypracowane w Google przetrwały przeprowadzkę. Plan migracji dostajesz na piśmie, zanim cokolwiek ruszymy.",
+    desc: "Przy przenoszeniu sklepu pilnujemy mapy przekierowań, struktury adresów i danych strukturalnych, żeby pozycje wypracowane w Google przetrwały przeprowadzkę. Plan migracji dostajesz na piśmie, zanim ruszymy cokolwiek na produkcji.",
   },
 ];
 
@@ -117,12 +117,12 @@ const storeCases = [
   {
     slug: "estalo",
     angle:
-      "Własna platforma SaaS z płatnościami (Lemon Squeezy), integracjami z portalami i panelem ról — te same kompetencje, których wymaga rozbudowany sklep B2B z integracjami.",
+      "Własna platforma SaaS z płatnościami przez Lemon Squeezy, integracjami z portalami i panelem uprawnień. Rozbudowany sklep B2B stoi na tych samych mechanizmach.",
   },
   {
     slug: "rejestr-pro",
     angle:
-      "Wydajny frontend w Next.js na danych z zewnętrznego API i własnym indeksie Postgres — fundament pod headless e-commerce na istniejącym backendzie sklepu.",
+      "Frontend w Next.js oparty na zewnętrznym API i własnym indeksie w Postgresie. Dokładnie tak działa headless e-commerce postawiony na backendzie istniejącego sklepu.",
   },
 ];
 
@@ -153,12 +153,13 @@ export default function SklepyInternetowePage() {
               <div>
                 <p className={EYEBROW}>Sklepy internetowe · E-commerce · Poznań</p>
                 <h1 className="mt-5 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl">
-                  Sklepy internetowe: od nowego sklepu po aplikację mobilną do tego, który już masz
+                  Sklepy internetowe i aplikacje mobilne do sklepów, które już działają
                 </h1>
                 <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
-                  Budujemy sklepy od zera i rozbudowujemy istniejące — bez wymuszania
-                  migracji. Nasza flagowa realizacja to dwie natywne aplikacje i
-                  interaktywne schematy części dla sklepu narzędziowego Jedmar.
+                  Budujemy sklepy od zera, a jeśli Twój działa dobrze, nie namawiamy
+                  Cię na migrację. Dla sklepu narzędziowego Jedmar zbudowaliśmy dwie
+                  natywne aplikacje i interaktywne schematy części, a sam sklep został
+                  na PrestaShopie.
                 </p>
                 <div className="mt-8 flex flex-wrap items-center gap-4">
                   <CtaButton href="tel:+48509123434" variant="secondary">Zadzwoń: 509 123 434</CtaButton>
@@ -179,7 +180,7 @@ export default function SklepyInternetowePage() {
                       <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border border-outline-variant/40 bg-surface-container-low">
                         <Image
                           src="/screenshots/jedmar-hero.webp"
-                          alt="Aplikacja mobilna sklepu Jedmar — natywne iOS i Android zbudowane przez Programo"
+                          alt="Aplikacja mobilna sklepu Jedmar - natywne iOS i Android zbudowane przez Programo"
                           fill
                           priority
                           sizes="96px"
@@ -217,24 +218,25 @@ export default function SklepyInternetowePage() {
           <div className={CONTAINER}>
             <Reveal className="mb-14 max-w-3xl md:mb-16">
               <p className={EYEBROW}>Realizacja flagowa</p>
-              <h2 className={`mt-5 ${H2}`}>Jedmar — sklep, którego nie ruszaliśmy, i dwie aplikacje, których mu brakowało</h2>
+              <h2 className={`mt-5 ${H2}`}>Jedmar: dwie aplikacje do sklepu, którego nie musieliśmy przebudowywać</h2>
               <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/70">
-                Jedmar miał działający sklep na PrestaShop i nie potrzebował nowego. Potrzebował
-                wygodnych zakupów z telefonu i sensownej sprzedaży części zamiennych.
-                Zbudowaliśmy dwie natywne aplikacje (iOS i Android), które są opublikowane w
+                Jedmar miał działający sklep na PrestaShop i nie potrzebował nowego. Brakowało
+                mu wygodnych zakupów z telefonu i sensownej sprzedaży części zamiennych.
+                Zbudowaliśmy dwie natywne aplikacje, na iOS i Androida, opublikowane w
                 App Store i Google Play: katalog ponad 1500 produktów, koszyk, sześć metod
-                płatności, Paczkomaty InPost i skaner kodów EAN. Do tego moduł interaktywnych
-                schematów: 73 narzędzia rozrysowane część po części, około 7500 klikalnych
-                markerów, a każda część z przyciskiem dodania do koszyka — na stronie sklepu i
-                w obu aplikacjach, z jednego źródła danych. Katalog synchronizuje się z
-                PrestaShopem automatycznie co kilka minut.
+                płatności, Paczkomaty InPost i skaner kodów EAN. Doszedł do tego moduł
+                interaktywnych schematów, czyli 73 narzędzia rozrysowane część po części
+                i około 7500 klikalnych markerów, z których każdy dodaje daną część do
+                koszyka. Ten sam moduł działa na stronie sklepu i w obu aplikacjach, na
+                jednym źródle danych, a katalog synchronizuje się z PrestaShopem co kilka
+                minut.
               </p>
             </Reveal>
             <Reveal delay={0.1}>
               <BrowserFrame
                 url="jedmar.pl/pl/schematy-narzedzi"
                 src="/screenshots/v2/jedmar-schemat-tool-desktop.webp"
-                alt="Interaktywny moduł schematów części Jedmar — eksplodowane rysunki techniczne z klikalnymi markerami"
+                alt="Interaktywny moduł schematów części Jedmar - eksplodowane rysunki techniczne z klikalnymi markerami"
                 width={1440}
                 height={900}
               />
@@ -275,8 +277,8 @@ export default function SklepyInternetowePage() {
         <div id="realizacje" className="scroll-mt-28" />
         <CaseStudies
           eyebrow="Kompetencje"
-          heading="Co jeszcze potrafimy — przydatne w sklepie"
-          intro="Jedmar (wyżej) to nasza realizacja sklepowa. Obok — własne platformy, które dowodzą umiejętności potrzebnych w rozbudowanym e-commerce: płatności, integracje z systemami zewnętrznymi i wydajny frontend."
+          heading="Co jeszcze budowaliśmy i co z tego przydaje się w sklepie"
+          intro="Jedmar wyżej to nasze wdrożenie sklepowe. Poniżej dwie własne platformy, przy których robiliśmy to samo, czego wymaga rozbudowany e-commerce: płatności, integracje z zewnętrznymi systemami i frontend, który nie zwalnia przy dużym katalogu."
           items={storeCases}
         />
 
@@ -312,8 +314,9 @@ export default function SklepyInternetowePage() {
             <Reveal className="overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:p-16">
               <h2 className={H2}>Porozmawiajmy o Twoim sklepie</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
-                Opisz projekt w 2 minuty — wrócimy z planem, integracjami i wyceną.
-                Poznań, Wielkopolska i cała Polska. Odpowiadamy w 24 h.
+                Opisz projekt w dwie minuty, a wrócimy z planem, listą integracji
+                i wyceną. Pracujemy z firmami z Poznania, Wielkopolski i całej
+                Polski, odpowiadamy w ciągu 24 h.
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-4">
                 <CtaButton href="#kontakt-main">Opisz projekt szczegółowo</CtaButton>

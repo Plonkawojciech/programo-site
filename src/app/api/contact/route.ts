@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
   const consentAt = consentTimestamp || new Date().toISOString();
   const safeConsentAt = sanitize(consentAt);
 
-  // Lead source (Google Ads / UTM) — which keyword/campaign produced this lead
+  // Lead source (Google Ads / UTM) - which keyword/campaign produced this lead
   const {
     gclid, gbraid, wbraid,
     utm_source, utm_medium, utm_campaign, utm_term, utm_content,
@@ -225,7 +225,7 @@ export async function POST(request: NextRequest) {
       console.error("[contact] CRM webhook error:", e);
     }
   } else {
-    console.log("[DEV] No CRM_WEBHOOK_SECRET — skipping CRM forward.");
+    console.log("[DEV] No CRM_WEBHOOK_SECRET - skipping CRM forward.");
   }
 
   const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
@@ -242,7 +242,7 @@ export async function POST(request: NextRequest) {
           await resend.emails.send({
             from: "Programo <noreply@programo.pl>",
             to: emailTo,
-            subject: `[Programo] ${safeSubject} — od ${safeName}`,
+            subject: `[Programo] ${safeSubject} - od ${safeName}`,
             html: `
               <h2>Nowa wiadomość z formularza kontaktowego</h2>
               <p><strong>Imię:</strong> ${safeName}</p>
@@ -264,7 +264,7 @@ export async function POST(request: NextRequest) {
       })()
     );
   } else {
-    console.log("[DEV] No RESEND_API_KEY — skipping email.");
+    console.log("[DEV] No RESEND_API_KEY - skipping email.");
   }
 
   const tgToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -277,7 +277,7 @@ export async function POST(request: NextRequest) {
             s.replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, "\\$1");
           const srcLines = sources.map(([k, v]) => `*${esc(k)}:* ${esc(v)}`);
           const lines = [
-            `*Nowa wiadomość — Programo*`,
+            `*Nowa wiadomość - Programo*`,
             ``,
             `*Imię:* ${esc(displayName)}`,
             email ? `*Email:* ${esc(email)}` : "",
@@ -315,7 +315,7 @@ export async function POST(request: NextRequest) {
       })()
     );
   } else {
-    console.log("[DEV] No TELEGRAM_BOT_TOKEN/CHAT_ID — skipping Telegram.");
+    console.log("[DEV] No TELEGRAM_BOT_TOKEN/CHAT_ID - skipping Telegram.");
   }
 
   if (tasks.length === 0) {

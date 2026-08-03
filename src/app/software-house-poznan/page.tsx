@@ -3,14 +3,14 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title:
-    "Software House Poznań — Programo | Tworzenie oprogramowania na zamówienie",
+    "Software House Poznań - Programo | Oprogramowanie na zamówienie",
   description:
-    "Software house Poznań — Programo. Tworzymy aplikacje webowe, mobilne i systemy SaaS dla firm z Poznania i całej Polski. Next.js, React, TypeScript, AI. Bezpłatna wycena.",
+    "Software house Poznań. Budujemy aplikacje webowe, mobilne i systemy SaaS w Next.js i React. Pracujemy z firmami z Poznania i całej Polski. Bezpłatna wycena.",
   alternates: {
     canonical: "https://programo.pl/software-house-poznan",
   },
   openGraph: {
-    title: "Software House Poznań — Programo",
+    title: "Software House Poznań - Programo",
     description:
       "Software house z Poznania. Aplikacje webowe, mobilne, systemy SaaS, integracje AI.",
     url: "https://programo.pl/software-house-poznan",
@@ -59,7 +59,7 @@ const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
   serviceType: "Software house Poznań",
-  name: "Software House Poznań — Programo",
+  name: "Software House Poznań - Programo",
   provider: { "@id": "https://programo.pl/#organization" },
   areaServed: [
     { "@type": "City", name: "Poznań" },
@@ -67,26 +67,26 @@ const serviceJsonLd = {
     { "@type": "Country", name: "Polska" },
   ],
   description:
-    "Software house z Poznania — tworzenie oprogramowania na zamówienie, systemy SaaS, aplikacje webowe i mobilne, integracje AI.",
+    "Software house z Poznania. Tworzenie oprogramowania na zamówienie: systemy SaaS, aplikacje webowe i mobilne, integracje AI.",
   url: "https://programo.pl/software-house-poznan",
 };
 
 const services = [
   {
     title: "Aplikacje webowe",
-    desc: "Budujemy szybkie, dostępne i bezpieczne aplikacje webowe w Next.js i React. Od MVP do skalowalnych platform.",
+    desc: "Piszemy je w Next.js i React, z myślą o szybkości ładowania i dostępności. Od pierwszego MVP po rozbudowane platformy.",
   },
   {
     title: "Systemy SaaS",
-    desc: "Wielonajemcowe systemy SaaS z płatnościami, rolami, AI i integracjami. Przykłady: Estalo CRM, Solvio, Rejestr Pro.",
+    desc: "Wiele firm na jednej instancji, role użytkowników, płatności, integracje. Tak działają Estalo CRM, Solvio i Rejestr Pro, które zbudowaliśmy u siebie.",
   },
   {
     title: "Aplikacje mobilne",
-    desc: "iOS i Android natywnie — Swift/SwiftUI i Kotlin/Jetpack Compose. Publikację w App Store i Google Play bierzemy na siebie.",
+    desc: "Natywnie: Swift i SwiftUI na iOS, Kotlin i Jetpack Compose na Androidzie. Publikację w App Store i Google Play bierzemy na siebie.",
   },
   {
     title: "Integracje AI",
-    desc: "Azure OpenAI, Anthropic Claude, RAG, OCR i agenty AI — wpięte w produkty, które pokazujemy w portfolio.",
+    desc: "Azure OpenAI, Anthropic Claude, RAG, OCR, agenty. Te same mechanizmy działają w produktach z naszego portfolio.",
   },
 ];
 
@@ -110,22 +110,22 @@ const projects = [
   {
     name: "Estalo",
     slug: "estalo",
-    desc: "SaaS CRM dla biur nieruchomości — AI matching, RAG chatbot, integracje z Otodom.",
+    desc: "CRM w modelu SaaS dla biur nieruchomości. Dopasowanie ofert przez AI, chatbot RAG, integracje z Otodom.",
   },
   {
     name: "Solvio",
     slug: "solvio",
-    desc: "SaaS do śledzenia wydatków z AI — OCR paragonów, grupy kosztów, porównywarka cen, raporty.",
+    desc: "Aplikacja do pilnowania wydatków. Wrzucasz paragon, OCR czyta go za ciebie, a dalej są grupy kosztów, porównywarka cen i raporty.",
   },
   {
     name: "PoolTimer",
     slug: "pooltimer",
-    desc: "System pomiaru czasu dla klubów pływackich — sprzęt i oprogramowanie. W rozwoju, pilotaż w realnym klubie.",
+    desc: "Pomiar czasu dla klubów pływackich, sprzęt razem z oprogramowaniem. Projekt jest w rozwoju, pilotaż działa w klubie.",
   },
   {
     name: "Rejestr Pro",
     slug: "rejestr-pro",
-    desc: "Wyszukiwarka firm z KRS — oficjalne dane MS, profile spółek, powiązania osób, link do RDF.",
+    desc: "Wyszukiwarka firm na oficjalnych danych z KRS. Profile spółek, powiązania osób, link do RDF.",
   },
 ];
 
@@ -159,13 +159,12 @@ export default function SoftwareHousePoznanPage() {
               Software House · Poznań · Wielkopolska
             </p>
             <h1 className="mb-6 font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl lg:text-7xl">
-              Software House Poznań — Programo
+              Software House Poznań - Programo
             </h1>
             <p className="max-w-3xl text-lg leading-relaxed opacity-80 md:text-xl">
-              Programo to software house z Poznania. Projektujemy i budujemy
-              oprogramowanie na zamówienie — systemy SaaS, aplikacje webowe i
-              mobilne, integracje AI. Pracujemy z firmami z Poznania, Wielkopolski
-              i całej Polski.
+              Programo to software house z Poznania. Budujemy oprogramowanie na
+              zamówienie: systemy SaaS, aplikacje webowe i mobilne, integracje
+              AI. Pracujemy z firmami z Poznania, Wielkopolski i całej Polski.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <a
@@ -189,18 +188,19 @@ export default function SoftwareHousePoznanPage() {
             </h2>
             <div className="max-w-3xl space-y-4 text-base leading-relaxed opacity-80 md:text-lg">
               <p>
-                Wybierając lokalny software house w Poznaniu, zyskujesz krótszą
-                drogę komunikacji, możliwość spotkań na miejscu i partnera, który
-                rozumie polski rynek — od polskich integracji (Otodom, NOE 2.0,
-                Domy.pl) po polskie regulacje (RODO, KSeF, PSD2). Programo łączy
-                lokalność z nowoczesnym stackiem: Next.js, TypeScript, Supabase,
-                natywny Swift i Kotlin.
+                Z wykonawcą z tego samego miasta łatwiej się dogadać. Można
+                spotkać się na miejscu zamiast wymieniać maile, a przy rozmowie o
+                wymaganiach nie trzeba tłumaczyć od zera, czym jest KSeF albo
+                Otodom. Znamy polskie systemy (Otodom, NOE 2.0, Domy.pl) i polskie
+                przepisy (RODO, KSeF, PSD2). Pracujemy na
+                Next.js, TypeScript i Supabase, a aplikacje mobilne piszemy
+                natywnie w Swift i Kotlinie.
               </p>
               <p>
-                Za Programo stoi dwóch inżynierów — bez warstw pośredników i
-                korporacyjnych procesów. Pracujesz bezpośrednio z założycielami:
-                Wojciechem Płonką (Design i Produkt) i Bartoszem Kolajem
-                (Inżynieria).
+                Programo to dwie osoby: Wojciech Płonka odpowiada za design i
+                produkt, Bartosz Kolaj za inżynierię. Przez cały projekt
+                rozmawiasz bezpośrednio z nimi, od pierwszego telefonu po
+                wdrożenie i utrzymanie.
               </p>
             </div>
           </section>
@@ -268,9 +268,9 @@ export default function SoftwareHousePoznanPage() {
                   Czy realizujecie projekty tylko w Poznaniu?
                 </h3>
                 <p className="max-w-2xl opacity-75">
-                  Siedziba Programo mieści się w Poznaniu, ale realizujemy projekty
-                  zdalnie dla klientów z całej Polski oraz z zagranicy. Komunikacja
-                  po polsku i angielsku.
+                  Siedziba Programo jest w Poznaniu, ale projekty prowadzimy też
+                  zdalnie, dla klientów z całej Polski i z zagranicy. Rozmawiamy po
+                  polsku i po angielsku.
                 </p>
               </div>
               <div>
@@ -278,10 +278,10 @@ export default function SoftwareHousePoznanPage() {
                   Ile kosztuje współpraca z software house Programo?
                 </h3>
                 <p className="max-w-2xl opacity-75">
-                  Koszt zależy od zakresu projektu — małą aplikację webową i
-                  rozbudowany system SaaS wyceniamy zupełnie inaczej. Dlatego
-                  każdą wycenę przygotowujemy indywidualnie po krótkiej rozmowie,
-                  z konkretnymi widełkami i bez ukrytych kosztów.
+                  Wszystko zależy od zakresu. Prosta aplikacja webowa i
+                  rozbudowany system SaaS to zupełnie inne wyceny, więc nie
+                  podajemy jednej stawki z góry. Widełki dostajesz po krótkiej
+                  rozmowie o tym, co ma powstać.
                 </p>
               </div>
               <div>
@@ -289,10 +289,10 @@ export default function SoftwareHousePoznanPage() {
                   Co odróżnia Programo od innych software house&apos;ów w Poznaniu?
                 </h3>
                 <p className="max-w-2xl opacity-75">
-                  Zespół dwóch inżynierów, własne produkty SaaS w portfolio (Estalo,
-                  Solvio, Rejestr Pro, PoolTimer) i bezpośredni kontakt z założycielami.
-                  Nie jesteśmy outsourcingową fabryką — projekt prowadzimy od pierwszej
-                  rozmowy po utrzymanie.
+                  Sami budujemy i utrzymujemy własne produkty SaaS: Estalo, Solvio,
+                  Rejestr Pro i PoolTimer. Dzięki temu wiemy, jak wygląda życie
+                  systemu długo po wdrożeniu. Do tego przez cały projekt rozmawiasz
+                  z tymi samymi dwiema osobami, które go budują.
                 </p>
               </div>
             </div>
@@ -310,10 +310,10 @@ export default function SoftwareHousePoznanPage() {
                 biuro@programo.pl
               </a>
               <a href="tel:+48797222363" className="hover:underline">
-                +48 797 222 363 — Wojciech Płonka
+                +48 797 222 363 - Wojciech Płonka
               </a>
               <a href="tel:+48509123434" className="hover:underline">
-                +48 509 123 434 — Bartosz Kolaj
+                +48 509 123 434 - Bartosz Kolaj
               </a>
             </div>
           </section>

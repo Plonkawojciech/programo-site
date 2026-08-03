@@ -4,7 +4,7 @@ import { ImageResponse } from "next/og";
 // File-convention route: Next.js auto-wires og:image (and Twitter falls back to it).
 // Text kept ASCII-only so it renders without shipping a custom font.
 
-export const alt = "Programo — Software House z Poznania";
+export const alt = "Programo - Software House z Poznania";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

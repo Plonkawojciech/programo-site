@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import About from "@/components/about";
 
 export const metadata: Metadata = {
-  title: "O nas — dwóch inżynierów z Poznania | Programo",
+  title: "O nas - dwóch inżynierów z Poznania | Programo",
   description:
-    "Programo s.c. to Wojciech Płonka i Bartosz Kolaj. Projektujemy i budujemy oprogramowanie sami — bez handlowców i podwykonawców. Poznań, cała Polska zdalnie.",
+    "Programo s.c. to Wojciech Płonka i Bartosz Kolaj. Projektujemy i budujemy oprogramowanie sami - bez handlowców i podwykonawców. Poznań, cała Polska zdalnie.",
   alternates: { canonical: "https://programo.pl/o-nas" },
   openGraph: {
-    title: "O nas — dwóch inżynierów z Poznania | Programo",
+    title: "O nas - dwóch inżynierów z Poznania | Programo",
     description: "Programo s.c. to Wojciech Płonka i Bartosz Kolaj. Projektujemy i budujemy oprogramowanie sami.",
     url: "https://programo.pl/o-nas",
     siteName: "Programo",

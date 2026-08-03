@@ -68,7 +68,7 @@ export default function CaseStudies({
                     {shot ? (
                       <Image
                         src={shot}
-                        alt={`${project.title} — realizacja Programo`}
+                        alt={`${project.title} - realizacja Programo`}
                         fill
                         sizes="(min-width: 768px) 32vw, 100vw"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"

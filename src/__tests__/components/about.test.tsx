@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import About from "@/components/about";
-import { I18nProvider } from "@/lib/i18n";
+import { I18nProvider, translations } from "@/lib/i18n";
 
 function renderWithI18n() {
   return render(
@@ -12,9 +12,11 @@ function renderWithI18n() {
 }
 
 describe("About component", () => {
+  // Asserted against the dictionary, not a copy literal. The wording is edited
+  // often; what this test is actually for is that the heading renders at all.
   it("renders the page heading", () => {
     renderWithI18n();
-    expect(screen.getByText("Dwóch inżynierów, jeden standard pracy")).toBeInTheDocument();
+    expect(screen.getByText(translations["about.title"].pl)).toBeInTheDocument();
   });
 
   it("renders founder names", () => {

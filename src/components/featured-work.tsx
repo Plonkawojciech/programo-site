@@ -128,7 +128,7 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
       <Link
         href={`/projects/${project.slug}`}
         onClick={() => trackPortfolioClick(project.slug, `/projects/${project.slug}`)}
-        aria-label={`${project.title} — ${project.subtitle[lang]}`}
+        aria-label={`${project.title} - ${project.subtitle[lang]}`}
         className="flex h-full flex-col overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
       >
         {/* Accent line */}

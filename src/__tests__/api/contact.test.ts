@@ -208,7 +208,7 @@ describe("phone-only lead (homepage hero)", () => {
     name: "",
     email: "",
     phone,
-    message: "Prośba o kontakt telefoniczny — formularz w nagłówku strony głównej.",
+    message: "Prośba o kontakt telefoniczny - formularz w nagłówku strony głównej.",
     consent: true as const,
   });
 

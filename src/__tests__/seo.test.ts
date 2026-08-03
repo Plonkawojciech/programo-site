@@ -76,10 +76,25 @@ describe("SEO", () => {
     });
   });
 
+  // Mirrors the dictionary-wide guard in i18n.test.ts. projects.ts is the other
+  // place site copy lives, and `subtitle.pl` additionally feeds the <title> tag
+  // truncation in projects/[slug]/page.tsx, which splits on a spaced dash.
+  describe("copy hygiene", () => {
+    it("no em dashes in project copy", () => {
+      const fields = ["subtitle", "description", "longDescription"] as const;
+      for (const p of projects) {
+        for (const f of fields) {
+          expect(p[f].pl, `${p.slug}.${f}.pl has an em dash`).not.toContain("\u2014");
+          expect(p[f].en, `${p.slug}.${f}.en has an em dash`).not.toContain("\u2014");
+        }
+      }
+    });
+  });
+
   describe("project titles", () => {
     it("all project titles are under 60 chars when combined with 'Programo'", () => {
       for (const p of projects) {
-        const fullTitle = `${p.title} — Programo`;
+        const fullTitle = `${p.title} - Programo`;
         expect(
           fullTitle.length,
           `${p.title} title too long: ${fullTitle}`

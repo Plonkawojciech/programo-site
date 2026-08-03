@@ -34,7 +34,7 @@ function ProjectTile({ project }: { project: Project }) {
       href={`/projects/${project.slug}`}
       onClick={() => trackPortfolioClick(project.slug, `/projects/${project.slug}`)}
       className="group relative aspect-[4/3] w-[80vw] shrink-0 snap-center overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container/40 sm:w-[360px] md:w-[380px] md:card-hover lg:w-[440px]"
-      aria-label={`${project.title} — ${project.subtitle[lang]}`}
+      aria-label={`${project.title} - ${project.subtitle[lang]}`}
     >
       {screenshot ? (
         <Image

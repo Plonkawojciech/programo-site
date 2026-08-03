@@ -444,7 +444,7 @@ export default function DevEditor() {
             </button>
           ) : (
             <p style={S.hint}>
-              Ten tekst nie pochodzi ze słownika — edytuj go w pliku źródłowym. Tutaj możesz go
+              Ten tekst nie pochodzi ze słownika - edytuj go w pliku źródłowym. Tutaj możesz go
               usunąć.
             </p>
           )}
@@ -500,7 +500,7 @@ export default function DevEditor() {
       {mode === "colors" && (
         <div style={S.panel}>
           <div style={S.panelHead}>
-            <strong style={S.brand}>Paleta — motyw {theme === "dark" ? "ciemny" : "jasny"}</strong>
+            <strong style={S.brand}>Paleta - motyw {theme === "dark" ? "ciemny" : "jasny"}</strong>
           </div>
           <p style={S.hint}>
             Zapis idzie do <code>globals.css</code>. Warianty <code>-rgb</code> przeliczają się same.

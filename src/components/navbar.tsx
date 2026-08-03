@@ -145,7 +145,7 @@ export default function Navbar() {
         <div className="relative justify-self-start">
           <Link
             href="/"
-            aria-label="Programo — strona główna"
+            aria-label="Programo - strona główna"
             className="flex items-center"
           >
             {/* The SVG is an A4 art-board (viewBox 841.89x595.28) with the
@@ -293,7 +293,7 @@ export default function Navbar() {
 
           <Link
             href="/"
-            aria-label="Programo — strona główna"
+            aria-label="Programo - strona główna"
             className="flex items-center"
           >
             <Image

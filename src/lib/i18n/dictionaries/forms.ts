@@ -6,16 +6,16 @@ export const forms = {
   // --- CompactLeadForm (imię + telefon + zgoda) --------------------------------
   "compact.eyebrow": { pl: "Szybki kontakt", en: "Quick contact" },
   "compact.heading": {
-    pl: "Zostaw numer — oddzwonimy w 24 h z konkretami.",
-    en: "Leave your number — we'll call back within 24 hours with specifics.",
+    pl: "Zostaw numer, a oddzwonimy w 24 h z konkretami.",
+    en: "Leave your number and we'll call back within 24 hours with specifics.",
   },
   "compact.sub": {
-    pl: "Bez zobowiązań i bez spamu — numeru użyjemy tylko po to, żeby oddzwonić.",
-    en: "No obligation, no spam — we'll only use your number to call you back.",
+    pl: "Numeru użyjemy tylko po to, żeby oddzwonić, i do niczego więcej.",
+    en: "We'll use your number to call you back, and for nothing else.",
   },
   "compact.bareSub": {
-    pl: "Odpowiadamy w 24 h — bez zobowiązań.",
-    en: "We reply within 24 hours — no obligation.",
+    pl: "Odpowiadamy w 24 h, bez zobowiązań.",
+    en: "We reply within 24 hours, no obligation.",
   },
   "compact.directContact": {
     pl: "Bezpośredni kontakt z założycielami · Odpowiadamy w 24 h",
@@ -33,8 +33,8 @@ export const forms = {
   "compact.submitting": { pl: "Wysyłanie...", en: "Sending..." },
   "compact.callNow": { pl: "Zadzwoń teraz", en: "Call now" },
   "compact.success": {
-    pl: "Dziękujemy — odezwiemy się w 24 h.",
-    en: "Thank you — we'll be in touch within 24 hours.",
+    pl: "Dziękujemy. Odezwiemy się w ciągu 24 h.",
+    en: "Thank you. We'll be in touch within 24 hours.",
   },
   "compact.successBody": {
     pl: "Jeśli sprawa jest pilna, zadzwoń: 509 123 434.",
@@ -50,8 +50,8 @@ export const forms = {
     en: "This number looks incomplete. Check that it's a valid phone number.",
   },
   "compact.errorConsent": {
-    pl: "Zaznacz zgodę na kontakt — bez niej nie możemy oddzwonić.",
-    en: "Tick the contact consent — without it we can't call you back.",
+    pl: "Zaznacz zgodę na kontakt. Bez niej nie możemy oddzwonić.",
+    en: "Tick the contact consent. Without it we can't call you back.",
   },
   "compact.errorServer": {
     pl: "Nie udało się wysłać. Spróbuj ponownie albo zadzwoń: 509 123 434.",
@@ -61,8 +61,8 @@ export const forms = {
   // --- QuickContact (imię, e-mail LUB telefon, chipy, wiadomość opcjonalna) ----
   "quick.title": { pl: "Opowiedz nam, co chcesz zbudować", en: "Tell us what you want to build" },
   "quick.subtitle": {
-    pl: "Piętnaście minut rozmowy wystarczy, żebyśmy powiedzieli Ci, czy to ma sens, ile może kosztować i od czego zacząć.",
-    en: "Fifteen minutes on the phone is enough for us to tell you whether it makes sense, roughly what it may cost, and where to start.",
+    pl: "Piętnaście minut rozmowy wystarczy, żeby powiedzieć Ci, czy to ma sens, ile mniej więcej kosztuje i od czego zacząć.",
+    en: "Fifteen minutes on the phone is enough for us to tell you whether it makes sense, roughly what it costs, and where to start.",
   },
   "quick.name": { pl: "Imię", en: "First name" },
   "quick.namePlaceholder": { pl: "Jak masz na imię?", en: "What's your first name?" },
@@ -76,8 +76,8 @@ export const forms = {
     en: "Enter a phone number or email so we can reply.",
   },
   "quick.nameRequired": {
-    pl: "Podaj imię — chcemy wiedzieć, do kogo dzwonimy.",
-    en: "Enter your first name — we'd like to know who we're calling.",
+    pl: "Podaj imię. Chcemy wiedzieć, do kogo dzwonimy.",
+    en: "Enter your first name. We'd like to know who we're calling.",
   },
   "quick.emailInvalid": {
     pl: "Ten adres e-mail wygląda na niepełny.",
@@ -116,8 +116,8 @@ export const forms = {
     en: "We reply within 24 h · No-obligation consultation · Your data is safe (GDPR)",
   },
   "quick.successTitle": {
-    pl: "Dziękujemy — odezwiemy się w 24 h.",
-    en: "Thank you — we'll be in touch within 24 hours.",
+    pl: "Dziękujemy. Odezwiemy się w ciągu 24 h.",
+    en: "Thank you. We'll be in touch within 24 hours.",
   },
   "quick.successBody": {
     pl: "Twoje zapytanie dotarło. Jeśli sprawa jest pilna, zadzwoń: 509 123 434.",
@@ -138,8 +138,8 @@ export const forms = {
     en: "I consent to being contacted about my inquiry. Programo s.c. is the data controller. Details in the",
   },
   "quick.consentRequired": {
-    pl: "Zaznacz zgodę na kontakt — bez niej nie możemy odpowiedzieć.",
-    en: "Tick the contact consent — without it we can't reply.",
+    pl: "Zaznacz zgodę na kontakt. Bez niej nie możemy odpowiedzieć.",
+    en: "Tick the contact consent. Without it we can't reply.",
   },
   "quick.privacyLink": {
     pl: "polityce prywatności",

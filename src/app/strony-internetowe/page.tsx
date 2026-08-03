@@ -9,14 +9,14 @@ import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
 
 export const metadata: Metadata = {
-  title: "Strony internetowe dla firm — projekt i wdrożenie | Programo",
+  title: "Strony internetowe dla firm - projekt i wdrożenie | Programo",
   description:
-    "Szybkie, nowoczesne strony firmowe i landingi zaprojektowane pod kontakt od klienta. Formularz, telefon i pomiar skuteczności od pierwszego dnia.",
+    "Projektujemy i wdrażamy strony internetowe dla firm z Poznania i całej Polski. Next.js, panel do edycji treści, formularz i pomiar zapytań od startu.",
   alternates: { canonical: "https://programo.pl/strony-internetowe" },
   openGraph: {
-    title: "Strony internetowe dla firm — projekt i wdrożenie | Programo",
+    title: "Strony internetowe dla firm - projekt i wdrożenie | Programo",
     description:
-      "Szybkie, nowoczesne strony firmowe i landingi zaprojektowane pod kontakt od klienta.",
+      "Projektujemy i wdrażamy strony internetowe dla firm. Next.js, panel do edycji treści i formularz, z którego zapytania trafiają prosto do Ciebie.",
     url: "https://programo.pl/strony-internetowe",
     siteName: "Programo",
     locale: "pl_PL",
@@ -53,7 +53,7 @@ const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
   serviceType: "Tworzenie stron internetowych",
-  name: "Tworzenie stron internetowych dla firm — Programo",
+  name: "Tworzenie stron internetowych dla firm - Programo",
   provider: { "@id": "https://programo.pl/#organization" },
   areaServed: [
     { "@type": "Country", name: "Polska" },
@@ -67,19 +67,19 @@ const serviceJsonLd = {
 const faqs = [
   {
     q: "Ile kosztuje strona internetowa?",
-    a: "Koszt zależy od zakresu — liczby podstron, panelu treści (CMS), integracji i wymagań SEO. Nie pracujemy z cennikiem z półki: po krótkiej rozmowie przygotowujemy konkretną, indywidualną wycenę z widełkami. Bez ukrytych kosztów.",
+    a: "Na cenę wpływa liczba podstron, panel do edycji treści (CMS), integracje i zakres prac pod SEO. Po krótkiej rozmowie wysyłamy wycenę z widełkami, w której rozpisujemy, co się na nią składa.",
   },
   {
     q: "Ile trwa wykonanie strony?",
-    a: "Prosta strona firmowa zwykle 2–3 tygodnie. Rozbudowany serwis z CMS-em, integracjami i migracją treści — 4–6 tygodni, zależnie od zakresu.",
+    a: "Prosta strona firmowa zwykle 2–3 tygodnie. Na rozbudowany serwis z CMS-em, integracjami i migracją treści potrzebujemy 4–6 tygodni, zależnie od zakresu.",
   },
   {
     q: "Czy zadbacie o szybkość i SEO?",
-    a: "Tak. Budujemy w Next.js z naciskiem na Core Web Vitals, poprawną strukturę i dane strukturalne. Szybsza, dobrze zbudowana strona to wyższe pozycje w Google i lepsza konwersja.",
+    a: "Tak. Budujemy w Next.js i pilnujemy Core Web Vitals, poprawnej struktury nagłówków oraz danych strukturalnych. To wpływa i na pozycje w Google, i na to, ilu odwiedzających zostaje na stronie.",
   },
   {
     q: "Czy mogę samodzielnie edytować treści?",
-    a: "Tak — wpinamy CMS dopasowany do potrzeb (lub panel headless), dzięki któremu samodzielnie aktualizujesz treści. Po wdrożeniu wspieramy stronę i rozwijamy ją dalej.",
+    a: "Tak. Podpinamy CMS dobrany do tego, co faktycznie będziesz zmieniać, albo panel headless. Teksty, zdjęcia i nowe podstrony dodajesz sam, bez czekania na programistę.",
   },
 ];
 
@@ -94,35 +94,35 @@ const faqJsonLd = {
 };
 
 const services = [
-  { n: "01", title: "Strony firmowe", desc: "Nowoczesna wizytówka firmy w Next.js — szybka, dostępna i zbudowana pod konwersję. Z CMS-em do samodzielnej edycji treści." },
-  { n: "02", title: "Landing page / sprzedażowe", desc: "Skoncentrowane na jednym celu strony pod kampanie i ofertę — z formularzem, dowodami i jasnym CTA. Mierzone i optymalizowane." },
-  { n: "03", title: "Sklepy internetowe", desc: "Potrzebujesz e-commerce? Robimy też sklepy (WooCommerce, Shopify, PrestaShop, headless) — zobacz osobną ofertę dla sklepów." },
-  { n: "04", title: "Redesign i migracja", desc: "Odświeżamy i przyspieszamy istniejące strony, migrujemy bez utraty pozycji w Google (przekierowania 301, zachowana struktura URL)." },
-  { n: "05", title: "Wydajność i SEO", desc: "Optymalizacja Core Web Vitals, struktura, dane strukturalne i techniczne SEO. Szybsza strona = wyższe pozycje i więcej zapytań." },
-  { n: "06", title: "Utrzymanie i rozwój", desc: "Opieka po wdrożeniu, aktualizacje, nowe sekcje i ciągła optymalizacja. Stała współpraca, nie znikamy po starcie." },
+  { n: "01", title: "Strony firmowe", desc: "Strona firmowa w Next.js z panelem, w którym sam poprawisz teksty i dodasz podstronę. Zbudowana tak, żeby odwiedzający szybko trafił do formularza albo do numeru telefonu." },
+  { n: "02", title: "Landing page / sprzedażowe", desc: "Strona pod konkretną kampanię i konkretną ofertę, z formularzem jako jedynym wyjściem. Do tego pomiar, który pokazuje, ile zapytań przyszło z której reklamy." },
+  { n: "03", title: "Sklepy internetowe", desc: "Robimy też sklepy: WooCommerce, Shopify, PrestaShop i headless. Opisaliśmy to na osobnej stronie o sklepach internetowych." },
+  { n: "04", title: "Redesign i migracja", desc: "Odświeżamy istniejące strony i przenosimy je na nowy stack. Przy migracji trzymamy przekierowania 301 i strukturę adresów, żeby wypracowane pozycje w Google zostały na miejscu." },
+  { n: "05", title: "Wydajność i SEO", desc: "Core Web Vitals, dane strukturalne, nagłówki, mapa strony i reszta technicznego SEO. Zaczynamy od audytu tego, co masz teraz." },
+  { n: "06", title: "Utrzymanie i rozwój", desc: "Po starcie zostajemy. Aktualizacje, nowe podstrony i poprawki po tym, jak zobaczysz pierwsze dane z ruchu." },
 ];
 
 const steps = [
-  { n: "01", title: "Krótka rozmowa", desc: "Ustalamy cel strony, zakres, budżet i termin." },
-  { n: "02", title: "Makieta i wycena", desc: "Dostajesz konkretny plan, etapy i widełki — zanim zaczniemy." },
-  { n: "03", title: "Budowa i wdrożenie", desc: "Projektujemy, kodujemy w Next.js i wypuszczamy stronę produkcyjnie." },
+  { n: "01", title: "Krótka rozmowa", desc: "Pytamy, po co Ci strona, ile ma mieć podstron, jaki masz budżet i termin." },
+  { n: "02", title: "Makieta i wycena", desc: "Dostajesz szkic układu strony, rozpisane etapy i widełki cenowe, zanim zaczniemy kodować." },
+  { n: "03", title: "Budowa i wdrożenie", desc: "Projektujemy, piszemy kod w Next.js i wypuszczamy stronę na produkcję." },
 ];
 
 const webCases = [
   {
     slug: "wsafefinanse",
     angle:
-      "Strona firmowa doradztwa finansowego w Next.js. Formularz wysyła zapytanie na e-mail i Telegram, więc właścicielka reaguje na lead w kilka minut.",
+      "Strona firmowa doradztwa finansowego w Next.js. Zapytanie z formularza idzie równocześnie na e-mail i Telegram, więc właścicielka reaguje na nie w kilka minut.",
   },
   {
     slug: "wks-poznan",
     angle:
-      "Strona klubu sportowego: 17 podstron, własny CMS, profile trenerów, harmonogram i galeria. Szybka, mobile-first i łatwa w samodzielnej aktualizacji.",
+      "Strona klubu sportowego: 17 podstron, własny CMS, profile trenerów, harmonogram i galeria. Klub aktualizuje terminarz i skład sam, z telefonu.",
   },
   {
     slug: "estalo",
     angle:
-      "Nasz własny produkt — platforma SaaS CRM w Next.js z AI i integracjami. Dowód, że budujemy też złożone systemy webowe, nie tylko wizytówki.",
+      "Nasz własny produkt: platforma SaaS CRM w Next.js z AI i integracjami. Utrzymujemy ją na co dzień, więc złożone systemy webowe znamy też od strony kosztów utrzymania.",
   },
 ];
 
@@ -155,12 +155,12 @@ export default function StronyInternetowePage() {
               <div>
                 <p className={EYEBROW}>Tworzenie stron internetowych · Poznań</p>
                 <h1 className="mt-5 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl">
-                  Strona firmowa, która pracuje na Twój biznes
+                  Strona firmowa, z której przychodzą zapytania
                 </h1>
                 <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
-                  Małe studio z Poznania — pracujesz bezpośrednio z założycielami.
-                  Nowoczesna strona w Next.js, prosta zwykle gotowa w 2–3 tygodnie.
-                  Odpowiadamy w 24 h, własny kod, bez agencyjnych narzutów.
+                  Jesteśmy dwuosobowym studiem z Poznania, więc rozmawiasz z ludźmi,
+                  którzy piszą Twoją stronę. Prostą stronę w Next.js oddajemy zwykle
+                  w 2–3 tygodnie. Na wiadomości odpowiadamy w ciągu 24 h.
                 </p>
 
                 <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -194,7 +194,7 @@ export default function StronyInternetowePage() {
                 formId="strony-hero"
                 anchorId="szybki-kontakt"
                 projectType="Strona / landing"
-                heading="Zostaw numer — oddzwonimy z wyceną"
+                heading="Zostaw numer, oddzwonimy z wyceną"
               />
             </div>
           </div>
@@ -206,8 +206,8 @@ export default function StronyInternetowePage() {
             <Reveal className="max-w-4xl">
               <p className={EYEBROW}>Dlaczego to ważne</p>
               <p className="mt-6 font-headline text-2xl font-light leading-snug tracking-tight text-on-surface md:text-4xl">
-                Wolna, szablonowa strona to zapytania, które nigdy nie przyszły.{" "}
-                <span className="text-primary">Szybka, skrojona pod jeden cel pracuje na Ciebie — w Google i w głowie klienta.</span>
+                Klient wchodzi na stronę z telefonu, w biegu, i daje jej kilka sekund.{" "}
+                <span className="text-primary">Albo w tym czasie znajdzie numer i powód, żeby zadzwonić, albo wraca do wyników wyszukiwania.</span>
               </p>
             </Reveal>
           </div>
@@ -231,8 +231,8 @@ export default function StronyInternetowePage() {
             </div>
             <Reveal className="mt-14 rounded-2xl border border-outline-variant/40 bg-surface-container-low px-6 py-5 md:mt-20">
               <p className="max-w-2xl text-sm text-on-surface-variant">
-                Prowadzimy też kampanie i tracking — pomiar konwersji, Consent Mode v2 i
-                Google Ads, na Twojej stronie albo na nowej.{" "}
+                Prowadzimy też Google Ads i konfigurujemy pomiar konwersji razem
+                z Consent Mode v2, na Twojej stronie albo na nowej.{" "}
                 <Link href="/strony-tracking-reklamy" className="font-medium text-primary underline underline-offset-4 transition hover:text-on-surface">
                   Zobacz ofertę strony, trackingu i reklam →
                 </Link>
@@ -246,7 +246,7 @@ export default function StronyInternetowePage() {
         <CaseStudies
           eyebrow="Wybrane realizacje"
           heading="Strony i produkty, które zbudowaliśmy"
-          intro="Pracujesz bezpośrednio z założycielami — bez pośredników. Kilka realnych wdrożeń: od strony klubu sportowego, przez stronę firmową z lead-formularzem, po własną platformę SaaS."
+          intro="Trzy wdrożenia, przy których pracowaliśmy od pierwszej rozmowy do wypuszczenia strony: klub sportowy, firma doradcza z formularzem kontaktowym i nasza własna platforma SaaS."
           items={webCases}
         />
 
@@ -263,13 +263,14 @@ export default function StronyInternetowePage() {
           <div className={CONTAINER}>
             <Reveal className="overflow-hidden rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:p-14">
               <p className={EYEBROW}>Dlaczego Programo</p>
-              <h2 className={`mt-5 ${H2}`}>Nowoczesny stack, butikowe podejście</h2>
+              <h2 className={`mt-5 ${H2}`}>Dwóch inżynierów z Poznania i żadnych pośredników</h2>
               <p className="mt-6 max-w-3xl text-lg font-light leading-relaxed text-on-surface/70">
-                Za Programo stoi dwóch inżynierów z Poznania — pracujesz bezpośrednio
-                z założycielami, bez warstw pośredników. Budujemy w Next.js / React /
-                TypeScript, z naciskiem na szybkość, dostępność i realny efekt
-                biznesowy. Mamy własne produkty (Estalo, Rejestr Pro) — wiemy, jak
-                robić rzeczy, które trzeba potem utrzymać i rozwijać.
+                Programo to Wojciech Płonka i Bartosz Kołaj. Wojtek odpowiada za
+                design i produkt, Bartek za inżynierię, i to my odbieramy telefon,
+                projektujemy i piszemy kod. Pracujemy w Next.js, React
+                i TypeScript. Prowadzimy też własne produkty, Estalo i Rejestr Pro,
+                więc utrzymanie strony po wdrożeniu nie jest dla nas dodatkiem do
+                zlecenia.
               </p>
               <div className="mt-8 flex flex-wrap gap-2.5">
                 {["Next.js / React", "Core Web Vitals", "SEO techniczne", "CMS do edycji treści", "Wsparcie po wdrożeniu"].map((chip) => (
@@ -321,10 +322,11 @@ export default function StronyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:p-16">
-              <h2 className={H2}>Zróbmy stronę, która sprzedaje</h2>
+              <h2 className={H2}>Porozmawiajmy o Twojej stronie</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
-                Opisz projekt w 2 minuty — wrócimy z planem i wyceną. Poznań,
-                Wielkopolska i cała Polska. Odpowiadamy w 24 h.
+                Opisz projekt w dwie minuty, wrócimy z planem i wyceną. Pracujemy
+                z firmami z Poznania, Wielkopolski i całej Polski, odpowiadamy
+                w ciągu 24 h.
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-4">
                 <CtaButton href="#kontakt-main">Opisz projekt szczegółowo</CtaButton>

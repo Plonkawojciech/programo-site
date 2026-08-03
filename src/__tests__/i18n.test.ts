@@ -35,6 +35,17 @@ describe("i18n translations", () => {
     expect(uniquePl.size).toBeGreaterThan(5);
   });
 
+  // The site's copy uses a plain hyphen everywhere. An em dash creeping back in
+  // is the tell that a block of text was pasted from a generator rather than
+  // written, so guard the whole dictionary rather than spot-checking components.
+  it("no em dashes in any translation value", () => {
+    for (const key of allKeys) {
+      const entry = translations[key];
+      expect(entry.pl, `PL value for "${key}" contains an em dash`).not.toContain("\u2014");
+      expect(entry.en, `EN value for "${key}" contains an em dash`).not.toContain("\u2014");
+    }
+  });
+
   it("TranslationKey type covers all keys", () => {
     // If translations object has N keys, allKeys length should match
     expect(allKeys.length).toBeGreaterThan(30);
@@ -77,7 +88,7 @@ describe("i18n translations", () => {
     expect(allKeys).not.toContain(fakeKey);
   });
 
-  it("toggle changes returned text — PL and EN differ for key translations", () => {
+  it("toggle changes returned text - PL and EN differ for key translations", () => {
     // Verify that toggling language would return different text for most keys
     const keysWithDifferentTranslations = allKeys.filter(
       (k) => translations[k].pl !== translations[k].en

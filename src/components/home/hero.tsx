@@ -73,7 +73,7 @@ export default function HomeHero() {
       name: "",
       email: "",
       phone: phone.trim(),
-      message: "Prośba o kontakt telefoniczny — formularz w nagłówku strony głównej.",
+      message: "Prośba o kontakt telefoniczny - formularz w nagłówku strony głównej.",
       projectType: "",
       budget: "",
       consent: true as const,
