@@ -154,3 +154,21 @@
 **Przyczyna:** wcześniejsze docięcie góry zrzutów apki (250px) zmieniło ich proporcje (0.508 vs ekran ramki 0.459) — object-cover skalował i przycinał boki = efekt zoomu. **Naprawa:** przywrócone ORYGINALNE zrzuty App Store (1284×2778, z paskiem systemowym i wyspą); geometria PhoneFrame przeliczona tak, by ekran = dokładnie 0.4622 (aspect 100/208.2, padding 3.5cqw) — zrzut pasuje 1:1 bez cropu; nowy prop `ownStatusBar` wyłącza rysowaną wyspę CSS, gdy zrzut ma własną (przekazany we wszystkich call sites przez matcher /-app[-\d]/; naprawiony też stary matcher /-app\d/ w featured-work). Reguła na przyszłość: zrzutów urządzeń NIE docinać — ramka ma pasować do zrzutu, nie odwrotnie.
 
 **Weryfikacja:** tsc, 98/98, build; hero Jedmara — naturalna skala, pasek systemowy 14:11/wifi/bateria, jedna wyspa.
+
+## 2026-08-03 — Pasek „Zaufali nam": prawdziwe logotypy klientów zamiast nazw tekstem
+
+**Co:** Pasek zaufania na stronie głównej (i na landingach /strony-internetowe, /sklepy-internetowe — wspólny komponent) renderował wyłącznie nazwy klientów zwykłym tekstem. Teraz pokazuje realne znaki graficzne.
+
+**Skąd assety:** z naszych repo i z oficjalnych stron klientów (to nasza tworczość) — Jedmar (wordmark z jedmar.com.pl), WKS Poznań (herb ze zdjęcia czepka z wkspoznan.pl), Domki Poznaniak (winieta z kartusza), W. Safe Finance (lockup z wsafefinance.pl). Skup Nieruchomości nie ma żadnego znaku nigdzie (własna strona nosi tylko logo Programo, favikona to generyczny domek) — zostaje złożony typograficznie, w tym samym kolorze i wadze.
+
+**Technika:** każdy logotyp przerobiony na **płaską maskę alfa** (rampa luma Rec. 709 zachowująca antyaliasing + `trim` do własnego bounding boxa), renderowany przez CSS `mask-image` + `bg-current`. Dzięki temu jeden plik na klienta obsługuje oba motywy, kolor bierze się z tokenu (`text-on-surface/60`), a żaden firmowy kolor (złoto, granat, wypalone białe tło JPEG-a) nie bije się z leśną zielenią. Domki dodatkowo z gammą alfy 0.62 — włosowe kreski winiety inaczej znikały obok trzech cięższych znaków.
+
+**Skalowanie:** normalizacja po **polu optycznym** (`h = sqrt(A/ratio)`), nie po wysokości bounding boxa — przy równej wysokości herb 1.13:1 przytłacza wordmark 4.45:1. Zweryfikowane renderem A/B, nie założone. Dwa ręczne odstępstwa opisane w kodzie: WKS w górę (dwa pierścienie włosowego pisma potrzebują zapasu), Domki w górę o 18%. Jeden pokrętło responsywne: `--logo-h`.
+
+**Dostępność:** `role="img"` + `aria-label` z nazwą klienta na każdej masce; kontrast 5.8:1 (dark) / 4.5:1 (light), oba powyżej AA. Ink podniesiony z 45% na 60% — włosowe kreski logotypów potrzebują wagi, której typografia display nie potrzebuje.
+
+**Dev-editor:** rozpoznawanie klienta czyta teraz `aria-label` z fallbackiem na `textContent` (maski to puste spany). `deleteListItem` działa na tablicy obiektów bez zmian — `removeArrayEntry` liczy zagnieżdżenia; przetestowane realnym POST-em.
+
+**Pliki:** `src/components/trust-bar.tsx`, `src/components/dev/dev-editor.tsx`, `public/logos/{jedmar,wks-poznan,domki-poznaniak,wsafefinance}.png` (~46 kB łącznie).
+
+**Weryfikacja:** tsc czysty, lint 0 błędów, 103/103 testy, build OK; wizualnie dark + light na 1280 oraz mobile 390 (dwa równe rzędy, bez poziomego scrolla).

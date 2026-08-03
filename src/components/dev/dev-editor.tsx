@@ -128,9 +128,12 @@ function findListItem(el: Element | null, section: SectionTarget | null): ListHi
       return { id: "product", param: slug, label: `produkt „${slug}"` };
     }
   }
-  // Client wordmarks are bare leaf spans, so they carry no href to key off.
+  // Client marks are bare leaf spans, so they carry no href to key off. Most are
+  // CSS-masked logos and therefore empty — the name lives in `aria-label`, which
+  // is what the screen reader announces too. The one client with no artwork is
+  // still typeset, so fall back to its text.
   if (section?.id === "trust-bar" && el && el.childElementCount === 0) {
-    const name = norm(el.textContent ?? "");
+    const name = norm(el.getAttribute("aria-label") ?? el.textContent ?? "");
     if (name && name.length <= 40 && /^[\p{L}\p{N} .-]+$/u.test(name)) {
       return { id: "client", param: name, label: `logotyp „${name}"` };
     }
