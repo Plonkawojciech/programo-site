@@ -94,7 +94,7 @@ export default function Process() {
                 {i > 0 && (
                   <span
                     aria-hidden="true"
-                    className="hidden text-outline md:inline"
+                    className="hidden text-on-surface-variant/50 md:inline"
                   >
                     /
                   </span>
