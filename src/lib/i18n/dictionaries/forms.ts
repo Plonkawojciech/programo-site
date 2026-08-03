@@ -26,8 +26,8 @@ export const forms = {
   "compact.phoneLabel": { pl: "Numer telefonu", en: "Phone number" },
   "compact.phonePlaceholder": { pl: "600 000 000", en: "+48 600 000 000" },
   "compact.consentLabel": {
-    pl: "Wyrażam zgodę na kontakt telefoniczny w sprawie mojego zapytania. Administratorem danych jest Programo s.c. Szczegóły w",
-    en: "I consent to being contacted by phone about my inquiry. Programo s.c. is the data controller. Details in the",
+    pl: "Wyrażam zgodę na kontakt telefoniczny w sprawie mojego zapytania. Administratorem danych jest Programo s.j. Szczegóły w",
+    en: "I consent to being contacted by phone about my inquiry. Programo s.j. is the data controller. Details in the",
   },
   "compact.submit": { pl: "Oddzwońcie do mnie", en: "Call me back" },
   "compact.submitting": { pl: "Wysyłanie...", en: "Sending..." },
@@ -134,8 +134,8 @@ export const forms = {
 
   // Contact form consent
   "quick.consentLabel": {
-    pl: "Wyrażam zgodę na kontakt w sprawie mojego zapytania. Administratorem danych jest Programo s.c. Szczegóły w",
-    en: "I consent to being contacted about my inquiry. Programo s.c. is the data controller. Details in the",
+    pl: "Wyrażam zgodę na kontakt w sprawie mojego zapytania. Administratorem danych jest Programo s.j. Szczegóły w",
+    en: "I consent to being contacted about my inquiry. Programo s.j. is the data controller. Details in the",
   },
   "quick.consentRequired": {
     pl: "Zaznacz zgodę na kontakt. Bez niej nie możemy odpowiedzieć.",

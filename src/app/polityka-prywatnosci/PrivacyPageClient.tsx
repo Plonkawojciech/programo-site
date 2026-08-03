@@ -58,7 +58,7 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="1. Administrator danych">
         <p>
-          Administratorem danych osobowych jest Programo Studio z siedzibą w Poznaniu, prowadzone przez Wojciecha Płonkę oraz Bartosza Kolaja. Kontakt: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
+          Administratorem danych osobowych jest Programo s.j. z siedzibą w Poznaniu, prowadzona przez Wojciecha Płonkę oraz Bartosza Kolaja. Kontakt: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
         </p>
       </Section>
 
@@ -129,7 +129,7 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="1. Data controller">
         <p>
-          The data controller is Programo Studio based in Poznań, Poland, run by Wojciech Płonka and Bartosz Kolaj. Contact: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
+          The data controller is Programo s.j. based in Poznań, Poland, run by Wojciech Płonka and Bartosz Kolaj. Contact: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
         </p>
       </Section>
 

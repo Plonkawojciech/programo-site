@@ -25,7 +25,7 @@ export const common = {
   "footer.colCompany": { pl: "Firma", en: "Company" },
   "footer.allProjects": { pl: "Wszystkie projekty", en: "All projects" },
   "footer.location": { pl: "Poznań, Polska", en: "Poznan, Poland" },
-  "footer.companyName": { pl: "Programo s.j.", en: "Programo s.c." },
+  "footer.companyName": { pl: "Programo s.j.", en: "Programo s.j." },
   "footer.copyright": { pl: "Programo", en: "Programo" },
   "footer.privacy": { pl: "Polityka prywatności", en: "Privacy policy" },
   "footer.cookies": { pl: "Ustawienia cookies", en: "Cookie settings" },

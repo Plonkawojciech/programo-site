@@ -1,7 +1,7 @@
 # Programo Site
 ---
 
-Strona firmowa Programo s.c. (Wojciech Płonka + Bartosz Kolaj, Poznań) — landing pod konwersję
+Strona firmowa Programo s.j. (Wojciech Płonka + Bartosz Kolaj, Poznań) — landing pod konwersję
 (telefon + formularz) z portfolio jako pokazem umiejętności. Redesign: 2026-07-15
 (brief: `docs/redesign-brief-2026-07.md`, treści: `docs/content-deck-2026-07.md`).
 

@@ -5,7 +5,7 @@ export const about = {
   "about.label": { pl: "O nas", en: "About" },
   "about.title": { pl: "Dwóch inżynierów, którzy robią to sami", en: "Two engineers who do the work themselves" },
   "about.intro": {
-    pl: "Programo to spółka cywilna Wojciecha Płonki i Bartosza Kolaja z Poznania. Projektujemy i budujemy oprogramowanie sami, od pierwszej rozmowy po wdrożenie i utrzymanie. Nie ma u nas handlowca ani podwykonawcy, więc już od pierwszego telefonu rozmawiasz z osobami, które wykonują pracę.",
+    pl: "Programo to spółka jawna Wojciecha Płonki i Bartosza Kolaja z Poznania. Projektujemy i budujemy oprogramowanie sami, od pierwszej rozmowy po wdrożenie i utrzymanie. Nie ma u nas handlowca ani podwykonawcy, więc już od pierwszego telefonu rozmawiasz z osobami, które wykonują pracę.",
     en: "Programo is the partnership of Wojciech Płonka and Bartosz Kolaj, based in Poznan. We design and build software ourselves, from the first call through deployment and maintenance. We have no salespeople and no subcontractors, so from the first phone call you talk to the people doing the work.",
   },
   "about.how.title": { pl: "Jak pracujemy", en: "How we work" },
@@ -35,7 +35,7 @@ export const about = {
   "about.company.title": { pl: "Dane firmy", en: "Company details" },
   "about.company.line": {
     pl: "Programo s.j., Poznań · biuro@programo.pl · 509 123 434",
-    en: "Programo s.c., Poznan, Poland · biuro@programo.pl · +48 509 123 434",
+    en: "Programo s.j., Poznan, Poland · biuro@programo.pl · +48 509 123 434",
   },
 
   // Tech Stack
