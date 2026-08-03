@@ -107,8 +107,9 @@ export default function HomeHero() {
       <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-start gap-12 px-6 md:px-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:px-24">
         {/* ── Text + form column ── */}
         <div className="max-w-2xl">
-          {/* Headline — text-display token, Archivo with wdth axis */}
-          <h1 className="font-headline text-display font-bold leading-[1.04] tracking-[-0.025em] text-on-surface text-balance [font-stretch:108%]">
+          {/* Headline — text-display token (carries its own 1.04 leading),
+              Archivo with wdth axis */}
+          <h1 className="font-headline text-display font-bold tracking-[-0.025em] text-on-surface text-balance [font-stretch:108%]">
             {t("home.hero.headline.v2")}
           </h1>
 
