@@ -103,10 +103,14 @@ Bramka przed commitem: `npm run build && npx tsc --noEmit && npm run test`.
 
 ## Zmienne środowiskowe
 
-Wzór w `.env.example`. Wymagane do pełnego działania lokalnie:
-`RESEND_API_KEY`, `EMAIL_TO` (lead pipeline), `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`
-(powiadomienia), `PAGESPEED_API_KEY`, `NEXT_PUBLIC_BOOKINGS_URL`.
-Bez nich `npm run dev` wstanie, ale wysyłka leada padnie.
+Wzór w `.env.example`. Do pełnego działania lokalnie:
+`TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` (powiadomienia o leadach),
+`CRM_WEBHOOK_SECRET`, `KV_REST_API_URL` + `KV_REST_API_TOKEN` (magazyn leadów i zdarzeń),
+`NEXT_PUBLIC_BOOKINGS_URL`.
+Tracking (opcjonalne, każde no-op gdy puste):
+`NEXT_PUBLIC_META_DATASET_ID`, `META_CAPI_ACCESS_TOKEN`, `GA4_API_SECRET`,
+`NEXT_PUBLIC_GSC_VERIFICATION`, `NEXT_PUBLIC_BING_VERIFICATION`.
+Bez nich `npm run dev` wstanie; padnie tylko ten kanał, którego brakuje.
 
 ## Deploy
 
