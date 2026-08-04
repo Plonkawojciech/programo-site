@@ -52,8 +52,20 @@ export interface Project {
   role: { pl: string; en: string };
   screenshots?: string[];
   subProducts?: SubProduct[];
+  // ISO date of the last significant content change to this entry — used for
+  // sitemap.ts `lastModified` and the project page's WebPage.dateModified, so
+  // both stay honest instead of stamping today's build date on every page.
+  // Derived with `git log -1 --format=%cI -L <range>:src/lib/projects.ts`
+  // (see src/lib/schema/route-dates.ts for the same method on static routes).
+  // Re-derive when a project's copy actually changes; don't hand-edit to "today".
+  updatedAt?: string;
 }
 
+// All 10 entries currently share one `updatedAt`: the last commit to touch
+// this file (7110f17, 2026-08-03) rewrote the copy in every project block
+// the same day — verified per-block with `git log -1 --format=%cI -L <range>`,
+// not assumed from the whole-file date. They will drift apart individually
+// as projects get updated one at a time going forward.
 export const projects: Project[] = [
   {
     slug: "jedmar",
@@ -124,6 +136,7 @@ export const projects: Project[] = [
     accentColor: "#ffd333",
     bgColor: "#1a1a0a",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo - projekt i budowa aplikacji oraz modułu schematów",
       en: "Programo - design and build of the apps and the diagram module",
@@ -231,6 +244,7 @@ export const projects: Project[] = [
     accentColor: "#c8a951",
     bgColor: "#1a1a1a",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo - własny produkt, projekt i budowa całości",
       en: "Programo - our own product, designed and built end to end",
@@ -301,6 +315,7 @@ export const projects: Project[] = [
     accentColor: "#b8a06a",
     bgColor: "#14120c",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo - własny produkt, projekt i budowa całości",
       en: "Programo - our own product, designed and built end to end",
@@ -368,6 +383,7 @@ export const projects: Project[] = [
     accentColor: "#c41e3a",
     bgColor: "#1a0a0a",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo - projekt, budowa i wdrożenie",
       en: "Programo - design, build, and deployment",
@@ -444,6 +460,7 @@ export const projects: Project[] = [
     accentColor: "#3f8f5f",
     bgColor: "#0a1a10",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo - strona, tracking i kampania end-to-end",
       en: "Programo - website, tracking, and campaign end to end",
@@ -510,6 +527,7 @@ export const projects: Project[] = [
     accentColor: "#0ea5e9",
     bgColor: "#0a1a24",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo - własny produkt, projekt i budowa całości",
       en: "Programo - our own product, designed and built end to end",
@@ -576,6 +594,7 @@ export const projects: Project[] = [
     accentColor: "#5b8def",
     bgColor: "#0f1730",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo we współpracy z PBDevs (Filip Piątek)",
       en: "Programo in collaboration with PBDevs (Filip Piątek)",
@@ -644,6 +663,7 @@ export const projects: Project[] = [
     accentColor: "#d97706",
     bgColor: "#1a1206",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo - tracking konwersji i prowadzenie kampanii Google Ads",
       en: "Programo - conversion tracking and Google Ads campaign management",
@@ -709,6 +729,7 @@ export const projects: Project[] = [
     accentColor: "#0b59db",
     bgColor: "#07172d",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo - hardware, oprogramowanie i wdrożenie pilotażowe",
       en: "Programo - hardware, software, and the pilot deployment",
@@ -780,6 +801,7 @@ export const projects: Project[] = [
     accentColor: "#2563eb",
     bgColor: "#0a1025",
     year: "2026",
+    updatedAt: "2026-08-03T16:23:25+02:00",
     role: {
       pl: "Programo - projekt, budowa i wdrożenie",
       en: "Programo - design, build, and deployment",

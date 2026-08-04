@@ -19,6 +19,15 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Pins the build root to this directory. Without it, Turbopack walks up
+  // looking for lockfiles and — when this project is checked out as a git
+  // worktree nested under the main repo (.claude/worktrees/<name>/), which
+  // also has its own package-lock.json — picks the OUTER repo directory as
+  // root instead. That silently resolves `@/*` imports against the main
+  // checkout's src/ instead of this worktree's, breaking build isolation
+  // between concurrent worktree sessions. See the "multiple lockfiles"
+  // Turbopack warning this suppresses.
+  turbopack: { root: __dirname },
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],

@@ -2,6 +2,18 @@ import { describe, it, expect } from "vitest";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { projects } from "@/lib/projects";
+import {
+  buildBreadcrumbs,
+  buildOrganization,
+  buildPeople,
+  buildSoftwareApplication,
+  buildWebPage,
+  ORGANIZATION_ID,
+  ref,
+  renderGraph,
+  STATIC_ROUTE_UPDATED_AT,
+  WEBSITE_ID,
+} from "@/lib/schema";
 
 describe("SEO", () => {
   describe("robots.ts", () => {
@@ -150,57 +162,77 @@ describe("SEO", () => {
     });
   });
 
+  // These import the real builders from src/lib/schema instead of re-declaring
+  // literal copies of the JSON-LD — a literal copy would keep "passing" even
+  // if layout.tsx/the page files drifted away from what it asserts.
   describe("JSON-LD", () => {
-    it("Organization JSON-LD has correct name, url, and founders", () => {
-      // Verify the Organization schema structure from layout.tsx
-      const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: "Programo",
-        url: "https://programo.pl",
-        founders: [
-          { "@type": "Person", name: "Wojciech Płonka" },
-          { "@type": "Person", name: "Bartosz Kolaj" },
-        ],
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: "Poznań",
-          addressCountry: "PL",
-        },
-        sameAs: ["https://github.com/programo"],
-      };
-
-      expect(jsonLd["@type"]).toBe("Organization");
-      expect(jsonLd.name).toBe("Programo");
-      expect(jsonLd.url).toBe("https://programo.pl");
-      expect(jsonLd.founders).toHaveLength(2);
-      expect(jsonLd.founders[0].name).toBe("Wojciech Płonka");
-      expect(jsonLd.founders[1].name).toBe("Bartosz Kolaj");
-      expect(jsonLd.address.addressLocality).toBe("Poznań");
+    it("Organization node has the right @id, name and founder refs, and no unverified sameAs", () => {
+      const org = buildOrganization();
+      expect(org["@type"]).toBe("ProfessionalService");
+      expect(org["@id"]).toBe(ORGANIZATION_ID);
+      expect(org.name).toBe("Programo");
+      expect(org.url).toBe("https://programo.pl");
+      // github.com/programo belongs to an unrelated GitHub account, not
+      // Programo — must never come back into sameAs.
+      expect(org.sameAs).not.toContain("https://github.com/programo");
+      expect(org.address).toMatchObject({ addressLocality: "Poznań", addressCountry: "PL" });
     });
 
-    it("SoftwareApplication JSON-LD is valid for each project", () => {
+    it("Person nodes have stable @ids that Organization.founder references", () => {
+      const org = buildOrganization();
+      const [wojciech, bartosz] = buildPeople();
+      expect(org.founder).toEqual([{ "@id": wojciech["@id"] }, { "@id": bartosz["@id"] }]);
+      expect(wojciech.name).toBe("Wojciech Płonka");
+      expect(bartosz.name).toBe("Bartosz Kołaj");
+    });
+
+    it("renderGraph wraps nodes in one @context + @graph", () => {
+      const parsed = JSON.parse(renderGraph([buildOrganization()]));
+      expect(parsed["@context"]).toBe("https://schema.org");
+      expect(parsed["@graph"]).toHaveLength(1);
+      expect(parsed["@graph"][0]["@type"]).toBe("ProfessionalService");
+    });
+
+    it("ref() reads back a node's own @id and rejects nodes without one", () => {
+      const org = buildOrganization();
+      expect(ref(org)).toEqual({ "@id": ORGANIZATION_ID });
+      expect(() => ref({ "@type": "Thing" })).toThrow();
+    });
+
+    it("buildWebPage derives @id from the path and points isPartOf at the WebSite", () => {
+      const page = buildWebPage({ path: "/oferta", name: "Oferta" });
+      expect(page["@id"]).toBe("https://programo.pl/oferta#webpage");
+      expect(page.url).toBe("https://programo.pl/oferta");
+      expect(page.isPartOf).toEqual({ "@id": WEBSITE_ID });
+    });
+
+    it("buildBreadcrumbs numbers ListItems from 1 and resolves '/' to the bare site URL", () => {
+      const bc = buildBreadcrumbs([
+        { name: "Programo", path: "/" },
+        { name: "Oferta", path: "/oferta" },
+      ]);
+      expect(bc.itemListElement).toEqual([
+        { "@type": "ListItem", position: 1, name: "Programo", item: "https://programo.pl" },
+        { "@type": "ListItem", position: 2, name: "Oferta", item: "https://programo.pl/oferta" },
+      ]);
+    });
+
+    it("SoftwareApplication is valid for each project and creator references the Organization by @id", () => {
       for (const project of projects) {
-        const jsonLd = {
-          "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
+        const app = buildSoftwareApplication({
+          path: `/projects/${project.slug}`,
           name: project.title,
           description: project.description.pl,
           applicationCategory: project.tags.join(", "),
-          operatingSystem: "Web",
-          ...(project.liveUrl && { url: project.liveUrl }),
-          creator: {
-            "@type": "Organization",
-            name: "Programo",
-          },
-        };
+          liveUrl: project.liveUrl,
+        });
 
-        expect(jsonLd["@type"]).toBe("SoftwareApplication");
-        expect(jsonLd.name).toBe(project.title);
-        expect(jsonLd.description).toBeTruthy();
-        expect(jsonLd.creator.name).toBe("Programo");
+        expect(app["@type"]).toBe("SoftwareApplication");
+        expect(app.name).toBe(project.title);
+        expect(app.description).toBeTruthy();
+        expect(app.creator).toEqual({ "@id": ORGANIZATION_ID });
         if (project.liveUrl) {
-          expect(jsonLd.url).toBe(project.liveUrl);
+          expect(app.url).toBe(project.liveUrl);
         }
       }
     });
@@ -215,6 +247,37 @@ describe("SEO", () => {
         const canonical = `https://programo.pl/projects/${project.slug}`;
         expect(canonical).toMatch(/^https:\/\/programo\.pl\/projects\/[a-z0-9-]+$/);
       }
+    });
+  });
+
+  // Regression guard for the bug this task fixed: every sitemap entry used to
+  // get `new Date()` (the build timestamp), so a page untouched for months got
+  // today's date on every deploy. These dates must now be real and stable.
+  describe("sitemap lastModified dates", () => {
+    it("static routes come from the tracked route-date map, not the build clock", () => {
+      const entries = sitemap();
+      const home = entries.find((e) => e.url === "https://programo.pl");
+      const cennik = entries.find((e) => e.url === "https://programo.pl/cennik");
+      expect(home?.lastModified).toBe(STATIC_ROUTE_UPDATED_AT["/"]);
+      expect(cennik?.lastModified).toBe(STATIC_ROUTE_UPDATED_AT["/cennik"]);
+    });
+
+    it("project routes come from each project's own updatedAt field", () => {
+      const entries = sitemap();
+      for (const p of projects) {
+        const entry = entries.find((e) => e.url === `https://programo.pl/projects/${p.slug}`);
+        if (p.updatedAt) {
+          expect(entry?.lastModified).toBe(p.updatedAt);
+        } else {
+          expect(entry?.lastModified).toBeUndefined();
+        }
+      }
+    });
+
+    it("is stable across repeated calls in the same process (not derived from `new Date()`)", () => {
+      const first = sitemap().map((e) => e.lastModified);
+      const second = sitemap().map((e) => e.lastModified);
+      expect(second).toEqual(first);
     });
   });
 });

@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CompactLeadForm from "@/components/compact-lead-form";
+import {
+  buildArticle,
+  buildBreadcrumbs,
+  buildFaqPage,
+  buildWebPage,
+  ref,
+  renderGraph,
+  STATIC_ROUTE_UPDATED_AT,
+} from "@/lib/schema";
+
+const PATH = "/ile-kosztuje-aplikacji";
 
 export const metadata: Metadata = {
   title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy - Programo",
@@ -94,54 +105,35 @@ const faqs = [
   },
 ];
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Programo", item: "https://programo.pl" },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Ile kosztuje aplikacja",
-      item: "https://programo.pl/ile-kosztuje-aplikacji",
-    },
-  ],
-};
-
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
-
-const articleJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Article",
+const article = buildArticle({
+  path: PATH,
   headline: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy",
-  inLanguage: "pl-PL",
-  author: { "@id": "https://programo.pl/#organization" },
-  publisher: { "@id": "https://programo.pl/#organization" },
-  mainEntityOfPage: "https://programo.pl/ile-kosztuje-aplikacji",
-};
+  dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
+});
+
+const pageGraph = renderGraph([
+  buildWebPage({
+    path: PATH,
+    name: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy - Programo",
+    description:
+      "Ile kosztuje aplikacja, strona lub system SaaS? Tłumaczymy, co podnosi i co obniża koszt oraz jak przygotowujemy wycenę.",
+    dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
+    mainEntity: ref(article),
+  }),
+  buildBreadcrumbs([
+    { name: "Programo", path: "/" },
+    { name: "Ile kosztuje aplikacja", path: PATH },
+  ]),
+  buildFaqPage(faqs),
+  article,
+]);
 
 export default function IleKosztujeAplikacjiPage() {
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: pageGraph }}
       />
 
       {/* No <main> here — the root layout (Providers) already wraps every page

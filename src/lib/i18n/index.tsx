@@ -1,37 +1,13 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import { translations, type Lang, type TranslationKey } from "./dictionary";
 
-import { common } from "./dictionaries/common";
-import { home } from "./dictionaries/home";
-import { offer } from "./dictionaries/offer";
-import { projects } from "./dictionaries/projects";
-import { about } from "./dictionaries/about";
-import { pricing } from "./dictionaries/pricing";
-import { contact } from "./dictionaries/contact";
-import { forms } from "./dictionaries/forms";
-import { marketing } from "./dictionaries/marketing";
-
-export type Lang = "pl" | "en";
-
-// Single translation dictionary, merged from per-domain modules. Each module is
-// `as const`, so the merged object keeps literal keys — TranslationKey stays a
-// strict union and typos in `t("...")` fail at compile time. Keys must be unique
-// across modules (a duplicate would silently shadow).
-const translations = {
-  ...common,
-  ...home,
-  ...offer,
-  ...projects,
-  ...about,
-  ...pricing,
-  ...contact,
-  ...forms,
-  ...marketing,
-} as const;
-
-export type TranslationKey = keyof typeof translations;
+// Re-exported so every existing `import { translations, type TranslationKey }
+// from "@/lib/i18n"` call site keeps working unchanged — the dictionary itself
+// now lives in ./dictionary (no "use client"), see that file for why.
 export { translations };
+export type { Lang, TranslationKey };
 
 interface I18nContextType {
   lang: Lang;

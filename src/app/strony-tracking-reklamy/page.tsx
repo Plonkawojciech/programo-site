@@ -1,5 +1,16 @@
 import type { Metadata } from "next";
 import MarketingTrackingLanding from "@/components/marketing-tracking";
+import {
+  buildBreadcrumbs,
+  buildFaqPage,
+  buildService,
+  buildWebPage,
+  ref,
+  renderGraph,
+  STATIC_ROUTE_UPDATED_AT,
+} from "@/lib/schema";
+
+const PATH = "/strony-tracking-reklamy";
 
 // Metadata: content-deck-2026-07.md section 8.
 export const metadata: Metadata = {
@@ -29,35 +40,6 @@ export const metadata: Metadata = {
   ],
 };
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Programo", item: "https://programo.pl" },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Strony, tracking i reklamy",
-      item: "https://programo.pl/strony-tracking-reklamy",
-    },
-  ],
-};
-
-const serviceJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Strony internetowe, tracking konwersji i kampanie Google Ads",
-  name: "Strony, tracking i reklamy Google - Programo",
-  provider: { "@id": "https://programo.pl/#organization" },
-  areaServed: [
-    { "@type": "Country", name: "Polska" },
-    { "@type": "City", name: "Poznań" },
-  ],
-  description:
-    "Strona lub landing zaprojektowane pod jedno działanie, pomiar konwersji zgodny z Consent Mode v2 (GA4, enhanced conversions) i kampania Google Ads zbudowana oraz prowadzona przez Programo. Pracujemy też na istniejącej stronie klienta.",
-  url: "https://programo.pl/strony-tracking-reklamy",
-};
-
 const faqs = [
   {
     q: "Mam już stronę. Czy musicie budować nową?",
@@ -73,22 +55,39 @@ const faqs = [
   },
 ];
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const service = buildService({
+  path: PATH,
+  serviceType: "Strony internetowe, tracking konwersji i kampanie Google Ads",
+  name: "Strony, tracking i reklamy Google - Programo",
+  areaServed: [
+    { "@type": "Country", name: "Polska" },
+    { "@type": "City", name: "Poznań" },
+  ],
+  description:
+    "Strona lub landing zaprojektowane pod jedno działanie, pomiar konwersji zgodny z Consent Mode v2 (GA4, enhanced conversions) i kampania Google Ads zbudowana oraz prowadzona przez Programo. Pracujemy też na istniejącej stronie klienta.",
+});
+
+const pageGraph = renderGraph([
+  buildWebPage({
+    path: PATH,
+    name: "Strony internetowe z trackingiem i kampanią Google Ads | Programo",
+    description:
+      "Strona, pomiar konwersji (GA4, Consent Mode v2) i kampania Google Ads w jednych rękach. Pracujemy też na Twojej istniejącej stronie.",
+    dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
+    mainEntity: ref(service),
+  }),
+  buildBreadcrumbs([
+    { name: "Programo", path: "/" },
+    { name: "Strony, tracking i reklamy", path: PATH },
+  ]),
+  service,
+  buildFaqPage(faqs),
+]);
 
 export default function StronyTrackingReklamyPage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
       <MarketingTrackingLanding />
     </>
   );
