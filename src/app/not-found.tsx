@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { I18nProvider, useI18n } from "@/lib/i18n";
+import { track } from "@/lib/analytics/client";
 
 function NotFoundContent() {
   const { t } = useI18n();
@@ -12,6 +13,13 @@ function NotFoundContent() {
   // previous page set.
   useEffect(() => {
     document.title = "Strona nie znaleziona (404) | Programo";
+    // Which URL was expected to exist, and who linked to it. Dead links in old
+    // proposals, LinkedIn posts and renamed routes lose leads silently and are
+    // among the cheapest things on the site to fix — once you can see them.
+    track("page_not_found", {
+      requested_path: window.location.pathname,
+      referrer: document.referrer || undefined,
+    });
   }, []);
 
   return (

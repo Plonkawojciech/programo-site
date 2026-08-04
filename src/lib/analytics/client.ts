@@ -128,10 +128,94 @@ export function flush(useBeacon = false): void {
 function bindLifecycleListeners(): void {
   if (listenersBound || typeof window === "undefined") return;
   listenersBound = true;
+  const leave = () => {
+    emitSessionSummary();
+    flush(true);
+  };
   // pagehide fires reliably on mobile Safari where beforeunload does not.
-  window.addEventListener("pagehide", () => flush(true));
+  window.addEventListener("pagehide", leave);
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") flush(true);
+    if (document.visibilityState === "hidden") leave();
+  });
+}
+
+// ------------------------------------------------------------ session summary
+
+/**
+ * Running tally of the visit, emitted as one row when the visitor leaves.
+ *
+ * At a few hundred sessions a month, this is the most useful artefact the whole
+ * system produces: not a chart, but a list short enough to read line by line.
+ * Everything here is derived from events that already pass through track(), so
+ * it costs one object and no extra listeners.
+ */
+const stats = {
+  pages: 0,
+  maxScroll: 0,
+  engagedSeconds: 0,
+  ctaClicks: 0,
+  sections: new Set<string>(),
+  formStarted: false,
+  formSubmitted: false,
+  contactClicked: false,
+  frustration: 0,
+  emitted: false,
+};
+
+function updateStats(name: string, params: EventParams): void {
+  switch (name) {
+    case "page_view_spa":
+      stats.pages += 1;
+      break;
+    case "scroll_depth":
+      stats.maxScroll = Math.max(stats.maxScroll, Number(params.percent) || 0);
+      break;
+    case "engaged_time":
+      stats.engagedSeconds += Number(params.seconds) || 0;
+      break;
+    case "cta_click":
+      stats.ctaClicks += 1;
+      break;
+    case "section_view":
+      if (typeof params.section === "string") stats.sections.add(params.section);
+      break;
+    case "form_start":
+      stats.formStarted = true;
+      break;
+    case "generate_lead":
+      stats.formSubmitted = true;
+      break;
+    case "contact_click":
+    case "copy_contact":
+      stats.contactClicked = true;
+      break;
+    case "rage_click":
+    case "dead_click":
+    case "js_error":
+    case "form_submit_failed":
+      stats.frustration += 1;
+      break;
+  }
+}
+
+function emitSessionSummary(): void {
+  if (stats.emitted || typeof window === "undefined") return;
+  // A session with no measured activity says nothing worth a row.
+  if (stats.pages === 0 && stats.maxScroll === 0) return;
+  stats.emitted = true;
+  const s = getSession();
+  track("session_summary", {
+    pages_viewed: Math.max(stats.pages, s.views),
+    max_scroll: stats.maxScroll,
+    engaged_seconds: stats.engagedSeconds,
+    cta_clicks: stats.ctaClicks,
+    sections_seen: stats.sections.size,
+    form_started: stats.formStarted,
+    form_submitted: stats.formSubmitted,
+    contact_clicked: stats.contactClicked,
+    frustration_signals: stats.frustration,
+    session_number: s.number,
+    exit_page: window.location.pathname,
   });
 }
 
@@ -155,6 +239,8 @@ export function track(key: EventKey, params: EventParams = {}): string {
   bindLifecycleListeners();
   const { analytics, marketing } = consent();
   const payload = clean({ ...params, event_id: eventId });
+  // Everything funnels through here, so the visit tally comes for free.
+  if (def.name !== "session_summary") updateStats(def.name, payload);
 
   // --- GA4 -----------------------------------------------------------------
   // Sent unconditionally: with consent denied, Consent Mode v2 sends a

@@ -88,8 +88,13 @@ function loadClarity() {
 }
 
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
+import { track } from "@/lib/analytics/client";
+import { persistPendingIdentity } from "@/lib/analytics/identity";
 
 export { CONSENT_COOKIE };
+
+/** How the visitor reached the decision — one click or a deliberate choice. */
+type ConsentAction = "accept_all" | "reject_all" | "save_custom";
 
 /**
  * Mirrors the consent decision into a first-party cookie.
@@ -171,7 +176,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     }
   }, [stored, override]);
 
-  const persist = useCallback((categories: ConsentCategories) => {
+  const persist = useCallback((categories: ConsentCategories, action: ConsentAction = "save_custom") => {
     const next: ConsentState = { ...categories, decided: true };
     setOverride(next);
     try {
@@ -180,6 +185,24 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
       /* ignore quota errors */
     }
     pushConsent(categories);
+
+    // The denominator under every other number we collect. If half the
+    // visitors decline analytics, every metric is roughly half the truth — and
+    // without this event there is no way to know by how much. Recorded AFTER
+    // pushConsent so a grant is already in effect and the event is allowed
+    // through; a rejection is intentionally not recorded, because recording it
+    // would require the very storage the visitor just declined.
+    if (categories.analytics) {
+      // Identity was in memory only until now; promote it so the visit that led
+      // to the decision is not split from everything that follows it.
+      persistPendingIdentity();
+      track("consent_update", {
+        analytics: categories.analytics,
+        marketing: categories.marketing,
+        action,
+      });
+    }
+
     // Clarity has no stop/teardown API. If analytics consent is being withdrawn while
     // a Clarity session is already recording, a reload is the only way to actually
     // honour the withdrawal within the same visit (GDPR), so do it after persisting.
@@ -189,12 +212,12 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const acceptAll = useCallback(() => {
-    persist({ analytics: true, marketing: true });
+    persist({ analytics: true, marketing: true }, "accept_all");
     setSettingsOpen(false);
   }, [persist]);
 
   const rejectAll = useCallback(() => {
-    persist({ analytics: false, marketing: false });
+    persist({ analytics: false, marketing: false }, "reject_all");
     setSettingsOpen(false);
   }, [persist]);
 

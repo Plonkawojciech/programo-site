@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import { track } from "@/lib/analytics/client";
 
 import { common } from "./dictionaries/common";
 import { home } from "./dictionaries/home";
@@ -56,7 +57,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, [lang]);
 
   const toggle = useCallback(() => {
-    setLang((prev) => (prev === "pl" ? "en" : "pl"));
+    setLang((prev) => {
+      const next = prev === "pl" ? "en" : "pl";
+      // Measures whether anyone actually wants the English version. That is the
+      // open question behind the /en/ + hreflang decision: today the English
+      // copy exists only client-side, so it is invisible to search engines, and
+      // the honest choice is either to make it indexable or to drop it. This
+      // event is the evidence that call should be based on.
+      track("language_switch", { from_lang: prev, to_lang: next, page_path: window.location.pathname });
+      return next;
+    });
   }, []);
 
   const t = useCallback(
