@@ -145,6 +145,32 @@ Brak cookie = brak zgody (fail-closed).
 
 ---
 
+## 2.7 Co znalazł przegląd adwersaryjny (i co z tego wynikło)
+
+Pierwsza wersja tej warstwy została zmergowana na produkcję jako „zweryfikowana".
+Niezależny przegląd z testami odtwarzającymi znalazł w niej 20 defektów, w tym
+trzy poważne. Wszystkie naprawione i potwierdzone na żywym prodzie.
+
+| Defekt | Dlaczego był groźny |
+|---|---|
+| Atrybucja zapisywana do localStorage **przed zgodą** | ryzyko prawne; `identity.ts` miał bramkę i akapit o RODO, `attribution.ts` nie dostał jej wcale |
+| `gclid` ginął przy pierwszej nawigacji klienckiej | w App Routerze `document.referrer` się nie zmienia, więc druga odsłona wyglądała jak nowy touch organiczny i nadpisywała kampanię — **leady z Ads trafiały do CRM jako „direct"** |
+| 6 z 31 zdarzeń nigdy nie odpalanych | pusty raport czyta się jako wniosek („nikt nie klika CTA"), a nie jako brak pomiaru |
+| `section_view` i `form_view` z ułamkowym progiem IntersectionObservera | próg mierzy się względem ELEMENTU — sekcja 1894 px w oknie 760 px nie mogła go spełnić **nigdy**; najwyższe, najważniejsze sekcje były jedynymi, które nie raportowały |
+| `session_summary` przy pierwszym przełączeniu karty i nigdy więcej | dominujący przypadek to kikut z pierwszą odsłoną; reszta wizyty i lead nie trafiały do żadnego podsumowania |
+| Formularz w hero bez `prepareLeadConversion()` | piksel i CAPI generowały różne `event_id` → Meta liczyła najbardziej eksponowany formularz **dwa razy** |
+| Meta CAPI czytało tylko `META_DATASET_ID` | udokumentowana jest wyłącznie `NEXT_PUBLIC_...`, więc CAPI zgłaszałoby „not configured" w nieskończoność |
+| Współczynniki lejka bez clampu | przy wypchniętym buforze dashboard pokazywał „300% konwersji" i „−200% porzuceń" |
+| GA4 bez `page_view` przy nawigacji klienckiej | GA4 znał tylko stronę wejścia każdej wizyty |
+| Proxy wykluczało `*.txt`/`*.xml` | nie liczyło pobrań `/llms.txt` — dokładnie tych, dla których powstało |
+| `/api/collect`: `path` i `ts` bez walidacji, limit w pamięci procesu, bufor 800 paczek | anonim mógł wypchnąć wszystkie prawdziwe sesje i rozdąć hasz dzienny |
+
+**Wniosek procesowy, wart zapamiętania:** wszystko powyżej przechodziło build,
+typecheck, lint i 153 testy. Zielona bramka mówi „nic się nie wywala", nie „to
+mierzy prawdę". Rzeczy, które wyszły dopiero z uruchomienia w prawdziwej
+przeglądarce na produkcji: martwe zdarzenia, próg obserwatora, utrata `gclid`,
+brak promocji atrybucji po zgodzie.
+
 ## 3. Co wymaga Wojtka
 
 Bez tego kod działa, ale część kanałów jest wyłączona (env pusty = graceful no-op).
