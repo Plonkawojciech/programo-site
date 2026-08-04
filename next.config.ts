@@ -20,15 +20,15 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  // This repo is built from git worktrees (each with its own package-lock.json)
-  // alongside the main checkout. Turbopack sees both lockfiles, infers a
-  // monorepo, and silently picks the WRONG one as its root — which then
-  // resolves top-level convention files (e.g. src/proxy.ts) against a sibling
-  // checkout instead of this one. Pinning root to cwd (the project actually
-  // being built) removes the guesswork.
-  turbopack: {
-    root: process.cwd(),
-  },
+  // Pins the build root to the project being built. This repo is routinely
+  // checked out as git worktrees nested under the main repo
+  // (.claude/worktrees/<name>/), each with its own package-lock.json. Turbopack
+  // sees both lockfiles, infers a monorepo, and silently picks the OUTER
+  // directory as root — which then resolves `@/*` and top-level convention
+  // files (src/proxy.ts) against a sibling checkout that another session may be
+  // editing at that very moment. Pinning it removes the guesswork; on a real
+  // deploy there is one lockfile and this is a no-op.
+  turbopack: { root: __dirname },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,

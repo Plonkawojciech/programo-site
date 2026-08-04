@@ -20,6 +20,9 @@ import { easeEntry, durationMedium } from "@/lib/motion";
  *
  * Uses native <details>/<summary> so all answers are in the DOM for
  * SSR, crawlers, and screen readers regardless of open/closed state.
+ *
+ * FAQPage JSON-LD for these same questions is rendered by the sibling
+ * ./faq-schema.tsx (a server component, PL only) instead of from here.
  */
 const faqs: { q: TranslationKey; a: TranslationKey }[] = [
   { q: "home.faq.q1", a: "home.faq.a1" },
@@ -34,19 +37,6 @@ export default function Faq() {
   const { t } = useI18n();
   const prefersReduced = useReducedMotion();
 
-  // Structured data is built from the same array that renders the accordion, so
-  // Google's rich result can never quote copy the page does not show — and it
-  // follows the active language, because `t` does.
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((item) => ({
-      "@type": "Question",
-      name: t(item.q),
-      acceptedAnswer: { "@type": "Answer", text: t(item.a) },
-    })),
-  };
-
   const reveal = prefersReduced
     ? {}
     : {
@@ -58,10 +48,6 @@ export default function Faq() {
 
   return (
     <section className="bg-surface-dim py-section-tight">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           {/* Left column: heading */}

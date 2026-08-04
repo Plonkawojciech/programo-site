@@ -6,6 +6,7 @@ import ServicesOverview from "@/components/home/services-overview";
 import Process from "@/components/home/process";
 import Founders from "@/components/home/founders";
 import Faq from "@/components/home/faq";
+import FaqSchema from "@/components/home/faq-schema";
 import ContactBookend from "@/components/home/contact-bookend";
 
 /**
@@ -37,6 +38,7 @@ export default function Home() {
       <ServicesOverview />
       <Process />
       <Founders />
+      <FaqSchema />
       <Faq />
       <ContactBookend />
     </>

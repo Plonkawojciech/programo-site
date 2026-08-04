@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
+import { buildOrganization, buildWebsite, buildPeople, renderGraph } from "@/lib/schema";
 
 const GA_ID = "G-KT2R144BYG";
 // Google Ads conversion tracking (gated by marketing consent via Consent Mode v2 above)
@@ -70,43 +71,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://programo.pl",
   },
+  // Search Console / Bing Webmaster site-ownership meta tags. Env-gated so a
+  // missing token omits the tag instead of rendering empty/placeholder
+  // content — see .env.example for where to get each one.
+  verification: {
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_BING_VERIFICATION
+      ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION }
+      : {},
+  },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "@id": "https://programo.pl/#organization",
-  name: "Programo",
-  alternateName: ["Programo Software House", "Programo Studio"],
-  description:
-    "Software house z Poznania. Oprogramowanie na zamówienie: strony, aplikacje webowe i mobilne, systemy SaaS oraz integracje AI.",
-  url: "https://programo.pl",
-  logo: "https://programo.pl/programo-logo-gradient.svg",
-  image: "https://programo.pl/opengraph-image",
-  email: "biuro@programo.pl",
-  telephone: "+48797222363",
-  priceRange: "$$",
-  knowsLanguage: ["pl", "en"],
-  founders: [
-    { "@type": "Person", name: "Wojciech Płonka", jobTitle: "Design & Product" },
-    { "@type": "Person", name: "Bartosz Kolaj", jobTitle: "Engineering" },
-  ],
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Poznań",
-    addressRegion: "wielkopolskie",
-    addressCountry: "PL",
-  },
-  areaServed: [
-    { "@type": "City", name: "Poznań" },
-    { "@type": "AdministrativeArea", name: "Wielkopolska" },
-    { "@type": "Country", name: "Polska" },
-  ],
-  sameAs: [
-    "https://github.com/programo",
-    "https://linkedin.com/company/programo",
-  ],
-};
+// The site's core graph — Organization, WebSite and both founders — rendered
+// once here so every other page can reference these entities by @id instead
+// of repeating them. See src/lib/schema/.
+const siteGraph = renderGraph([buildOrganization(), buildWebsite(), ...buildPeople()]);
 
 export default function RootLayout({
   children,
@@ -149,7 +128,7 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: siteGraph }}
         />
       </head>
       <body className="antialiased bg-surface text-on-surface overflow-x-hidden">

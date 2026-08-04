@@ -9,6 +9,17 @@ import CompactLeadForm from "@/components/compact-lead-form";
 import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
 import BrowserFrame from "@/components/ui/browser-frame";
+import {
+  buildBreadcrumbs,
+  buildFaqPage,
+  buildService,
+  buildWebPage,
+  ref,
+  renderGraph,
+  STATIC_ROUTE_UPDATED_AT,
+} from "@/lib/schema";
+
+const PATH = "/sklepy-internetowe";
 
 // Metadata: content-deck-2026-07.md section 8.
 export const metadata: Metadata = {
@@ -38,35 +49,6 @@ export const metadata: Metadata = {
   ],
 };
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Programo", item: "https://programo.pl" },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Sklepy internetowe",
-      item: "https://programo.pl/sklepy-internetowe",
-    },
-  ],
-};
-
-const serviceJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Tworzenie sklepów internetowych i aplikacji mobilnych do sklepów",
-  name: "Sklepy internetowe i aplikacje mobilne - Programo",
-  provider: { "@id": "https://programo.pl/#organization" },
-  areaServed: [
-    { "@type": "Country", name: "Polska" },
-    { "@type": "City", name: "Poznań" },
-  ],
-  description:
-    "Sklepy od zera (WooCommerce, PrestaShop, headless Next.js) i natywne aplikacje mobilne do istniejących sklepów. Integracje płatności, InPost, Allegro/BaseLinker, migracje bez utraty SEO.",
-  url: "https://programo.pl/sklepy-internetowe",
-};
-
 const faqs = [
   {
     q: "Ile kosztuje sklep internetowy?",
@@ -78,15 +60,34 @@ const faqs = [
   },
 ];
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const service = buildService({
+  path: PATH,
+  serviceType: "Tworzenie sklepów internetowych i aplikacji mobilnych do sklepów",
+  name: "Sklepy internetowe i aplikacje mobilne - Programo",
+  areaServed: [
+    { "@type": "Country", name: "Polska" },
+    { "@type": "City", name: "Poznań" },
+  ],
+  description:
+    "Sklepy od zera (WooCommerce, PrestaShop, headless Next.js) i natywne aplikacje mobilne do istniejących sklepów. Integracje płatności, InPost, Allegro/BaseLinker, migracje bez utraty SEO.",
+});
+
+const pageGraph = renderGraph([
+  buildWebPage({
+    path: PATH,
+    name: "Sklepy internetowe i aplikacje mobilne do sklepów | Programo",
+    description:
+      "Sklepy internetowe na WooCommerce, PrestaShop i headless oraz aplikacje mobilne do sklepów, które już działają. Płatności, InPost, migracja bez utraty SEO.",
+    dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
+    mainEntity: ref(service),
+  }),
+  buildBreadcrumbs([
+    { name: "Programo", path: "/" },
+    { name: "Sklepy internetowe", path: PATH },
+  ]),
+  service,
+  buildFaqPage(faqs),
+]);
 
 // Scope of e-commerce services — content-deck-2026-07.md section 4.3.
 const services = [
@@ -134,9 +135,7 @@ const SECTION = "relative bg-surface py-24 md:py-32 lg:py-40";
 export default function SklepyInternetowePage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
 
       <div className="bg-surface text-on-surface">
         {/* HERO — static, 2-col: copy + lead form ABOVE THE FOLD */}

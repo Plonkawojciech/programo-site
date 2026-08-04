@@ -171,4 +171,14 @@ describe("projects data", () => {
   it("getProjectBySlug returns undefined for unknown slug", () => {
     expect(getProjectBySlug("nonexistent")).toBeUndefined();
   });
+
+  it("updatedAt, when present, is a real ISO date string (not a build timestamp)", () => {
+    for (const p of projects) {
+      if (p.updatedAt === undefined) continue;
+      expect(p.updatedAt, `${p.slug} updatedAt is not ISO 8601`).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}([+-]\d{2}:\d{2}|Z)$/
+      );
+      expect(new Date(p.updatedAt).getFullYear(), `${p.slug} updatedAt is not a real date`).toBeGreaterThan(2000);
+    }
+  });
 });
