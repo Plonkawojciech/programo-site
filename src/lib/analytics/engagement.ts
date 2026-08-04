@@ -219,9 +219,23 @@ function initSectionViews(): () => void {
       for (const entry of entries) {
         const name = sectionName(entry.target);
         if (!name || seen.has(name)) continue;
-        if (entry.isIntersecting) {
+
+        // A plain `threshold: 0.5` is a trap here: it means "half the ELEMENT",
+        // so a 1900px section can never satisfy it inside a 760px viewport —
+        // exactly the tall sections we most want to know about would silently
+        // never report. Measure against whichever is smaller, the section or
+        // the viewport, so "half of it is on screen" means the same thing for a
+        // short card row and a full-height section.
+        const viewport = window.innerHeight || 1;
+        const target = Math.min(entry.boundingClientRect.height || viewport, viewport);
+        const shown = entry.intersectionRect.height;
+        const enough = entry.isIntersecting && shown >= target * 0.5;
+
+        if (enough) {
+          if (timers.has(entry.target)) continue;
           const id = window.setTimeout(() => {
             seen.add(name);
+            timers.delete(entry.target);
             observer.unobserve(entry.target);
             track("section_view", { section: name });
           }, 1000);
@@ -235,7 +249,9 @@ function initSectionViews(): () => void {
         }
       }
     },
-    { threshold: 0.5 },
+    // Several thresholds so the callback re-runs as a tall section scrolls
+    // through, instead of only at the moment it first touches the viewport.
+    { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] },
   );
 
   for (const el of document.querySelectorAll(SECTION_SELECTOR)) observer.observe(el);

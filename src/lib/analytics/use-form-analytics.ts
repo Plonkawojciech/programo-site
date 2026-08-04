@@ -57,7 +57,12 @@ export function useFormAnalytics(formId: string): FormAnalytics {
           }
         }
       },
-      { threshold: 0.3 },
+      // threshold 0 on purpose: a fractional threshold is measured against the
+      // element, so a form taller than the viewport could never reach it and
+      // the denominator of the whole funnel would silently stay empty. Any part
+      // of the form on screen means the visitor reached it, which is the
+      // question this event answers.
+      { threshold: 0 },
     );
     observer.observe(el);
     return () => observer.disconnect();
