@@ -79,7 +79,8 @@ export default function AnalyticsTracker() {
     trackPageView(pathname, typeof document !== "undefined" ? document.title : undefined);
 
     const fired = new Set<number>();
-    const check = () => {
+
+    const measure = () => {
       const doc = document.documentElement;
       const scrollable = doc.scrollHeight - window.innerHeight;
       // Very short pages have nothing to scroll — treat as fully seen.
@@ -90,15 +91,32 @@ export default function AnalyticsTracker() {
           track("scroll_depth", { percent: threshold, page_path: pathname });
         }
       }
+      // Every threshold crossed — nothing left to watch on this page.
+      if (fired.size === SCROLL_THRESHOLDS.length) detach();
     };
 
-    check();
-    window.addEventListener("scroll", check, { passive: true });
-    window.addEventListener("resize", check, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", check);
-      window.removeEventListener("resize", check);
+    // Scroll fires far more often than once per frame. Reading scrollHeight in
+    // the handler forces layout, so coalescing to one measurement per frame is
+    // the difference between a few reads and a few hundred during one flick.
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        measure();
+      });
     };
+
+    const detach = () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+
+    measure();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return detach;
   }, [pathname]);
 
   return null;
