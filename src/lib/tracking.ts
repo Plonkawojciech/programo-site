@@ -1,99 +1,24 @@
-// Client-side attribution + GA4 event helpers.
+// Conversion tracking — Google Ads + GA4 key events.
 //
-// - Captures Google Ads click IDs (gclid/gbraid/wbraid) and UTM params on landing
-//   and persists them, so a lead submitted on a *different* page still carries its
-//   ad source. We can then tell which keyword/campaign produced each lead.
-// - Fires GA4 events (generate_lead, contact_click). Consent Mode v2 (set in
-//   layout.tsx) governs how the data is stored/used, so events are sent
-//   unconditionally and modeled correctly when consent is denied.
+// This module owns the *money* events. Everything behavioural now lives in
+// src/lib/analytics/; this file keeps the Google Ads specifics (conversion
+// label, lead value, Enhanced Conversions, once-per-session guard) and the
+// stable public API the forms and portfolio components already import.
+//
+// Attribution moved to analytics/attribution.ts, which additionally records
+// first-touch and classifies AI/organic/social referrers. Re-exported here so
+// existing imports keep working.
 
-export type Attribution = {
-  gclid?: string;
-  gbraid?: string;
-  wbraid?: string;
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
-  utm_term?: string;
-  utm_content?: string;
-  landing_page?: string;
-  referrer?: string;
-  first_seen?: string;
-};
+import { track, conversionContext, newEventId, flush } from "./analytics/client";
+import { getAttribution } from "./analytics/attribution";
 
-const STORAGE_KEY = "programo-attribution";
-
-const PARAM_KEYS = [
-  "gclid",
-  "gbraid",
-  "wbraid",
-  "utm_source",
-  "utm_medium",
-  "utm_campaign",
-  "utm_term",
-  "utm_content",
-] as const;
+export { captureAttribution, getAttribution } from "./analytics/attribution";
+export type { Attribution } from "./analytics/attribution";
 
 function gtag(...args: unknown[]): void {
   if (typeof window === "undefined") return;
   const fn = (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag;
   if (typeof fn === "function") fn(...args);
-}
-
-function safeParse(raw: string): Attribution {
-  try {
-    const obj = JSON.parse(raw);
-    return obj && typeof obj === "object" ? (obj as Attribution) : {};
-  } catch {
-    return {};
-  }
-}
-
-/**
- * Read campaign params from the current URL and persist them. Overwrites stored
- * attribution only when a NEW campaign/click id is present (latest ad click wins);
- * otherwise leaves the existing touch intact. Safe to call on every page mount.
- */
-export function captureAttribution(): void {
-  if (typeof window === "undefined") return;
-  try {
-    const params = new URLSearchParams(window.location.search);
-    const incoming: Attribution = {};
-    let hasCampaign = false;
-    for (const key of PARAM_KEYS) {
-      const val = params.get(key);
-      if (val) {
-        incoming[key] = val.slice(0, 300);
-        hasCampaign = true;
-      }
-    }
-    if (!hasCampaign) return; // organic / internal navigation — keep existing
-
-    const prevRaw = window.localStorage.getItem(STORAGE_KEY);
-    const prev: Attribution = prevRaw ? safeParse(prevRaw) : {};
-
-    const next: Attribution = {
-      ...incoming,
-      landing_page: window.location.pathname,
-      referrer: document.referrer || prev.referrer || "",
-      first_seen: prev.first_seen || new Date().toISOString(),
-    };
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  } catch {
-    /* ignore storage/parse errors */
-  }
-}
-
-/** Returns the stored attribution (after syncing any params still in the URL). */
-export function getAttribution(): Attribution {
-  if (typeof window === "undefined") return {};
-  try {
-    captureAttribution();
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? safeParse(raw) : {};
-  } catch {
-    return {};
-  }
 }
 
 /**
@@ -102,18 +27,22 @@ export function getAttribution(): Attribution {
  */
 const ADS_CONVERSION_LEAD = "AW-18196600478/tYIqCM3A_rkcEJ6t6ORD";
 
+const GA_MEASUREMENT_ID = "G-KT2R144BYG";
+
 // Estimated value of one lead, in PLN. This is a Smart Bidding signal, NOT a
 // reported statistic: a conservative expected value (avg project ≈ kilka tys. zł
 // × niska szansa zamknięcia). Required on the GA4 generate_lead event since the
 // April 2026 GA4 change — without value+currency the event silently fails to
 // qualify as a conversion. Adjust as close-rate data accumulates.
-const LEAD_VALUE_PLN = 500;
+export const LEAD_VALUE_PLN = 500;
 
-function trackAdsConversion(): void {
+function trackAdsConversion(eventId: string): void {
   gtag("event", "conversion", {
     send_to: ADS_CONVERSION_LEAD,
     value: LEAD_VALUE_PLN,
     currency: "PLN",
+    // Helps Google Ads collapse a retried submit into a single conversion.
+    transaction_id: eventId,
   });
 }
 
@@ -143,13 +72,6 @@ function markAdsLeadFired(): void {
   }
 }
 
-/**
- * GA4 lead conversion event + Google Ads "Lead" conversion. `form` identifies the source form.
- *
- * Form submit = primary Google Ads Lead conversion. Phone/email clicks = GA4-only secondary
- * signal; a dedicated Ads call-click conversion action can be added later. The Ads conversion
- * fires at most once per browser session; GA4 generate_lead fires on every submit.
- */
 /** True only if the visitor granted MARKETING consent (Consent Mode v2). */
 function hasMarketingConsent(): boolean {
   if (typeof window === "undefined") return false;
@@ -170,7 +92,7 @@ function normEmail(e?: string): string | undefined {
 }
 
 /** Normalize a PL/intl phone to E.164 (best-effort) for Enhanced Conversions. */
-function normPhone(p?: string): string | undefined {
+export function normPhone(p?: string): string | undefined {
   if (!p) return undefined;
   let d = p.replace(/[^\d+]/g, "");
   if (d.startsWith("00")) d = "+" + d.slice(2);
@@ -197,32 +119,87 @@ function setEnhancedUserData(email?: string, phone?: string): void {
   gtag("set", "user_data", ud);
 }
 
+/**
+ * Everything the server needs to fire the *server-side* twin of this conversion
+ * (Meta Conversions API + GA4 Measurement Protocol) and have it deduplicate
+ * against the browser-side hit.
+ *
+ * Call this BEFORE posting the form, then pass the returned `event_id` into
+ * trackLead() so the Meta Pixel fires with the identical id. Meta collapses a
+ * browser event and a server event into one when `event_id` + `event_name`
+ * match (48 h window).
+ */
+export async function prepareLeadConversion(): Promise<Record<string, string>> {
+  const ctx = conversionContext();
+  const out: Record<string, string> = {
+    event_id: ctx.event_id,
+    visitor_id: ctx.visitor_id,
+    session_id: ctx.session_id,
+    page_url: ctx.page_url,
+  };
+  if (ctx.fbc) out.fbc = ctx.fbc;
+  if (ctx.fbp) out.fbp = ctx.fbp;
+
+  // GA4's real client_id / session_id, read out of the gtag runtime. Without
+  // them a Measurement Protocol hit lands as a new, sessionless user reporting
+  // as "(not set) / (not set)" — worse than not sending it at all.
+  try {
+    const { readGa4Ids } = await import("./analytics/client");
+    const ids = await readGa4Ids(GA_MEASUREMENT_ID);
+    if (ids.client_id) out.ga_client_id = ids.client_id;
+    if (ids.session_id) out.ga_session_id = ids.session_id;
+  } catch {
+    /* gtag blocked — the server skips the MP hit, which is the correct call */
+  }
+  return out;
+}
+
+/**
+ * GA4 lead conversion event + Google Ads "Lead" conversion + Meta Pixel `Lead`.
+ *
+ * Form submit = primary Google Ads Lead conversion. Phone/email clicks = GA4-only
+ * secondary signal. The Ads conversion fires at most once per browser session;
+ * GA4 generate_lead fires on every submit (flagged `duplicate`).
+ */
 export function trackLead(detail: {
   form: string;
   method?: string;
   email?: string;
   phone?: string;
+  /** From prepareLeadConversion() — keeps browser and server hits deduplicated. */
+  eventId?: string;
+  /** Seconds from first interaction with the form to submit. */
+  seconds?: number;
 }): void {
   const attr = getAttribution();
   const duplicate = hasAdsLeadFired();
+  const eventId = detail.eventId ?? newEventId();
+
   // value + currency are REQUIRED for generate_lead to count as a GA4 key event
   // (GA4 change, April 2026). Without them the event is silently dropped from
   // conversion counting — a primary cause of the historical "0 konwersji".
-  gtag("event", "generate_lead", {
+  // track() also mirrors this to the Meta Pixel as a standard `Lead` event
+  // carrying the same eventID, which deduplicates it against the CAPI hit.
+  track("generate_lead", {
+    event_id: eventId,
     form_location: detail.form,
+    form_id: detail.form,
     method: detail.method,
     lead_source: attr.utm_source || (attr.gclid ? "google_ads" : "direct"),
     campaign: attr.utm_campaign,
     gclid: attr.gclid,
+    referrer_class: attr.last?.referrer_class ?? attr.referrer_class,
+    seconds_to_submit: detail.seconds,
     value: LEAD_VALUE_PLN,
     currency: "PLN",
     duplicate,
   });
+
   if (!duplicate) {
     // Enhanced Conversions for Leads (set on the Ads side as "Zarządzane za
     // pomocą tagu Google") — attach hashed user data before the conversion.
     setEnhancedUserData(detail.email, detail.phone);
-    trackAdsConversion();
+    trackAdsConversion(eventId);
     markAdsLeadFired();
   } else if (process.env.NODE_ENV !== "production") {
     // Manual-test aid: a second submit in the same browser session intentionally
@@ -231,20 +208,23 @@ export function trackLead(detail: {
     // fresh tab to fire it again.
     console.info(
       "[tracking] Ads lead conversion skipped (duplicate within session). " +
-        "Use a fresh tab/incognito to re-fire."
+        "Use a fresh tab/incognito to re-fire.",
     );
   }
+
+  // A conversion is often the last thing that happens on the page — do not sit
+  // on the batch timer.
+  flush(true);
 }
 
 /**
  * GA4 event for clicks on phone / email links anywhere on the site.
  *
- * Form submit = primary Google Ads Lead conversion. Phone/email clicks = GA4-only secondary
- * signal; a dedicated Ads call-click conversion action can be added later. Deliberately does
- * NOT fire the Google Ads "Lead" conversion label so the primary lead signal stays clean.
+ * Kept for direct callers; AnalyticsTracker already catches every tel:/mailto:
+ * click by delegation, so most code does not need to call this.
  */
 export function trackContactClick(method: "phone" | "email", url: string): void {
-  gtag("event", "contact_click", { method, link_url: url });
+  track("contact_click", { method, link_url: url });
 }
 
 /**
@@ -254,7 +234,7 @@ export function trackContactClick(method: "phone" | "email", url: string): void 
  * that tells us which projects draw interest.
  */
 export function trackPortfolioClick(slug: string, url: string): void {
-  gtag("event", "select_content", {
+  track("select_content", {
     content_type: "project",
     content_id: slug,
     link_url: url,
@@ -262,9 +242,9 @@ export function trackPortfolioClick(slug: string, url: string): void {
 }
 
 /**
- * GA4 scroll-depth signal. Fires `scroll_depth` with the crossed threshold
- * (25/50/75/100). Deduplication and per-page reset live in AnalyticsTracker.
+ * GA4 scroll-depth signal. Fires `scroll_depth` with the crossed threshold.
+ * Deduplication and per-page reset live in AnalyticsTracker.
  */
-export function trackScrollDepth(percent: 25 | 50 | 75 | 100): void {
-  gtag("event", "scroll_depth", { percent });
+export function trackScrollDepth(percent: 25 | 50 | 75 | 90 | 100): void {
+  track("scroll_depth", { percent });
 }

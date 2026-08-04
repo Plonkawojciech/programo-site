@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { contactSchema, rateLimitMap, isRateLimited, sanitize } from "@/app/api/contact/route";
+import { contactSchema, rateLimitMap, isRateLimited, sanitize } from "@/lib/contact-schema";
 
 describe("contact API validation", () => {
   it("valid submission passes schema", () => {

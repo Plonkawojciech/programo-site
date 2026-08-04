@@ -87,8 +87,37 @@ function loadClarity() {
   })(window, document, "clarity", "script", CLARITY_ID);
 }
 
+/** Name of the cookie mirroring the consent state for the server. */
+export const CONSENT_COOKIE = "programo-consent";
+
+/**
+ * Mirrors the consent decision into a first-party cookie.
+ *
+ * localStorage is invisible to the server, and server-side conversion APIs
+ * (Meta CAPI, GA4 Measurement Protocol) must NOT fire without marketing
+ * consent. A flag posted in a request body is a claim by the client, not
+ * evidence; a cookie the browser attaches to every request is what the route
+ * handler can actually check. Strictly necessary — it exists solely to
+ * remember and enforce the visitor's own choice.
+ */
+function writeConsentCookie(categories: ConsentCategories) {
+  if (typeof document === "undefined") return;
+  try {
+    const value = encodeURIComponent(
+      JSON.stringify({ analytics: categories.analytics, marketing: categories.marketing }),
+    );
+    const oneYear = 60 * 60 * 24 * 365;
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${CONSENT_COOKIE}=${value}; Path=/; Max-Age=${oneYear}; SameSite=Lax${secure}`;
+  } catch {
+    /* cookies disabled — the server then sees no consent and sends nothing,
+       which is the correct fail-closed behaviour */
+  }
+}
+
 function pushConsent(categories: ConsentCategories) {
   if (typeof window === "undefined") return;
+  writeConsentCookie(categories);
   window.dataLayer = window.dataLayer || [];
   const gtag: GtagFn =
     window.gtag ||
@@ -107,6 +136,20 @@ function pushConsent(categories: ConsentCategories) {
   // Load Microsoft Clarity only after analytics consent is granted
   if (categories.analytics) {
     loadClarity();
+  }
+
+  // Clarity needs its OWN consent signal, separate from loading the script.
+  // Since 31 Oct 2025 Clarity enforces this for EEA/UK/CH traffic: without a
+  // consentv2 call it runs in "no-consent mode" — a fresh id per page view, no
+  // cookies, no session stitching — which makes recordings and heatmaps
+  // effectively useless. Loading the script after consent is NOT enough.
+  // (The older clarity('consent', bool) API forces one flag onto both storage
+  // types and is being phased out, so we always use v2.)
+  if (typeof window !== "undefined" && typeof window.clarity === "function") {
+    window.clarity("consentv2", {
+      ad_Storage: categories.marketing ? "granted" : "denied",
+      analytics_Storage: categories.analytics ? "granted" : "denied",
+    });
   }
 }
 
