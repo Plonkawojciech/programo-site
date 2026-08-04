@@ -231,3 +231,96 @@ describe("AI crawler identification", () => {
     expect(isAiBot(google)).toBe(false);
   });
 });
+
+describe("Meta CAPI request contract", () => {
+  // Validates the exact shape Meta requires, without a network call, so the
+  // integration is known-correct before real credentials exist. Getting this
+  // wrong is normally discovered by staring at Events Manager for an afternoon.
+  async function captureRequest(): Promise<{ url: string; payload: Record<string, unknown> }> {
+    const original = globalThis.fetch;
+    let captured: { url: string; payload: Record<string, unknown> } | null = null;
+    globalThis.fetch = (async (url: string, init: RequestInit) => {
+      captured = { url: String(url), payload: JSON.parse(String(init.body)) };
+      return new Response(JSON.stringify({ events_received: 1, messages: [], fbtrace_id: "t" }), {
+        status: 200,
+      });
+    }) as unknown as typeof fetch;
+
+    process.env.META_DATASET_ID = "111222333";
+    process.env.META_CAPI_ACCESS_TOKEN = "test-token";
+    delete process.env.META_TEST_EVENT_CODE;
+
+    const { sendMetaEvent } = await import("@/lib/analytics/server/meta-capi");
+    await sendMetaEvent({
+      eventName: "Lead",
+      eventId: "evt-abc",
+      eventSourceUrl: "https://programo.pl/kontakt?fbclid=XYZ",
+      user: {
+        email: " Jan.Kowalski@Example.PL ",
+        phone: "+48 601 234 567",
+        firstName: "Łukasz",
+        lastName: "Nowak",
+        externalId: "visitor-1",
+        clientIpAddress: "1.2.3.4",
+        clientUserAgent: "Mozilla/5.0",
+        fbp: "fb.1.123.456",
+        fbc: "fb.1.123.XYZ",
+      },
+      customData: { value: 500, currency: "PLN" },
+    });
+
+    globalThis.fetch = original;
+    return captured!;
+  }
+
+  it("posts to the pinned Graph version and dataset", async () => {
+    const { url } = await captureRequest();
+    expect(url).toContain("https://graph.facebook.com/v25.0/111222333/events");
+  });
+
+  it("sends the required server-event fields", async () => {
+    const { payload } = await captureRequest();
+    const event = (payload.data as Record<string, unknown>[])[0];
+    expect(event.event_name).toBe("Lead");
+    expect(event.action_source).toBe("website");
+    expect(event.event_source_url).toContain("programo.pl");
+    // Must be a STRING — a number here silently breaks deduplication.
+    expect(typeof event.event_id).toBe("string");
+    // Seconds, not milliseconds. Meta rejects the whole request if it looks
+    // older than 7 days, which is what a ms value would look like.
+    const now = Math.floor(Date.now() / 1000);
+    expect(Math.abs((event.event_time as number) - now)).toBeLessThan(60);
+  });
+
+  it("hashes match keys and leaves cookies, IP and UA in the clear", async () => {
+    const { payload } = await captureRequest();
+    const ud = (payload.data as Record<string, unknown>[])[0].user_data as Record<string, unknown>;
+    for (const key of ["em", "ph", "fn", "ln", "country", "external_id"]) {
+      expect((ud[key] as string[])[0], `${key} should be a SHA-256 hex digest`).toMatch(/^[a-f0-9]{64}$/);
+    }
+    // Hashing any of these destroys matching outright.
+    expect(ud.client_ip_address).toBe("1.2.3.4");
+    expect(ud.client_user_agent).toBe("Mozilla/5.0");
+    expect(ud.fbp).toBe("fb.1.123.456");
+    expect(ud.fbc).toBe("fb.1.123.XYZ");
+  });
+
+  it("omits test_event_code unless explicitly set", async () => {
+    const { payload } = await captureRequest();
+    // Meta requires it absent on production payloads.
+    expect(payload.test_event_code).toBeUndefined();
+  });
+
+  it("skips entirely when credentials are missing", async () => {
+    delete process.env.META_DATASET_ID;
+    delete process.env.META_CAPI_ACCESS_TOKEN;
+    const { sendMetaEvent } = await import("@/lib/analytics/server/meta-capi");
+    const res = await sendMetaEvent({
+      eventName: "Lead",
+      eventId: "x",
+      eventSourceUrl: "https://programo.pl/",
+      user: {},
+    });
+    expect(res).toEqual({ ok: false, skipped: true, reason: "not_configured" });
+  });
+});
