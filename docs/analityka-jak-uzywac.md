@@ -126,64 +126,56 @@ Zamiast patrzenia na wykresy — konkretne „jeśli X, to Y".
 
 ---
 
-## 5. Do zrobienia raz — bez tego część danych jest niewidoczna
+## 5. Konfiguracja jednorazowa
 
-### 5.1 GA4: zarejestruj custom dimensions
+### 5.1–5.4 — ZROBIONE 2026-08-04
 
-**To jest konieczne.** Parametry zdarzeń nie pojawią się w raportach GA4, dopóki
-nie zostaną zarejestrowane. Bez tego widzisz, że `form_error` wystąpił, ale nie
-którego pola dotyczył.
+- **GA4: 10 wymiarów niestandardowych** (`form_id`, `field`, `section`, `cta`,
+  `referrer_class`, `ai_source`, `metric_name`, `metric_rating`, `method`,
+  `http_status`), wszystkie o zakresie „zdarzenie". Bez nich widać, że
+  `form_error` wystąpił, ale nie którego pola dotyczył.
+- **GA4: „Interakcje z formularzem" wyłączone** w ulepszonych pomiarach.
+  Inaczej GA4 wysyłał własne `form_start`/`form_submit` obok naszych i lejek
+  liczyłby się podwójnie.
+- **GA4: `generate_lead`** oznaczone jako zdarzenie kluczowe, zliczanie
+  **raz na sesję**.
+- **Meta: dataset `1123682429983000`** („Programo.pl") utworzony w portfolio
+  Programo, `NEXT_PUBLIC_META_DATASET_ID` ustawiony na Vercelu — piksel działa.
+- **Meta: domena programo.pl zweryfikowana** (tag w `layout.tsx`). Nie była —
+  a bez tego traci się Aggregated Event Measurement dla ruchu z iOS.
 
-GA4 → Administracja → Definicje niestandardowe → Utwórz wymiar niestandardowy.
-Zakres: **zdarzenie**. Nazwa parametru dokładnie jak w tabeli:
+### 5.5 Zostało: token Conversions API (2 minuty, Twoje ręce)
 
-| Parametr | Po co |
-|---|---|
-| `form_id` | który formularz (hero / compact / pełny) |
-| `field` | które pole przy błędzie i pominięciu |
-| `section` | która sekcja przy CTA i rage click |
-| `cta` / `destination` | który CTA klikają |
-| `referrer_class` | direct / search / social / **ai** |
-| `ai_source` | który asystent AI przysłał |
-| `metric_name` / `metric_rating` | Web Vitals w rozbiciu |
-| `method` | telefon czy e-mail |
-| `faq_position` | która obiekcja |
-| `http_status` | przy `form_submit_failed` |
+Events Manager → dataset **Programo.pl** → Settings → Conversions API →
+**Generate access token**. Potem:
 
-Limit: 50 wymiarów event-scoped. Powyżej wystarczy.
+```bash
+cd ~/Programo/programo-site && npx vercel env add META_CAPI_ACCESS_TOKEN production
+```
 
-### 5.2 GA4: wyłącz „Interakcje z formularzami"
+Celowo nie generuję i nie przenoszę tego tokenu sam — to sekret dający dostęp do
+zapisu zdarzeń w Waszym datasecie, a wszystko, co przechodzi przez asystenta,
+zostaje w transkrypcie. Piksel działa bez niego; CAPI dokłada odporność na
+adblocki i zamknięcie karty w trakcie wysyłki.
 
-Administracja → Strumienie danych → Ulepszone pomiary → **odznacz „Interakcje z
-formularzami"**. Inaczej GA4 wysyła własne `form_start`/`form_submit` obok
-naszych i lejek liczy się podwójnie.
+Po dodaniu sprawdź w Test Events, czy `Lead` przychodzi z **dwóch źródeł**
+(Browser + Server) jako jedno zdeduplikowane zdarzenie. Dwa osobne wpisy
+oznaczają, że `event_id` się rozjeżdża.
 
-### 5.3 GA4: oznacz zdarzenia kluczowe
-
-`generate_lead` jako kluczowe, metoda zliczania **raz na sesję**.
-Opcjonalnie `contact_click` jako drugorzędne.
-
-### 5.4 Meta: utwórz dataset
-
-Events Manager → Datasets → utwórz. Potem Settings → Conversions API →
-Generate access token. Do Vercela:
-`NEXT_PUBLIC_META_DATASET_ID` i `META_CAPI_ACCESS_TOKEN`.
-
-Po wdrożeniu sprawdź w Test Events, czy zdarzenie `Lead` przychodzi z **dwóch
-źródeł** (Browser + Server) jako jedno zdeduplikowane. Dwa osobne wpisy = `event_id`
-się rozjeżdża.
+**Nie ustawiaj `Contact` jako celu optymalizacji kampanii** — kliknięcie w telefon
+ma tylko IP i user agent, więc match quality będzie niski.
 
 **Nie ustawiaj `Contact` jako celu optymalizacji kampanii** — kliknięcie w telefon
 ma tylko IP i user agent, więc match quality będzie niski i Meta będzie
 optymalizować na sygnał, którego nie umie przypisać do ludzi.
 
-### 5.5 GA4 Measurement Protocol
+### 5.6 GA4 Measurement Protocol
 
 Administracja → Strumienie danych → Measurement Protocol API secrets → utwórz.
 Do Vercela jako `GA4_API_SECRET`. Odblokowuje serwerowe `generate_lead_verified`
 — potwierdzenie, że lead faktycznie doszedł, odporne na zamknięcie karty.
 
-### 5.6 Search Console + Bing
+### 5.7 Search Console + Bing
 
 Dodaj programo.pl jako **Domain property** (weryfikacja rekordem DNS TXT — przetrwa
 zmianę hostingu). Bing: import z Search Console jednym kliknięciem.
