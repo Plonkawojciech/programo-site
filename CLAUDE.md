@@ -8,7 +8,7 @@ Strona firmowa Programo s.j. (Wojciech Płonka + Bartosz Kolaj, Poznań) — lan
 ## Tech Stack
 
 - Next.js 16.1 (App Router), React 19, TypeScript
-- Tailwind CSS v4, framer-motion v12, lenis (smooth scroll)
+- Tailwind CSS v4, framer-motion v12 (bez smooth-scrolla — `lenis` usunięty 2026-08-04 jako martwy kod)
 - Dwujęzyczność PL/EN: własny kontekst i18n w `src/lib/i18n/` (słowniki per domena w `dictionaries/`)
 - Fonty: Newsreader (nagłówki) + Plus Jakarta Sans (body) przez next/font
 - Leady: `/api/contact` → Resend + Redis CRM (`/crm`, token-gated) + webhook crm.programo.pl
@@ -26,8 +26,12 @@ src/
     projekty/                   # lista portfolio
     projects/[slug]/            # detale projektów (SSG z projects.ts)
     api/contact/ api/leads/     # lead pipeline
+    api/collect/                # first-party sink zdarzeń (zawsze 204)
     api/crm-login/ api/crm-logout/
     crm/                        # wewnętrzny panel leadów (noindex)
+    crm/analytics/              # czytnik sesji + lejek formularza (noindex, ten sam auth)
+    llms.txt/                   # generowany z site-urls.ts + projects.ts
+  proxy.ts                      # log crawlerów AI (Next 16: dawne middleware.ts)
   components/
     home/                       # sekcje homepage (offer-pillars, portfolio-grid, featured-jedmar, people, faq...)
     ui/                         # prymitywy: phone-frame, browser-frame, device-duo, count-up, reveal
@@ -36,8 +40,17 @@ src/
     navbar.tsx footer.tsx sticky-cta.tsx cookie-banner.tsx analytics-tracker.tsx
   lib/
     i18n/                       # provider + dictionaries/{common,home,offer,projects,about,pricing,contact,forms,marketing}.ts
-    projects.ts                 # DANE portfolio (10 projektów, kategorie: produkty | dla-klientow | marketing)
-    tracking.ts consent.tsx     # GA4 + Google Ads + Consent Mode v2
+    projects.ts                 # DANE portfolio (kategorie: produkty | dla-klientow | marketing)
+    tracking.ts consent.tsx     # konwersje Google Ads + Consent Mode v2 + cookie zgody
+    schema/                     # graf schema.org z @id (jedno źródło prawdy dla JSON-LD)
+    site-urls.ts                # kanoniczna lista stron (llms.txt + IndexNow)
+    analytics/
+      events.ts                 # TAKSONOMIA — nazwa, cele, uzasadnienie. Nic nie odpala surowego stringa
+      client.ts                 # dispatcher GA4 + Meta + first-party, tally sesji
+      identity.ts attribution.ts engagement.ts use-form-analytics.ts
+      store.ts query.ts         # zapis i odczyt z Redisa
+      ai-crawlers.ts            # rozpoznawanie botów AI (answer vs training)
+      server/{ga4,meta-capi,lead-conversions}.ts
 ```
 
 ## Twarde zasady tego repo
@@ -45,6 +58,18 @@ src/
 - **Tracking nietykalny bez wyraźnego powodu**: GA4 `G-KT2R144BYG`, Ads `AW-18196600478`
   (konwersja lead z value 500 PLN, guard raz-na-sesję), Consent Mode v2 inline w `<head>`
   PRZED gtag.js. Każdy formularz ma unikalny `formId` i woła `trackLead`.
+- **Nowe zdarzenie dodaje się WYŁĄCZNIE w `analytics/events.ts`** — z nazwą, celami i
+  uzasadnieniem. `/api/collect` odrzuca nazwy spoza taksonomii, więc pominięcie tego kroku
+  kończy się cichym gubieniem danych.
+- **Treść musi być w HTML serwerowym.** Crawlery AI nie wykonują JS. Żadnych
+  `ssr: false`, treści w `useEffect` ani `{open && <Content/>}` na tekście, który ma być
+  widoczny dla wyszukiwarek — `src/__tests__/ssr-content.test.ts` to pilnuje.
+- **Telefon dla Meta ≠ telefon dla Google**: Meta chce `48601234567`, Google Enhanced
+  Conversions `+48601234567`. Polskie znaki w nazwiskach ZOSTAJĄ (Meta wymaga UTF-8).
+  `fbc`/`fbp`/IP/user-agent NIGDY nie hashowane.
+- **Zgodę server-side czyta się z cookie `programo-consent`**, nigdy z body requestu.
+- `lastModified` w sitemapie to realne daty z historii gita — **nie** `new Date()`.
+  Google traktuje zaufanie do `lastmod` binarnie.
 - **Paleta**: ciemna zieleń + mięta (`#051F20`/`#DAF1DE`/`#8EB69B`, tokeny w globals.css),
   light mode odwrócony. Logo i kolory NIE do zmiany.
 - **Fakty w portfolio**: statusy i liczby tylko z `projects.ts` / briefu — zero zmyślonych
