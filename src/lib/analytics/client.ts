@@ -404,7 +404,17 @@ export function readGa4Ids(measurementId: string): Promise<{
   session_id?: string;
 }> {
   return new Promise((resolve) => {
-    if (typeof window === "undefined" || typeof (window as unknown as { gtag?: GtagFn }).gtag !== "function") {
+    if (typeof window === "undefined") {
+      resolve({});
+      return;
+    }
+    // `window.gtag` is ALWAYS a function — layout.tsx defines the queueing stub
+    // inline, before the library loads — so checking it tells us nothing. The
+    // real library announces itself as google_tag_manager; without it (ad
+    // blocker, blocked domain, offline) the callbacks below would never fire and
+    // every visitor with a blocker would sit through the full timeout after
+    // pressing Send. Bail immediately instead.
+    if (!(window as unknown as { google_tag_manager?: unknown }).google_tag_manager) {
       resolve({});
       return;
     }
@@ -416,9 +426,10 @@ export function readGa4Ids(measurementId: string): Promise<{
       settled = true;
       resolve({ client_id: clientId, session_id: sessionId });
     };
-    // gtag('get') invokes the callback asynchronously and silently never calls
-    // it if the library failed to load — hence the timeout.
-    const timer = setTimeout(done, 1200);
+    // gtag('get') invokes the callback asynchronously. 500 ms is generous for a
+    // library that is already loaded, and this timeout sits between the visitor
+    // pressing Send and the request leaving — it is silence they can feel.
+    const timer = setTimeout(done, 500);
     let pending = 2;
     const settle = () => {
       if (--pending === 0) {

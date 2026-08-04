@@ -210,7 +210,11 @@ const SECTION_SELECTOR = "[data-section],section[id]";
  * rots the moment someone adds a section and forgets it, and a section people
  * never reach is exactly the thing we are trying to detect.
  */
-function initSectionViews(): () => void {
+function initSectionViews(getPath: () => string): () => void {
+  // Keyed by path + section, not section alone. The listener is installed once
+  // for the whole visit, so a bare name meant a section id that appears on two
+  // pages (#kontakt, #uslugi) reported on the first page and never again —
+  // despite the event being documented as once per section PER PAGE.
   const seen = new Set<string>();
   const timers = new Map<Element, number>();
 
@@ -218,7 +222,9 @@ function initSectionViews(): () => void {
     (entries) => {
       for (const entry of entries) {
         const name = sectionName(entry.target);
-        if (!name || seen.has(name)) continue;
+        if (!name) continue;
+        const key = `${getPath()}#${name}`;
+        if (seen.has(key)) continue;
 
         // A plain `threshold: 0.5` is a trap here: it means "half the ELEMENT",
         // so a 1900px section can never satisfy it inside a 760px viewport —
@@ -234,10 +240,10 @@ function initSectionViews(): () => void {
         if (enough) {
           if (timers.has(entry.target)) continue;
           const id = window.setTimeout(() => {
-            seen.add(name);
+            seen.add(key);
             timers.delete(entry.target);
             observer.unobserve(entry.target);
-            track("section_view", { section: name });
+            track("section_view", { section: name, page_path: getPath() });
           }, 1000);
           timers.set(entry.target, id);
         } else {
@@ -327,7 +333,7 @@ export function initEngagement(getPath: () => string): () => void {
     initClickQuality(),
     initExitIntent(),
     initEngagedTime(getPath),
-    initSectionViews(),
+    initSectionViews(getPath),
     initCopyContact(),
     initErrorCapture(),
   ];
