@@ -90,7 +90,7 @@ function loadClarity() {
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 import { track } from "@/lib/analytics/client";
 import { clearIdentity, persistPendingIdentity } from "@/lib/analytics/identity";
-import { clearAttribution } from "@/lib/analytics/attribution";
+import { clearAttribution, persistPendingAttribution } from "@/lib/analytics/attribution";
 
 export { CONSENT_COOKIE };
 
@@ -194,9 +194,11 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     // through; a rejection is intentionally not recorded, because recording it
     // would require the very storage the visitor just declined.
     if (categories.analytics) {
-      // Identity was in memory only until now; promote it so the visit that led
-      // to the decision is not split from everything that follows it.
+      // Identity and attribution were in memory only until now; promote both so
+      // the visit that led to the decision is not split from what follows, and
+      // the campaign that brought the visitor here survives the next page load.
       persistPendingIdentity();
+      persistPendingAttribution();
       track("consent_update", {
         analytics: categories.analytics,
         marketing: categories.marketing,

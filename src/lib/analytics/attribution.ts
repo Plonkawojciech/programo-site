@@ -213,6 +213,27 @@ function write(a: Attribution): void {
   }
 }
 
+/**
+ * Writes the in-memory attribution to storage. Called the moment analytics
+ * consent is granted.
+ *
+ * Without this, a visitor who lands from an ad and accepts the banner keeps the
+ * gclid only for the life of that page: the form on the same page still carries
+ * it (reads fall back to memory), but the next page load starts blank and a
+ * conversion two clicks later reports as "direct". Nothing else re-writes
+ * attribution until the next external touch, which for that visitor never comes.
+ */
+export function persistPendingAttribution(): void {
+  if (typeof window === "undefined" || !memAttribution || !canPersist()) return;
+  try {
+    if (!window.localStorage.getItem(STORAGE_KEY)) {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(memAttribution));
+    }
+  } catch {
+    /* private mode / quota */
+  }
+}
+
 /** Wipes stored attribution. Called when analytics consent is withdrawn. */
 export function clearAttribution(): void {
   memAttribution = null;
