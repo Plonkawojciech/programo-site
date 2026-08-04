@@ -1,9 +1,11 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { easeEntry, durationMedium } from "@/lib/motion";
+import { track } from "@/lib/analytics/client";
 
 /**
  * 6 questions, ordered by buyer fear sequence:
@@ -36,6 +38,9 @@ const faqs: { q: TranslationKey; a: TranslationKey }[] = [
 export default function Faq() {
   const { t } = useI18n();
   const prefersReduced = useReducedMotion();
+  // Sequence, not just count: the first objection someone opens matters more
+  // than the fifth.
+  const faqOpenOrder = useRef(0);
 
   const reveal = prefersReduced
     ? {}
@@ -69,6 +74,18 @@ export default function Faq() {
                   key={item.q}
                   className="group border-t border-outline-variant last:border-b"
                   {...(i === 0 ? { open: true } : {})}
+                  // The order in which people open these is a list of their
+                  // objections, ranked by weight. If most visitors open "ile to
+                  // kosztuje" first, that answer belongs higher on the page, not
+                  // folded into an accordion.
+                  onToggle={(e) => {
+                    if (!(e.currentTarget as HTMLDetailsElement).open) return;
+                    track("faq_open", {
+                      faq_position: i + 1,
+                      faq_question: t(item.q).slice(0, 80),
+                      open_order: ++faqOpenOrder.current,
+                    });
+                  }}
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
                     <span className="font-headline text-h4 font-bold tracking-tight text-on-surface">

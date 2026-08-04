@@ -9,6 +9,39 @@ import { initEngagement } from "@/lib/analytics/engagement";
 const SCROLL_THRESHOLDS = [25, 50, 75, 90, 100] as const;
 
 /**
+ * Destinations that mean "this visitor is moving toward contacting us".
+ * Everything here is a step in the funnel, not ordinary navigation.
+ */
+const CONVERSION_HREFS = [
+  "/kontakt",
+  "#kontakt",
+  "#kontakt-main",
+  "/cennik",
+  "#wycena",
+  "#formularz",
+];
+
+function hrefOf(el: Element): string {
+  return el.getAttribute("href") || "";
+}
+
+function isConversionTarget(el: Element): boolean {
+  const href = hrefOf(el);
+  if (!href) return false;
+  // tel:/mailto: are reported as contact_click, which is a stronger signal —
+  // counting them twice would inflate the CTA numbers.
+  if (href.startsWith("tel:") || href.startsWith("mailto:")) return false;
+  return CONVERSION_HREFS.some((h) => href === h || href.endsWith(h) || href.startsWith(h));
+}
+
+/** Short, stable label for where a CTA points. */
+function destinationOf(el: Element): string {
+  const href = hrefOf(el);
+  if (!href) return el.getAttribute("data-cta") ?? "unknown";
+  return href.split("?")[0].slice(0, 60);
+}
+
+/**
  * Mounted once globally (in Providers). Owns every site-wide listener:
  *
  *  - captures ad/AI attribution on landing and on each route change
@@ -39,13 +72,24 @@ export default function AnalyticsTracker() {
       const target = e.target as HTMLElement | null;
       const anchor = target?.closest?.("a");
 
-      // CTA clicks are opt-in via data-cta, so a CTA keeps its identity even
-      // when its label changes: <a data-cta="hero-primary">.
-      const cta = target?.closest?.("[data-cta]");
+      // A CTA is recognised by where it LEADS, not by an attribute someone has
+      // to remember to add. An explicit data-cta still wins when a specific
+      // button deserves a stable name of its own.
+      //
+      // This matters because the question a CTA event answers is "which
+      // placement earns its space" — and a placement that was added without
+      // tagging is precisely the one nobody is measuring.
+      const explicit = target?.closest?.("[data-cta]");
+      const cta = explicit ?? (anchor && isConversionTarget(anchor) ? anchor : null);
       if (cta) {
+        const section = cta.closest("[data-section],section[id]");
         track("cta_click", {
-          cta: cta.getAttribute("data-cta") ?? undefined,
+          cta:
+            explicit?.getAttribute("data-cta") ??
+            `${section?.getAttribute("data-section") ?? section?.getAttribute("id") ?? "page"}:${destinationOf(cta)}`,
           page_path: pathRef.current,
+          destination: destinationOf(cta),
+          section: section?.getAttribute("data-section") ?? section?.getAttribute("id") ?? undefined,
           label: (cta.textContent || "").trim().slice(0, 60) || undefined,
         });
       }

@@ -191,10 +191,24 @@ function initEngagedTime(getPath: () => string): () => void {
 
 // --------------------------------------------------------------- section views
 
+/** Section identity: an explicit data-section wins, otherwise the element id. */
+function sectionName(el: Element): string | null {
+  return el.getAttribute("data-section") || el.getAttribute("id") || null;
+}
+
+/** Everything worth treating as a named section of a page. */
+const SECTION_SELECTOR = "[data-section],section[id]";
+
 /**
- * Fires once per section per page for any element carrying `data-section`,
- * after it has been at least half visible for a full second. The dwell filter
- * keeps fast scrolls from marking the whole page as "seen".
+ * Fires once per section per page, after it has been at least half visible for
+ * a full second. The dwell filter keeps fast scrolls from marking the whole
+ * page as "seen".
+ *
+ * Sections are identified by an explicit `data-section` OR by the `id` the
+ * markup already carries (#uslugi, #realizacje, #jak-pracujemy…). Reusing ids
+ * is deliberate: an attribute that has to be sprinkled across every component
+ * rots the moment someone adds a section and forgets it, and a section people
+ * never reach is exactly the thing we are trying to detect.
  */
 function initSectionViews(): () => void {
   const seen = new Set<string>();
@@ -203,7 +217,7 @@ function initSectionViews(): () => void {
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
-        const name = entry.target.getAttribute("data-section");
+        const name = sectionName(entry.target);
         if (!name || seen.has(name)) continue;
         if (entry.isIntersecting) {
           const id = window.setTimeout(() => {
@@ -224,7 +238,7 @@ function initSectionViews(): () => void {
     { threshold: 0.5 },
   );
 
-  for (const el of document.querySelectorAll("[data-section]")) observer.observe(el);
+  for (const el of document.querySelectorAll(SECTION_SELECTOR)) observer.observe(el);
 
   // Sections mount late (framer-motion reveals, route transitions) — watch for
   // new ones instead of only scanning once.
@@ -232,8 +246,8 @@ function initSectionViews(): () => void {
     for (const record of records) {
       for (const node of record.addedNodes) {
         if (!(node instanceof Element)) continue;
-        if (node.hasAttribute?.("data-section")) observer.observe(node);
-        node.querySelectorAll?.("[data-section]").forEach((el) => observer.observe(el));
+        if (node.matches?.(SECTION_SELECTOR)) observer.observe(node);
+        node.querySelectorAll?.(SECTION_SELECTOR).forEach((el) => observer.observe(el));
       }
     }
   });

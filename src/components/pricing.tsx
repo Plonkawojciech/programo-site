@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
 import Reveal from "@/components/ui/reveal";
 import CtaButton from "@/components/ui/cta-button";
+import { track } from "@/lib/analytics/client";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
@@ -36,8 +38,38 @@ const factors: Factor[] = [
 export default function Pricing() {
   const { t } = useI18n();
 
+  // Someone reading the pricing is the strongest pre-lead signal a B2B services
+  // site has — stronger than any scroll depth. Fires once, after a real dwell,
+  // and mirrors to Meta as ViewContent so it can seed a remarketing audience.
+  const ref = useRef<HTMLElement>(null);
+  const fired = useRef(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let timer = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !fired.current) {
+          timer = window.setTimeout(() => {
+            fired.current = true;
+            observer.disconnect();
+            track("pricing_view", { page_path: window.location.pathname });
+          }, 1500);
+        } else {
+          window.clearTimeout(timer);
+        }
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(el);
+    return () => {
+      window.clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, []);
+
   return (
-    <section className="relative bg-surface py-24 md:py-32 lg:py-40">
+    <section ref={ref} className="relative bg-surface py-24 md:py-32 lg:py-40">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
         <Reveal className="mb-16 max-w-3xl md:mb-24">
           <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">

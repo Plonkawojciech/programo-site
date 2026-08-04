@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useClientValue } from "@/lib/use-client-value";
+import { track } from "@/lib/analytics/client";
 
 type Theme = "dark" | "light";
 
@@ -32,6 +33,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const next = theme === "light" ? "dark" : "light";
     setOverride(next);
     localStorage.setItem("programo-theme", next);
+    // Low stakes on its own, but it answers "which theme should the design
+    // treat as the default" with data instead of taste.
+    track("theme_switch", { from_theme: theme, to_theme: next });
   };
 
   return (

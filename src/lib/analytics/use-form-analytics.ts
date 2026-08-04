@@ -38,6 +38,7 @@ export function useFormAnalytics(formId: string): FormAnalytics {
   const startedAt = useRef(0);
   const focusedAt = useRef<Record<string, number>>({});
   const completed = useRef<Set<string>>(new Set());
+  const skipped = useRef<Set<string>>(new Set());
   const lastField = useRef<string>("");
   const viewed = useRef(false);
   const reportedErrors = useRef<Set<string>>(new Set());
@@ -115,10 +116,26 @@ export function useFormAnalytics(formId: string): FormAnalytics {
   const onFieldBlur = useCallback(
     (field: string, value: string) => {
       const trimmed = (value ?? "").trim();
-      if (!trimmed) return; // left empty — that is an abandonment signal, not a completion
+      const focused = focusedAt.current[field];
+
+      if (!trimmed) {
+        // Focused, left empty, moved on. Reported once per field: a field people
+        // look at and decline to answer is either badly labelled or genuinely
+        // unwanted — and it is invisible in a submit-only funnel. Only counts if
+        // they actually dwelt there; a tab passing through is not a decision.
+        if (skipped.current.has(field) || !focused) return;
+        if (Date.now() - focused < 400) return;
+        skipped.current.add(field);
+        track("form_field_skip", {
+          form_id: formId,
+          field,
+          seconds: Math.round((Date.now() - focused) / 1000),
+        });
+        return;
+      }
+
       if (completed.current.has(field)) return;
       completed.current.add(field);
-      const focused = focusedAt.current[field];
       track("form_field_complete", {
         form_id: formId,
         field,
