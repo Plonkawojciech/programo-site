@@ -11,7 +11,7 @@ Strona firmowa Programo s.j. (Wojciech Płonka + Bartosz Kolaj, Poznań) — lan
 - Tailwind CSS v4, framer-motion v12 (bez smooth-scrolla — `lenis` usunięty 2026-08-04 jako martwy kod)
 - Dwujęzyczność PL/EN: własny kontekst i18n w `src/lib/i18n/` (słowniki per domena w `dictionaries/`)
 - Fonty: Newsreader (nagłówki) + Plus Jakarta Sans (body) przez next/font
-- Leady: `/api/contact` → Resend + Redis CRM (`/crm`, token-gated) + webhook crm.programo.pl
+- Leady: `/api/contact` → Telegram + Redis CRM (`/crm`, token-gated) + webhook crm.programo.pl
 
 ## Struktura
 

@@ -76,9 +76,17 @@ export const metadata: Metadata = {
   // content — see .env.example for where to get each one.
   verification: {
     google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
-    other: process.env.NEXT_PUBLIC_BING_VERIFICATION
-      ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION }
-      : {},
+    other: {
+      // Meta domain verification. Hardcoded rather than env-gated because it is
+      // inherently public (it ships in the page HTML — that IS the proof) and
+      // because removing it silently un-verifies the domain, which quietly
+      // breaks Aggregated Event Measurement for iOS traffic. Business portfolio
+      // "Programo" (1518872866297785).
+      "facebook-domain-verification": "9t377lv7alcsi1thpsg4phtnkrdzjv",
+      ...(process.env.NEXT_PUBLIC_BING_VERIFICATION
+        ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION }
+        : {}),
+    },
   },
 };
 

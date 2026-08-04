@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse, after } from "next/server";
-import { Resend } from "resend";
 import { storeLead } from "@/lib/leads";
 import { contactSchema, isRateLimited, sanitize } from "@/lib/contact-schema";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
@@ -46,15 +45,13 @@ export async function POST(request: NextRequest) {
   // A phone-only lead legitimately has no name, so the notifications need a
   // label instead of a dangling "od ". The CRM keeps the field genuinely empty.
   const displayName = name?.trim() || "(bez nazwiska)";
+  // HTML-escaped copies, kept only for the fields that still reach a rendered
+  // surface. The rest were escaped solely for the e-mail body that Resend used
+  // to send; Telegram escapes for MarkdownV2 on its own and the CRM stores raw.
   const safeName = sanitize(displayName);
   const safeEmail = email ? sanitize(email) : "";
-  const safeMessage = message ? sanitize(message) : "";
   const safeSubject = sanitize(subject);
-  const safePhone = phone ? sanitize(phone) : "";
-  const safeProjectType = projectType ? sanitize(projectType) : "";
-  const safeBudget = budget ? sanitize(budget) : "";
   const consentAt = consentTimestamp || new Date().toISOString();
-  const safeConsentAt = sanitize(consentAt);
 
   // Lead source (Google Ads / UTM) - which keyword/campaign produced this lead
   const {
@@ -178,44 +175,15 @@ export async function POST(request: NextRequest) {
     console.log("[DEV] No CRM_WEBHOOK_SECRET - skipping CRM forward.");
   }
 
-  const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
-
-  // Send email + Telegram in parallel; success if at least one channel delivers
+  // Notification channels. Telegram is the live one; the CRM webhook and the
+  // Redis store above already persist the lead independently, so a Telegram
+  // outage loses the ping, never the lead.
+  //
+  // Resend was removed 2026-08-04: it had never been configured in production
+  // (no RESEND_API_KEY, no EMAIL_TO), so the branch was dead code pretending to
+  // be a delivery channel — and a dead channel in a `some(ok)` check is exactly
+  // the kind of thing that reads as redundancy while providing none.
   const tasks: Promise<{ channel: string; ok: boolean; error?: string }>[] = [];
-
-  const resendApiKey = process.env.RESEND_API_KEY;
-  if (resendApiKey) {
-    tasks.push(
-      (async () => {
-        try {
-          const resend = new Resend(resendApiKey);
-          await resend.emails.send({
-            from: "Programo <noreply@programo.pl>",
-            to: emailTo,
-            subject: `[Programo] ${safeSubject} - od ${safeName}`,
-            html: `
-              <h2>Nowa wiadomość z formularza kontaktowego</h2>
-              <p><strong>Imię:</strong> ${safeName}</p>
-              ${safeEmail ? `<p><strong>Email:</strong> ${safeEmail}</p>` : ""}
-              ${safePhone ? `<p><strong>Telefon:</strong> ${safePhone}</p>` : ""}
-              <p><strong>Temat:</strong> ${safeSubject}</p>
-              ${safeProjectType ? `<p><strong>Rodzaj projektu:</strong> ${safeProjectType}</p>` : ""}
-              ${safeBudget ? `<p><strong>Budżet:</strong> ${safeBudget}</p>` : ""}
-              ${safeMessage ? `<p><strong>Wiadomość:</strong></p><p>${safeMessage.replace(/\n/g, "<br>")}</p>` : ""}
-              <hr>
-              ${sources.length ? `<p style="color:#444;font-size:13px;"><strong>Źródło leada:</strong><br>${sources.map(([k, v]) => `${k}: ${sanitize(v)}`).join("<br>")}</p>` : ""}
-              <p style="color:#666;font-size:12px;">Zgoda RODO zaakceptowana: ${safeConsentAt}</p>
-            `,
-          });
-          return { channel: "resend", ok: true };
-        } catch (e) {
-          return { channel: "resend", ok: false, error: String(e) };
-        }
-      })()
-    );
-  } else {
-    console.log("[DEV] No RESEND_API_KEY - skipping email.");
-  }
 
   const tgToken = process.env.TELEGRAM_BOT_TOKEN;
   const tgChatId = process.env.TELEGRAM_CHAT_ID;
