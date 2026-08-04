@@ -28,9 +28,14 @@ export const SITE_PAGES: SitePage[] = [
     summary: "aplikacje webowe, systemy SaaS, aplikacje mobilne, integracje AI",
   },
   {
+    // Described by what the page actually contains. It used to promise
+    // "orientacyjne widełki cenowe" while carrying zero figures — an assistant
+    // that fetched it after that summary would find nothing to quote, and a
+    // promise unmatched by content is the "no invented facts" rule running
+    // backwards.
     path: "/cennik",
-    label: "Cennik",
-    summary: "orientacyjne widełki cenowe i co wpływa na koszt projektu",
+    label: "Wycena",
+    summary: "jak wygląda proces wyceny i co wpływa na koszt projektu",
   },
   {
     path: "/software-house-poznan",
@@ -56,7 +61,7 @@ export const SITE_PAGES: SitePage[] = [
   {
     path: "/ile-kosztuje-aplikacji",
     label: "Ile kosztuje aplikacja",
-    summary: "orientacyjne koszty aplikacji i co je zmienia",
+    summary: "co podbija i co obniża koszt aplikacji oraz od czego zależy termin",
   },
   { path: "/projekty", label: "Realizacje", summary: "portfolio — produkty własne i prace dla klientów" },
   { path: "/o-nas", label: "O nas", summary: "kto stoi za Programo i jak pracujemy" },

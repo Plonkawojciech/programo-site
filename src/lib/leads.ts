@@ -64,19 +64,25 @@ export function isLeadStoreConfigured(): boolean {
 }
 
 /**
- * Persist a lead. Best-effort: swallows all errors, never throws.
- * No-ops if Redis is not configured.
+ * Persist a lead. Never throws.
+ *
+ * Returns whether the lead is now durably stored. The caller needs that answer:
+ * a submission that reached Redis is NOT a failed submission just because a
+ * notification channel was down, and returning an error for one would tell the
+ * visitor their message was lost while it sits safely in the CRM.
  */
-export async function storeLead(lead: Lead): Promise<void> {
+export async function storeLead(lead: Lead): Promise<boolean> {
   const redis = getRedis();
-  if (!redis) return;
+  if (!redis) return false;
 
   try {
     await redis.lpush(LEADS_KEY, JSON.stringify(lead));
     await redis.ltrim(LEADS_KEY, 0, MAX_LEADS - 1);
+    return true;
   } catch (e) {
     // Best-effort — never let lead storage affect the request.
     console.error("[leads] storeLead failed:", e);
+    return false;
   }
 }
 

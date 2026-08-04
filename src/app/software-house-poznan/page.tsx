@@ -187,8 +187,11 @@ export default function SoftwareHousePoznanPage() {
               >
                 Bezpłatna wycena
               </a>
+              {/* /projekty, not /: a button labelled "portfolio" that lands on
+                  the homepage wastes the click, and this was the page's only
+                  outbound topical link. */}
               <Link
-                href="/"
+                href="/projekty"
                 className="rounded-full border border-current px-6 py-3 text-sm font-medium opacity-80 transition hover:opacity-100"
               >
                 Zobacz portfolio

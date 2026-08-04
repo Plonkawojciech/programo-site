@@ -109,8 +109,13 @@ export async function POST(request: NextRequest) {
     });
   });
 
+  // Whether the submission is durably recorded somewhere. Notifications are a
+  // convenience on top of this; the response status must follow persistence,
+  // not the ping.
+  let persisted = false;
+
   try {
-    await storeLead({
+    persisted = await storeLead({
       id: leadId,
       ts: requestTs,
       name: name || "",
@@ -165,7 +170,9 @@ export async function POST(request: NextRequest) {
         }),
         signal: AbortSignal.timeout(5000),
       });
-      if (!res.ok) {
+      if (res.ok) {
+        persisted = true;
+      } else {
         console.error(`[contact] CRM webhook failed: HTTP ${res.status}`);
       }
     } catch (e) {
@@ -246,15 +253,27 @@ export async function POST(request: NextRequest) {
   }
 
   const results = await Promise.all(tasks);
-  const anyOk = results.some((r) => r.ok);
+  const anyNotified = results.some((r) => r.ok);
   results
     .filter((r) => !r.ok)
     .forEach((r) => console.error(`[contact] ${r.channel} failed:`, r.error));
 
-  if (!anyOk) {
+  // The status follows PERSISTENCE, not notification. Previously a Telegram
+  // outage returned 500 for a lead already sitting in Redis and in the CRM: the
+  // visitor was told their message failed, and the client returns before
+  // trackLead(), so the Google Ads and Meta conversions never fired either. One
+  // dead channel cost the lead twice — once in the inbox, once in the bidding
+  // signal — while the lead itself was safe the whole time.
+  if (!persisted && !anyNotified) {
     return NextResponse.json(
       { error: "Failed to deliver notification" },
-      { status: 500 }
+      { status: 500 },
+    );
+  }
+
+  if (!anyNotified) {
+    console.error(
+      `[contact] lead ${leadId} stored but NO notification channel delivered — check Telegram`,
     );
   }
 
