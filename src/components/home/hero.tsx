@@ -119,8 +119,13 @@ export default function HomeHero() {
   }
 
   return (
-    <section className="relative bg-surface pt-28 pb-section-major md:pt-36 lg:pt-40">
-      <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
+    <section className="relative isolate overflow-hidden bg-surface pt-28 pb-section-major md:pt-36 lg:pt-40">
+      {/* The empty studio set the product shot below was photographed in.
+          Decorative only — see .hero-backdrop in globals.css for why it is a
+          CSS background and not an <img>. `isolate` keeps its stacking context
+          local so it can never rise above the header or the form. */}
+      <div aria-hidden="true" className="hero-backdrop" />
+      <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         {/* ── Text + form ── */}
         {/* 4xl, not 3xl: at the display size the headline breaks to four lines
             below ~890px and to three above it. */}

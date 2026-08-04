@@ -520,3 +520,63 @@ body {
   }
 }
 
+
+/* --------------------------------------------------------------------------
+   Hero backdrop — the empty studio set the product shot below was lit in.
+   Generated (GPT Image via Codex) as pure environment: plaster, light and
+   shadow, no text, no UI, no devices. That restriction is deliberate — an
+   AI-drawn interface would be a fabricated claim about the product, and the
+   real screenshots directly beneath it are the honest version of that.
+
+   Purely decorative: aria-hidden, pointer-events off, and a CSS background
+   rather than an <img> so it can never become the LCP element and push the
+   headline out of the way.
+   -------------------------------------------------------------------------- */
+.hero-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/hero-backdrop.webp");
+  background-size: cover;
+  background-position: 70% 20%;
+  /* Fades toward the headline and the section edges so the plaster reads as
+     depth behind the type, never as a photo competing with it. */
+  -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.35) 28%,
+      #000 62%
+    ),
+    linear-gradient(to bottom, #000 45%, transparent 92%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.35) 28%,
+      #000 62%
+    ),
+    linear-gradient(to bottom, #000 45%, transparent 92%);
+  mask-composite: intersect;
+  opacity: 0.5;
+}
+
+/* The photo is warm beige; the dark theme is deep green. At anything above a
+   whisper the two fight, so dark mode keeps only the light-and-shadow gesture
+   and lets the green win. */
+[data-theme="dark"] .hero-backdrop {
+  opacity: 0.1;
+}
+
+@media (max-width: 767px) {
+  /* On phones the headline occupies the full width, so there is no quiet side
+     left for the plaster to sit on. */
+  .hero-backdrop {
+    opacity: 0.22;
+    background-position: 78% 12%;
+  }
+
+  [data-theme="dark"] .hero-backdrop {
+    opacity: 0.07;
+  }
+}
