@@ -11,13 +11,35 @@ const KNOWN_EVENT_NAMES: Set<string> = new Set(
 
 const paramValue = z.union([z.string().max(500), z.number(), z.boolean(), z.null()]);
 
+/**
+ * Paths are used as Redis hash field names in the daily rollups, so an
+ * unconstrained string is an unbounded-growth vector: a script can mint a
+ * million distinct 500-character paths and inflate the day's hash without ever
+ * tripping the event-name whitelist. Real routes are short and boring.
+ */
+const pathSchema = z
+  .string()
+  .max(120)
+  .regex(/^\/[a-zA-Z0-9\-_/]*$/, "path must be a plain route");
+
+/**
+ * Client clocks lie, and `ts` orders the session list in the dashboard — an
+ * unbounded value pins a fabricated session to the top forever. Anything more
+ * than a day out is not a clock skew, it is noise.
+ */
+const DAY_MS = 24 * 60 * 60 * 1000;
+const tsSchema = z
+  .number()
+  .int()
+  .refine((t) => Math.abs(t - Date.now()) <= DAY_MS, "timestamp out of range");
+
 const eventSchema = z.object({
   event: z.string().max(40).refine((n) => KNOWN_EVENT_NAMES.has(n), {
     message: "unknown event name",
   }),
   event_id: z.string().max(100),
-  ts: z.number().int().min(0),
-  path: z.string().max(500),
+  ts: tsSchema,
+  path: pathSchema,
   params: z.record(z.string().max(60), paramValue).optional(),
 });
 
@@ -36,33 +58,6 @@ export const collectSchema = z.object({
 });
 
 export type CollectPayload = z.infer<typeof collectSchema>;
-
-// ---------------------------------------------------------------- rate limit
-
-const hits = new Map<string, number[]>();
-/** Generous: a genuine visitor flushes every few seconds across a long visit. */
-const LIMIT = 120;
-const WINDOW_MS = 5 * 60 * 1000;
-
-export function isCollectRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) || []).filter((t) => now - t < WINDOW_MS);
-  if (recent.length >= LIMIT) {
-    hits.set(ip, recent);
-    return true;
-  }
-  recent.push(now);
-  hits.set(ip, recent);
-
-  // The map is per-instance and short-lived on serverless, but a long-running
-  // instance should not grow it without bound.
-  if (hits.size > 5000) {
-    for (const [key, times] of hits) {
-      if (times.every((t) => now - t >= WINDOW_MS)) hits.delete(key);
-    }
-  }
-  return false;
-}
 
 // ------------------------------------------------------------- UA inspection
 

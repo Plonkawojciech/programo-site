@@ -142,12 +142,23 @@ async function buildUserData(u: MetaUserInput): Promise<Record<string, unknown>>
 
 // -------------------------------------------------------------------- sending
 
+/**
+ * The dataset id is the same number the browser Pixel uses, so it is normally
+ * only configured as NEXT_PUBLIC_META_DATASET_ID. Reading a server-only
+ * META_DATASET_ID *without* this fallback meant CAPI silently reported
+ * "not configured" forever while the Pixel worked fine — the failure mode being
+ * that half the conversion signal is missing and nothing says so.
+ */
+function metaDatasetId(): string | undefined {
+  return process.env.META_DATASET_ID || process.env.NEXT_PUBLIC_META_DATASET_ID;
+}
+
 export function isMetaCapiConfigured(): boolean {
-  return Boolean(process.env.META_DATASET_ID && process.env.META_CAPI_ACCESS_TOKEN);
+  return Boolean(metaDatasetId() && process.env.META_CAPI_ACCESS_TOKEN);
 }
 
 export async function sendMetaEvent(input: MetaEventInput): Promise<CapiResult> {
-  const datasetId = process.env.META_DATASET_ID;
+  const datasetId = metaDatasetId();
   const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
   // Only ever set in dev/staging. Meta requires it for events to show up in
   // Test Events, and requires it ABSENT on production payloads.

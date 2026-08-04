@@ -64,10 +64,11 @@ describe("event taxonomy", () => {
 });
 
 describe("/api/collect contract", () => {
+  const now = Date.now();
   const valid = {
     visitor_id: "v-1",
     session_id: "s-1",
-    events: [{ event: "scroll_depth", event_id: "e-1", ts: 1, path: "/", params: { percent: 50 } }],
+    events: [{ event: "scroll_depth", event_id: "e-1", ts: now, path: "/", params: { percent: 50 } }],
   };
 
   it("accepts a well-formed batch", () => {
@@ -77,9 +78,39 @@ describe("/api/collect contract", () => {
   it("rejects event names outside the taxonomy", () => {
     const res = collectSchema.safeParse({
       ...valid,
-      events: [{ event: "definitely_not_real", event_id: "e", ts: 1, path: "/" }],
+      events: [{ event: "definitely_not_real", event_id: "e", ts: now, path: "/" }],
     });
     expect(res.success).toBe(false);
+  });
+
+  it("rejects a path that is not a plain route", () => {
+    // Paths become Redis hash fields in the daily rollups, so a free-form
+    // string is an unbounded-growth vector, not a cosmetic issue.
+    for (const path of ["/x?" + "a".repeat(400), "//evil.com", "/<script>", "not-a-path", "/" + "a".repeat(200)]) {
+      const res = collectSchema.safeParse({
+        ...valid,
+        events: [{ event: "scroll_depth", event_id: "e", ts: now, path }],
+      });
+      expect(res.success, `should reject ${path.slice(0, 30)}`).toBe(false);
+    }
+    expect(
+      collectSchema.safeParse({
+        ...valid,
+        events: [{ event: "scroll_depth", event_id: "e", ts: now, path: "/projects/estalo" }],
+      }).success,
+    ).toBe(true);
+  });
+
+  it("rejects timestamps that are not from roughly now", () => {
+    // ts orders the dashboard session list; unbounded values pin a fabricated
+    // session to the top forever.
+    for (const ts of [0, 1, 99999999999999, now - 5 * 86400_000]) {
+      const res = collectSchema.safeParse({
+        ...valid,
+        events: [{ event: "scroll_depth", event_id: "e", ts, path: "/" }],
+      });
+      expect(res.success, `should reject ts=${ts}`).toBe(false);
+    }
   });
 
   it("rejects an empty batch and caps an oversized one", () => {
@@ -87,7 +118,7 @@ describe("/api/collect contract", () => {
     const many = Array.from({ length: 60 }, (_, i) => ({
       event: "scroll_depth",
       event_id: `e${i}`,
-      ts: 1,
+      ts: now,
       path: "/",
     }));
     expect(collectSchema.safeParse({ ...valid, events: many }).success).toBe(false);

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { collectSchema, isCollectRateLimited, parseUserAgent, isLikelyBot } from "@/lib/analytics/collect-schema";
-import { storeEventBatch, type StoredEvent } from "@/lib/analytics/store";
+import { collectSchema, parseUserAgent, isLikelyBot } from "@/lib/analytics/collect-schema";
+import { storeEventBatch, isRateLimited, type StoredEvent } from "@/lib/analytics/store";
 
 // First-party event sink.
 //
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
   const ua = request.headers.get("user-agent") || "";
   if (isLikelyBot(ua)) return ok();
-  if (isCollectRateLimited(clientIp(request))) return ok();
+  if (await isRateLimited(clientIp(request))) return ok();
 
   let body: unknown;
   try {

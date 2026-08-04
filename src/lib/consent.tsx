@@ -89,7 +89,8 @@ function loadClarity() {
 
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 import { track } from "@/lib/analytics/client";
-import { persistPendingIdentity } from "@/lib/analytics/identity";
+import { clearIdentity, persistPendingIdentity } from "@/lib/analytics/identity";
+import { clearAttribution } from "@/lib/analytics/attribution";
 
 export { CONSENT_COOKIE };
 
@@ -201,6 +202,16 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
         marketing: categories.marketing,
         action,
       });
+    } else {
+      // Withdrawal has to erase what was already written, not merely stop
+      // writing more. Meta's cookies are cleared separately in meta-pixel.tsx.
+      clearIdentity();
+      clearAttribution();
+      try {
+        sessionStorage.removeItem("programo-lead-fired");
+      } catch {
+        /* ignore */
+      }
     }
 
     // Clarity has no stop/teardown API. If analytics consent is being withdrawn while

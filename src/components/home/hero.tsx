@@ -3,7 +3,8 @@
 import { useState, useRef, useId } from "react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
-import { getAttribution, trackLead } from "@/lib/tracking";
+import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
+import { track } from "@/lib/analytics/client";
 
 type PhoneFormState = "idle" | "submitting" | "success" | "error";
 
@@ -86,20 +87,31 @@ export default function HomeHero() {
     };
 
     try {
+      // Without this the browser Pixel and the server-side CAPI hit generate
+      // DIFFERENT event ids for the same submission, so Meta counts the most
+      // prominent form on the site twice, and GA4's Measurement Protocol has no
+      // client id to attach the conversion to.
+      const conversion = await prepareLeadConversion();
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, form_id: "hero-phone", ...conversion }),
       });
 
       if (!res.ok) {
         setErrorMsg(t("home.hero.phoneErrorNetwork"));
         setFormState("error");
+        track("form_submit_failed", {
+          form_id: "hero-phone",
+          http_status: res.status,
+          message: "server",
+        });
         return;
       }
 
       setFormState("success");
-      trackLead({ form: "hero-phone", method: "phone" });
+      trackLead({ form: "hero-phone", method: "phone", phone, eventId: conversion.event_id });
     } catch {
       setErrorMsg(t("home.hero.phoneErrorNetwork"));
       setFormState("error");

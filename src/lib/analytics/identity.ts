@@ -159,6 +159,23 @@ export function isReturningVisitor(): boolean {
 }
 
 /**
+ * Erases every identifier we hold. Called when analytics consent is withdrawn:
+ * stopping new writes is not enough, the ones already made have to go too.
+ */
+export function clearIdentity(): void {
+  memVisitor = null;
+  memSession = null;
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(VISITOR_KEY);
+    window.localStorage.removeItem(`${VISITOR_KEY}-sessions`);
+    window.sessionStorage.removeItem(SESSION_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
  * Promotes in-memory identity into storage. Called the moment analytics consent
  * is granted, so the session the visitor is already in does not get split in two.
  */

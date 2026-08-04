@@ -10,9 +10,18 @@
 
 import { getRedis } from "@/lib/leads";
 
-/** Raw batches, newest first. ~500 batches ≈ several weeks at this traffic. */
+// Raw batches, newest first.
+//
+// Sizing note, because the first estimate here was wrong by an order of
+// magnitude: one real visit produces a batch every few seconds plus one on each
+// page hide and each phone click, so it is easily 10–20 batches — not one. At
+// 800 the buffer held roughly 40 sessions, which also meant an unauthenticated
+// caller could evict every genuine session with a short loop. The funnel maths
+// in query.ts reads `form_start` and `generate_lead` from different batches of
+// the same session, so eviction did not just lose data, it produced conversion
+// rates above 100%.
 const EVENTS_KEY = "programo:events";
-const MAX_BATCHES = 800;
+const MAX_BATCHES = 5000;
 
 /** Per-day rollups, so the dashboard never has to scan the raw list. */
 const DAILY_PREFIX = "programo:events:daily:";
@@ -83,6 +92,35 @@ export async function storeEventBatch(batch: EventBatch): Promise<void> {
     await pipe.exec();
   } catch (e) {
     console.error("[analytics] storeEventBatch failed:", e);
+  }
+}
+
+/**
+ * Rate limit shared across serverless instances.
+ *
+ * The in-process Map this replaces was decorative: every lambda instance kept
+ * its own counter and a cold start reset it to zero, so the effective limit was
+ * "120 × however many instances happen to be warm". A single Redis INCR with an
+ * expiry is one command and actually holds.
+ *
+ * Fails OPEN when Redis is unavailable — analytics must never become the reason
+ * a visitor's request errors.
+ */
+export async function isRateLimited(
+  ip: string,
+  limit = 200,
+  windowSeconds = 300,
+): Promise<boolean> {
+  const redis = getRedis();
+  if (!redis || ip === "unknown") return false;
+  try {
+    const bucket = Math.floor(Date.now() / (windowSeconds * 1000));
+    const key = `programo:rl:${bucket}:${ip}`;
+    const count = await redis.incr(key);
+    if (count === 1) await redis.expire(key, windowSeconds);
+    return count > limit;
+  } catch {
+    return false;
   }
 }
 

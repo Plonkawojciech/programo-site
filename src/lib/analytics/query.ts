@@ -196,6 +196,8 @@ export type FormFunnel = {
   failedSessions: number;
   viewToStartRate: number | null;
   startToSubmitRate: number | null;
+  /** Set when the event log was truncated mid-session, so rates understate. */
+  truncated?: boolean;
   /** 1 - (sessions with generate_lead / sessions with form_start). Sessions, not events. */
   abandonmentRate: number | null;
   fields: FieldFunnelRow[];
@@ -234,7 +236,21 @@ export function buildFormFunnel(sessions: SessionSummary[]): FormFunnel {
     }
   }
 
-  const rate = (num: number, den: number): number | null => (den > 0 ? num / den : null);
+  /**
+   * Clamped to [0,1] on purpose.
+   *
+   * Numerator and denominator come from different batches of the same session,
+   * and the raw event log is a capped ring buffer — so the batch carrying
+   * `form_start` can be evicted while the one carrying `generate_lead` survives.
+   * Unclamped, that produced a dashboard reading "300% conversion from form
+   * start" and "-200% abandonment", which is worse than a missing number: it
+   * looks like a finding.
+   */
+  const rate = (num: number, den: number): number | null =>
+    den > 0 ? Math.max(0, Math.min(1, num / den)) : null;
+
+  /** True when the log has been truncated mid-session and rates are suspect. */
+  const truncated = submitSessions > startSessions || startSessions > viewSessions;
 
   const fields: FieldFunnelRow[] = Array.from(byField.entries())
     .map(([field, row]) => {
@@ -260,7 +276,9 @@ export function buildFormFunnel(sessions: SessionSummary[]): FormFunnel {
     failedSessions,
     viewToStartRate: rate(startSessions, viewSessions),
     startToSubmitRate: rate(submitSessions, startSessions),
-    abandonmentRate: startSessions > 0 ? 1 - submitSessions / startSessions : null,
+    abandonmentRate:
+      startSessions > 0 ? Math.max(0, Math.min(1, 1 - submitSessions / startSessions)) : null,
+    truncated,
     fields,
   };
 }

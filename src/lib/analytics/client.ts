@@ -128,14 +128,22 @@ export function flush(useBeacon = false): void {
 function bindLifecycleListeners(): void {
   if (listenersBound || typeof window === "undefined") return;
   listenersBound = true;
-  const leave = () => {
+  // pagehide fires reliably on mobile Safari where beforeunload does not, and
+  // it is the only one of the two that means "this visit is over".
+  window.addEventListener("pagehide", () => {
     emitSessionSummary();
     flush(true);
-  };
-  // pagehide fires reliably on mobile Safari where beforeunload does not.
-  window.addEventListener("pagehide", leave);
+  });
+
+  // Hiding the tab is NOT leaving. Switching to another tab to check an e-mail
+  // and coming back is the most ordinary thing a visitor does; treating it as
+  // the end of the visit produced a session_summary containing the first page
+  // and nothing else — and, because it only ever emitted once, the rest of the
+  // visit (including the lead) never appeared in any summary at all.
+  // Flush what we have so nothing is lost if they never return, but keep the
+  // tally open.
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") leave();
+    if (document.visibilityState === "hidden") flush(true);
   });
 }
 
@@ -160,7 +168,24 @@ const stats = {
   contactClicked: false,
   frustration: 0,
   emitted: false,
+  /** Which session the tally belongs to — see resetSessionStats. */
+  sessionId: "",
 };
+
+/** Starts a fresh tally. */
+function resetSessionStats(sessionId = ""): void {
+  stats.pages = 0;
+  stats.maxScroll = 0;
+  stats.engagedSeconds = 0;
+  stats.ctaClicks = 0;
+  stats.sections = new Set();
+  stats.formStarted = false;
+  stats.formSubmitted = false;
+  stats.contactClicked = false;
+  stats.frustration = 0;
+  stats.emitted = false;
+  stats.sessionId = sessionId;
+}
 
 function updateStats(name: string, params: EventParams): void {
   switch (name) {
@@ -204,6 +229,15 @@ function emitSessionSummary(): void {
   if (stats.pages === 0 && stats.maxScroll === 0) return;
   stats.emitted = true;
   const s = getSession();
+  // A bfcache restore revives the page with the module still loaded. Reset so a
+  // second visit in the same tab gets its own row instead of silently vanishing.
+  window.addEventListener(
+    "pageshow",
+    (e) => {
+      if ((e as PageTransitionEvent).persisted) resetSessionStats();
+    },
+    { once: true },
+  );
   track("session_summary", {
     pages_viewed: Math.max(stats.pages, s.views),
     max_scroll: stats.maxScroll,
@@ -240,7 +274,20 @@ export function track(key: EventKey, params: EventParams = {}): string {
   const { analytics, marketing } = consent();
   const payload = clean({ ...params, event_id: eventId });
   // Everything funnels through here, so the visit tally comes for free.
-  if (def.name !== "session_summary") updateStats(def.name, payload);
+  if (def.name !== "session_summary") {
+    // A tab left open past the 30-minute idle boundary starts a NEW session.
+    // Close the previous tally and open a fresh one, or the second visit would
+    // inherit the first one's numbers — or, worse, be dropped as "already
+    // emitted".
+    const current = getSession().id;
+    if (stats.sessionId && stats.sessionId !== current) {
+      emitSessionSummary();
+      resetSessionStats(current);
+    } else if (!stats.sessionId) {
+      stats.sessionId = current;
+    }
+    updateStats(def.name, payload);
+  }
 
   // --- GA4 -----------------------------------------------------------------
   // Sent unconditionally: with consent denied, Consent Mode v2 sends a
@@ -273,10 +320,31 @@ export function track(key: EventKey, params: EventParams = {}): string {
   return eventId;
 }
 
-/** Marks a client-side route change. GA4 gets its own page_view from gtag. */
+/**
+ * Marks a page view, including client-side route changes.
+ *
+ * gtag('config') runs once in <head>, and the App Router never reloads the
+ * document — so GA4 was only ever told about the FIRST page of each visit and
+ * its "Pages and screens" report silently undercounted everything else. The
+ * explicit page_view below is what fixes that; `page_view_spa` remains our own
+ * first-party mirror.
+ */
+let lastGa4Path = "";
 export function trackPageView(path: string, title?: string): void {
   if (typeof window === "undefined") return;
   bumpSessionViews();
+
+  // Skip the very first call: gtag('config') already sent a page_view for the
+  // landing page, and sending a second one would double-count it.
+  if (lastGa4Path && lastGa4Path !== path) {
+    gtag("event", "page_view", {
+      page_path: path,
+      page_title: title,
+      page_location: window.location.href,
+    });
+  }
+  lastGa4Path = path;
+
   track("page_view_spa", { page_path: path, page_title: title });
 }
 

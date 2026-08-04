@@ -165,21 +165,62 @@ function safeParse(raw: string): Attribution {
   }
 }
 
+/**
+ * Attribution is a marketing identifier plus a history of where someone came
+ * from. Storing it is exactly the kind of access to a visitor's device that
+ * requires consent — "it is only a UUID" or "it is only a referrer" does not
+ * exempt it. So nothing is persisted until ANALYTICS consent is granted; before
+ * that it lives in memory for the life of the page and disappears with it.
+ *
+ * The campaign that brought someone here is still captured in memory, so a
+ * visitor who lands from an ad and accepts the banner keeps full attribution —
+ * we just never write it down before they say yes.
+ */
+let memAttribution: Attribution | null = null;
+
+function canPersist(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const raw = window.localStorage.getItem("programo-consent-v1");
+    if (!raw) return false;
+    const c = JSON.parse(raw) as { analytics?: boolean };
+    return !!c?.analytics;
+  } catch {
+    return false;
+  }
+}
+
 function read(): Attribution {
   if (typeof window === "undefined") return {};
+  if (!canPersist()) return memAttribution ?? {};
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? safeParse(raw) : {};
+    if (raw) return safeParse(raw);
+    // Consent just arrived — promote whatever we gathered in memory.
+    return memAttribution ?? {};
   } catch {
-    return {};
+    return memAttribution ?? {};
   }
 }
 
 function write(a: Attribution): void {
+  memAttribution = a;
+  if (!canPersist()) return;
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(a));
   } catch {
     /* private mode / quota */
+  }
+}
+
+/** Wipes stored attribution. Called when analytics consent is withdrawn. */
+export function clearAttribution(): void {
+  memAttribution = null;
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* ignore */
   }
 }
 
@@ -208,7 +249,18 @@ function currentTouch(): { touch: Touch; hasCampaign: boolean } {
 
   // An AI or organic referrer is a real acquisition touch even with no UTM on
   // the URL — that is exactly the GEO traffic we are trying to measure.
-  if (cls.class === "ai" || cls.class === "search" || cls.class === "social" || cls.class === "referral") {
+  //
+  // BUT: in the App Router, `document.referrer` does NOT change on client-side
+  // navigation. Without the guard below, the second page view of a visit looks
+  // like a brand-new organic touch from the same referrer, overwrites the stored
+  // campaign, and the gclid is gone — so a lead from a paid click gets filed as
+  // "direct" and never reconciles with Google Ads. Referrer alone only counts as
+  // a new touch when we have nothing at all yet.
+  const isFirstTouchOfVisit = !read().first;
+  if (
+    isFirstTouchOfVisit &&
+    (cls.class === "ai" || cls.class === "search" || cls.class === "social" || cls.class === "referral")
+  ) {
     hasCampaign = true;
   }
   return { touch, hasCampaign };
@@ -230,13 +282,28 @@ export function captureAttribution(): void {
     if (!hasCampaign && prev.first) return;
 
     const first = prev.first ?? touch;
+    // A visit, not a page view. captureAttribution runs on every mount and every
+    // route change, so an unconditional increment counted one visit five times.
+    // 30 minutes of inactivity is the same boundary GA4 uses for a session, so
+    // our "visits" and GA4's "sessions" stay comparable.
+    const lastTs = prev.last?.ts ? Date.parse(prev.last.ts) : 0;
+    const isNewVisit = !prev.first || !lastTs || Date.now() - lastTs > 30 * 60 * 1000;
+
     const next: Attribution = {
-      // legacy flat fields = last touch, matching the previous behaviour
+      // Flat fields = last touch, merged OVER the previous ones rather than
+      // replacing them. This is what keeps a gclid alive: a later touch that
+      // carries no click id must not erase the one that brought the visitor
+      // here, or a paid lead reports as organic. A genuinely new campaign still
+      // wins, because its own value is present in `touch`.
+      ...prev,
       ...touch,
       first,
       last: touch,
       first_seen: prev.first_seen || first.ts || touch.ts,
-      visits: (prev.visits ?? 0) + 1,
+      // Visits, not page views. captureAttribution runs on every mount and on
+      // every route change, so incrementing unconditionally counted a single
+      // visit five times.
+      visits: isNewVisit ? (prev.visits ?? 0) + 1 : (prev.visits ?? 1),
     };
     write(next);
   } catch {

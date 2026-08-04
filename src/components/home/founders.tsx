@@ -3,7 +3,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { easeEntry, durationMedium } from "@/lib/motion";
-import { trackContactClick } from "@/lib/tracking";
 
 const founders: {
   nameKey: TranslationKey;
@@ -110,9 +109,6 @@ export default function Founders() {
               {/* Right: direct phone */}
               <a
                 href={`tel:${f.phone}`}
-                onClick={() =>
-                  trackContactClick("phone", `tel:${f.phone}`)
-                }
                 className="inline-flex items-center gap-2 text-on-surface font-headline text-lg font-medium transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
               >
                 <svg
@@ -147,9 +143,6 @@ export default function Founders() {
         >
           <a
             href="mailto:biuro@programo.pl"
-            onClick={() =>
-              trackContactClick("email", "mailto:biuro@programo.pl")
-            }
             className="text-on-surface font-medium transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 rounded"
           >
             biuro@programo.pl
