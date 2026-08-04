@@ -1,7 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { Resend } from "resend";
 import { storeLead } from "@/lib/leads";
 import { contactSchema, isRateLimited, sanitize } from "@/lib/contact-schema";
+import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
+import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
+
+/**
+ * Estimated value of one lead, in PLN. A Smart Bidding / value-optimisation
+ * signal, not a reported statistic. Mirrors LEAD_VALUE_PLN on the client so the
+ * browser and server halves of the same conversion never disagree.
+ */
+const LEAD_VALUE_PLN = 500;
 
 export async function POST(request: NextRequest) {
   const ip =
@@ -71,9 +80,41 @@ export async function POST(request: NextRequest) {
   // throws, but wrap defensively so a store failure can never affect the
   // contact email/Telegram flow or the response.
   const requestTs = new Date().toISOString();
+  const leadId = crypto.randomUUID();
+
+  // Server-side conversion signal (Meta CAPI + GA4 Measurement Protocol),
+  // dispatched AFTER the response so the visitor never waits on a third party.
+  // Consent is verified inside, from the cookie — never from the request body,
+  // which is only a claim by the client. Fires only once the payload has passed
+  // validation, so form spam can never inflate the conversion count.
+  after(async () => {
+    await dispatchLeadConversions({
+      consentCookie: request.cookies.get(CONSENT_COOKIE)?.value,
+      eventId: result.data.event_id,
+      leadId,
+      formId: result.data.form_id,
+      leadValuePln: LEAD_VALUE_PLN,
+      email: email || undefined,
+      phone: phone || undefined,
+      fullName: name || undefined,
+      pageUrl: result.data.page_url,
+      visitorId: result.data.visitor_id,
+      // Prefer the cookies the browser actually sent; fall back to what the
+      // client derived (it can rebuild fbc from an fbclid the pixel missed).
+      fbp: request.cookies.get("_fbp")?.value ?? result.data.fbp,
+      fbc: request.cookies.get("_fbc")?.value ?? result.data.fbc,
+      gaClientId: result.data.ga_client_id,
+      gaSessionId: result.data.ga_session_id,
+      clientIp: ip !== "unknown" ? ip : undefined,
+      userAgent: request.headers.get("user-agent") ?? undefined,
+      leadSource: result.data.utm_source || (result.data.gclid ? "google_ads" : undefined),
+      channel: result.data.referrer_class,
+    });
+  });
+
   try {
     await storeLead({
-      id: crypto.randomUUID(),
+      id: leadId,
       ts: requestTs,
       name: name || "",
       email: email || "",

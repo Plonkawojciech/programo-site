@@ -87,8 +87,9 @@ function loadClarity() {
   })(window, document, "clarity", "script", CLARITY_ID);
 }
 
-/** Name of the cookie mirroring the consent state for the server. */
-export const CONSENT_COOKIE = "programo-consent";
+import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
+
+export { CONSENT_COOKIE };
 
 /**
  * Mirrors the consent decision into a first-party cookie.

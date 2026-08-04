@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import { getAttribution, trackLead } from "@/lib/tracking";
+import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
+import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
+import { track } from "@/lib/analytics/client";
 
 type FieldErrors = {
   name?: string;
@@ -67,6 +69,9 @@ export default function CompactLeadForm({
   const [consent, setConsent] = useState(false);
   const submittingRef = useRef(false);
   const successRef = useRef<HTMLHeadingElement>(null);
+  // Turns this form from a single "submitted / didn't" bit into a funnel:
+  // viewed → started → per-field completion → error → submit / abandoned.
+  const fa = useFormAnalytics(formId);
 
   const resolvedEyebrow = eyebrow ?? t("compact.eyebrow");
   const resolvedHeading = heading ?? t("compact.heading");
@@ -100,6 +105,7 @@ export default function CompactLeadForm({
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
+      fa.reportErrors(nextErrors);
       return;
     }
 
@@ -107,6 +113,11 @@ export default function CompactLeadForm({
     setState("submitting");
     setErrors({});
     try {
+      // Identity + Meta cookies + GA4's real ids, captured BEFORE the request so
+      // the server-side conversion twin carries the same event_id as the browser
+      // pixel and Meta collapses the pair instead of counting it twice.
+      const conversion = await prepareLeadConversion();
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -117,21 +128,40 @@ export default function CompactLeadForm({
           projectType: projectType || "",
           consent: true,
           consentTimestamp: new Date().toISOString(),
+          form_id: formId,
           ...getAttribution(),
+          ...conversion,
         }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setErrors({ server: data?.error || t("compact.errorServer") });
+        const message = data?.error || t("compact.errorServer");
+        setErrors({ server: message });
+        // The visitor did everything right and our backend refused. At this
+        // lead volume a broken week looks exactly like a slow week unless it is
+        // measured explicitly.
+        track("form_submit_failed", {
+          form_id: formId,
+          http_status: res.status,
+          message: String(message).slice(0, 100),
+        });
+        fa.reportErrors({ server: message }, "server");
         setState("idle");
         return;
       }
       setState("success");
-      trackLead({ form: formId, phone });
+      fa.markSubmitted();
+      trackLead({
+        form: formId,
+        phone,
+        eventId: conversion.event_id,
+        seconds: fa.elapsedSeconds(),
+      });
       (e.target as HTMLFormElement).reset();
       setConsent(false);
     } catch {
       setErrors({ server: t("compact.errorServer") });
+      track("form_submit_failed", { form_id: formId, http_status: 0, message: "network" });
       setState("idle");
     } finally {
       submittingRef.current = false;
@@ -165,7 +195,7 @@ export default function CompactLeadForm({
   );
 
   const form = (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+    <form ref={fa.ref} onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`${formId}-name`} className={labelClass}>
@@ -181,7 +211,12 @@ export default function CompactLeadForm({
             aria-invalid={errors.name ? true : undefined}
             aria-describedby={errors.name ? `${formId}-name-error` : undefined}
             className={inputClass}
-            onChange={() => clearFieldError("name")}
+            onFocus={() => fa.onFieldFocus("name")}
+            onBlur={(e) => fa.onFieldBlur("name", e.target.value)}
+            onChange={() => {
+              clearFieldError("name");
+              fa.onFieldInput("name");
+            }}
           />
           {errors.name && (
             <p id={`${formId}-name-error`} role="alert" className="text-xs text-error">
@@ -204,15 +239,24 @@ export default function CompactLeadForm({
             aria-invalid={errors.phone ? true : undefined}
             aria-describedby={errors.phone ? `${formId}-phone-error` : undefined}
             className={inputClass}
+            onFocus={() => fa.onFieldFocus("phone")}
             onBlur={(e) => {
+              fa.onFieldBlur("phone", e.target.value);
               const v = e.target.value.trim();
               if (!v) return;
+              const invalid = !isLikelyPhone(v);
               setErrors((prev) => ({
                 ...prev,
-                phone: isLikelyPhone(v) ? undefined : t("compact.errorPhoneInvalid"),
+                phone: invalid ? t("compact.errorPhoneInvalid") : undefined,
               }));
+              // Phone validation that rejects a number the visitor considers
+              // correct is an invisible conversion killer — measure it.
+              if (invalid) fa.reportErrors({ phone: t("compact.errorPhoneInvalid") });
             }}
-            onChange={() => clearFieldError("phone")}
+            onChange={() => {
+              clearFieldError("phone");
+              fa.onFieldInput("phone");
+            }}
           />
           {errors.phone && (
             <p id={`${formId}-phone-error`} role="alert" className="text-xs text-error">

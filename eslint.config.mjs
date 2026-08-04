@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Git worktrees for parallel agent work live inside the repo. Linting them
+    // re-lints a whole second copy of the source and fails the pre-commit gate
+    // on somebody else's work-in-progress.
+    ".claude/worktrees/**",
   ]),
 ]);
 
