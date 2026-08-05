@@ -142,7 +142,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
   }
 
   return (
-    <section id="kontakt-main" className="relative bg-surface py-24 md:py-32 lg:py-40 border-t border-outline-variant/20 scroll-mt-24">
+    <section id="kontakt-main" className="relative bg-surface py-section-major border-t border-outline-variant/20 scroll-mt-24">
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
           {/* Left side: heading + direct contact channels */}
@@ -186,6 +186,16 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                 </span>
               </a>
 
+              {/* Inherited from the Founders section removed on 2026-08-05.
+                  It's the only place on the site that says a project doesn't
+                  get handed between departments, and it belongs directly above
+                  the two numbers it's talking about. */}
+              {t("founders.subtitle").trim() && (
+                <p className="mt-2 max-w-md text-sm leading-relaxed text-on-surface-variant">
+                  {t("founders.subtitle")}
+                </p>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
                 <a href="tel:+48797222363" className="group flex flex-col gap-1">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
@@ -205,10 +215,13 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                 </a>
               </div>
 
+              {/* Location only. `quick.aside.sla` used to sit here behind a
+                  separator, but it was the same sentence as `quick.trust`
+                  under the submit button - twice in one section, on all five
+                  routes that render this component. The one by the button
+                  wins: it is at the moment the visitor decides to send. */}
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-on-surface-variant">
                 <span>{t("quick.aside.location")}</span>
-                <span aria-hidden="true">·</span>
-                <span className="font-medium text-primary">{t("quick.aside.sla")}</span>
               </div>
             </div>
           </div>

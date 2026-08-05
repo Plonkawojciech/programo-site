@@ -92,10 +92,18 @@
   --lead-lead: 1.6;
 
   /* Section rhythm — three tiers of importance. Adjacent sections must not
-     share a tier; uniform padding is what made every section weigh the same. */
-  --step-section-major: clamp(6rem, 4rem + 8vw, 11rem);
-  --step-section: clamp(4.5rem, 3.6rem + 3.6vw, 7.5rem);
-  --step-section-tight: clamp(3rem, 2.6rem + 1.6vw, 4.5rem);
+     share a tier; uniform padding is what made every section weigh the same.
+
+     Read these as HALF A BOUNDARY. The void a visitor sees between two sections
+     is one section's bottom tier plus the next section's top tier, so the tier
+     name describes a contribution, not a gap. The old values ignored that and
+     inverted the system: a `tight`↔`major` seam measured 241px while
+     `section`↔`tight` measured 174px — the "tight" tier produced the widest
+     void on the page. Tuned so the sums land on 104 / 132 / 156 at 1440px, in
+     that order of weight. Raise these and you raise every boundary twice. */
+  --step-section-major: clamp(4rem, 3.1rem + 3.8vw, 6.5rem);   /* 64–104px */
+  --step-section: clamp(3rem, 2.3rem + 3vw, 5rem);             /* 48–80px  */
+  --step-section-tight: clamp(2rem, 1.55rem + 1.9vw, 3.25rem); /* 32–52px  */
 }
 
 [data-theme="light"] {

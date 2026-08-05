@@ -30,7 +30,11 @@ const caseAngleKeys: TKey[] = ["mkt.cases.1.angle", "mkt.cases.2.angle", "mkt.ca
 const EYEBROW = "text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary";
 const H2 = "font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl";
 const CONTAINER = "mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24";
-const SECTION = "relative bg-surface py-24 md:py-32 lg:py-40";
+// Asymmetric on purpose. Every section on this page uses the same constant, so
+// a symmetric value gets counted twice at every boundary — `py-24 md:py-32
+// lg:py-40` produced a 320px void between each pair. Top-heavy keeps the space
+// above a heading, where it separates, instead of below it, where it strands.
+const SECTION = "relative bg-surface pt-section pb-section-tight";
 
 // /strony-tracking-reklamy — website + conversion tracking + Google Ads as one
 // package. Content: content-deck-2026-07.md section 3.
@@ -45,7 +49,7 @@ export default function MarketingTrackingLanding() {
   return (
     <div className="bg-surface text-on-surface">
       {/* HERO — 2-column: copy + lead form above the fold */}
-      <section className="relative pt-28 pb-16 md:pt-32 md:pb-24">
+      <section className="relative pt-28 pb-section-tight md:pt-32">
         <div className={CONTAINER}>
           <nav aria-label="breadcrumb" className="mb-8 text-xs uppercase tracking-widest text-on-surface-variant">
             <Link href="/" className="transition-colors hover:text-on-surface">Programo</Link>
@@ -114,7 +118,7 @@ export default function MarketingTrackingLanding() {
       {/* 3 ELEMENTS OF THE PACKAGE */}
       <section className={SECTION}>
         <div className={CONTAINER}>
-          <Reveal className="mb-14 max-w-3xl md:mb-20">
+          <Reveal className="mb-10 max-w-3xl md:mb-14">
             <p className={EYEBROW}>{t("mkt.elements.eyebrow")}</p>
             <h2 className={`mt-5 ${H2}`}>{t("mkt.elements.title")}</h2>
           </Reveal>
@@ -153,7 +157,7 @@ export default function MarketingTrackingLanding() {
       {/* FAQ */}
       <section className={SECTION}>
         <div className={CONTAINER}>
-          <Reveal className="mb-14 max-w-3xl md:mb-20">
+          <Reveal className="mb-10 max-w-3xl md:mb-14">
             <p className={EYEBROW}>{t("mkt.faq.eyebrow")}</p>
             <h2 className={`mt-5 ${H2}`}>{t("mkt.faq.title")}</h2>
           </Reveal>

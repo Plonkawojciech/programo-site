@@ -146,10 +146,16 @@ export default function ClientWork() {
   const featured = cases[0];
   const secondary = cases.slice(1);
 
+  // Padding is asymmetric on purpose. OwnProducts sits directly below on the
+  // same `bg-surface-dim` with no divider — the two are one sunken room, so the
+  // seam between them has to be the tightest boundary on the page (104px at
+  // 1440, against 132–156 everywhere else). A symmetric `py-section-major` here
+  // would add its 104 to OwnProducts' own top padding and open a gap wider than
+  // the ones separating rooms.
   return (
     <section
       id="realizacje"
-      className="relative scroll-mt-24 bg-surface-dim py-section-major"
+      className="relative scroll-mt-24 bg-surface-dim pt-section-major pb-section-tight"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         {/* ── Section heading ──────────────────────────────────── */}

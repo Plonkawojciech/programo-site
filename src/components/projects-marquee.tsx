@@ -116,7 +116,11 @@ export default function ProjectsMarquee() {
       // declares that anchor at the point it actually wants the jump to land.
       // Duplicating it made the document invalid and the target ambiguous.
       aria-labelledby="realizations-heading"
-      className="relative overflow-hidden border-t border-outline-variant/20 bg-surface py-24 md:py-32 lg:py-40"
+      // Bottom tier is one step down because on all three landings this sits
+      // directly above QuickContact, which is `py-section-major`. Symmetric
+      // `py-section` made that seam 184px — the widest on the page, right where
+      // the visitor is supposed to reach the form.
+      className="relative overflow-hidden border-t border-outline-variant/20 bg-surface pt-section pb-section-tight"
     >
       {/* Self-contained CSS-keyframes marquee: pauses on hover, static when the
           visitor prefers reduced motion. No JS animation loop. */}

@@ -10,13 +10,14 @@ type PhoneFormState = "idle" | "submitting" | "success" | "error";
 /**
  * Homepage hero - conversion-first rebuild (2026-08).
  *
- * Structure: headline, one-liner, inline phone capture, then a full-width shot
- * of four shipped projects. Single column at every breakpoint.
+ * Structure: headline, one-liner, inline phone capture. Single column at every
+ * breakpoint, over a heavily blurred photograph.
  *
- * The proof image replaced a single WSafeFinanse screenshot (2026-08-03): one
- * client's site is weaker evidence than four, and that particular project is
- * not one we lead with. Don't put it back in a right-hand column - see the
- * comment on the `figure` for the measurements.
+ * The device mockup that used to close this section was removed on 2026-08-06
+ * at the owner's request and replaced by that background. The proof it carried
+ * did not disappear from the page - ProjectsMarquee below shows the same work
+ * at a size where it is actually legible, which the four shrunken devices
+ * never were on a phone.
  *
  * The phone capture posts to /api/contact with a number and nothing else. That
  * shape is only valid because the route waives the `name` requirement when the
@@ -107,7 +108,71 @@ export default function HomeHero() {
   }
 
   return (
-    <section className="relative bg-surface pt-28 pb-section-major md:pt-36 lg:pt-40">
+    <section className="relative isolate overflow-hidden bg-surface pt-28 pb-section-major md:pt-36 lg:pt-40">
+      {/* Background photograph, blurred to a suggestion of a desk rather than a
+          picture of one. Two rules govern every number below.
+
+          (1) The scrim is what buys the contrast, not the opacity. Deviation of
+          the composite from the flat surface colour is (1 - scrimAlpha) x
+          imageOpacity. Under the text the scrim sits at 0.86-0.92, so the
+          background moves at most ~5% off `--theme-bg-1` - measured, not
+          guessed. On the right, where no copy ever lands at md+, it opens to
+          0.45 and the photo actually reads.
+
+          (2) The image is mirrored. The desk and laptops sit on the LEFT of the
+          source frame, which is exactly where the headline, the phone field and
+          the consent line live. Flipped, the busy half falls into the empty
+          right column and the near-black half slides under the copy. At this
+          blur radius nothing is legible as a mirrored object.
+
+          scale(1.3) is not styling: `filter: blur()` samples transparency past
+          the element edge, so an unscaled layer would show a pale rim inside
+          `overflow-hidden`. 30% overscan clears the ~42px bleed of a 14px blur
+          at every breakpoint, including a short mobile hero.
+
+          14px, not 26: at 26 the photo stopped being a photo. Nothing read as a
+          desk, only as a glow, which is not what was asked for. 14 kills the
+          text on the screens and the grain but keeps the lids, the monitor and
+          the window frame as recognisable shapes. */}
+      <style>{`
+        .hero-bg__img {
+          transform: scale(-1.3, 1.3);
+          filter: blur(14px) saturate(0.9);
+          opacity: 0.5;
+        }
+        [data-theme="light"] .hero-bg__img { opacity: 0.28; }
+
+        .hero-bg__scrim {
+          background: linear-gradient(
+            to bottom,
+            rgba(var(--theme-bg-1-rgb), 0.78) 0%,
+            rgba(var(--theme-bg-1-rgb), 0.78) 55%,
+            rgb(var(--theme-bg-1-rgb)) 100%
+          );
+        }
+        @media (min-width: 768px) {
+          .hero-bg__scrim {
+            background:
+              linear-gradient(to bottom, rgba(var(--theme-bg-1-rgb), 0) 60%, rgb(var(--theme-bg-1-rgb)) 100%),
+              linear-gradient(to right,
+                rgba(var(--theme-bg-1-rgb), 0.90) 0%,
+                rgba(var(--theme-bg-1-rgb), 0.84) 38%,
+                rgba(var(--theme-bg-1-rgb), 0.25) 100%);
+          }
+        }
+      `}</style>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+        <Image
+          src="/hero-bg.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="hero-bg__img object-cover object-center"
+        />
+        <div className="hero-bg__scrim absolute inset-0" />
+      </div>
+
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         {/* ── Text + form ── */}
         {/* 4xl, not 3xl: at the display size the headline breaks to four lines
@@ -228,38 +293,6 @@ export default function HomeHero() {
             </a>
           </div>
         </div>
-
-        {/* ── Proof strip - four shipped projects, seen without scrolling ──
-            Full width rather than a right-hand column: at the display size the
-            headline needs ~890px to stay on three lines, so a two-column split
-            pushes it to five, and four devices squeezed into a 600px column are
-            too small to read as real work. */}
-        <figure className="mt-14 lg:mt-16">
-          {/* Full-bleed on phones. Inside the 24px gutter the four devices come
-              out ~90px wide each and read as blur; the extra 48px is the
-              difference between "some screens" and legible product shots on the
-              screen most of this audience arrives on.
-              calc(100%+3rem), not w-screen: 100vw counts the classic scrollbar
-              that clientWidth doesn't, so on Windows/Linux Chrome it overflows
-              by ~15px. Percentages measure the container, which is correct. */}
-          <Image
-            src="/screenshots/realizacje-hero.webp"
-            alt={t("home.hero.showcaseAlt")}
-            width={1672}
-            height={941}
-            priority
-            sizes="(max-width: 1400px) 100vw, 1400px"
-            className="-mx-6 w-[calc(100%+3rem)] max-w-none md:mx-0 md:w-full md:rounded-2xl"
-          />
-          {/* Conditional because this string is owner-editable from the dev
-              editor; cleared copy would otherwise leave a floating rule. */}
-          {t("home.hero.showcaseCaption").trim() && (
-            <figcaption className="mt-4 flex items-center gap-2 text-sm text-on-surface-variant">
-              <span aria-hidden="true" className="h-px w-5 bg-outline-variant" />
-              {t("home.hero.showcaseCaption")}
-            </figcaption>
-          )}
-        </figure>
       </div>
     </section>
   );

@@ -37,9 +37,9 @@ export default function Pricing() {
   const { t } = useI18n();
 
   return (
-    <section className="relative bg-surface py-24 md:py-32 lg:py-40">
+    <section className="relative bg-surface py-section">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
-        <Reveal className="mb-16 max-w-3xl md:mb-24">
+        <Reveal className="mb-12 max-w-3xl md:mb-16">
           <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
             {t("pricing.label")}
           </p>
@@ -70,7 +70,7 @@ export default function Pricing() {
         </div>
 
         {/* What drives the cost */}
-        <Reveal className="mb-6 mt-24 max-w-2xl md:mt-32">
+        <Reveal className="mb-6 mt-16 max-w-2xl md:mt-20">
           <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
             {t("pricing.factorsLabel")}
           </p>
@@ -89,7 +89,7 @@ export default function Pricing() {
         </div>
 
         {/* CTA band */}
-        <Reveal className="mt-20 overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:mt-28 md:p-16">
+        <Reveal className="mt-14 overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:mt-20 md:p-16">
           <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl">
             {t("pricing.ctaTitle")}
           </h2>

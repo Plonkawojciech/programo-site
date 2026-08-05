@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function StackPage() {
   return (
-    <div className="pt-24 md:pt-32">
+    <div className="pt-20 md:pt-24">
       <TechStack />
     </div>
   );

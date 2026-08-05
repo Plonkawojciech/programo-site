@@ -125,12 +125,11 @@ export const forms = {
   },
   "quick.successAgain": { pl: "Wyślij kolejną wiadomość", en: "Send another message" },
 
-  // Quick contact — direct contact aside (email, founders, SLA)
+  // Quick contact — direct contact aside (email, founders, location)
   "quick.aside.emailLabel": { pl: "E-mail", en: "Email" },
   "quick.aside.wojciechName": { pl: "Wojciech Płonka", en: "Wojciech Płonka" },
   "quick.aside.bartoszName": { pl: "Bartosz Kolaj", en: "Bartosz Kolaj" },
   "quick.aside.location": { pl: "Poznań, Polska", en: "Poznan, Poland" },
-  "quick.aside.sla": { pl: "Odpowiadamy w 24 h", en: "We reply within 24 hours" },
 
   // Contact form consent
   "quick.consentLabel": {

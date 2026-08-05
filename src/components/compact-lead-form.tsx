@@ -314,7 +314,7 @@ export default function CompactLeadForm({
 
   // --- default: full-width section with a 2-column card ----------------------
   return (
-    <section id={anchorId ?? formId} className="relative bg-surface py-16 md:py-20 scroll-mt-28">
+    <section id={anchorId ?? formId} className="relative bg-surface py-section-tight scroll-mt-28">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
         <div className="rounded-3xl border border-primary/30 bg-primary/5 p-7 md:p-12">
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">

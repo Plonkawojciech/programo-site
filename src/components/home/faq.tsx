@@ -56,8 +56,12 @@ export default function Faq() {
         transition: { duration: durationMedium, ease: easeEntry } as const,
       };
 
+  // Asymmetric since Founders was removed (2026-08-05). Process above is also
+  // `tight`, so a symmetric `py-section-tight` here would put a 104px seam
+  // between two differently-coloured rooms — the same width as the deliberate
+  // ClientWork/OwnProducts seam inside one room. `pt-section` opens it to 132.
   return (
-    <section className="bg-surface-dim py-section-tight">
+    <section className="bg-surface-dim pt-section pb-section-tight">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}

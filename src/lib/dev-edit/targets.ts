@@ -50,12 +50,11 @@ export const PAGE_FILE = "src/app/page.tsx";
  * reason — a homepage with no hero is not a layout decision, it's a mistake.
  */
 export const SECTION_TARGETS: SectionTarget[] = [
-  { id: "trust-bar", label: "Pasek zaufania (logotypy + liczby)", tag: "TrustBar", anchorKey: "home.trust.stat1.label" },
+  { id: "trust-bar", label: "Pasek zaufania (logotypy)", tag: "TrustBar", anchorKey: "home.trust.eyebrow" },
   { id: "client-work", label: "Wybrane wdrożenia", tag: "ClientWork", anchorKey: "home.work.title.v2" },
   { id: "own-products", label: "Produkty własne", tag: "OwnProducts", anchorKey: "home.products.title.v2" },
   { id: "services", label: "Co robimy", tag: "ServicesOverview", anchorKey: "home.svc.title" },
   { id: "process", label: "Jak pracujemy", tag: "Process", anchorKey: "home.process.title.v2" },
-  { id: "founders", label: "Założyciele", tag: "Founders", anchorKey: "founders.title" },
   { id: "faq", label: "FAQ", tag: "Faq", anchorKey: "home.faq.title" },
 ];
 

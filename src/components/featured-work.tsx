@@ -205,7 +205,7 @@ export default function FeaturedWork() {
 
   return (
     <section id="work" className="relative w-full bg-surface">
-      <div className="mx-auto max-w-[1400px] px-6 py-24 md:px-12 md:py-32 lg:px-24">
+      <div className="mx-auto max-w-[1400px] px-6 py-section md:px-12 lg:px-24">
         {/* Header */}
         <div className="mb-12 flex flex-col gap-8 md:mb-16 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
@@ -255,7 +255,7 @@ export default function FeaturedWork() {
         </motion.div>
 
         {/* Footer CTA */}
-        <div className="mt-16 flex flex-col items-start gap-4 border-t border-outline-variant/20 pt-10 md:flex-row md:items-center md:justify-between">
+        <div className="mt-12 flex flex-col items-start gap-4 border-t border-outline-variant/20 pt-8 md:flex-row md:items-center md:justify-between">
           <p className="max-w-md text-base font-light text-on-surface/70 md:text-lg">
             {lang === "pl"
               ? "Masz pomysł na własny system lub aplikację?"

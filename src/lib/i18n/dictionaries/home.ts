@@ -95,23 +95,12 @@ export const home = {
     en: "Leave your number - we'll call back within 24 hours with specifics.",
   },
 
-  // 1.2 Trust bar
+  // 1.2 Trust bar — logos only. The three proof numbers (2 natywne aplikacje /
+  // 10+ realizacji / 24 h) were cut on 2026-08-06 at the owner's request. Two of
+  // them said what the page already says better elsewhere: the deployments are
+  // shown as actual work in ClientWork, and the 24 h promise still sits next to
+  // the phone field where it affects a decision.
   "home.trust.eyebrow": { pl: "Zaufali nam", en: "Trusted by" },
-  "home.trust.stat1.value": { pl: "2", en: "2" },
-  "home.trust.stat1.label": {
-    pl: "natywne aplikacje w App Store i Google Play",
-    en: "native apps on the App Store and Google Play",
-  },
-  "home.trust.stat2.value": { pl: "10+", en: "10+" },
-  "home.trust.stat2.label": {
-    pl: "produktów i realizacji",
-    en: "products and deployments",
-  },
-  "home.trust.stat3.value": { pl: "24 h", en: "24 h" },
-  "home.trust.stat3.label": {
-    pl: "maksymalny czas naszej odpowiedzi",
-    en: "maximum response time",
-  },
 
   // 1.3 Offer — 4 pillars
   "home.offer.eyebrow": { pl: "Co robimy", en: "What we do" },
@@ -276,8 +265,10 @@ export const home = {
     en: "Tell us what you want to build",
   },
   "home.contact.sub": {
-    pl: "Piętnaście minut rozmowy wystarczy, żebyśmy powiedzieli Ci, czy to ma sens, ile może kosztować i od czego zacząć. Odpowiadamy w 24 h.",
-    en: "Fifteen minutes on the phone is enough for us to tell you whether it makes sense, roughly what it may cost, and where to start. We reply within 24 hours.",
+    // Closing "Odpowiadamy w 24 h." removed — the same promise already sits in
+    // the hero form, the trust bar statistic and the FAQ.
+    pl: "Piętnaście minut rozmowy wystarczy, żebyśmy powiedzieli Ci, czy to ma sens, ile może kosztować i od czego zacząć.",
+    en: "Fifteen minutes on the phone is enough for us to tell you whether it makes sense, roughly what it may cost, and where to start.",
   },
 
   // ————————————————————————————————————————————————————————————————
@@ -296,14 +287,6 @@ export const home = {
     en: "Websites, stores, systems and AI automation. From the first call to launch the project stays with two engineers in Poznan, with nobody in between.",
   },
   "home.hero.ctaSecondary": { pl: "Zobacz realizacje", en: "See our work" },
-  "home.hero.showcaseAlt": {
-    pl: "Cztery wdrożenia Programo na ekranach: sklep Jedmar na laptopie, strona W. Safe Finance na laptopie, CRM Estalo na tablecie i aplikacja Jedmar na telefonie",
-    en: "Four Programo builds on screen: the Jedmar store on a laptop, the W. Safe Finance site on a laptop, the Estalo CRM on a tablet and the Jedmar app on a phone",
-  },
-  "home.hero.showcaseCaption": {
-    pl: "",
-    en: "",
-  },
 
   /* --- Homepage redesign: hero callback form --- */
   "home.hero.phoneLabel": {
@@ -441,7 +424,6 @@ export const home = {
 
   /* --- Homepage redesign: situations we get called about --- */
   "home.svc.title": { pl: "Z czym przychodzą do nas firmy", en: "What companies come to us with" },
-  "home.svc.pricing": { pl: "Widełki cenowe i model rozliczeń", en: "Price ranges & billing model" },
   "home.svc.block1.situation": { pl: "Strona nie przynosi zapytań", en: "Your website brings no inquiries" },
   "home.svc.block1.body": {
     pl: "Masz stronę, ale telefon milczy. Ładuje się wolno i nigdzie nie prowadzi. Budujemy strony i sklepy, na których odwiedzający od razu wie, co ma zrobić, i zostawia numer.",
@@ -467,36 +449,44 @@ export const home = {
   /* --- Homepage redesign: process --- */
   "home.process.title.v2": { pl: "Co się stanie, jak zadzwonisz", en: "What happens when you call" },
   "home.process.1.title": { pl: "Rozmowa i diagnoza", en: "Call & diagnosis" },
+  // Steps 1-3: the owner shortened the PL side by hand and EN was left long, so
+  // the two languages were making different promises. Trimmed EN back to the PL
+  // sentence count (and dropped the trailing spaces PL was left with).
   "home.process.1.desc.v2": {
-    pl: "Rozmawiasz od razu z ludźmi, którzy zaprojektują i napiszą kod. ",
-    en: "You talk straight to the people who will design and write the code. No salesperson, no handoffs. We listen to what isn't working and what should change.",
+    pl: "Rozmawiasz od razu z ludźmi, którzy zaprojektują i napiszą kod.",
+    en: "You talk straight to the people who will design and write the code.",
   },
   "home.process.2.title": { pl: "Plan i wycena", en: "Plan & estimate" },
   "home.process.2.desc.v2": {
-    pl: "Zanim cokolwiek ruszymy, dostajesz zakres, kolejne kroki i widełki kosztów. ",
-    en: "Before we move on anything, you get the scope, next steps and a cost range. No surprises on the invoice.",
+    pl: "Zanim cokolwiek ruszymy, dostajesz zakres, kolejne kroki i widełki kosztów.",
+    en: "Before we move on anything, you get the scope, next steps and a cost range.",
   },
   "home.process.3.title": { pl: "Projekt i development", en: "Design & development" },
   "home.process.3.desc.v2": {
     pl: "Projekt, kod i wdrożenie robimy w jednym miejscu. Postępy widzisz na bieżąco.",
-    en: "Design, code and deployment all happen in one place. You see progress as we go; we don't disappear for weeks.",
+    en: "Design, code and deployment all happen in one place. You see progress as we go.",
   },
   "home.process.4.title": { pl: "Wdrożenie i wsparcie", en: "Launch & support" },
   "home.process.4.desc.v2": {
     pl: "Uruchamiamy na produkcji i zostajemy. Poprawki, rozwój i wsparcie techniczne zostają po naszej stronie.",
     en: "We launch to production and stay. Fixes, further development and technical support remain on our side.",
   },
-  "home.process.terms.label": { pl: "Na co możesz liczyć", en: "What you can count on" },
-  "home.process.terms.1": { pl: "", en: "" },
-  "home.process.terms.2": { pl: "Widełki kosztów przed startem", en: "Cost estimate before we start" },
-  "home.process.terms.3": { pl: "Odpowiedź do 24 godzin", en: "Reply within 24 hours" },
-  "home.process.terms.4": { pl: "Projekt, kod i wdrożenie w jednym miejscu", en: "Design, code and deployment in one place" },
+  // The "Na co możesz liczyć" bar under the four steps was cut on 2026-08-06 at
+  // the owner's request. It had already been trimmed from four terms to two the
+  // day before, for repetition; the owner took the rest. The two promises it
+  // carried are not lost - code ownership is answered in the FAQ, and the cost
+  // estimate is the whole of /cennik.
 
-  /* --- Homepage redesign: founders --- */
+  /* --- Founders ---
+     The homepage section these belonged to was removed on 2026-08-05 (it
+     duplicated QuickContact's aside). `founders.subtitle` survived the removal
+     and now renders there, directly above the two phone numbers — which is why
+     it no longer opens with "Programo to Wojciech i Bartosz": the names are
+     right underneath it. */
   "founders.title": { pl: "Kto to robi", en: "Who does the work" },
   "founders.subtitle": {
-    pl: "Programo to Wojciech i Bartosz. Nie ma działów, między którymi wędruje projekt. Od pierwszej rozmowy po utrzymanie rozmawiasz z tymi samymi osobami.",
-    en: "Programo is Wojciech and Bartosz. There are no departments for a project to travel between. From the first call to maintenance you talk to the same two people.",
+    pl: "Nie ma działów, między którymi wędruje projekt. Od pierwszej rozmowy po utrzymanie rozmawiasz z tymi samymi osobami.",
+    en: "There are no departments for a project to travel between. From the first call to maintenance you talk to the same two people.",
   },
   "founders.location": { pl: "Poznań, Polska", en: "Poznań, Poland" },
   "founders.wojtek.focus": { pl: "", en: "" },

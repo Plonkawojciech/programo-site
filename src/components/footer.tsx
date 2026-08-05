@@ -47,10 +47,13 @@ export default function Footer() {
   // Reduced motion: static variant — no scroll-linked parallax.
   const contentY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [60, 0]);
 
+  // `mt-8` is the floor, not a preference: the top corners are rounded by
+  // exactly 32px, so a smaller margin makes the curve bite into the section
+  // above it.
   return (
     <footer
       ref={footerRef}
-      className="w-full rounded-t-[32px] mt-12 bg-surface-container-low overflow-hidden"
+      className="w-full rounded-t-[32px] mt-8 bg-surface-container-low overflow-hidden"
     >
       <motion.div
         style={{ y: contentY }}

@@ -109,9 +109,9 @@ export default function TechStack() {
   ];
 
   return (
-    <section id="stack" className="relative overflow-hidden py-24 md:py-32 lg:py-56 bg-gradient-to-b from-[var(--theme-bg-1)] via-[var(--theme-bg-3)] to-[var(--theme-bg-1)]">
+    <section id="stack" className="relative overflow-hidden py-section bg-gradient-to-b from-[var(--theme-bg-1)] via-[var(--theme-bg-3)] to-[var(--theme-bg-1)]">
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
-        <Reveal className="mb-20 md:mb-32 2xl:mb-48 flex flex-col items-end text-right">
+        <Reveal className="mb-12 md:mb-16 2xl:mb-24 flex flex-col items-end text-right">
           <span className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary">
             {t("stack.label")}
           </span>

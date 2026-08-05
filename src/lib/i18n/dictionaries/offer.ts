@@ -5,16 +5,21 @@
 export const offer = {
   "offer.label": { pl: "Co robimy i jak pracujemy", en: "What we do and how we work" },
   "offer.title": { pl: "Oferta", en: "Services" },
+  // Every `desc` below was cut roughly in half on 2026-08-05. The rule was
+  // narrow: a sentence goes if the bullet list under it already says the same
+  // thing. The bullets are the scannable part, the paragraph is the argument —
+  // when both carried the same fact, the paragraph lost. Nothing was reworded
+  // for style, so anything still here is a claim no bullet makes.
   "offer.lead": {
-    pl: "Projekt, kod, wdrożenie i pomiar efektu robimy w jednych rękach. Poniżej dokładnie to, co dostajesz w każdym z czterech obszarów.",
-    en: "Design, code, deployment, and measurement all happen in the same hands. Below is exactly what you get in each of the four areas.",
+    pl: "Projekt, kod, wdrożenie i pomiar efektu robimy w jednych rękach.",
+    en: "Design, code, deployment, and measurement all happen in the same hands.",
   },
 
   // Pillar 1 — Web applications & SaaS
   "offer.pillar1.title": { pl: "Aplikacje webowe i SaaS", en: "Web applications and SaaS" },
   "offer.pillar1.desc": {
-    pl: "Budujemy systemy, w których firma pracuje na co dzień: CRM-y, panele klienta, platformy z płatnościami i wieloma poziomami uprawnień. Nasz własny produkt, Estalo, to działający produkcyjnie CRM dla biur nieruchomości z płatnościami, integracjami czterech portali ogłoszeniowych i sztuczną inteligencją wpiętą w codzienną pracę agenta. W projektach klienckich pracujemy tak samo. Dane każdego klienta są odizolowane na poziomie bazy, kod ma testy automatyczne, a architektura wytrzymuje pierwszy wzrost bez przepisywania. Piszemy w Next.js i TypeScript, na Postgresie, z wdrożeniem na sprawdzonej infrastrukturze.",
-    en: "We build the systems a company works in daily: CRMs, client panels, platforms with payments and multiple permission levels. Our own product, Estalo, is a production CRM for real estate agencies with live billing, integrations with four listing portals, and AI wired into an agent's daily work. We work the same way on client projects. Each customer's data is isolated at the database level, the code has automated tests, and the architecture survives the first growth spurt without a rewrite. We write in Next.js and TypeScript, on Postgres, deployed on proven infrastructure.",
+    pl: "Budujemy systemy, w których firma pracuje na co dzień: CRM-y, panele klienta, platformy z płatnościami i wieloma poziomami uprawnień. Nasz własny produkt, Estalo, to działający produkcyjnie CRM dla biur nieruchomości z płatnościami, integracjami czterech portali ogłoszeniowych i sztuczną inteligencją wpiętą w codzienną pracę agenta. W projektach klienckich pracujemy tak samo.",
+    en: "We build the systems a company works in daily: CRMs, client panels, platforms with payments and multiple permission levels. Our own product, Estalo, is a production CRM for real estate agencies with live billing, integrations with four listing portals, and AI wired into an agent's daily work. We work the same way on client projects.",
   },
   "offer.pillar1.example": {
     pl: "Estalo - CRM dla biur nieruchomości, live z płatnościami",
@@ -29,8 +34,8 @@ export const offer = {
   // Pillar 2 — Native iOS & Android apps
   "offer.pillar2.title": { pl: "Natywne aplikacje iOS i Android", en: "Native iOS and Android apps" },
   "offer.pillar2.desc": {
-    pl: "Aplikacje mobilne piszemy natywnie: iOS w Swift i SwiftUI, Android w Kotlinie z Jetpack Compose. Nie używamy nakładek typu webview, bo różnicę czuć w pierwszej sekundzie, a potem przy aparacie, powiadomieniach, Face ID i pracy bez zasięgu. Dla Jedmara zbudowaliśmy w ten sposób dwie aplikacje sklepowe, które są opublikowane i działają w App Store oraz Google Play, ze skanerem kodów EAN i sześcioma metodami płatności. Cały proces wydawniczy, od TestFlight po review Apple i Google, prowadzimy my.",
-    en: "We write mobile apps natively: iOS in Swift and SwiftUI, Android in Kotlin with Jetpack Compose. We skip webview wrappers, because you feel the difference in the first second, and then again with the camera, notifications, Face ID, and working with no signal. For Jedmar we built two store apps this way, published and live on the App Store and Google Play, with an EAN barcode scanner and six payment methods. We run the entire release process, from TestFlight through Apple and Google review.",
+    pl: "Aplikacje mobilne piszemy natywnie: iOS w Swift i SwiftUI, Android w Kotlinie z Jetpack Compose. Nie używamy nakładek typu webview, bo różnicę czuć w pierwszej sekundzie, a potem przy aparacie, powiadomieniach, Face ID i pracy bez zasięgu. Dla Jedmara zbudowaliśmy w ten sposób dwie aplikacje sklepowe, opublikowane i działające w App Store oraz Google Play.",
+    en: "We write mobile apps natively: iOS in Swift and SwiftUI, Android in Kotlin with Jetpack Compose. We skip webview wrappers, because you feel the difference in the first second, and then again with the camera, notifications, Face ID, and working with no signal. For Jedmar we built two store apps this way, published and live on the App Store and Google Play.",
   },
   "offer.pillar2.example": {
     pl: "Jedmar - dwie aplikacje sklepowe opublikowane w obu sklepach",
@@ -45,8 +50,8 @@ export const offer = {
   // Pillar 3 — Online stores
   "offer.pillar3.title": { pl: "Sklepy internetowe", en: "Online stores" },
   "offer.pillar3.desc": {
-    pl: "E-commerce robimy na dwa sposoby. Możemy rozbudować sklep, który już masz, jak u Jedmara, gdzie do działającego PrestaShopa dołożyliśmy dwie natywne aplikacje mobilne i interaktywne schematy części zamiennych, nie ruszając samego sklepu. Możemy też postawić sklep od zera, na WooCommerce, PrestaShop albo headless na Next.js, z płatnościami, Paczkomatami InPost i integracjami magazynowymi. Przy migracjach pilnujemy przekierowań i struktury adresów, żeby nie stracić pozycji wypracowanych w Google.",
-    en: "We do e-commerce two ways. We can extend the store you already have, as with Jedmar, where we added two native mobile apps and interactive spare-parts diagrams to a running PrestaShop without touching the store itself. Or we can build a store from scratch, on WooCommerce, PrestaShop, or headless Next.js, with payments, InPost parcel lockers, and warehouse integrations. During migrations we guard redirects and URL structure so you don't lose the rankings you've earned on Google.",
+    pl: "E-commerce robimy na dwa sposoby. Możemy rozbudować sklep, który już masz, jak u Jedmara, gdzie do działającego PrestaShopa dołożyliśmy dwie natywne aplikacje mobilne i interaktywne schematy części zamiennych. Możemy też postawić sklep od zera, na WooCommerce, PrestaShop albo headless na Next.js.",
+    en: "We do e-commerce two ways. We can extend the store you already have, as with Jedmar, where we added two native mobile apps and interactive spare-parts diagrams to a running PrestaShop. Or we can build a store from scratch, on WooCommerce, PrestaShop, or headless Next.js.",
   },
   "offer.pillar3.example": {
     pl: "Jedmar - aplikacje i interaktywne schematy części do istniejącego sklepu",
@@ -59,10 +64,12 @@ export const offer = {
   "offer.pillar3.b5": { pl: "Migrację bez utraty pozycji w Google", en: "Migration without losing Google rankings" },
 
   // Pillar 4 — Websites, tracking & Google Ads
-  "offer.pillar4.title": { pl: "", en: "" },
+  // Was `""` on both sides, which rendered pillar "04" with a number and no
+  // heading — the only unlabelled block on the page.
+  "offer.pillar4.title": { pl: "Strony, tracking i reklamy Google", en: "Websites, tracking and Google Ads" },
   "offer.pillar4.desc": {
-    pl: "Strona, na którą nikt nie wchodzi i której nikt nie mierzy, to wydatek bez zwrotu. Dlatego stronę lub landing, pomiar konwersji i kampanię Google Ads prowadzimy razem. Dla Skupu Nieruchomości zbudowaliśmy kompletny lejek: sześć podstron dopasowanych do treści reklam, dwukrokowy widżet oddzwonienia i pełny tracking z enhanced conversions. Dla Domków Poznaniak weszliśmy na istniejącą stronę WordPress, wpięliśmy pomiar i prowadzimy kampanię. Nie musisz mieć strony od nas, żebyśmy zajęli się Twoimi reklamami.",
-    en: "A website nobody visits and nobody measures is money spent for nothing. That's why we handle the site or landing page, conversion tracking, and the Google Ads campaign together. For Skup Nieruchomości we built a complete funnel: six pages matched to ad copy, a two-step callback widget, and full tracking with enhanced conversions. For Domki Poznaniak we stepped into an existing WordPress site, wired up measurement, and now run the campaign. You don't need a website built by us for us to take over your ads.",
+    pl: "Strona, na którą nikt nie wchodzi i której nikt nie mierzy, to wydatek bez zwrotu. Dlatego stronę lub landing, pomiar konwersji i kampanię Google Ads prowadzimy razem. Dla Skupu Nieruchomości zbudowaliśmy kompletny lejek: sześć podstron dopasowanych do treści reklam, dwukrokowy widżet oddzwonienia i pełny tracking z enhanced conversions.",
+    en: "A website nobody visits and nobody measures is money spent for nothing. That's why we handle the site or landing page, conversion tracking, and the Google Ads campaign together. For Skup Nieruchomości we built a complete funnel: six pages matched to ad copy, a two-step callback widget, and full tracking with enhanced conversions.",
   },
   "offer.pillar4.example": {
     pl: "Skup Nieruchomości - kompletny lejek: strona, tracking i kampania",

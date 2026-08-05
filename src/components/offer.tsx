@@ -57,9 +57,9 @@ export default function Offer() {
   const { t } = useI18n();
 
   return (
-    <section className="relative bg-surface py-24 md:py-32 lg:py-40">
+    <section className="relative bg-surface py-section">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
-        <Reveal className="mb-16 max-w-3xl md:mb-24">
+        <Reveal className="mb-12 max-w-3xl md:mb-16">
           <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
             {t("offer.label")}
           </p>
@@ -71,7 +71,7 @@ export default function Offer() {
           </p>
         </Reveal>
 
-        <div className="flex flex-col gap-16 md:gap-24">
+        <div className="flex flex-col gap-12 md:gap-16">
           {pillars.map((p, i) => (
             <Reveal
               key={p.number}
@@ -120,7 +120,7 @@ export default function Offer() {
           ))}
         </div>
 
-        <Reveal className="mt-20 flex flex-col items-start gap-6 rounded-3xl bg-primary p-8 md:mt-28 md:flex-row md:items-center md:justify-between md:p-12">
+        <Reveal className="mt-14 flex flex-col items-start gap-6 rounded-3xl bg-primary p-8 md:mt-20 md:flex-row md:items-center md:justify-between md:p-12">
           <h2 className="font-headline text-2xl font-bold tracking-tight text-on-primary md:text-4xl">
             {t("main.cta.primary")}
           </h2>

@@ -132,22 +132,6 @@ export default function ServicesOverview() {
             );
           })}
         </div>
-
-        {/* Pricing link — secondary, quiet */}
-        <div className="mt-10 md:mt-14">
-          <Link
-            href="/cennik"
-            className="group inline-flex items-center gap-2 text-on-surface-variant transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
-            {t("home.svc.pricing")}
-            <span
-              aria-hidden="true"
-              className="transition-transform duration-300 ease-out group-hover:translate-x-1"
-            >
-              &rarr;
-            </span>
-          </Link>
-        </div>
       </div>
     </section>
   );

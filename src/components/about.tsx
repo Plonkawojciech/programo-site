@@ -16,7 +16,7 @@ export default function About() {
   ] as const;
 
   return (
-    <section id="about" className="relative bg-surface py-24 md:py-32 lg:py-40">
+    <section id="about" className="relative bg-surface py-section">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
         <Reveal className="max-w-3xl">
           <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
@@ -30,7 +30,7 @@ export default function About() {
           </p>
         </Reveal>
 
-        <div className="mt-20 grid gap-14 border-t border-outline-variant/30 pt-14 md:mt-28 md:grid-cols-2 md:gap-16 md:pt-20">
+        <div className="mt-14 grid gap-14 border-t border-outline-variant/30 pt-10 md:mt-20 md:grid-cols-2 md:gap-16 md:pt-14">
           <Reveal className="flex flex-col gap-4">
             <h2 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
               {t("about.how.title")}
@@ -46,7 +46,7 @@ export default function About() {
         </div>
 
         {/* Founders */}
-        <div className="mt-20 border-t border-outline-variant/30 pt-14 md:mt-28 md:pt-20">
+        <div className="mt-14 border-t border-outline-variant/30 pt-10 md:mt-20 md:pt-14">
           <Reveal className="mb-12 max-w-2xl md:mb-16">
             <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl">
               {t("about.people.title")}
@@ -79,7 +79,7 @@ export default function About() {
         </div>
 
         {/* Company data + CTA */}
-        <Reveal className="mt-20 flex flex-col items-start gap-8 rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:mt-28 md:flex-row md:items-center md:justify-between md:p-12">
+        <Reveal className="mt-14 flex flex-col items-start gap-8 rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:mt-20 md:flex-row md:items-center md:justify-between md:p-12">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
               {t("about.company.title")}
