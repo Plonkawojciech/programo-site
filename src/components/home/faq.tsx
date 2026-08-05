@@ -1,9 +1,11 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { easeEntry, durationMedium } from "@/lib/motion";
+import { track } from "@/lib/analytics/client";
 
 /**
  * 6 questions, ordered by buyer fear sequence:
@@ -20,6 +22,9 @@ import { easeEntry, durationMedium } from "@/lib/motion";
  *
  * Uses native <details>/<summary> so all answers are in the DOM for
  * SSR, crawlers, and screen readers regardless of open/closed state.
+ *
+ * FAQPage JSON-LD for these same questions is rendered by the sibling
+ * ./faq-schema.tsx (a server component, PL only) instead of from here.
  */
 const faqs: { q: TranslationKey; a: TranslationKey }[] = [
   { q: "home.faq.q1", a: "home.faq.a1" },
@@ -33,19 +38,9 @@ const faqs: { q: TranslationKey; a: TranslationKey }[] = [
 export default function Faq() {
   const { t } = useI18n();
   const prefersReduced = useReducedMotion();
-
-  // Structured data is built from the same array that renders the accordion, so
-  // Google's rich result can never quote copy the page does not show — and it
-  // follows the active language, because `t` does.
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((item) => ({
-      "@type": "Question",
-      name: t(item.q),
-      acceptedAnswer: { "@type": "Answer", text: t(item.a) },
-    })),
-  };
+  // Sequence, not just count: the first objection someone opens matters more
+  // than the fifth.
+  const faqOpenOrder = useRef(0);
 
   const reveal = prefersReduced
     ? {}
@@ -62,10 +57,6 @@ export default function Faq() {
   // ClientWork/OwnProducts seam inside one room. `pt-section` opens it to 132.
   return (
     <section className="bg-surface-dim pt-section pb-section-tight">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           {/* Left column: heading */}
@@ -87,6 +78,18 @@ export default function Faq() {
                   key={item.q}
                   className="group border-t border-outline-variant last:border-b"
                   {...(i === 0 ? { open: true } : {})}
+                  // The order in which people open these is a list of their
+                  // objections, ranked by weight. If most visitors open "ile to
+                  // kosztuje" first, that answer belongs higher on the page, not
+                  // folded into an accordion.
+                  onToggle={(e) => {
+                    if (!(e.currentTarget as HTMLDetailsElement).open) return;
+                    track("faq_open", {
+                      faq_position: i + 1,
+                      faq_question: t(item.q).slice(0, 80),
+                      open_order: ++faqOpenOrder.current,
+                    });
+                  }}
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
                     <span className="font-headline text-h4 font-bold tracking-tight text-on-surface">

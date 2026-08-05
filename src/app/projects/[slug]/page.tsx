@@ -1,6 +1,39 @@
 import type { Metadata } from "next";
-import { projects } from "@/lib/projects";
+import { projects, type Project } from "@/lib/projects";
 import ProjectDetailClient from "./ProjectDetailClient";
+import {
+  buildBreadcrumbs,
+  buildSoftwareApplication,
+  buildWebPage,
+  ref,
+  renderGraph,
+} from "@/lib/schema";
+
+function buildProjectGraph(project: Project, slug: string): string {
+  const path = `/projects/${slug}`;
+  const app = buildSoftwareApplication({
+    path,
+    name: project.title,
+    description: project.description.pl,
+    applicationCategory: project.tags.join(", "),
+    liveUrl: project.liveUrl,
+  });
+  return renderGraph([
+    buildWebPage({
+      path,
+      name: project.title,
+      description: project.description.pl,
+      dateModified: project.updatedAt,
+      mainEntity: ref(app),
+    }),
+    buildBreadcrumbs([
+      { name: "Programo", path: "/" },
+      { name: "Projekty", path: "/projekty" },
+      { name: project.title, path },
+    ]),
+    app,
+  ]);
+}
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -74,29 +107,14 @@ export default async function ProjectPage({
 }) {
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
-
-  const jsonLd = project
-    ? {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        name: project.title,
-        description: project.description.pl,
-        applicationCategory: project.tags.join(", "),
-        operatingSystem: "Web",
-        ...(project.liveUrl && { url: project.liveUrl }),
-        creator: {
-          "@type": "Organization",
-          name: "Programo",
-        },
-      }
-    : null;
+  const pageGraph = project ? buildProjectGraph(project, slug) : null;
 
   return (
     <>
-      {jsonLd && (
+      {pageGraph && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: pageGraph }}
         />
       )}
       <ProjectDetailClient slug={slug} />

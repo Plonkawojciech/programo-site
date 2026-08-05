@@ -5,6 +5,7 @@ import OwnProducts from "@/components/home/own-products";
 import ServicesOverview from "@/components/home/services-overview";
 import Process from "@/components/home/process";
 import Faq from "@/components/home/faq";
+import FaqSchema from "@/components/home/faq-schema";
 import ContactBookend from "@/components/home/contact-bookend";
 
 /**
@@ -48,6 +49,7 @@ export default function Home() {
       <OwnProducts />
       <ServicesOverview />
       <Process />
+      <FaqSchema />
       <Faq />
       <ContactBookend />
     </>

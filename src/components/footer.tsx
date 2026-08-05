@@ -17,6 +17,7 @@ const offerLinks: { titleKey: TKey; href: string }[] = [
   { titleKey: "offer.pillar2.title", href: "/oferta" },
   { titleKey: "offer.pillar3.title", href: "/sklepy-internetowe" },
   { titleKey: "offer.pillar4.title", href: "/strony-tracking-reklamy" },
+  { titleKey: "footer.websites", href: "/strony-internetowe" },
 ];
 
 // Projects column — top 6 (content-deck / brief section 5.4 portfolio picks).
@@ -27,7 +28,10 @@ const projectLinks = featuredSlugs
 
 const companyLinks: { labelKey: TKey; href: string }[] = [
   { labelKey: "nav.about", href: "/o-nas" },
+  { labelKey: "footer.softwareHousePoznan", href: "/software-house-poznan" },
   { labelKey: "nav.pricing", href: "/cennik" },
+  { labelKey: "footer.appCost", href: "/ile-kosztuje-aplikacji" },
+  { labelKey: "footer.stack", href: "/stack" },
   { labelKey: "nav.contact", href: "/kontakt" },
   { labelKey: "footer.privacy", href: "/polityka-prywatnosci" },
 ];

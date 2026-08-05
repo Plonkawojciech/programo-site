@@ -1,5 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import {
+  buildBreadcrumbs,
+  buildFaqPage,
+  buildService,
+  buildWebPage,
+  ref,
+  renderGraph,
+  STATIC_ROUTE_UPDATED_AT,
+} from "@/lib/schema";
+
+const PATH = "/software-house-poznan";
 
 export const metadata: Metadata = {
   title:
@@ -36,40 +47,47 @@ export const metadata: Metadata = {
   ],
 };
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Programo",
-      item: "https://programo.pl",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Software House Poznań",
-      item: "https://programo.pl/software-house-poznan",
-    },
-  ],
-};
+// Same 3 questions as the visible "Najczęstsze pytania" section below —
+// FAQPage markup was missing here even though the content already existed.
+const faqs = [
+  {
+    q: "Czy realizujecie projekty tylko w Poznaniu?",
+    a: "Siedziba Programo jest w Poznaniu, ale projekty prowadzimy też zdalnie, dla klientów z całej Polski i z zagranicy. Rozmawiamy po polsku i po angielsku.",
+  },
+  {
+    q: "Ile kosztuje współpraca z software house Programo?",
+    a: "Wszystko zależy od zakresu. Prosta aplikacja webowa i rozbudowany system SaaS to zupełnie inne wyceny, więc nie podajemy jednej stawki z góry. Widełki dostajesz po krótkiej rozmowie o tym, co ma powstać.",
+  },
+  {
+    q: "Co odróżnia Programo od innych software house'ów w Poznaniu?",
+    a: "Sami budujemy i utrzymujemy własne produkty SaaS: Estalo, Solvio, Rejestr Pro i PoolTimer. Dzięki temu wiemy, jak wygląda życie systemu długo po wdrożeniu. Do tego przez cały projekt rozmawiasz z tymi samymi dwiema osobami, które go budują.",
+  },
+];
 
-const serviceJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
+const service = buildService({
+  path: PATH,
   serviceType: "Software house Poznań",
   name: "Software House Poznań - Programo",
-  provider: { "@id": "https://programo.pl/#organization" },
-  areaServed: [
-    { "@type": "City", name: "Poznań" },
-    { "@type": "AdministrativeArea", name: "Wielkopolska" },
-    { "@type": "Country", name: "Polska" },
-  ],
   description:
     "Software house z Poznania. Tworzenie oprogramowania na zamówienie: systemy SaaS, aplikacje webowe i mobilne, integracje AI.",
-  url: "https://programo.pl/software-house-poznan",
-};
+});
+
+const pageGraph = renderGraph([
+  buildWebPage({
+    path: PATH,
+    name: "Software House Poznań - Programo",
+    description:
+      "Software house z Poznania. Budujemy aplikacje webowe, mobilne i systemy SaaS. Pracujemy z firmami z Poznania i całej Polski.",
+    dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
+    mainEntity: ref(service),
+  }),
+  buildBreadcrumbs([
+    { name: "Programo", path: "/" },
+    { name: "Software House Poznań", path: PATH },
+  ]),
+  service,
+  buildFaqPage(faqs),
+]);
 
 const services = [
   {
@@ -134,11 +152,7 @@ export default function SoftwareHousePoznanPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: pageGraph }}
       />
 
       {/* No <main> here — the root layout (Providers) already wraps every page
@@ -173,8 +187,11 @@ export default function SoftwareHousePoznanPage() {
               >
                 Bezpłatna wycena
               </a>
+              {/* /projekty, not /: a button labelled "portfolio" that lands on
+                  the homepage wastes the click, and this was the page's only
+                  outbound topical link. */}
               <Link
-                href="/"
+                href="/projekty"
                 className="rounded-full border border-current px-6 py-3 text-sm font-medium opacity-80 transition hover:opacity-100"
               >
                 Zobacz portfolio

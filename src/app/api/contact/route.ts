@@ -1,98 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod/v4";
-import { Resend } from "resend";
+import { NextRequest, NextResponse, after } from "next/server";
 import { storeLead } from "@/lib/leads";
+import { contactSchema, isRateLimited, sanitize } from "@/lib/contact-schema";
+import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
+import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 
-// A phone number with enough digits to actually dial is a complete lead on its
-// own — the homepage hero asks for a number first and treats every other field
-// as a bonus. Below this threshold the normal rules apply.
-const PHONE_MIN_DIGITS = 9;
-
-const contactSchema = z.object({
-  // Required in practice, but enforced in the superRefine below so it can be
-  // waived for a dialable phone. See the `name` rule at the bottom.
-  name: z.string().max(120, "Name too long").optional().or(z.literal("")),
-  email: z.string().email("Nieprawidłowy adres email").optional().or(z.literal("")),
-  phone: z
-    .string()
-    .max(30, "Phone too long")
-    .optional()
-    .or(z.literal("")),
-  subject: z
-    .enum([
-      "Współpraca",
-      "Wycena projektu",
-      "Pytanie techniczne",
-      "Inne",
-    ])
-    .optional()
-    .default("Inne"),
-  message: z
-    .string()
-    .max(2000, "Message must be at most 2000 characters")
-    .optional()
-    .or(z.literal("")),
-  // Lead qualification (chips on the form) — optional
-  projectType: z.string().max(60).optional().or(z.literal("")),
-  budget: z.string().max(60).optional().or(z.literal("")),
-  consent: z.literal(true, { message: "Consent is required" }),
-  consentTimestamp: z.string().datetime().optional(),
-  // Ad attribution (captured client-side) — all optional
-  gclid: z.string().max(300).optional(),
-  gbraid: z.string().max(300).optional(),
-  wbraid: z.string().max(300).optional(),
-  utm_source: z.string().max(300).optional(),
-  utm_medium: z.string().max(300).optional(),
-  utm_campaign: z.string().max(300).optional(),
-  utm_term: z.string().max(300).optional(),
-  utm_content: z.string().max(300).optional(),
-  landing_page: z.string().max(500).optional(),
-  referrer: z.string().max(500).optional(),
-  first_seen: z.string().max(40).optional(),
-})
-  .refine(
-    (d) => Boolean((d.email && d.email.length) || (d.phone && d.phone.length)),
-    { message: "Podaj e-mail lub numer telefonu.", path: ["email"] }
-  )
-  .superRefine((d, ctx) => {
-    // A dialable phone is a complete lead on its own, so the name becomes a
-    // bonus. Everything else stays exactly as it was: this rule only ever
-    // widens what the endpoint accepts, never narrows it.
-    const digits = (d.phone ?? "").replace(/\D/g, "");
-    if (digits.length >= PHONE_MIN_DIGITS) return;
-    if (!d.name?.trim()) {
-      ctx.addIssue({ code: "custom", path: ["name"], message: "Name is required" });
-    }
-  });
-
-// In-memory rate limiter: IP -> timestamps[]
-const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT = 3;
-const RATE_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const timestamps = rateLimitMap.get(ip) || [];
-  const recent = timestamps.filter((t) => now - t < RATE_WINDOW_MS);
-  rateLimitMap.set(ip, recent);
-
-  if (recent.length >= RATE_LIMIT) {
-    return true;
-  }
-  recent.push(now);
-  rateLimitMap.set(ip, recent);
-  return false;
-}
-
-// Sanitize HTML to prevent XSS
-function sanitize(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;");
-}
+/**
+ * Estimated value of one lead, in PLN. A Smart Bidding / value-optimisation
+ * signal, not a reported statistic. Mirrors LEAD_VALUE_PLN on the client so the
+ * browser and server halves of the same conversion never disagree.
+ */
+const LEAD_VALUE_PLN = 500;
 
 export async function POST(request: NextRequest) {
   const ip =
@@ -128,15 +45,13 @@ export async function POST(request: NextRequest) {
   // A phone-only lead legitimately has no name, so the notifications need a
   // label instead of a dangling "od ". The CRM keeps the field genuinely empty.
   const displayName = name?.trim() || "(bez nazwiska)";
+  // HTML-escaped copies, kept only for the fields that still reach a rendered
+  // surface. The rest were escaped solely for the e-mail body that Resend used
+  // to send; Telegram escapes for MarkdownV2 on its own and the CRM stores raw.
   const safeName = sanitize(displayName);
   const safeEmail = email ? sanitize(email) : "";
-  const safeMessage = message ? sanitize(message) : "";
   const safeSubject = sanitize(subject);
-  const safePhone = phone ? sanitize(phone) : "";
-  const safeProjectType = projectType ? sanitize(projectType) : "";
-  const safeBudget = budget ? sanitize(budget) : "";
   const consentAt = consentTimestamp || new Date().toISOString();
-  const safeConsentAt = sanitize(consentAt);
 
   // Lead source (Google Ads / UTM) - which keyword/campaign produced this lead
   const {
@@ -162,9 +77,46 @@ export async function POST(request: NextRequest) {
   // throws, but wrap defensively so a store failure can never affect the
   // contact email/Telegram flow or the response.
   const requestTs = new Date().toISOString();
+  const leadId = crypto.randomUUID();
+
+  // Server-side conversion signal (Meta CAPI + GA4 Measurement Protocol),
+  // dispatched AFTER the response so the visitor never waits on a third party.
+  // Consent is verified inside, from the cookie — never from the request body,
+  // which is only a claim by the client. Fires only once the payload has passed
+  // validation, so form spam can never inflate the conversion count.
+  after(async () => {
+    await dispatchLeadConversions({
+      consentCookie: request.cookies.get(CONSENT_COOKIE)?.value,
+      eventId: result.data.event_id,
+      leadId,
+      formId: result.data.form_id,
+      leadValuePln: LEAD_VALUE_PLN,
+      email: email || undefined,
+      phone: phone || undefined,
+      fullName: name || undefined,
+      pageUrl: result.data.page_url,
+      visitorId: result.data.visitor_id,
+      // Prefer the cookies the browser actually sent; fall back to what the
+      // client derived (it can rebuild fbc from an fbclid the pixel missed).
+      fbp: request.cookies.get("_fbp")?.value ?? result.data.fbp,
+      fbc: request.cookies.get("_fbc")?.value ?? result.data.fbc,
+      gaClientId: result.data.ga_client_id,
+      gaSessionId: result.data.ga_session_id,
+      clientIp: ip !== "unknown" ? ip : undefined,
+      userAgent: request.headers.get("user-agent") ?? undefined,
+      leadSource: result.data.utm_source || (result.data.gclid ? "google_ads" : undefined),
+      channel: result.data.referrer_class,
+    });
+  });
+
+  // Whether the submission is durably recorded somewhere. Notifications are a
+  // convenience on top of this; the response status must follow persistence,
+  // not the ping.
+  let persisted = false;
+
   try {
-    await storeLead({
-      id: crypto.randomUUID(),
+    persisted = await storeLead({
+      id: leadId,
       ts: requestTs,
       name: name || "",
       email: email || "",
@@ -218,7 +170,9 @@ export async function POST(request: NextRequest) {
         }),
         signal: AbortSignal.timeout(5000),
       });
-      if (!res.ok) {
+      if (res.ok) {
+        persisted = true;
+      } else {
         console.error(`[contact] CRM webhook failed: HTTP ${res.status}`);
       }
     } catch (e) {
@@ -228,44 +182,15 @@ export async function POST(request: NextRequest) {
     console.log("[DEV] No CRM_WEBHOOK_SECRET - skipping CRM forward.");
   }
 
-  const emailTo = process.env.EMAIL_TO || "biuro@programo.pl";
-
-  // Send email + Telegram in parallel; success if at least one channel delivers
+  // Notification channels. Telegram is the live one; the CRM webhook and the
+  // Redis store above already persist the lead independently, so a Telegram
+  // outage loses the ping, never the lead.
+  //
+  // Resend was removed 2026-08-04: it had never been configured in production
+  // (no RESEND_API_KEY, no EMAIL_TO), so the branch was dead code pretending to
+  // be a delivery channel — and a dead channel in a `some(ok)` check is exactly
+  // the kind of thing that reads as redundancy while providing none.
   const tasks: Promise<{ channel: string; ok: boolean; error?: string }>[] = [];
-
-  const resendApiKey = process.env.RESEND_API_KEY;
-  if (resendApiKey) {
-    tasks.push(
-      (async () => {
-        try {
-          const resend = new Resend(resendApiKey);
-          await resend.emails.send({
-            from: "Programo <noreply@programo.pl>",
-            to: emailTo,
-            subject: `[Programo] ${safeSubject} - od ${safeName}`,
-            html: `
-              <h2>Nowa wiadomość z formularza kontaktowego</h2>
-              <p><strong>Imię:</strong> ${safeName}</p>
-              ${safeEmail ? `<p><strong>Email:</strong> ${safeEmail}</p>` : ""}
-              ${safePhone ? `<p><strong>Telefon:</strong> ${safePhone}</p>` : ""}
-              <p><strong>Temat:</strong> ${safeSubject}</p>
-              ${safeProjectType ? `<p><strong>Rodzaj projektu:</strong> ${safeProjectType}</p>` : ""}
-              ${safeBudget ? `<p><strong>Budżet:</strong> ${safeBudget}</p>` : ""}
-              ${safeMessage ? `<p><strong>Wiadomość:</strong></p><p>${safeMessage.replace(/\n/g, "<br>")}</p>` : ""}
-              <hr>
-              ${sources.length ? `<p style="color:#444;font-size:13px;"><strong>Źródło leada:</strong><br>${sources.map(([k, v]) => `${k}: ${sanitize(v)}`).join("<br>")}</p>` : ""}
-              <p style="color:#666;font-size:12px;">Zgoda RODO zaakceptowana: ${safeConsentAt}</p>
-            `,
-          });
-          return { channel: "resend", ok: true };
-        } catch (e) {
-          return { channel: "resend", ok: false, error: String(e) };
-        }
-      })()
-    );
-  } else {
-    console.log("[DEV] No RESEND_API_KEY - skipping email.");
-  }
 
   const tgToken = process.env.TELEGRAM_BOT_TOKEN;
   const tgChatId = process.env.TELEGRAM_CHAT_ID;
@@ -328,20 +253,29 @@ export async function POST(request: NextRequest) {
   }
 
   const results = await Promise.all(tasks);
-  const anyOk = results.some((r) => r.ok);
+  const anyNotified = results.some((r) => r.ok);
   results
     .filter((r) => !r.ok)
     .forEach((r) => console.error(`[contact] ${r.channel} failed:`, r.error));
 
-  if (!anyOk) {
+  // The status follows PERSISTENCE, not notification. Previously a Telegram
+  // outage returned 500 for a lead already sitting in Redis and in the CRM: the
+  // visitor was told their message failed, and the client returns before
+  // trackLead(), so the Google Ads and Meta conversions never fired either. One
+  // dead channel cost the lead twice — once in the inbox, once in the bidding
+  // signal — while the lead itself was safe the whole time.
+  if (!persisted && !anyNotified) {
     return NextResponse.json(
       { error: "Failed to deliver notification" },
-      { status: 500 }
+      { status: 500 },
+    );
+  }
+
+  if (!anyNotified) {
+    console.error(
+      `[contact] lead ${leadId} stored but NO notification channel delivered — check Telegram`,
     );
   }
 
   return NextResponse.json({ success: true });
 }
-
-// Export for testing
-export { contactSchema, rateLimitMap, isRateLimited, sanitize };

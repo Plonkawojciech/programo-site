@@ -12,6 +12,8 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import CookieBanner from "@/components/cookie-banner";
 import AnalyticsTracker from "@/components/analytics-tracker";
+import WebVitals from "@/components/web-vitals";
+import MetaPixel from "@/components/meta-pixel";
 import StickyCta from "@/components/sticky-cta";
 
 // Localhost source editor. The ternary is evaluated at module scope against a
@@ -54,6 +56,8 @@ export default function Providers({ children }: { children: ReactNode }) {
               <StickyCta />
               <CookieBanner />
               <AnalyticsTracker />
+              <WebVitals />
+              <MetaPixel />
               <DevEditor />
             </>
           )}

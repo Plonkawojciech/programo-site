@@ -1,5 +1,29 @@
 import type { Metadata } from "next";
 import TechStack from "@/components/tech-stack";
+import {
+  buildBreadcrumbs,
+  buildWebPage,
+  ORGANIZATION_ID,
+  renderGraph,
+  STATIC_ROUTE_UPDATED_AT,
+} from "@/lib/schema";
+
+const PATH = "/stack";
+
+const pageGraph = renderGraph([
+  buildWebPage({
+    path: PATH,
+    name: "Technologie - Programo",
+    description:
+      "Nasz stack technologiczny: Next.js, React, TypeScript, Tailwind, Supabase, Neon, Vercel i więcej.",
+    dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
+    about: { "@id": ORGANIZATION_ID },
+  }),
+  buildBreadcrumbs([
+    { name: "Programo", path: "/" },
+    { name: "Technologie", path: PATH },
+  ]),
+]);
 
 export const metadata: Metadata = {
   title: "Technologie - Programo",
@@ -10,8 +34,11 @@ export const metadata: Metadata = {
 
 export default function StackPage() {
   return (
-    <div className="pt-20 md:pt-24">
-      <TechStack />
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
+      <div className="pt-20 md:pt-24">
+        <TechStack />
+      </div>
+    </>
   );
 }

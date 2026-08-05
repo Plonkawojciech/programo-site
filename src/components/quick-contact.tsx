@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import { getAttribution, trackLead } from "@/lib/tracking";
+import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
+import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
+import { track } from "@/lib/analytics/client";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 type FormState = "idle" | "submitting" | "success";
@@ -57,6 +59,8 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
   // Guards the primary Google Ads "Lead" conversion against a double-fire from a
   // rapid double-submit (before the button's disabled state applies) or any re-render race.
   const submittingRef = useRef(false);
+  // Funnel instrumentation: viewed → started → per-field → error → submitted.
+  const fa = useFormAnalytics(formId);
   const successRef = useRef<HTMLHeadingElement>(null);
 
   // Move focus to the success message so keyboard/screen-reader users are told
@@ -94,6 +98,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
+      fa.reportErrors(nextErrors);
       return;
     }
 
@@ -101,18 +106,24 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
     setState("submitting");
     setErrors({});
 
-    const payload = {
-      name,
-      email,
-      phone,
-      message,
-      projectType: projectType ? t(projectType) : "",
-      consent: true,
-      consentTimestamp: new Date().toISOString(),
-      ...getAttribution(),
-    };
-
     try {
+      // Captured before the request so the browser pixel and the server-side
+      // conversion twin share one event_id and Meta deduplicates the pair.
+      const conversion = await prepareLeadConversion();
+
+      const payload = {
+        name,
+        email,
+        phone,
+        message,
+        projectType: projectType ? t(projectType) : "",
+        consent: true,
+        consentTimestamp: new Date().toISOString(),
+        form_id: formId,
+        ...getAttribution(),
+        ...conversion,
+      };
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -121,7 +132,14 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setErrors({ server: data?.error || t("quick.error") });
+        const message = data?.error || t("quick.error");
+        setErrors({ server: message });
+        track("form_submit_failed", {
+          form_id: formId,
+          http_status: res.status,
+          message: String(message).slice(0, 100),
+        });
+        fa.reportErrors({ server: message }, "server");
         setState("idle");
         return;
       }
@@ -129,7 +147,14 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
       // Success branch only (API returned ok) — fire the primary Google Ads "Lead"
       // conversion exactly once per successful submit.
       setState("success");
-      trackLead({ form: formId, email, phone });
+      fa.markSubmitted();
+      trackLead({
+        form: formId,
+        email,
+        phone,
+        eventId: conversion.event_id,
+        seconds: fa.elapsedSeconds(),
+      });
       (e.target as HTMLFormElement).reset();
       setConsent(false);
       setProjectType(null);
@@ -262,6 +287,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
               </motion.div>
             ) : (
               <motion.form
+                ref={fa.ref}
                 onSubmit={handleSubmit}
                 noValidate
                 initial={{ opacity: 0, y: 20 }}
@@ -315,7 +341,12 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         aria-describedby={errors.name ? "quick-name-error" : undefined}
                         className={inputClass}
                         placeholder={t("quick.namePlaceholder")}
-                        onChange={() => clearFieldError("name")}
+                        onFocus={() => fa.onFieldFocus("name")}
+                        onBlur={(e) => fa.onFieldBlur("name", e.target.value)}
+                        onChange={() => {
+                          clearFieldError("name");
+                          fa.onFieldInput("name");
+                        }}
                       />
                       {errors.name && (
                         <p id="quick-name-error" role="alert" className="text-sm text-error">
@@ -339,7 +370,12 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         aria-describedby={errors.contact ? "quick-contact-error" : undefined}
                         className={inputClass}
                         placeholder={t("quick.contactPlaceholder")}
-                        onChange={() => clearFieldError("contact")}
+                        onFocus={() => fa.onFieldFocus("contact")}
+                        onBlur={(e) => fa.onFieldBlur("contact", e.target.value)}
+                        onChange={() => {
+                          clearFieldError("contact");
+                          fa.onFieldInput("contact");
+                        }}
                       />
                       {errors.contact && (
                         <p id="quick-contact-error" role="alert" className="text-sm text-error">
@@ -410,6 +446,9 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                       rows={4}
                       className={`${inputClass} resize-none`}
                       placeholder={t("quick.messagePlaceholder")}
+                      onFocus={() => fa.onFieldFocus("message")}
+                      onBlur={(e) => fa.onFieldBlur("message", e.target.value)}
+                      onChange={() => fa.onFieldInput("message")}
                     />
                   </div>
                 </div>

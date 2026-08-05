@@ -3,7 +3,8 @@
 import { useState, useRef, useId } from "react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
-import { getAttribution, trackLead } from "@/lib/tracking";
+import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
+import { track } from "@/lib/analytics/client";
 
 type PhoneFormState = "idle" | "submitting" | "success" | "error";
 
@@ -87,20 +88,31 @@ export default function HomeHero() {
     };
 
     try {
+      // Without this the browser Pixel and the server-side CAPI hit generate
+      // DIFFERENT event ids for the same submission, so Meta counts the most
+      // prominent form on the site twice, and GA4's Measurement Protocol has no
+      // client id to attach the conversion to.
+      const conversion = await prepareLeadConversion();
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, form_id: "hero-phone", ...conversion }),
       });
 
       if (!res.ok) {
         setErrorMsg(t("home.hero.phoneErrorNetwork"));
         setFormState("error");
+        track("form_submit_failed", {
+          form_id: "hero-phone",
+          http_status: res.status,
+          message: "server",
+        });
         return;
       }
 
       setFormState("success");
-      trackLead({ form: "hero-phone", method: "phone" });
+      trackLead({ form: "hero-phone", method: "phone", phone, eventId: conversion.event_id });
     } catch {
       setErrorMsg(t("home.hero.phoneErrorNetwork"));
       setFormState("error");
@@ -127,20 +139,24 @@ export default function HomeHero() {
 
           scale(1.3) is not styling: `filter: blur()` samples transparency past
           the element edge, so an unscaled layer would show a pale rim inside
-          `overflow-hidden`. 30% overscan clears the ~42px bleed of a 14px blur
+          `overflow-hidden`. 30% overscan clears the ~30px bleed of a 10px blur
           at every breakpoint, including a short mobile hero.
 
-          14px, not 26: at 26 the photo stopped being a photo. Nothing read as a
-          desk, only as a glow, which is not what was asked for. 14 kills the
-          text on the screens and the grain but keeps the lids, the monitor and
-          the window frame as recognisable shapes. */}
+          10px, not 26: at 26 the photo stopped being a photo - nothing read as
+          a desk, only as a glow. 10 still kills the text on the screens and the
+          grain, but the lids, the monitor, the mug and the window frame keep
+          their edges instead of dissolving into each other. */}
       <style>{`
         .hero-bg__img {
           transform: scale(-1.3, 1.3);
-          filter: blur(14px) saturate(0.9);
+          filter: blur(10px) saturate(0.9);
           opacity: 0.5;
         }
-        [data-theme="light"] .hero-bg__img { opacity: 0.28; }
+        /* Jaśniejszy motyw potrzebuje WIĘKSZEJ krycia niż ciemny, nie
+           mniejszej. Zdjęcie jest niemal czarne: na ciemnym tle dokłada
+           różnicę, na jasnym musi ją najpierw wyrobić. Przy 0.28 znikało
+           zupełnie - zostawał płaski off-white. */
+        [data-theme="light"] .hero-bg__img { opacity: 0.42; }
 
         .hero-bg__scrim {
           background: linear-gradient(
@@ -173,7 +189,7 @@ export default function HomeHero() {
         <div className="hero-bg__scrim absolute inset-0" />
       </div>
 
-      <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
+      <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         {/* ── Text + form ── */}
         {/* 4xl, not 3xl: at the display size the headline breaks to four lines
             below ~890px and to three above it. */}

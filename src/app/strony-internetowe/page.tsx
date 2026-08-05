@@ -7,6 +7,17 @@ import CaseStudies from "@/components/case-studies";
 import CompactLeadForm from "@/components/compact-lead-form";
 import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
+import {
+  buildBreadcrumbs,
+  buildFaqPage,
+  buildService,
+  buildWebPage,
+  ref,
+  renderGraph,
+  STATIC_ROUTE_UPDATED_AT,
+} from "@/lib/schema";
+
+const PATH = "/strony-internetowe";
 
 export const metadata: Metadata = {
   title: "Strony internetowe dla firm - projekt i wdrożenie | Programo",
@@ -35,35 +46,6 @@ export const metadata: Metadata = {
   ],
 };
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Programo", item: "https://programo.pl" },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Strony internetowe",
-      item: "https://programo.pl/strony-internetowe",
-    },
-  ],
-};
-
-const serviceJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Tworzenie stron internetowych",
-  name: "Tworzenie stron internetowych dla firm - Programo",
-  provider: { "@id": "https://programo.pl/#organization" },
-  areaServed: [
-    { "@type": "Country", name: "Polska" },
-    { "@type": "City", name: "Poznań" },
-  ],
-  description:
-    "Projektowanie i wykonanie stron internetowych dla firm: strony firmowe, landing page, sklepy. Next.js/React, Core Web Vitals, SEO.",
-  url: "https://programo.pl/strony-internetowe",
-};
-
 const faqs = [
   {
     q: "Ile kosztuje strona internetowa?",
@@ -83,15 +65,34 @@ const faqs = [
   },
 ];
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const service = buildService({
+  path: PATH,
+  serviceType: "Tworzenie stron internetowych",
+  name: "Tworzenie stron internetowych dla firm - Programo",
+  areaServed: [
+    { "@type": "Country", name: "Polska" },
+    { "@type": "City", name: "Poznań" },
+  ],
+  description:
+    "Projektowanie i wykonanie stron internetowych dla firm: strony firmowe, landing page, sklepy. Next.js/React, Core Web Vitals, SEO.",
+});
+
+const pageGraph = renderGraph([
+  buildWebPage({
+    path: PATH,
+    name: "Strony internetowe dla firm - projekt i wdrożenie | Programo",
+    description:
+      "Projektujemy i wdrażamy strony internetowe dla firm z Poznania i całej Polski. Next.js, panel do edycji treści, formularz i pomiar zapytań od startu.",
+    dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
+    mainEntity: ref(service),
+  }),
+  buildBreadcrumbs([
+    { name: "Programo", path: "/" },
+    { name: "Strony internetowe", path: PATH },
+  ]),
+  service,
+  buildFaqPage(faqs),
+]);
 
 const services = [
   { n: "01", title: "Strony firmowe", desc: "Strona firmowa w Next.js z panelem, w którym sam poprawisz teksty i dodasz podstronę. Zbudowana tak, żeby odwiedzający szybko trafił do formularza albo do numeru telefonu." },
@@ -138,9 +139,7 @@ const SECTION = "relative bg-surface pt-section pb-section-tight";
 export default function StronyInternetowePage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
 
       <div className="bg-surface text-on-surface">
         {/* HERO — static (best LCP), 2-column: copy + lead form ABOVE THE FOLD.

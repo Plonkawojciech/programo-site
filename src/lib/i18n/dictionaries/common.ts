@@ -27,6 +27,15 @@ export const common = {
   "footer.location": { pl: "Poznań, Polska", en: "Poznan, Poland" },
   "footer.companyName": { pl: "Programo s.j.", en: "Programo s.j." },
   "footer.copyright": { pl: "Programo", en: "Programo" },
+  // Landing pages that were orphaned: nothing on the site linked to
+  // /software-house-poznan, /strony-internetowe, /ile-kosztuje-aplikacji or
+  // /stack, so their only inbound signal came from the sitemap. The first of
+  // them is the target page for "software house poznań" — 165 impressions and
+  // zero clicks at an average position of ~26.
+  "footer.softwareHousePoznan": { pl: "Software house Poznań", en: "Software house in Poznan" },
+  "footer.websites": { pl: "Strony internetowe", en: "Websites" },
+  "footer.appCost": { pl: "Ile kosztuje aplikacja", en: "How much does an app cost" },
+  "footer.stack": { pl: "Stack technologiczny", en: "Tech stack" },
   "footer.privacy": { pl: "Polityka prywatności", en: "Privacy policy" },
   "footer.cookies": { pl: "Ustawienia cookies", en: "Cookie settings" },
 
