@@ -232,8 +232,26 @@
   --theme-alt-text-rgb: 218, 241, 222;
   --theme-alt-accent-rgb: 142, 182, 155;
 
-  /* Navbar pill colors — dark green pill with light text */
-  --theme-nav-pill: rgba(5, 31, 32, 0.5);
+  /* Navbar pill colors — dark green pill with light text.
+
+     The base alpha is 0.70, not the 0.5 it carried until 2026-08-07, and the
+     number is a contrast floor rather than a taste call. At 0.5 the pill
+     composited to rgb(128,142,142) — a mid grey where NEITHER the light mint
+     text nor a dark one clears 4.5:1, so no change to the text colour could
+     have fixed it. Only the backdrop moves the number.
+
+     Measured against WHITE, not against the page body, because the pill is
+     translucent and fixed: what sits behind it is the hero photo at the top and
+     whatever section scrolls under it after. White is the lightest thing that
+     can ever land there, so it is the worst case, and a translucent chrome has
+     to be judged by its worst case, not its average. Inactive links (alpha
+     0.92) over white: 0.50 → 2.62 · 0.65 → 4.12 · 0.70 → 4.85 · 0.85 → 8.04.
+     0.65 still misses, so 0.70 is the first step that passes with room.
+
+     Side effect worth keeping: at 0.5 the pill read as washed-out grey, which
+     is not what the comment above it promised. At 0.70 it is an actual dark
+     pill on a light page. */
+  --theme-nav-pill: rgba(5, 31, 32, 0.7);
   --theme-nav-pill-scrolled: rgba(5, 31, 32, 0.85);
   --theme-nav-pill-mobile: rgba(5, 31, 32, 0.75);
   --theme-nav-pill-border: rgba(218, 241, 222, 0.15);
