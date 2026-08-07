@@ -217,7 +217,7 @@ export default function SklepyInternetowePage() {
                 Jedmar miał działający sklep na PrestaShop i nie potrzebował nowego. Brakowało
                 mu wygodnych zakupów z telefonu i sensownej sprzedaży części zamiennych.
                 Zbudowaliśmy dwie natywne aplikacje, na iOS i Androida, opublikowane w
-                App Store i Google Play: katalog ponad 1500 produktów, koszyk, sześć metod
+                App Store i Google Play: katalog ponad 1400 produktów, koszyk, sześć metod
                 płatności, Paczkomaty InPost i skaner kodów EAN. Doszedł do tego moduł
                 interaktywnych schematów, czyli 73 narzędzia rozrysowane część po części
                 i około 7500 klikalnych markerów, z których każdy dodaje daną część do

@@ -11,8 +11,33 @@
   --theme-bg-2: #0A2A28;      /* surface container low */
   --theme-bg-3: #0B2B26;      /* tech stack, surface container */
   --theme-bg-4: #163832;      /* surface container high */
-  --theme-border-1: #163832;  /* primary borders */
-  --theme-border-2: #235347;  /* secondary borders */
+  /* Historically "borders", but nothing draws a border with them any more —
+     they feed --color-surface-container-high, --color-primary-container and
+     --color-inverse-primary, i.e. FILLS. Left at their exact values because
+     text sits on top of them; see --theme-outline* below for the real borders. */
+  --theme-border-1: #163832;  /* fill: inverse primary */
+  --theme-border-2: #235347;  /* fill: container high, primary container */
+
+  /* Borders, split off from the fills above on 2026-08-07. Sharing a hex with a
+     background was what made every rule on the site invisible: --theme-border-1
+     is #163832 on a #051F20 body, which is 1.36:1 at FULL opacity, and most call
+     sites then run it at /30. A fill only has to differ from its parent; a border
+     has to be *seen*, and one of these is drawn around interactive controls.
+     Both derived by scaling the old greens in linear light, so the hue is
+     identical to the palette — only the luminance moved.
+       outline         3.0:1 on bg-1 — WCAG 1.4.11: `border-outline` is the sole
+                       visual boundary of the ghost buttons, so 3:1 is required,
+                       not preferred. Was 1.94:1.
+       outline-variant 2.0:1 on bg-1 — structural hairlines between sections and
+                       around cards. Decorative, so exempt from 1.4.11, but it
+                       has to be perceptible or it is dead CSS. Was 1.36:1.
+                       Deliberately lands on what `outline` measured yesterday:
+                       the quiet tier now looks like the loud tier already did,
+                       so nothing on the page gets louder than something already
+                       shipped. */
+  --theme-outline: #367160;
+  --theme-outline-variant: #235347;
+
   --theme-text-1: #DAF1DE;    /* main text — light mint */
   --theme-text-2: #8EB69B;    /* muted text — sage */
   --theme-accent: #8EB69B;    /* primary brand color */
@@ -120,8 +145,17 @@
   --theme-bg-2: #F2F8F3;      /* very light mint */
   --theme-bg-3: #E6F1E8;      /* light mint container */
   --theme-bg-4: #DAF1DE;      /* mint from palette */
-  --theme-border-1: #DAF1DE;  /* mint border */
-  --theme-border-2: #8EB69B;  /* sage border */
+  --theme-border-1: #DAF1DE;  /* fill: inverse primary */
+  --theme-border-2: #8EB69B;  /* fill: container high, primary container */
+
+  /* Same split as dark, same targets on this theme's own bg-1 (#FBFDFB).
+     outline-variant reuses the palette sage unchanged (2.2:1); outline is that
+     sage scaled down in linear light to hit 3.0:1, hue untouched.
+     Light was the worse of the two themes: border-1 here is #DAF1DE on #FBFDFB,
+     a 1.17:1 rule, which is roughly a 1.5% step and simply does not render. */
+  --theme-outline: #799B84;
+  --theme-outline-variant: #8EB69B;
+
   --theme-text-1: #051F20;    /* deepest dark green — main text */
   --theme-text-2: #235347;    /* medium dark green — muted text */
   --theme-accent: #235347;    /* dark green accent for strong contrast on white */
@@ -182,8 +216,8 @@
   --color-primary-container: var(--theme-border-2);
   --color-on-primary: var(--theme-bg-1);
   --color-on-primary-container: var(--theme-text-1);
-  --color-outline: var(--theme-border-2);
-  --color-outline-variant: var(--theme-border-1);
+  --color-outline: var(--theme-outline);
+  --color-outline-variant: var(--theme-outline-variant);
   --color-error: var(--theme-error);
   --color-secondary: var(--theme-accent);
   --color-tertiary: var(--theme-text-1);

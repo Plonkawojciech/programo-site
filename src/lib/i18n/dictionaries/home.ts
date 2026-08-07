@@ -101,10 +101,6 @@ export const home = {
   // shown as actual work in ClientWork, and the 24 h promise still sits next to
   // the phone field where it affects a decision.
   "home.trust.eyebrow": { pl: "Zaufali nam", en: "Trusted by" },
-  // Druga grupa paska zaufania. Celowo "produkty", nie "realizacje": realizacja
-  // czyta się jako robota dla kogoś, a to jest dokładnie ta różnica, którą ten
-  // pasek ma pokazywać.
-  "home.trust.own": { pl: "Własne produkty", en: "Our own products" },
 
   // 1.3 Offer — 4 pillars
   "home.offer.eyebrow": { pl: "Co robimy", en: "What we do" },
@@ -171,8 +167,8 @@ export const home = {
   },
   "home.jedmar.challengeLabel": { pl: "Wyzwanie", en: "Challenge" },
   "home.jedmar.challenge": {
-    pl: "Centrum Narzędziowe Jedmar prowadzi sklep z ponad 1500 produktami na PrestaShop. Zakupy z telefonu były uciążliwe, a dobranie części zamiennej do gwoździarki wymagało telefonu do obsługi i wertowania PDF-ów producenta.",
-    en: "The Jedmar Tool Center runs a store with over 1,500 products on PrestaShop. Shopping from a phone was clumsy, and matching a spare part to a nail gun meant calling the shop and digging through manufacturer PDFs.",
+    pl: "Centrum Narzędziowe Jedmar prowadzi sklep z ponad 1400 produktami na PrestaShop. Zakupy z telefonu były uciążliwe, a dobranie części zamiennej do gwoździarki wymagało telefonu do obsługi i wertowania PDF-ów producenta.",
+    en: "The Jedmar Tool Center runs a store with over 1,400 products on PrestaShop. Shopping from a phone was clumsy, and matching a spare part to a nail gun meant calling the shop and digging through manufacturer PDFs.",
   },
   "home.jedmar.solutionLabel": { pl: "Rozwiązanie", en: "Solution" },
   "home.jedmar.solution": {
@@ -184,7 +180,7 @@ export const home = {
     pl: "Obie aplikacje są opublikowane i działają w App Store oraz Google Play, a schematy części działają publicznie na jedmar.pl i natywnie w obu aplikacjach. Katalog synchronizuje się automatycznie co kilka minut, bez pracy po stronie sklepu.",
     en: "Both apps are published and live on the App Store and Google Play, and the parts diagrams run publicly on jedmar.pl and natively inside both apps. The catalog syncs automatically every few minutes, with no work on the store's side.",
   },
-  "home.jedmar.m1.value": { pl: "1500+", en: "1500+" },
+  "home.jedmar.m1.value": { pl: "1400+", en: "1400+" },
   "home.jedmar.m1.label": { pl: "produktów w katalogu", en: "products in the catalog" },
   "home.jedmar.m2.value": { pl: "73", en: "73" },
   "home.jedmar.m2.label": {
@@ -362,22 +358,25 @@ export const home = {
     pl: "Każdy lead trafia dwoma kanałami naraz, więc właściciel reaguje w kilka minut, bez zaglądania do skrzynki.",
     en: "Every lead arrives through two channels at once, so the owner reacts within minutes without opening an inbox.",
   },
-  "home.work.jedmar.category": { pl: "Sklep internetowy · Narzędzia B2B", en: "Online store · B2B tools" },
+  // Kategoria mówi "aplikacje", nie "sklep internetowy". Sklep jedmar.pl istniał
+  // przed nami i nie jest naszym dziełem - patrz `scope` w projects.ts, gdzie
+  // jest to napisane wprost. Trzy klucze niżej mówiły co innego.
+  "home.work.jedmar.category": { pl: "Aplikacje mobilne · Narzędzia B2B", en: "Mobile apps · B2B tools" },
   "home.work.jedmar.imgAlt": {
     pl: "Sklep Jedmar - widok strony głównej",
     en: "Jedmar store - homepage view",
   },
   "home.work.jedmar.problem": {
-    pl: "Centrum narzędziowe z katalogiem na tysiąc kilkaset pozycji potrzebowało szybszego sklepu, ale bez przebudowy backendu.",
-    en: "A tool center with a catalog of well over a thousand items needed a faster store, but without rebuilding the backend.",
+    pl: "Centrum narzędziowe z katalogiem ponad 1400 pozycji potrzebowało wygodnych zakupów z telefonu i sensownej sprzedaży części zamiennych.",
+    en: "A tool center with a catalog of over 1,400 items needed comfortable phone shopping and a sane way to sell spare parts.",
   },
   "home.work.jedmar.solution": {
-    pl: "Nowy frontend Next.js na istniejącym PrestaShopie: katalog z filtrami, koszyk, checkout i konto klienta. Zamówienia wracają do starego panelu.",
-    en: "A new Next.js frontend on the existing PrestaShop: filtered catalog, cart, checkout and customer accounts. Orders flow back into the old panel.",
+    pl: "Dwie natywne aplikacje - iOS w Swift, Android w Kotlinie - spięte z istniejącym PrestaShopem: katalog, koszyk, sześć metod płatności, Paczkomaty i skaner kodów EAN. Do tego moduł schematów, w którym każda część z rysunku trafia prosto do koszyka.",
+    en: "Two native apps - iOS in Swift, Android in Kotlin - wired into the existing PrestaShop: catalog, cart, six payment methods, parcel lockers and an EAN scanner. Plus a diagram module where every part on a drawing goes straight into the cart.",
   },
   "home.work.jedmar.effect": {
-    pl: "1460 produktów i 190 kategorii renderuje się statycznie pod SEO, bez migracji danych i bez ryzyka dla działającego sklepu.",
-    en: "1,460 products and 190 categories render statically for SEO, with no data migration and no risk to the live store.",
+    pl: "Obie aplikacje są opublikowane w App Store i Google Play, a schematy 73 narzędzi działają publicznie na jedmar.pl. Katalog synchronizuje się sam, sklepu nie trzeba było migrować.",
+    en: "Both apps are published on the App Store and Google Play, and diagrams of 73 tools run publicly on jedmar.pl. The catalog syncs itself, and the store needed no migration.",
   },
   "home.work.wks.category": { pl: "Strona sportowa · Klub", en: "Sports site · Club" },
   "home.work.wks.imgAlt": {
