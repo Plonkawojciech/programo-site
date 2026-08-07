@@ -31,7 +31,7 @@ function TechCard({ item, index }: { item: TechItem; index: number }) {
 
   return (
     <div
-      className="tech-card-line card-hover group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] border border-[var(--theme-border-2)]/30 bg-[var(--theme-bg-3)] p-8 shadow-sm md:min-w-[320px] overflow-hidden"
+      className="tech-card-line card-hover group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] bg-card p-8 shadow-card md:min-w-[320px] overflow-hidden"
       style={{
         animationDelay: `${index * 0.1}s`,
         // @ts-expect-error CSS custom property for tech-card-line hover color

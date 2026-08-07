@@ -173,7 +173,7 @@ export default function CompactLeadForm({
     <div
       role="status"
       aria-live="polite"
-      className="flex items-start gap-4 rounded-2xl border border-primary/40 bg-surface p-6"
+      className="flex items-start gap-4 rounded-2xl bg-card p-6 shadow-card"
     >
       <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
         <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
@@ -341,7 +341,7 @@ export default function CompactLeadForm({
   // --- bare: just the form card, for embedding in a hero column ---------------
   if (bare) {
     return (
-      <div id={anchorId ?? formId} className="scroll-mt-28 rounded-3xl border border-primary/30 bg-primary/5 p-6 md:p-8">
+      <div id={anchorId ?? formId} className="scroll-mt-28 rounded-3xl bg-card p-6 shadow-card md:p-8">
         <h2 className="font-headline text-2xl font-bold tracking-tight text-on-surface">
           {resolvedHeading}
         </h2>
@@ -357,7 +357,7 @@ export default function CompactLeadForm({
   return (
     <section id={anchorId ?? formId} className="relative bg-surface py-section-tight scroll-mt-28">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
-        <div className="rounded-3xl border border-primary/30 bg-primary/5 p-7 md:p-12">
+        <div className="rounded-3xl bg-card p-7 shadow-card md:p-12">
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">
             <div>
               <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">

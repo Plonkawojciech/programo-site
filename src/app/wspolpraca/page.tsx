@@ -364,7 +364,7 @@ export default function WspolpracaPage() {
         {/* CTA FINALNE */}
         <section className={SECTION}>
           <div className={CONTAINER}>
-            <Reveal className="overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:p-16">
+            <Reveal className="overflow-hidden rounded-3xl bg-card p-8 text-center shadow-card md:p-16">
               <h2 className={H2}>Zacznij od jednego telefonu</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
                 Kwadrans i wiesz, czy to dla Ciebie. Nic nie podpisujesz na

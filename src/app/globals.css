@@ -26,9 +26,19 @@
      separation from the fill step above, and dropping the band further would
      only crush the section into the page edges. */
   --theme-card-band: #051F20;
-  --theme-card-shadow: 0 1px 2px rgba(3, 21, 23, 0.4),
+  /* The first layer is a hairline ring, not a blur — it replaces the `border`
+     class the cards used to carry. Owner, 2026-08-07: "zeby nie bylo widac tej
+     chamskiej obwodki tylko zeby to bylo jakby nad tlem". A drawn border is a
+     line you read before you read the card; a 1px ring at 6% is a line you only
+     notice when it is missing. It lives in the shadow so a card is one class,
+     and so the ring can flip direction per theme: here it is LIGHTER than the
+     card, because on a dark page an edge catches light rather than casting it.
+     Ring first, then contact shadow, then the soft cast — painter's order. */
+  --theme-card-shadow: 0 0 0 1px rgba(218, 241, 222, 0.06),
+    0 1px 2px rgba(3, 21, 23, 0.4),
     0 12px 28px -10px rgba(3, 21, 23, 0.55);
-  --theme-card-shadow-hover: 0 2px 4px rgba(3, 21, 23, 0.45),
+  --theme-card-shadow-hover: 0 0 0 1px rgba(218, 241, 222, 0.1),
+    0 2px 4px rgba(3, 21, 23, 0.45),
     0 26px 50px -14px rgba(3, 21, 23, 0.65);
 
   /* Historically "borders", but nothing draws a border with them any more —
@@ -174,9 +184,14 @@
      back so paper-white can step forward. It is NOT the #E6F1E8 slab the cards
      used to be filled with — that was 8× the tint and read as "green box". */
   --theme-card-band: #F2F8F3;
-  --theme-card-shadow: 0 1px 2px rgba(5, 31, 32, 0.05),
+  /* Ring flips direction here: DARKER than the card, because on a light page an
+     edge casts rather than catches. 7% rather than dark's 6% — the same ring has
+     less work to do against a near-black card than against paper on paper. */
+  --theme-card-shadow: 0 0 0 1px rgba(5, 31, 32, 0.07),
+    0 1px 2px rgba(5, 31, 32, 0.05),
     0 12px 28px -10px rgba(5, 31, 32, 0.15);
-  --theme-card-shadow-hover: 0 2px 6px rgba(5, 31, 32, 0.07),
+  --theme-card-shadow-hover: 0 0 0 1px rgba(5, 31, 32, 0.1),
+    0 2px 6px rgba(5, 31, 32, 0.07),
     0 26px 50px -14px rgba(5, 31, 32, 0.22);
 
   --theme-border-1: #DAF1DE;  /* fill: inverse primary */
@@ -565,16 +580,18 @@ body {
    would still leave a near-instant translateY jump, which this overrides. */
 @utility card-hover {
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1);
 
   &:hover,
   &:focus-visible {
     transform: translateY(-2px);
-    border-color: rgba(var(--theme-accent-rgb), 0.5);
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.15),
-      0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    /* Was a raw `rgba(0,0,0,0.15)` pair plus a `border-color` tween. Both went
+       stale on 2026-08-07 when cards lost their `border` class: the tween had
+       nothing left to colour, and the black shadow carried no 1px ring, so a
+       card that had an edge at rest lost it on hover — the one moment it is
+       meant to feel more solid. Now it is the same token the rest of the site
+       hovers with, which is what this utility's docblock always claimed. */
+    box-shadow: var(--theme-card-shadow-hover);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -583,6 +600,20 @@ body {
       transform: none;
     }
   }
+}
+
+/* Horizontal snap rails (homepage showcase). The native scrollbar is hidden
+   because the rail already advertises itself two other ways — neighbouring
+   slides are clipped at the viewport edge, and dots sit underneath — so the bar
+   would be a third, uglier affordance. Hiding it costs nothing here: the rail is
+   NOT the only route to any slide. Every card is a plain link that also lives on
+   /projekty, and the dots are real buttons, so keyboard and screen-reader users
+   never depend on dragging. Do not reuse this on a rail where scrolling is the
+   only way to reach content. */
+@utility scrollbar-none {
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* legacy Edge */
+  &::-webkit-scrollbar { display: none; }
 }
 
 /* Projects marquee — infinite horizontal scroll */

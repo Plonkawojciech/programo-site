@@ -232,7 +232,7 @@ export default function StronyInternetowePage() {
                 </li>
               ))}
             </ol>
-            <Reveal className="mt-14 rounded-2xl border border-outline-variant/40 bg-surface-container-low px-6 py-5 md:mt-20">
+            <Reveal className="mt-14 rounded-2xl bg-card px-6 py-5 shadow-card md:mt-20">
               <p className="max-w-2xl text-sm text-on-surface-variant">
                 Prowadzimy też Google Ads i konfigurujemy pomiar konwersji razem
                 z Consent Mode v2, na Twojej stronie albo na nowej.{" "}
@@ -262,7 +262,7 @@ export default function StronyInternetowePage() {
         {/* DLACZEGO MY */}
         <section className={SECTION}>
           <div className={CONTAINER}>
-            <Reveal className="overflow-hidden rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:p-14">
+            <Reveal className="overflow-hidden rounded-3xl bg-card p-8 shadow-card md:p-14">
               <h2 className={H2}>Dwóch inżynierów z Poznania i żadnych pośredników</h2>
               <p className="mt-6 max-w-3xl text-lg font-light leading-relaxed text-on-surface/70">
                 Programo to Wojciech Płonka i Bartosz Kołaj. Wojtek odpowiada za
@@ -325,7 +325,7 @@ export default function StronyInternetowePage() {
         {/* CTA FINALNE */}
         <section className={SECTION}>
           <div className={CONTAINER}>
-            <Reveal className="overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:p-16">
+            <Reveal className="overflow-hidden rounded-3xl bg-card p-8 text-center shadow-card md:p-16">
               <h2 className={H2}>Porozmawiajmy o Twojej stronie</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
                 Opisz projekt w dwie minuty, wrócimy z planem i wyceną. Pracujemy

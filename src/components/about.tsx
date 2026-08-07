@@ -76,7 +76,7 @@ export default function About() {
         </div>
 
         {/* Company data + CTA */}
-        <Reveal className="mt-14 flex flex-col items-start gap-8 rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:mt-20 md:flex-row md:items-center md:justify-between md:p-12">
+        <Reveal className="mt-14 flex flex-col items-start gap-8 rounded-3xl bg-card p-8 shadow-card md:mt-20 md:flex-row md:items-center md:justify-between md:p-12">
           <div>
             <p className="font-headline text-xl font-medium tracking-tight text-on-surface md:text-2xl">
               {t("about.company.line")}

@@ -205,7 +205,7 @@ export default function IleKosztujeAplikacjiPage() {
               {factors.map((f) => (
                 <div
                   key={f.title}
-                  className="rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6"
+                  className="rounded-2xl bg-card p-6 shadow-card"
                 >
                   <h3 className="mb-2 font-headline text-lg font-bold tracking-tight">{f.title}</h3>
                   <p className="text-sm leading-relaxed opacity-75">{f.desc}</p>
@@ -272,7 +272,7 @@ export default function IleKosztujeAplikacjiPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-primary/30 bg-primary/5 p-8 md:p-12">
+          <section className="rounded-3xl bg-card p-8 shadow-card md:p-12">
             <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
               Chcesz poznać koszt swojego projektu?
             </h2>

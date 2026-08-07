@@ -173,7 +173,7 @@ export default function SklepyInternetowePage() {
                     e-commerce work. */}
                 <div className="mt-10 flex flex-col gap-5 border-t border-outline-variant/30 pt-7">
                   <div className="flex items-center gap-4">
-                    <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border border-outline-variant/40 bg-surface-container-low">
+                    <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-card shadow-card">
                       <Image
                         src="/screenshots/jedmar-hero.webp"
                         alt="Aplikacja mobilna sklepu Jedmar - natywne iOS i Android zbudowane przez Programo"
@@ -307,7 +307,7 @@ export default function SklepyInternetowePage() {
         {/* CTA FINALNE */}
         <section className={SECTION}>
           <div className={CONTAINER}>
-            <Reveal className="overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:p-16">
+            <Reveal className="overflow-hidden rounded-3xl bg-card p-8 text-center shadow-card md:p-16">
               <h2 className={H2}>Porozmawiajmy o Twoim sklepie</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
                 Opisz projekt w dwie minuty, a wrócimy z planem, listą integracji

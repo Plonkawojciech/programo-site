@@ -58,7 +58,7 @@ export default function CaseStudies({
             const isLive = project.status === "live" && Boolean(project.liveUrl);
             return (
               <Reveal key={project.slug} delay={i * 0.1}>
-                <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-outline-variant/30 bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-outline hover:shadow-card-hover">
+                <article className="group flex h-full flex-col overflow-hidden rounded-3xl bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
                   <div className="relative aspect-[16/10] overflow-hidden bg-surface-container">
                     {shot ? (
                       <Image

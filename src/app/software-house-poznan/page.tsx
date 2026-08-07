@@ -227,7 +227,7 @@ export default function SoftwareHousePoznanPage() {
               {services.map((s) => (
                 <div
                   key={s.title}
-                  className="rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6 transition hover:border-outline-variant/70"
+                  className="rounded-2xl bg-card p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover"
                 >
                   <h3 className="mb-3 font-headline text-xl font-bold tracking-tight">{s.title}</h3>
                   <p className="text-sm leading-relaxed opacity-75">{s.desc}</p>
@@ -261,7 +261,7 @@ export default function SoftwareHousePoznanPage() {
                 <Link
                   key={p.slug}
                   href={`/projects/${p.slug}`}
-                  className="group rounded-2xl border border-outline-variant/40 bg-surface-container-low p-6 transition hover:border-outline-variant/70"
+                  className="group rounded-2xl bg-card p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover"
                 >
                   <h3 className="mb-2 font-headline text-xl font-bold tracking-tight group-hover:underline">
                     {p.name}
@@ -312,7 +312,7 @@ export default function SoftwareHousePoznanPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-primary/30 bg-primary/5 p-8 md:p-12">
+          <section className="rounded-3xl bg-card p-8 shadow-card md:p-12">
             <h2 className="mb-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
               Skontaktuj się z software house Programo
             </h2>

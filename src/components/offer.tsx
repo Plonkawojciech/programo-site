@@ -95,7 +95,7 @@ export default function Offer() {
                     <span aria-hidden="true">→</span>
                   </Link>
                 </div>
-                <div className="rounded-3xl border border-outline-variant/40 bg-surface-container-low p-6 md:p-8">
+                <div className="rounded-3xl bg-card p-6 shadow-card md:p-8">
                   <ul className="flex flex-col gap-3.5">
                     {p.bulletKeys.map((k) => (
                       <li key={k} className="flex items-start gap-3 text-sm leading-relaxed text-on-surface/80 md:text-base">

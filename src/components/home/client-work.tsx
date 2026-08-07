@@ -1,21 +1,25 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
-import { easeEntry, durationMedium, staggerItem } from "@/lib/motion";
 import { getProjectBySlug } from "@/lib/projects";
+import { trackPortfolioClick } from "@/lib/tracking";
 
 interface CaseStudy {
   slug: string;
   image: string;
   imgAltKey: TranslationKey;
   categoryKey: TranslationKey;
-  problemKey: TranslationKey;
-  solutionKey: TranslationKey;
-  effectKey: TranslationKey;
 }
+
+// The caption is a label, not a paragraph. `home.work.*.effect` — two full
+// sentences each — was written for the narrative layout this replaced; over a
+// screenshot it turned into a three-line wall the visitor scrolls past. It still
+// lives in the dictionary and still gets read, on the case study page the button
+// leads to. Here the name and the category do the work.
 
 // Order is the pitch order, not chronology: Jedmar leads because it is the one
 // piece of client work that shipped to the App Store and Google Play, so it
@@ -27,9 +31,6 @@ const cases: CaseStudy[] = [
     image: "/screenshots/jedmar-hero.webp",
     imgAltKey: "home.work.jedmar.imgAlt",
     categoryKey: "home.work.jedmar.category",
-    problemKey: "home.work.jedmar.problem",
-    solutionKey: "home.work.jedmar.solution",
-    effectKey: "home.work.jedmar.effect",
   },
   {
     // Key namespace is `wks` while the project slug is `wks-poznan`; the two are
@@ -38,113 +39,57 @@ const cases: CaseStudy[] = [
     image: "/screenshots/wks-hero.webp",
     imgAltKey: "home.work.wks.imgAlt",
     categoryKey: "home.work.wks.category",
-    problemKey: "home.work.wks.problem",
-    solutionKey: "home.work.wks.solution",
-    effectKey: "home.work.wks.effect",
   },
   {
     slug: "wsafefinanse",
     image: "/screenshots/wsafefinanse-hero.webp",
     imgAltKey: "home.work.wsafefinanse.imgAlt",
     categoryKey: "home.work.wsafefinanse.category",
-    problemKey: "home.work.wsafefinanse.problem",
-    solutionKey: "home.work.wsafefinanse.solution",
-    effectKey: "home.work.wsafefinanse.effect",
   },
 ];
-
-/* ── Narrative block for a single case study ─────────────────────────── */
-
-function CaseNarrative({
-  c,
-  t,
-  reduced,
-}: {
-  c: CaseStudy;
-  t: ReturnType<typeof useI18n>["t"];
-  reduced: boolean;
-}) {
-  const base = reduced
-    ? { opacity: 1, y: 0 }
-    : { opacity: 0, y: 16 };
-  const visible = { opacity: 1, y: 0 };
-  const transition = (d: number) => ({
-    delay: d,
-    duration: durationMedium,
-    ease: easeEntry,
-  });
-
-  return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <h3 className="font-headline text-h3 font-semibold tracking-tight text-on-surface">
-          {/* Read from the project record rather than repeated here. A second
-              copy of a client's name is a second thing to keep correct, and it
-              had already drifted — this rendered "WKS Poznan" while the project
-              page, the trust bar and the case study all said "WKS Poznań". */}
-          {getProjectBySlug(c.slug)?.title ?? c.slug}
-        </h3>
-        <span className="text-sm text-on-surface-variant">
-          {t(c.categoryKey)}
-        </span>
-      </div>
-
-      <dl className="flex flex-col gap-4">
-        {(
-          [
-            { label: "home.work.problem" as TranslationKey, value: c.problemKey, accent: false },
-            { label: "home.work.solution" as TranslationKey, value: c.solutionKey, accent: false },
-            { label: "home.work.effect" as TranslationKey, value: c.effectKey, accent: true },
-          ]
-        ).map((row, ri) => (
-          <motion.div
-            key={ri}
-            initial={base}
-            whileInView={visible}
-            viewport={{ once: true, margin: "-5% 0px" }}
-            transition={transition(ri * staggerItem)}
-            className="flex flex-col gap-1"
-          >
-            <dt className="text-sm font-medium text-on-surface-variant">
-              {t(row.label)}
-            </dt>
-            <dd
-              className={
-                row.accent
-                  ? "text-base leading-relaxed text-on-surface"
-                  : "text-base leading-relaxed text-on-surface-variant"
-              }
-            >
-              {t(row.value)}
-            </dd>
-          </motion.div>
-        ))}
-      </dl>
-
-      <Link
-        href={`/projects/${c.slug}`}
-        className="group/link mt-1 inline-flex w-fit items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-on-surface focus-visible:text-on-surface"
-      >
-        {t("home.work.cta")}
-        <span
-          aria-hidden="true"
-          className="transition-transform duration-300 ease-out group-hover/link:translate-x-1"
-        >
-          &rarr;
-        </span>
-      </Link>
-    </div>
-  );
-}
 
 /* ── Main section ────────────────────────────────────────────────────── */
 
 export default function ClientWork() {
   const { t } = useI18n();
   const reduced = useReducedMotion() ?? false;
+  const railRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
 
-  const featured = cases[0];
-  const secondary = cases.slice(1);
+  // Which slide is under the middle of the rail. Measured from the DOM rather
+  // than tracked as state the buttons also write to, because the rail is a
+  // native scroller: a drag, a trackpad flick, a shift-wheel and a dot click all
+  // have to land on the same answer, and only the scroll position knows.
+  const syncActive = useCallback(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const middle = rail.scrollLeft + rail.clientWidth / 2;
+    let best = 0;
+    let bestDist = Infinity;
+    Array.from(rail.children).forEach((child, i) => {
+      const el = child as HTMLElement;
+      const dist = Math.abs(el.offsetLeft + el.offsetWidth / 2 - middle);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+    setActive(best);
+  }, []);
+
+  useEffect(() => {
+    syncActive();
+  }, [syncActive]);
+
+  const goTo = (i: number) => {
+    const rail = railRef.current;
+    const el = rail?.children[i] as HTMLElement | undefined;
+    if (!rail || !el) return;
+    rail.scrollTo({
+      left: el.offsetLeft - (rail.clientWidth - el.offsetWidth) / 2,
+      behavior: reduced ? "auto" : "smooth",
+    });
+  };
 
   // Padding is asymmetric on purpose. OwnProducts sits directly below on the
   // same `bg-surface-dim` with no divider — the two are one sunken room, so the
@@ -155,10 +100,9 @@ export default function ClientWork() {
   return (
     <section
       id="realizacje"
-      className="relative scroll-mt-24 bg-surface-dim pt-section-major pb-section-tight"
+      className="relative scroll-mt-24 overflow-hidden bg-surface-dim pt-section-major pb-section-tight"
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
-        {/* ── Section heading ──────────────────────────────────── */}
         <div className="max-w-2xl">
           <h2 className="font-headline text-h2 font-semibold tracking-tight text-on-surface text-balance [font-stretch:110%]">
             {t("home.work.title.v2")}
@@ -167,64 +111,113 @@ export default function ClientWork() {
             {t("home.work.subtitle.v2")}
           </p>
         </div>
+      </div>
 
-        {/* ── Featured case study (larger weight) ─────────────── */}
-        <div className="mt-12 grid grid-cols-1 items-start gap-8 lg:mt-16 lg:grid-cols-[1fr_1fr] lg:gap-12">
-          <Link
-            href={`/projects/${featured.slug}`}
-            className="group relative block aspect-[16/10] overflow-hidden rounded-lg bg-surface-container"
+      {/* ── Snap rail ────────────────────────────────────────────
+          Full-bleed on purpose: the slide is narrower than the viewport and
+          centred, so the neighbours are clipped by the screen edge instead of
+          by a container. That clipped edge is the entire affordance — it says
+          "there is more this way" without a caption or an arrow.
+          `--slide` drives both the slide width and the rail's own side padding,
+          so one number keeps the active card centred at every breakpoint. */}
+      <div
+        ref={railRef}
+        onScroll={syncActive}
+        role="group"
+        aria-roledescription="karuzela"
+        aria-label={t("home.work.title.v2")}
+        className="scrollbar-none mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[max(1.5rem,calc((100%-var(--slide))/2))] pb-2 [--slide:88vw] md:mt-14 md:gap-6 md:[--slide:74vw] lg:[--slide:min(62vw,1080px)]"
+      >
+        {cases.map((c, i) => {
+          const project = getProjectBySlug(c.slug);
+          return (
+            <article
+              key={c.slug}
+              className="w-[var(--slide)] shrink-0 snap-center"
+              aria-label={`${i + 1} z ${cases.length}`}
+            >
+              <Link
+                href={`/projects/${c.slug}`}
+                onClick={() => trackPortfolioClick(c.slug, `/projects/${c.slug}`)}
+                className="group relative block aspect-[4/3] overflow-hidden rounded-2xl shadow-card transition-shadow duration-300 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 sm:aspect-[16/10] lg:aspect-[16/9]"
+              >
+                <Image
+                  src={c.image}
+                  alt={t(c.imgAltKey)}
+                  fill
+                  sizes="(max-width: 768px) 88vw, (max-width: 1024px) 74vw, 1080px"
+                  className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  priority={i === 0}
+                />
+
+                {/* Scrim. The caption sits inside the bottom band where this is
+                    at least 75% black, so white text clears 4.5:1 against ANY
+                    screenshot underneath — even a blown-out white one, which
+                    composites to #404040 at worst. Contrast here cannot be
+                    audited from the DOM, so it is guaranteed by the alpha
+                    instead of measured. */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/75 to-transparent"
+                />
+
+                <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-5 md:flex-row md:items-center md:gap-5 md:p-7">
+                  <span className="inline-flex w-fit shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-[#111] transition-transform duration-300 group-hover:-translate-y-0.5">
+                    {t("home.work.cta")}
+                    <span aria-hidden="true">&rarr;</span>
+                  </span>
+                  <p className="text-sm leading-snug text-white text-pretty md:text-base">
+                    <span className="font-semibold">
+                      {project?.title ?? c.slug}
+                    </span>
+                    <span className="text-white/70"> · {t(c.categoryKey)}</span>
+                  </p>
+                </div>
+              </Link>
+            </article>
+          );
+        })}
+      </div>
+
+      {/* ── Dots ─────────────────────────────────────────────────
+          Real buttons, not decoration: they are the keyboard route along the
+          rail. The active one is a stretched bar rather than a bigger circle so
+          position is readable without relying on colour alone. */}
+      <div className="mt-6 flex items-center justify-center gap-2.5">
+        {cases.map((c, i) => (
+          <button
+            key={c.slug}
+            type="button"
+            onClick={() => goTo(i)}
+            aria-label={`${getProjectBySlug(c.slug)?.title ?? c.slug}`}
+            aria-current={i === active}
+            className="group flex h-6 items-center px-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
-            <Image
-              src={featured.image}
-              alt={t(featured.imgAltKey)}
-              fill
-              sizes="(max-width: 1024px) 100vw, 680px"
-              className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-            />
-          </Link>
-
-          <CaseNarrative c={featured} t={t} reduced={reduced} />
-        </div>
-
-        {/* ── Secondary case studies (compact rows) ───────────── */}
-        <div className="mt-12 border-t border-outline-variant pt-10 lg:mt-16 lg:pt-12">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12">
-            {secondary.map((c) => (
-              <article key={c.slug} className="flex flex-col gap-5">
-                <Link
-                  href={`/projects/${c.slug}`}
-                  className="group relative block aspect-[16/10] overflow-hidden rounded-lg bg-surface-container"
-                >
-                  <Image
-                    src={c.image}
-                    alt={t(c.imgAltKey)}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1400px) 50vw, 640px"
-                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                  />
-                </Link>
-
-                <CaseNarrative c={c} t={t} reduced={reduced} />
-              </article>
-            ))}
-          </div>
-        </div>
-
-        {/* ── View all link ───────────────────────────────────── */}
-        <div className="mt-12 flex justify-center lg:mt-16">
-          <Link
-            href="/projekty"
-            className="group inline-flex items-center gap-3 rounded-full border border-outline px-7 py-3.5 text-sm font-medium uppercase tracking-widest text-on-surface transition-colors hover:border-primary hover:text-primary"
-          >
-            {t("home.work.viewAll")}
             <span
               aria-hidden="true"
-              className="transition-transform duration-300 ease-out group-hover:translate-x-1"
-            >
-              &rarr;
-            </span>
-          </Link>
-        </div>
+              className={`block h-1.5 rounded-full transition-all duration-300 ${
+                i === active
+                  ? "w-7 bg-on-surface"
+                  : "w-1.5 bg-outline group-hover:bg-on-surface-variant"
+              }`}
+            />
+          </button>
+        ))}
+      </div>
+
+      <div className="mx-auto mt-10 flex max-w-[1400px] justify-center px-6 md:px-12 lg:px-24">
+        <Link
+          href="/projekty"
+          className="group inline-flex items-center gap-3 rounded-full border border-outline px-7 py-3.5 text-sm font-medium uppercase tracking-widest text-on-surface transition-colors hover:border-primary hover:text-primary"
+        >
+          {t("home.work.viewAll")}
+          <span
+            aria-hidden="true"
+            className="transition-transform duration-300 ease-out group-hover:translate-x-1"
+          >
+            &rarr;
+          </span>
+        </Link>
       </div>
     </section>
   );

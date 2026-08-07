@@ -105,7 +105,7 @@ export default function Pricing() {
             <Reveal
               key={f.nameKey}
               delay={(i % 3) * 0.1}
-              className="rounded-3xl border border-outline-variant/30 bg-surface-container-low p-7"
+              className="rounded-3xl bg-card p-7 shadow-card"
             >
               <h3 className="font-headline text-xl font-bold tracking-tight text-on-surface">{t(f.nameKey)}</h3>
               <p className="mt-3 text-sm font-light leading-relaxed text-on-surface-variant">{t(f.descKey)}</p>
@@ -114,7 +114,7 @@ export default function Pricing() {
         </div>
 
         {/* CTA band */}
-        <Reveal className="mt-14 overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:mt-20 md:p-16">
+        <Reveal className="mt-14 overflow-hidden rounded-3xl bg-card p-8 text-center shadow-card md:mt-20 md:p-16">
           <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl">
             {t("pricing.ctaTitle")}
           </h2>

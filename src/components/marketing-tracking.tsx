@@ -100,7 +100,7 @@ export default function MarketingTrackingLanding() {
                 {t("mkt.problem.body")}
               </p>
             </Reveal>
-            <Reveal delay={0.1} className="rounded-3xl border border-primary/30 bg-primary/5 p-8 md:p-10">
+            <Reveal delay={0.1} className="rounded-3xl bg-card p-8 shadow-card md:p-10">
               <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
                 {t("mkt.solution.title")}
               </h3>
@@ -172,7 +172,7 @@ export default function MarketingTrackingLanding() {
       {/* FINAL CTA */}
       <section className={SECTION}>
         <div className={CONTAINER}>
-          <Reveal className="overflow-hidden rounded-3xl border border-primary/30 bg-primary/5 p-8 text-center md:p-16">
+          <Reveal className="overflow-hidden rounded-3xl bg-card p-8 text-center shadow-card md:p-16">
             <h2 className={H2}>{t("mkt.cta.title")}</h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg font-light leading-relaxed text-on-surface/70">
               {t("mkt.cta.desc")}
