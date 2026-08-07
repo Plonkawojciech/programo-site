@@ -70,6 +70,9 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
           <strong>Cookies i analityka:</strong> identyfikatory urządzenia, język, motyw, anonimowe dane o ruchu na stronie (po wyrażeniu zgody).
         </p>
         <p>
+          <strong>Program poleceń:</strong> imię i nazwisko, telefon, e-mail, a jeśli prowadzisz działalność - także jej dane i numer NIP. Od Ciebie zbieramy też dane kontaktowe firmy, którą nam polecasz: nazwę, imię osoby kontaktowej i numer telefonu.
+        </p>
+        <p>
           Podanie danych jest dobrowolne, ale bez adresu e-mail lub numeru telefonu nie mamy jak odpowiedzieć na zapytanie.
         </p>
       </Section>
@@ -79,6 +82,8 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
           <li>Odpowiedź na zapytanie z formularza - art. 6 ust. 1 lit. a RODO (zgoda) oraz lit. b (działania przed zawarciem umowy).</li>
           <li>Analiza ruchu i poprawa strony - art. 6 ust. 1 lit. a RODO (zgoda na cookies analityczne).</li>
           <li>Marketing własny i remarketing - art. 6 ust. 1 lit. a RODO (zgoda na cookies marketingowe).</li>
+          <li>Udział w programie poleceń, naliczenie i wypłata prowizji - art. 6 ust. 1 lit. b RODO (wykonanie umowy) oraz lit. c (obowiązki podatkowe i rachunkowe).</li>
+          <li>Kontakt z firmą, którą ktoś nam polecił - art. 6 ust. 1 lit. f RODO (nasz prawnie uzasadniony interes w nawiązaniu kontaktu handlowego). Przy pierwszej rozmowie mówimy, skąd mamy dane, i możesz od razu zażądać ich usunięcia.</li>
         </ul>
         <p>
           Nie podejmujemy wobec Ciebie decyzji opartych wyłącznie na zautomatyzowanym przetwarzaniu, które miałyby skutki prawne. Po zgodzie na cookies marketingowe Google Ads może pokazywać Ci nasze reklamy na podstawie wcześniejszej wizyty na stronie (remarketing) - to profilowanie w celach marketingowych i wyłączysz je, wycofując zgodę.
@@ -161,6 +166,9 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
           <strong>Cookies and analytics:</strong> device identifiers, language, theme, anonymous traffic data (only after consent).
         </p>
         <p>
+          <strong>Referral programme:</strong> full name, phone, e-mail and, if you run a business, its details and tax number. We also collect the contact details of the company you refer to us: its name, a contact person and a phone number.
+        </p>
+        <p>
           Providing your data is voluntary, but without an e-mail address or phone number we have no way to answer your inquiry.
         </p>
       </Section>
@@ -170,6 +178,8 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
           <li>Responding to form inquiries - Art. 6(1)(a) GDPR (consent) and (b) (pre-contractual measures).</li>
           <li>Traffic analytics and site improvement - Art. 6(1)(a) GDPR (consent to analytical cookies).</li>
           <li>Own marketing and remarketing - Art. 6(1)(a) GDPR (consent to marketing cookies).</li>
+          <li>Taking part in the referral programme, calculating and paying commission - Art. 6(1)(b) GDPR (performance of a contract) and (c) (tax and accounting obligations).</li>
+          <li>Contacting a company someone referred to us - Art. 6(1)(f) GDPR (our legitimate interest in making commercial contact). We say where we got the details on the first call, and you can ask us to delete them right away.</li>
         </ul>
         <p>
           We do not make decisions about you based solely on automated processing that would produce legal effects. After you consent to marketing cookies, Google Ads may show you our ads based on your earlier visit (remarketing) - that is profiling for marketing purposes, and withdrawing consent turns it off.

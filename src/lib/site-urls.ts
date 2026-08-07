@@ -68,6 +68,11 @@ export const SITE_PAGES: SitePage[] = [
   { path: "/stack", label: "Stack technologiczny", summary: "technologie, których używamy i dlaczego" },
   { path: "/kontakt", label: "Kontakt", summary: "formularz, e-mail, telefon" },
   {
+    path: "/wspolpraca",
+    label: "Program poleceń",
+    summary: "zasady polecania Programo - 25% prowizji od wartości netto opłaconej faktury",
+  },
+  {
     path: "/polityka-prywatnosci",
     label: "Polityka prywatności",
     summary: "RODO, cookies, administrator danych",

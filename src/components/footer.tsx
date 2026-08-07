@@ -32,6 +32,7 @@ const companyLinks: { labelKey: TKey; href: string }[] = [
   { labelKey: "nav.pricing", href: "/cennik" },
   { labelKey: "footer.appCost", href: "/ile-kosztuje-aplikacji" },
   { labelKey: "footer.stack", href: "/stack" },
+  { labelKey: "footer.referral", href: "/wspolpraca" },
   { labelKey: "nav.contact", href: "/kontakt" },
   { labelKey: "footer.privacy", href: "/polityka-prywatnosci" },
 ];

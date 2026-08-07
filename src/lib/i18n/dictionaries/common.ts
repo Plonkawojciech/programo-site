@@ -36,6 +36,10 @@ export const common = {
   "footer.websites": { pl: "Strony internetowe", en: "Websites" },
   "footer.appCost": { pl: "Ile kosztuje aplikacja", en: "How much does an app cost" },
   "footer.stack": { pl: "Stack technologiczny", en: "Tech stack" },
+  // Sama strona /wspolpraca jest tylko po polsku (polskie faktury, umowa
+  // o dzieło, podatki). Angielska etykieta istnieje po to, żeby link w stopce
+  // nie znikał po przełączeniu języka.
+  "footer.referral": { pl: "Program poleceń", en: "Referral program" },
   "footer.privacy": { pl: "Polityka prywatności", en: "Privacy policy" },
   "footer.cookies": { pl: "Ustawienia cookies", en: "Cookie settings" },
 

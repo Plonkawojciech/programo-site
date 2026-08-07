@@ -44,6 +44,7 @@ const PAGES: { file: string; label: string; min: number }[] = [
   { file: "strony-internetowe.html", label: "/strony-internetowe", min: 4000 },
   { file: "sklepy-internetowe.html", label: "/sklepy-internetowe", min: 4000 },
   { file: "ile-kosztuje-aplikacji.html", label: "/ile-kosztuje-aplikacji", min: 2000 },
+  { file: "wspolpraca.html", label: "/wspolpraca", min: 2000 },
 ];
 
 const built = existsSync(APP_DIR);

@@ -86,6 +86,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://programo.pl/wspolpraca",
+      lastModified: STATIC_ROUTE_UPDATED_AT["/wspolpraca"],
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
       url: "https://programo.pl/polityka-prywatnosci",
       lastModified: STATIC_ROUTE_UPDATED_AT["/polityka-prywatnosci"],
       changeFrequency: "monthly",
