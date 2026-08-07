@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
+import { COMPANY, COMPANY_ADDRESS_LINE } from "@/lib/company";
 import {
   buildBreadcrumbs,
   buildFaqPage,
@@ -85,7 +86,7 @@ const pageGraph = renderGraph([
 const steps = [
   {
     title: "Dzwonisz i ustalamy zasady",
-    desc: "Krótka rozmowa, w której mówimy wprost, ile płacimy i kiedy. Na koniec dostajesz swój kod polecający i regulamin na maila.",
+    desc: "Krótka rozmowa, w której mówimy wprost, ile płacimy i kiedy. Na koniec zakładamy Ci indywidualny kod polecający.",
   },
   {
     title: "Podsyłasz nam kontakt",
@@ -124,6 +125,10 @@ const scope = [
 ];
 
 const rules = [
+  // Regulaminu jeszcze nie ma i nie ma do niego linku - świadomie, bo publikacja
+  // dokumentu przed sprawdzeniem go przez prawnika jest gorsza niż jego brak.
+  // Ta zasada mówi wprost, w którym momencie uczestnik go dostaje.
+  "Regulamin programu dostajesz do wglądu przy zakładaniu Twojego indywidualnego kodu polecającego. Zaczynasz, mając zasady na piśmie, a nie po rozmowie telefonicznej.",
   "Prowizja to 25% wartości netto faktury opłaconej przez poleconego klienta.",
   "Przy stałej obsłudze płacimy co miesiąc przez pierwsze 6 miesięcy współpracy z tym klientem.",
   "Liczy się pierwsze zgłoszenie. Jeśli akurat rozmawiamy już z tą firmą, mówimy Ci o tym od razu.",
@@ -171,8 +176,8 @@ export default function WspolpracaPage() {
                 </CtaButton>
               </div>
               <p className="mt-5 text-sm text-on-surface-variant">
-                Jeden telefon wystarczy. Ustalamy zasady, dostajesz kod polecający
-                i na tym formalności się kończą.
+                Jeden telefon wystarczy. Ustalamy zasady, dostajesz regulamin
+                i swój kod polecający.
               </p>
             </div>
           </div>
@@ -327,8 +332,8 @@ export default function WspolpracaPage() {
             </ul>
             <Reveal delay={0.2} className="mt-8 max-w-3xl">
               <p className="text-sm leading-relaxed text-on-surface-variant">
-                Pełny regulamin wysyłamy mailem razem z kodem polecającym, zaraz
-                po pierwszej rozmowie. Dane, które nam zostawisz, przetwarzamy na
+                Stroną umowy jest {COMPANY.legalName}, {COMPANY_ADDRESS_LINE},
+                NIP {COMPANY.nip}. Dane, które nam zostawisz, przetwarzamy na
                 zasadach opisanych w{" "}
                 <Link href="/polityka-prywatnosci" className="underline underline-offset-4 hover:text-on-surface">
                   polityce prywatności

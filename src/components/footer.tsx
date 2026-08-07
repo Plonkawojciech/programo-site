@@ -8,6 +8,7 @@ import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { useConsent } from "@/lib/consent";
 import { projects } from "@/lib/projects";
+import { COMPANY_ADDRESS_LINE, COMPANY_IDS_LINE } from "@/lib/company";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
@@ -159,7 +160,11 @@ export default function Footer() {
             legible; a whileInView reveal here could freeze at opacity 0. */}
         <div className="flex flex-col gap-4 border-t border-outline-variant/20 pt-8 text-sm text-on-surface-variant md:flex-row md:flex-wrap md:items-center md:gap-x-6 md:gap-y-2">
           <span className="font-medium text-on-surface">{t("footer.companyName")}</span>
-          <span>{t("footer.location")}</span>
+          {/* Adres siedziby, nie samo miasto: art. 5 ust. 2 ustawy o świadczeniu
+              usług drogą elektroniczną wymaga od usługodawcy adresu, a nie
+              lokalizacji. Nie przechodzi przez i18n, bo adres nie jest tekstem
+              do tłumaczenia i nie ma się rozjechać z klauzulą RODO. */}
+          <span>{COMPANY_ADDRESS_LINE}</span>
           <a href="mailto:biuro@programo.pl" className="hover-underline hover:text-on-surface transition-colors">
             biuro@programo.pl
           </a>
@@ -176,6 +181,9 @@ export default function Footer() {
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest">
               © {new Date().getFullYear()} {t("footer.copyright")}
+            </span>
+            <span className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest tabular-nums">
+              {COMPANY_IDS_LINE}
             </span>
             <button
               type="button"

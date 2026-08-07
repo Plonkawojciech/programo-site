@@ -9,6 +9,9 @@ export const common = {
   "nav.pricing": { pl: "Wycena", en: "Pricing" },
   "nav.about": { pl: "O nas", en: "About" },
   "nav.contact": { pl: "Kontakt", en: "Contact" },
+  // Krótsza etykieta niż `footer.referral` ("Program poleceń") i to jest
+  // celowe: pigułka nawigacji ma teraz osiem pozycji i mierzy się na 1280 px.
+  "nav.referral": { pl: "Współpraca", en: "Partners" },
   "nav.cta": { pl: "Umów rozmowę", en: "Book a call" },
   "nav.phone": { pl: "Zadzwoń", en: "Call" },
 
@@ -24,7 +27,8 @@ export const common = {
   "footer.colProjects": { pl: "Projekty", en: "Projects" },
   "footer.colCompany": { pl: "Firma", en: "Company" },
   "footer.allProjects": { pl: "Wszystkie projekty", en: "All projects" },
-  "footer.location": { pl: "Poznań, Polska", en: "Poznan, Poland" },
+  // Bez `footer.location` - stopka pokazuje teraz pełny adres siedziby
+  // z src/lib/company.ts, a nie samo miasto.
   "footer.companyName": { pl: "Programo s.j.", en: "Programo s.j." },
   "footer.copyright": { pl: "Programo", en: "Programo" },
   // Landing pages that were orphaned: nothing on the site linked to

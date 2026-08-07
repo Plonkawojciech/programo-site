@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Footer from "@/components/footer";
 import { I18nProvider, useI18n, translations } from "@/lib/i18n";
+import { COMPANY, COMPANY_ADDRESS_LINE, COMPANY_IDS_LINE } from "@/lib/company";
 
 function renderWithI18n() {
   return render(
@@ -32,17 +33,25 @@ describe("Footer component", () => {
     expect(screen.getByText(new RegExp(`${year}.*Programo`))).toBeInTheDocument();
   });
 
-  // Asserted against the dictionary, not a copy literal: the legal form and the
-  // location are owner-editable, and the point of this test is that the company
-  // data line renders at all.
+  // Asserted against the dictionary, not a copy literal: the legal form is
+  // owner-editable, and the point of this test is that the company data line
+  // renders at all.
   it("renders the company data line", () => {
     renderWithI18n();
     expect(
       screen.getByText(translations["footer.companyName"].pl),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(translations["footer.location"].pl),
-    ).toBeInTheDocument();
+    expect(screen.getByText(COMPANY_ADDRESS_LINE)).toBeInTheDocument();
+  });
+
+  // Dane rejestrowe są obowiązkiem informacyjnym, a nie ozdobą stopki - jeśli
+  // ktoś je kiedyś wytnie przy porządkach, ten test ma zapalić czerwone światło.
+  it("renders the KRS, NIP and REGON identifiers", () => {
+    renderWithI18n();
+    expect(screen.getByText(COMPANY_IDS_LINE)).toBeInTheDocument();
+    expect(COMPANY_IDS_LINE).toContain(COMPANY.krs);
+    expect(COMPANY_IDS_LINE).toContain(COMPANY.nip);
+    expect(COMPANY_IDS_LINE).toContain(COMPANY.regon);
   });
 
   it("renders both phone numbers and the email as functional links", () => {
@@ -91,12 +100,18 @@ describe("Footer component", () => {
     expect(footer).toBeInTheDocument();
   });
 
-  it("i18n: location changes to 'Poland' in EN", () => {
+  // Adres siedziby i numery rejestrowe celowo NIE przechodzą przez i18n:
+  // to dane z KRS, a nie tekst do tłumaczenia. Wcześniej stopka pokazywała
+  // tu "Poznań, Polska" / "Poznan, Poland" i ten test pilnował przełączania.
+  // Teraz pilnuje odwrotności - że przełączenie języka ich nie rusza.
+  it("i18n: the registered address and identifiers do not translate", () => {
     renderWithToggle();
-    // Default PL
-    expect(screen.getByText("Poznań, Polska")).toBeInTheDocument();
-    // Toggle to EN
+    expect(screen.getByText(COMPANY_ADDRESS_LINE)).toBeInTheDocument();
+    expect(screen.getByText(COMPANY_IDS_LINE)).toBeInTheDocument();
+
     fireEvent.click(screen.getByTestId("toggle-lang"));
-    expect(screen.getByText("Poznan, Poland")).toBeInTheDocument();
+
+    expect(screen.getByText(COMPANY_ADDRESS_LINE)).toBeInTheDocument();
+    expect(screen.getByText(COMPANY_IDS_LINE)).toBeInTheDocument();
   });
 });

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useConsent } from "@/lib/consent";
+import { COMPANY, COMPANY_ADDRESS_LINE } from "@/lib/company";
 
 export default function PrivacyPageClient() {
   const { lang, t } = useI18n();
@@ -58,7 +59,7 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="1. Administrator danych">
         <p>
-          Administratorem danych osobowych jest Programo s.j. z siedzibą w Poznaniu, prowadzona przez Wojciecha Płonkę oraz Bartosza Kolaja. Kontakt: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
+          Administratorem danych osobowych jest {COMPANY.legalName} z siedzibą w Poznaniu ({COMPANY_ADDRESS_LINE}), wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS {COMPANY.krs}, NIP {COMPANY.nip}, REGON {COMPANY.regon}. Spółkę prowadzą Wojciech Płonka oraz Bartosz Kolaj. Kontakt: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
         </p>
       </Section>
 
@@ -154,7 +155,7 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="1. Data controller">
         <p>
-          The data controller is Programo s.j. based in Poznań, Poland, run by Wojciech Płonka and Bartosz Kolaj. Contact: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
+          The data controller is {COMPANY.legalName}, a Polish general partnership seated in Poznań, Poland ({COMPANY_ADDRESS_LINE}), entered in the National Court Register (KRS) under no. {COMPANY.krs}, tax ID (NIP) {COMPANY.nip}, statistical ID (REGON) {COMPANY.regon}. The partnership is run by Wojciech Płonka and Bartosz Kolaj. Contact: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
         </p>
       </Section>
 

@@ -36,6 +36,7 @@ export default function Navbar() {
     { label: t("nav.marketing"), href: "/strony-tracking-reklamy", section: "strony-tracking-reklamy" },
     { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
     { label: t("nav.about"), href: "/o-nas", section: "o-nas" },
+    { label: t("nav.referral"), href: "/wspolpraca", section: "wspolpraca" },
     { label: t("nav.contact"), href: "/kontakt", section: "kontakt" },
   ];
 
@@ -164,7 +165,7 @@ export default function Navbar() {
               width={300}
               height={212}
               priority
-              className="w-[168px] xl:w-[200px] aspect-[841.89/121.3] object-cover select-none"
+              className="w-[168px] 2xl:w-[200px] shrink-0 aspect-[841.89/121.3] object-cover select-none"
             />
           </Link>
         </div>
@@ -178,17 +179,30 @@ export default function Navbar() {
           {/* No `data-scrolled` here on purpose — the band behind it now owns the
               scrolled state, so the pill keeps one constant treatment. */}
           <div className="liquid-glass relative rounded-full">
-            <div className="relative z-10 flex items-center gap-4 lg:gap-6 px-5 lg:px-6 py-2.5">
+            {/* Zagęszczenie przełącza się na 2xl, nie na lg. Ósma pozycja
+                ("Współpraca") rozpycha pigułkę do 754 px, a przy gap-6/13 px
+                od lg kolumna 1fr z logo zwijała się na 1280 px ze 200 px do
+                104 px - logo po prostu robiło się węższe i nikt tego nie
+                zgłaszał, bo nic nie wychodziło poza ekran. */}
+            <div className="relative z-10 flex items-center gap-4 2xl:gap-6 px-5 2xl:px-6 py-2.5">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.section;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`relative whitespace-nowrap text-[12px] lg:text-[13px] uppercase font-medium transition-colors ${
+                    aria-current={isActive ? "page" : undefined}
+                    // 0.92, nie 0.72. Pigułka składa się do rgb(130,143,144),
+                    // więc przy 0.72 nieaktywne pozycje mierzyły 3.39:1 przy
+                    // wymaganych 4.5:1 dla 12 px - i to na każdej podstronie.
+                    // Nawet pełną siłą koloru wychodzi tu 5.13:1, bo limitem
+                    // jest samo tło pigułki. Stan aktywny nic na tym nie traci:
+                    // niesie go podkreślenie w kolorze primary i aria-current,
+                    // a nie sama różnica przezroczystości.
+                    className={`relative whitespace-nowrap text-[12px] 2xl:text-[13px] uppercase font-medium transition-colors ${
                       isActive
                         ? "text-[var(--theme-nav-text)]"
-                        : "text-[rgba(var(--theme-nav-text-rgb),0.72)] hover:text-[var(--theme-nav-text)]"
+                        : "text-[rgba(var(--theme-nav-text-rgb),0.92)] hover:text-[var(--theme-nav-text)]"
                     }`}
                     style={{
                       transitionDuration: `${durationFast * 1000}ms`,

@@ -1,4 +1,5 @@
 import { ORGANIZATION_ID, WOJCIECH_ID, BARTOSZ_ID, SITE_URL, DEFAULT_AREA_SERVED } from "./constants";
+import { COMPANY } from "../company";
 import type { SchemaNode } from "./types";
 
 /**
@@ -6,20 +7,23 @@ import type { SchemaNode } from "./types";
  * layout. Every other page references it by `@id` (ORGANIZATION_ID) instead
  * of repeating it.
  *
- * Facts only, traced to existing copy: `legalName` and the "dwie osoby" /
- * numberOfEmployees come from src/app/software-house-poznan/page.tsx and
- * about.ts; `knowsAbout` mirrors that page's `services` list verbatim. No
- * NIP (vatID) or foundingDate — neither appears anywhere in the repo, so
- * they're omitted rather than guessed (see task report for what Wojtek still
- * needs to supply).
+ * Facts only: the "dwie osoby" / numberOfEmployees come from
+ * src/app/software-house-poznan/page.tsx and about.ts, `knowsAbout` mirrors
+ * that page's `services` list verbatim, and everything registry-shaped
+ * (legalName, KRS, NIP, REGON, seat address, foundingDate) comes from
+ * src/lib/company.ts — i.e. from the KRS extract, not from prose on the site.
+ *
+ * The identifiers matter here beyond SEO: they are what lets Google resolve
+ * this entity to the real company rather than to a name that happens to
+ * repeat on a few pages.
  */
 export function buildOrganization(): SchemaNode {
   return {
     "@type": "ProfessionalService",
     "@id": ORGANIZATION_ID,
     name: "Programo",
-    legalName: "Programo s.j.",
-    alternateName: ["Programo Software House", "Programo Studio"],
+    legalName: COMPANY.legalName,
+    alternateName: ["Programo s.j.", "Programo Software House", "Programo Studio"],
     description:
       "Software house z Poznania. Oprogramowanie na zamówienie: strony, aplikacje webowe i mobilne, systemy SaaS oraz integracje AI.",
     url: SITE_URL,
@@ -32,9 +36,20 @@ export function buildOrganization(): SchemaNode {
     knowsAbout: ["Aplikacje webowe", "Systemy SaaS", "Aplikacje mobilne", "Integracje AI"],
     numberOfEmployees: { "@type": "QuantitativeValue", value: 2 },
     founder: [{ "@id": WOJCIECH_ID }, { "@id": BARTOSZ_ID }],
+    foundingDate: COMPANY.foundingDate,
+    // vatID w formacie unijnym (prefiks kraju), taxID to sam NIP - schema.org
+    // rozróżnia te dwa, a Google czyta oba.
+    vatID: `PL${COMPANY.nip}`,
+    taxID: COMPANY.nip,
+    identifier: [
+      { "@type": "PropertyValue", propertyID: "KRS", value: COMPANY.krs },
+      { "@type": "PropertyValue", propertyID: "REGON", value: COMPANY.regon },
+    ],
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Poznań",
+      streetAddress: COMPANY.street,
+      postalCode: COMPANY.postalCode,
+      addressLocality: COMPANY.city,
       addressRegion: "wielkopolskie",
       addressCountry: "PL",
     },
