@@ -1,0 +1,9 @@
+<!-- Solvio - wydatki: zdjęcie paragonu zamienia się w skategoryzowane pozycje.
+     Paragon z ząbkowaną krawędzią to najbardziej rozpoznawalna sylwetka w całym
+     zestawie - czyta się nawet przy 20 px, gdzie ikona portfela byłaby plamą.
+     Kontur, nie wypełnienie: jako maska wypełniony prostokąt zjadłby pozycje. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 10 36 45" fill="none">
+  <path d="M17 13H47V47l-5 5-5-5-5 5-5-5-5 5-5-5Z" stroke="#000" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="24" y="21" width="16" height="5" rx="2.5" fill="#000"/>
+  <rect x="24" y="31" width="16" height="5" rx="2.5" fill="#000"/>
+</svg>

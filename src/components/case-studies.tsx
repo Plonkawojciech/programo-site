@@ -4,8 +4,8 @@ import { getProjectBySlug, type Project } from "@/lib/projects";
 import Reveal from "@/components/ui/reveal";
 
 // A grounded case-studies section for the Polish Ads landings. All facts come
-// from `projects.ts` (the single source of truth) — title, subtitle, metric,
-// tech, screenshot, accent. The only per-page copy is `angle`: a short, honest
+// from `projects.ts` (the single source of truth) - title, subtitle,
+// screenshot, accent. The only per-page copy is `angle`: a short, honest
 // one-liner describing what the project demonstrates. No invented numbers.
 export interface CaseStudyItem {
   slug: string;
@@ -19,12 +19,10 @@ interface Resolved {
 }
 
 export default function CaseStudies({
-  eyebrow = "Realizacje",
   heading,
   intro,
   items,
 }: {
-  eyebrow?: string;
   heading: string;
   intro?: string;
   items: CaseStudyItem[];
@@ -44,10 +42,7 @@ export default function CaseStudies({
     <section className="relative bg-surface pt-section pb-section-tight">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
         <Reveal className="mb-12 max-w-3xl md:mb-16">
-          <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
-            {eyebrow}
-          </p>
-          <h2 className="mt-5 font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl">
+          <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl">
             {heading}
           </h2>
           {intro && (
@@ -91,10 +86,6 @@ export default function CaseStudies({
                   </div>
 
                   <div className="flex flex-1 flex-col p-6 md:p-7">
-                    <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-on-surface-variant">
-                      <span>{project.tags[0] ?? "Realizacja"}</span>
-                      <span>· {project.year}</span>
-                    </div>
                     <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
                       {project.title}
                     </h3>
@@ -104,12 +95,6 @@ export default function CaseStudies({
                     <p className="mt-3 text-sm font-light leading-relaxed text-on-surface/70">
                       {angle}
                     </p>
-                    {project.metric && (
-                      <p className="mt-4 inline-flex w-fit items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
-                        <span aria-hidden="true">▸</span>
-                        {project.metric.pl}
-                      </p>
-                    )}
                     <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6">
                       <Link
                         href={`/projects/${project.slug}`}

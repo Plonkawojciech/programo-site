@@ -33,11 +33,6 @@ describe("About component", () => {
     expect(bartoszTel).toHaveAttribute("href", "tel:+48509123434");
   });
 
-  it("renders section label", () => {
-    renderWithI18n();
-    expect(screen.getByText("O nas")).toBeInTheDocument();
-  });
-
   it("has section id 'about'", () => {
     const { container } = renderWithI18n();
     const section = container.querySelector("#about");

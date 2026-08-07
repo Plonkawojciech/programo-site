@@ -69,36 +69,12 @@ function ProjectTile({ project }: { project: Project }) {
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-end p-6 text-white md:p-7">
-        <div className="mb-2 flex items-center gap-2">
-          {/* Tag label uses a fixed brand mint instead of each project's own
-              accentColor — per-project accents (yellow, blue...) read as
-              off-palette noise when used as a tag chip. This tile always sits
-              on the same dark gradient regardless of site theme (like the
-              white title/status-badge text below), so the color is fixed
-              rather than the theme-reactive --color-primary token, which
-              turns dark green in light mode and would lose contrast here. */}
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#8EB69B]">
-            {project.tags[0] ?? project.category}
-          </span>
-          <span className="text-[10px] font-medium uppercase tracking-widest text-white/80">
-            · {project.year}
-          </span>
-        </div>
         <h3 className="font-headline text-3xl font-bold tracking-tighter text-white md:text-4xl">
           {project.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-sm font-light leading-snug text-white/80 md:text-base">
           {project.subtitle[lang]}
         </p>
-        {project.metric && (
-          <p
-            className="mt-3 inline-flex w-fit items-center gap-2 text-[11px] font-semibold uppercase tracking-wider md:text-xs"
-            style={{ color: project.accentColor }}
-          >
-            <span aria-hidden="true">▸</span>
-            {project.metric[lang]}
-          </p>
-        )}
       </div>
     </Link>
   );
@@ -135,12 +111,9 @@ export default function ProjectsMarquee() {
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         <div className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
           <Reveal>
-            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary md:text-xs">
-              {t("realizations.label")}
-            </span>
             <h2
               id="realizations-heading"
-              className="mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl"
+              className="font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl"
             >
               {t("realizations.title")}
             </h2>

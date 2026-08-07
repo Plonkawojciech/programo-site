@@ -46,7 +46,6 @@ export default function CompactLeadForm({
   anchorId,
   projectType,
   bare = false,
-  eyebrow,
   heading,
   sub,
 }: {
@@ -58,8 +57,7 @@ export default function CompactLeadForm({
   projectType?: string;
   /** Render only the form card (no <section>/container) — for embedding in a hero. */
   bare?: boolean;
-  /** Overrides the default (i18n) eyebrow / heading / sub — used by Ads landings. */
-  eyebrow?: string;
+  /** Overrides the default (i18n) heading / sub - used by Ads landings. */
   heading?: string;
   sub?: string;
 }) {
@@ -73,7 +71,6 @@ export default function CompactLeadForm({
   // viewed → started → per-field completion → error → submit / abandoned.
   const fa = useFormAnalytics(formId);
 
-  const resolvedEyebrow = eyebrow ?? t("compact.eyebrow");
   const resolvedHeading = heading ?? t("compact.heading");
   const resolvedSub = sub ?? t("compact.sub");
 
@@ -363,9 +360,6 @@ export default function CompactLeadForm({
         <div className="rounded-3xl border border-primary/30 bg-primary/5 p-7 md:p-12">
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">
             <div>
-              <p className="mb-3 text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
-                {resolvedEyebrow}
-              </p>
               <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
                 {resolvedHeading}
               </h2>

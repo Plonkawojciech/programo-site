@@ -296,9 +296,17 @@ export default function Navbar() {
             aria-label="Programo - strona główna"
             className="flex items-center"
           >
+            {/* Inverted against the desktop logo above, on purpose. This one
+                sits INSIDE the pill, and the pill is deliberately the opposite
+                of the page — globals.css:44, "pill is light in dark mode, dark
+                in light mode". Picking the logo by page theme (which is what
+                the desktop band wants) put the dark wordmark on the dark pill
+                in light mode and it vanished. Everything else in this pill
+                already tints from --theme-nav-text; the logo is a file, so it
+                has to pick the file that matches that token. */}
             <Image
               key={theme}
-              src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
+              src={theme === "dark" ? "/programo-logo-dark.svg" : "/programo-logo-white.svg"}
               alt="Programo"
               width={170}
               height={120}
@@ -333,63 +341,123 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu — a sheet, not a centred stack.
+
+          The old version was `inset-0 … justify-center` holding nine children at
+          gap-8. At 375x667 that is taller than the viewport, there was no
+          scroller, and `body { overflow: hidden }` was already blocking the page
+          behind it — so the bottom of the menu was simply unreachable. It also
+          sat at z-40: below the pill (z-50), which punched through it, and level
+          with the sticky call bar, which covered the CTA.
+
+          Three rows now. `100dvh` rather than `inset-0`, because `vh` resolves
+          against the largest viewport and would push the footer under mobile
+          browser chrome. The middle row owns the only scroll.
+
+          `--z-nav-scrim` (45) sits above the sticky call bar (40) and below the
+          pill (50) — deliberately, not by accident. The top row is clearance,
+          not decoration: the pill stays visible so the hamburger, which carries
+          aria-expanded and is where focus returns, is still tappable to close. */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             id="mobile-menu-overlay"
             ref={menuOverlayRef}
-            initial={shouldReduceMotion ? false : { clipPath: "circle(0% at 90% 5%)" }}
-            animate={{ clipPath: "circle(150% at 90% 5%)" }}
-            exit={shouldReduceMotion ? undefined : { clipPath: "circle(0% at 90% 5%)" }}
+            // Reveal originates from the hamburger, which is on the LEFT of the
+            // pill. The old circle grew from 90% 5% — the opposite corner, so
+            // the menu appeared to come from nowhere the user had touched.
+            initial={shouldReduceMotion ? false : { clipPath: "circle(0% at 25% 6%)" }}
+            animate={{ clipPath: "circle(150% at 25% 6%)" }}
+            exit={shouldReduceMotion ? undefined : { clipPath: "circle(0% at 25% 6%)" }}
             transition={{
-              duration: shouldReduceMotion ? 0 : 0.6,
+              duration: shouldReduceMotion ? 0 : 0.5,
               ease: easeEntry,
             }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/98 backdrop-blur-lg xl:hidden"
+            className="fixed inset-x-0 top-0 z-[var(--z-nav-scrim)] grid h-[100dvh] grid-rows-[auto_1fr_auto] bg-surface/98 backdrop-blur-2xl xl:hidden"
           >
-            <nav aria-label={t("a11y.mainNav")} className="flex flex-col items-center gap-8">
-              <motion.a
+            {/* Pill clearance. 16px margin + 48px pill + 24px breathing room. */}
+            <div aria-hidden="true" className="h-[88px]" />
+
+            {/* Not a <nav>: the pill above is already the mobile navigation
+                landmark and is labelled as such. A second landmark with the
+                same name is a worse outcome than none — the toggle points here
+                with aria-controls, which is what the disclosure pattern wants. */}
+            <div className="overflow-y-auto overscroll-contain px-6">
+              <ul role="list" className="flex flex-col">
+                {navLinks.map((link, i) => {
+                  const isActive = activeSection === link.section;
+                  return (
+                    <motion.li
+                      key={link.href}
+                      initial={shouldReduceMotion ? false : { opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={shouldReduceMotion ? undefined : { opacity: 0, x: -16 }}
+                      transition={{
+                        // 0.04 not 0.1: seven links at the old stagger took
+                        // 700ms to finish arriving, which reads as lag.
+                        delay: shouldReduceMotion ? 0 : i * 0.04,
+                        duration: shouldReduceMotion ? 0 : durationMedium,
+                        ease: easeEntry,
+                      }}
+                      // on-surface-variant, not outline-variant. The latter is
+                      // --theme-border-1, which in the dark theme is #163832 —
+                      // DARKER than the sheet it sits on, so the rules measured
+                      // 1.06:1 and were simply not there. on-surface-variant is
+                      // the one token that inverts with the theme, so one value
+                      // gives a real hairline in both.
+                      className="border-b border-on-surface-variant/25 last:border-b-0"
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={() => setMobileOpen(false)}
+                        aria-current={isActive ? "page" : undefined}
+                        className={`flex min-h-[56px] items-center justify-between gap-4 font-headline text-xl transition-colors ${
+                          isActive ? "text-primary" : "text-on-surface"
+                        }`}
+                      >
+                        <span>{link.label}</span>
+                        <span
+                          aria-hidden="true"
+                          className={`text-base leading-none ${
+                            isActive ? "text-primary" : "text-on-surface-variant/60"
+                          }`}
+                        >
+                          →
+                        </span>
+                      </Link>
+                    </motion.li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Pinned actions. The phone number lived in three places at once
+                before — top of the overlay, the overlay CTA, and the sticky bar
+                underneath — so it read as filler rather than as the one thing
+                this site is asking for. Once here, at the thumb.
+
+                Deliberately not animated. This row is the sheet's anchor and it
+                carries the only conversion on the page; gating it behind an
+                entrance means that any environment where the transition stalls
+                shows a menu with no way to contact us. The links stagger, the
+                anchor is simply there. */}
+            <div className="border-t border-on-surface-variant/30 px-6 pt-5 pb-[max(env(safe-area-inset-bottom),1.25rem)]">
+              <a
                 href="tel:+48509123434"
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={shouldReduceMotion ? undefined : { opacity: 0, y: 20 }}
-                transition={{ duration: shouldReduceMotion ? 0 : durationMedium, ease: easeEntry }}
-                className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-5 py-2.5 text-sm font-medium uppercase tracking-widest text-primary min-h-[44px]"
+                className="flex min-h-[44px] items-center gap-2.5 text-base font-medium text-on-surface"
               >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
+                <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] shrink-0 text-primary" fill="none" aria-hidden="true">
                   <path d="M6.5 3.5l3 1 1 4-2 1.5a11 11 0 005 5l1.5-2 4 1 1 3a2 2 0 01-2 2.3A16 16 0 014.2 6.5 2 2 0 016.5 3.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 509 123 434
-              </motion.a>
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={shouldReduceMotion ? false : { opacity: 0, x: -30, y: 20 }}
-                  animate={{ opacity: 1, x: 0, y: 0 }}
-                  exit={shouldReduceMotion ? undefined : { opacity: 0, x: -30, y: 20 }}
-                  transition={{
-                    delay: shouldReduceMotion ? 0 : i * 0.1,
-                    duration: shouldReduceMotion ? 0 : durationMedium,
-                    ease: easeEntry,
-                  }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="font-headline text-2xl font-normal text-on-surface min-h-[44px] flex items-center"
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
+              </a>
               <ContactCtaLink
                 onNavigate={() => setMobileOpen(false)}
-                className="mt-4 bg-primary px-8 py-3 rounded-full text-on-primary text-sm tracking-wide font-medium min-h-[44px] flex items-center"
+                className="mt-3 flex min-h-[52px] w-full items-center justify-center rounded-full bg-primary px-6 text-sm font-medium tracking-wide text-on-primary transition-transform active:scale-[0.98]"
               >
                 {t("nav.cta")}
               </ContactCtaLink>
-            </nav>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -11,12 +11,6 @@ import CountUp from "@/components/ui/count-up";
 import Reveal from "@/components/ui/reveal";
 import { trackPortfolioClick } from "@/lib/tracking";
 
-const CATEGORY_LABELS: Record<Project["category"], { pl: string; en: string }> = {
-  produkty: { pl: "Produkt Programo", en: "Programo product" },
-  "dla-klientow": { pl: "Dla klienta", en: "Client work" },
-  marketing: { pl: "Tracking i reklamy", en: "Tracking & ads" },
-};
-
 const isDesktopShot = (s: string) => /desktop/.test(s);
 // App screens use either an "-app-<name>" or "-app<n>" filename convention.
 const isAppShot = (s: string) => /-app[-\d]/.test(s);
@@ -241,7 +235,7 @@ function ProjectContent({ slug }: { slug: string }) {
         : "See preview";
 
   // Variants B (dark) and D (mosaic) render the hero as a full-bleed dark canvas
-  // tinted with the project's own bgColor, with the accent driving the eyebrow.
+  // tinted with the project's own bgColor, which flips the copy to light tones.
   const darkHero = presentation(project) === "dark" || presentation(project) === "mosaic";
 
   return (
@@ -266,20 +260,8 @@ function ProjectContent({ slug }: { slug: string }) {
           <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
             {/* Left: title + intro */}
             <div className="lg:col-span-5">
-              <span
-                className="text-[11px] font-bold uppercase tracking-[0.3em]"
-                style={darkHero ? { color: project.accentColor } : undefined}
-              >
-                <span className={darkHero ? undefined : "text-primary"}>
-                  {CATEGORY_LABELS[project.category][lang]}
-                </span>
-                <span className={darkHero ? "text-white/40" : "text-on-surface-variant/60"}>
-                  {" · "}
-                  {project.year}
-                </span>
-              </span>
               <h1
-                className={`mt-5 font-headline text-5xl font-bold leading-[1.02] tracking-tight md:text-7xl ${
+                className={`font-headline text-5xl font-bold leading-[1.02] tracking-tight md:text-7xl ${
                   darkHero ? "text-white" : "text-on-surface"
                 }`}
               >
@@ -438,18 +420,21 @@ function ProjectContent({ slug }: { slug: string }) {
               {t("project.whatWeBuilt")}
             </h2>
           </Reveal>
-          <div className="grid gap-x-12 gap-y-8 sm:grid-cols-2">
+          {/* Capabilities are an unordered set, not a sequence — the numerals
+              here implied a ranking that does not exist. The rule above each
+              item already separates them, so the number goes and the copy
+              starts at the column edge. */}
+          <ul role="list" className="grid gap-x-12 gap-y-6 sm:grid-cols-2">
             {project.features[lang].map((f, i) => (
-              <Reveal key={i} delay={Math.min(i, 4) * 0.05}>
-                <div className="flex gap-4 border-t border-outline-variant/40 pt-5">
-                  <span className="font-headline text-lg font-bold text-primary/50">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <p className="text-base font-light leading-relaxed text-on-surface/80">{f}</p>
-                </div>
-              </Reveal>
+              <li key={i}>
+                <Reveal delay={Math.min(i, 4) * 0.05}>
+                  <p className="border-t border-outline-variant/40 pt-5 text-base font-light leading-relaxed text-on-surface/80">
+                    {f}
+                  </p>
+                </Reveal>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 

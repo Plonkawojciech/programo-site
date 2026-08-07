@@ -58,14 +58,9 @@ function TechCard({ item, index }: { item: TechItem; index: number }) {
           {item.name[0]}
         </span>
       </div>
-      <div>
-        <h3 className="font-headline text-2xl font-bold tracking-tighter text-on-surface">
-          {item.name}
-        </h3>
-        <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/40">
-          Expertise Layer
-        </p>
-      </div>
+      <h3 className="font-headline text-2xl font-bold tracking-tighter text-on-surface">
+        {item.name}
+      </h3>
       <p className="text-sm font-light leading-relaxed text-on-surface-variant">
         {item.description}
       </p>
@@ -112,9 +107,6 @@ export default function TechStack() {
     <section id="stack" className="relative overflow-hidden py-section bg-gradient-to-b from-[var(--theme-bg-1)] via-[var(--theme-bg-3)] to-[var(--theme-bg-1)]">
       <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
         <Reveal className="mb-12 md:mb-16 2xl:mb-24 flex flex-col items-end text-right">
-          <span className="text-[10px] md:text-xs 2xl:text-sm font-bold uppercase tracking-[0.5em] text-primary">
-            {t("stack.label")}
-          </span>
           {/* h1, not h2: this component is only ever mounted by /stack, where it
               is the page title. As an h2 the route shipped with no h1 at all.
               Solid fill, not the previous bg-clip-text gradient: `text-transparent`
@@ -122,7 +114,7 @@ export default function TechStack() {
               forced-colors mode — where UA styles drop background images — the
               page's only h1 rendered invisible. The gradient ran text-1 → text-2
               → text-1, a shimmer nobody reads as meaning. */}
-          <h1 className="mt-4 md:mt-6 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]">
+          <h1 className="font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]">
             {t("stack.title")}
           </h1>
           <div className="mt-6 h-[2px] w-32 md:w-48 bg-gradient-to-r from-transparent via-primary to-transparent origin-right" />

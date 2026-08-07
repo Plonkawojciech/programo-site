@@ -64,6 +64,12 @@
   --z-base: 0;
   --z-raised: 10;
   --z-sticky: 40;
+  /* The mobile menu sheet. It has to cover the sticky call bar — that bar was
+     clipping the menu's own CTA — but must stay UNDER the nav pill, because the
+     hamburger inside the pill is what closes it. A scrim that swallows its own
+     dismiss control is a trap, so this is a tier of its own rather than
+     --z-scrim, which is for overlays that carry their own close button. */
+  --z-nav-scrim: 45;
   --z-nav: 50;
   --z-scrim: 100;
   --z-modal: 200;

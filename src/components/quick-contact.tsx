@@ -173,19 +173,11 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
           {/* Left side: heading + direct contact channels */}
           <div className="lg:col-span-5 flex flex-col gap-10">
             <div>
-              <motion.span
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary"
-              >
-                {t("contact.label")}
-              </motion.span>
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="mt-6 font-headline text-4xl md:text-6xl 2xl:text-7xl font-bold tracking-tighter text-on-surface"
+                className="font-headline text-4xl md:text-6xl 2xl:text-7xl font-bold tracking-tighter text-on-surface"
               >
                 {t("quick.title")}
               </motion.h2>

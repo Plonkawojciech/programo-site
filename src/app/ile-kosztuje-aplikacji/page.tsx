@@ -153,9 +153,6 @@ export default function IleKosztujeAplikacjiPage() {
           </nav>
 
           <header className="mb-12">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] opacity-60">
-              Wycena · Software house Poznań
-            </p>
             <h1 className="mb-6 font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl">
               Ile kosztuje stworzenie aplikacji lub strony?
             </h1>

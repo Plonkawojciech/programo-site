@@ -169,9 +169,6 @@ export default function SoftwareHousePoznanPage() {
           </nav>
 
           <header className="mb-16">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] opacity-60">
-              Software House · Poznań · Wielkopolska
-            </p>
             <h1 className="mb-6 font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl lg:text-7xl">
               Software House Poznań - Programo
             </h1>

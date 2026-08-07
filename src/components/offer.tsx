@@ -7,7 +7,6 @@ import Reveal from "@/components/ui/reveal";
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
 interface Pillar {
-  number: string;
   titleKey: TKey;
   descKey: TKey;
   exampleKey: TKey;
@@ -20,7 +19,6 @@ interface Pillar {
 // subpage — content-deck section 2.
 const pillars: Pillar[] = [
   {
-    number: "01",
     titleKey: "offer.pillar1.title",
     descKey: "offer.pillar1.desc",
     exampleKey: "offer.pillar1.example",
@@ -28,7 +26,6 @@ const pillars: Pillar[] = [
     href: "/oferta",
   },
   {
-    number: "02",
     titleKey: "offer.pillar2.title",
     descKey: "offer.pillar2.desc",
     exampleKey: "offer.pillar2.example",
@@ -36,7 +33,6 @@ const pillars: Pillar[] = [
     href: "/oferta",
   },
   {
-    number: "03",
     titleKey: "offer.pillar3.title",
     descKey: "offer.pillar3.desc",
     exampleKey: "offer.pillar3.example",
@@ -44,7 +40,6 @@ const pillars: Pillar[] = [
     href: "/sklepy-internetowe",
   },
   {
-    number: "04",
     titleKey: "offer.pillar4.title",
     descKey: "offer.pillar4.desc",
     exampleKey: "offer.pillar4.example",
@@ -60,10 +55,7 @@ export default function Offer() {
     <section className="relative bg-surface py-section">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
         <Reveal className="mb-12 max-w-3xl md:mb-16">
-          <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
-            {t("offer.label")}
-          </p>
-          <h1 className="mt-5 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-7xl">
+          <h1 className="font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-7xl">
             {t("offer.title")}
           </h1>
           <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
@@ -71,23 +63,24 @@ export default function Offer() {
           </p>
         </Reveal>
 
-        <div className="flex flex-col gap-12 md:gap-16">
+        {/* Numbered list, so the numeral in the heading is decoration the
+            screen reader can skip — the <ol> already carries the count. */}
+        <ol role="list" className="flex flex-col gap-10 md:gap-14">
           {pillars.map((p, i) => (
-            <Reveal
-              key={p.number}
-              delay={Math.min(i * 0.08, 0.3)}
-              className="grid gap-8 border-t border-outline-variant/30 pt-10 md:grid-cols-[auto_1fr] md:gap-14 md:pt-14"
-            >
-              <span className="font-mono text-xs uppercase tracking-widest text-primary md:pt-1">
-                {p.number}
-              </span>
-              <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
+            <li key={p.titleKey}>
+              <Reveal
+                delay={Math.min(i * 0.08, 0.3)}
+                className="grid gap-8 border-t border-outline-variant/30 pt-10 md:pt-12 lg:grid-cols-[1.3fr_1fr] lg:gap-16"
+              >
                 <div>
                   {/* Owner-editable: an empty <h2> still occupies a line box
                       at 36-40px and breaks the heading outline for screen
                       readers, so drop the element rather than render it blank. */}
                   {t(p.titleKey).trim() && (
                     <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
+                      <span className="mr-2 text-on-surface-variant" aria-hidden="true">
+                        {i + 1}.
+                      </span>
                       {t(p.titleKey)}
                     </h2>
                   )}
@@ -103,10 +96,7 @@ export default function Offer() {
                   </Link>
                 </div>
                 <div className="rounded-3xl border border-outline-variant/40 bg-surface-container-low p-6 md:p-8">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
-                    {t("offer.getBullets")}
-                  </p>
-                  <ul className="mt-5 flex flex-col gap-3.5">
+                  <ul className="flex flex-col gap-3.5">
                     {p.bulletKeys.map((k) => (
                       <li key={k} className="flex items-start gap-3 text-sm leading-relaxed text-on-surface/80 md:text-base">
                         <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
@@ -115,10 +105,10 @@ export default function Offer() {
                     ))}
                   </ul>
                 </div>
-              </div>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
-        </div>
+        </ol>
 
         <Reveal className="mt-14 flex flex-col items-start gap-6 rounded-3xl bg-primary p-8 md:mt-20 md:flex-row md:items-center md:justify-between md:p-12">
           <h2 className="font-headline text-2xl font-bold tracking-tight text-on-primary md:text-4xl">

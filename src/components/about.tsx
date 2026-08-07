@@ -19,10 +19,7 @@ export default function About() {
     <section id="about" className="relative bg-surface py-section">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
         <Reveal className="max-w-3xl">
-          <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
-            {t("about.label")}
-          </p>
-          <h1 className="mt-5 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-7xl">
+          <h1 className="font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-7xl">
             {t("about.title")}
           </h1>
           <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
@@ -81,10 +78,7 @@ export default function About() {
         {/* Company data + CTA */}
         <Reveal className="mt-14 flex flex-col items-start gap-8 rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:mt-20 md:flex-row md:items-center md:justify-between md:p-12">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
-              {t("about.company.title")}
-            </p>
-            <p className="mt-3 font-headline text-xl font-medium tracking-tight text-on-surface md:text-2xl">
+            <p className="font-headline text-xl font-medium tracking-tight text-on-surface md:text-2xl">
               {t("about.company.line")}
             </p>
           </div>

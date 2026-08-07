@@ -19,12 +19,6 @@ const FILTERS: { key: Project["category"] | null; label: { pl: string; en: strin
   { key: "marketing", label: { pl: "Tracking i reklamy", en: "Tracking & ads" } },
 ];
 
-const CATEGORY_LABELS: Record<Project["category"], { pl: string; en: string }> = {
-  produkty: { pl: "Produkty Programo", en: "Programo products" },
-  "dla-klientow": { pl: "Dla klientów", en: "Client work" },
-  marketing: { pl: "Tracking i reklamy", en: "Tracking & ads" },
-};
-
 // General status badge shown on cards. The detailed `statusLabel` lives on the
 // project detail page (per content deck §10).
 const STATUS_LABELS: Record<ProjectStatus, { pl: string; en: string }> = {
@@ -141,11 +135,7 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
         <CardMedia project={project} />
 
         <div className="flex flex-1 flex-col p-5 md:p-6">
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-on-surface-variant">
-              {CATEGORY_LABELS[project.category][lang]}
-              <span className="text-on-surface-variant/50"> · {project.year}</span>
-            </span>
+          <div className="flex items-center gap-3">
             <span
               className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest ${
                 project.status === "live"
@@ -209,11 +199,8 @@ export default function FeaturedWork() {
         {/* Header */}
         <div className="mb-12 flex flex-col gap-8 md:mb-16 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary md:text-xs">
-              {lang === "pl" ? "Portfolio" : "Portfolio"}
-            </span>
             {/* This section is the /projekty route's only content, so it owns the page h1. */}
-            <h1 className="mt-6 font-headline text-4xl font-bold leading-[1.05] tracking-tight text-on-surface md:text-6xl 2xl:text-7xl">
+            <h1 className="font-headline text-4xl font-bold leading-[1.05] tracking-tight text-on-surface md:text-6xl 2xl:text-7xl">
               {lang === "pl" ? "Wybrane realizacje" : "Selected work"}
             </h1>
             <p className="mt-5 text-base font-light leading-relaxed text-on-surface/70 md:text-lg">

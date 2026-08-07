@@ -90,24 +90,21 @@ const pageGraph = renderGraph([
 ]);
 
 // Scope of e-commerce services — content-deck-2026-07.md section 4.3.
+// Kolejność listy niesie numer w nagłówku — nie trzymamy go w danych.
 const services = [
   {
-    n: "01",
     title: "Aplikacje mobilne do istniejących sklepów",
     desc: "Twój sklep zostaje tam, gdzie jest. Dokładamy do niego natywne aplikacje iOS i Android, które czytają ten sam katalog, ceny, stany magazynowe i zamówienia. Klient kupuje z telefonu, dostaje powiadomienia push i skanuje kody, a Ty nadal pracujesz na jednym panelu.",
   },
   {
-    n: "02",
     title: "Sklepy od zera",
     desc: "WooCommerce albo PrestaShop, jeśli zależy Ci na sprawdzonym ekosystemie i gotowych wtyczkach. Headless na Next.js, jeśli sklep ma się otwierać tak szybko jak aplikacja. Powiemy, która droga pasuje do Twojej skali, nawet jeśli będzie to ta tańsza.",
   },
   {
-    n: "03",
     title: "Integracje",
     desc: "Płatności (PayU, PayPo, iMoje, InPost Pay i inne), wybór Paczkomatu na mapie, Allegro i BaseLinker, synchronizacja stanów magazynowych. Piszemy je z obsługą błędów i automatycznym ponawianiem, żeby nikt nie musiał ich pilnować ręcznie.",
   },
   {
-    n: "04",
     title: "Migracje bez utraty SEO",
     desc: "Przy przenoszeniu sklepu pilnujemy mapy przekierowań, struktury adresów i danych strukturalnych, żeby pozycje wypracowane w Google przetrwały przeprowadzkę. Plan migracji dostajesz na piśmie, zanim ruszymy cokolwiek na produkcji.",
   },
@@ -127,7 +124,6 @@ const storeCases = [
   },
 ];
 
-const EYEBROW = "text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary";
 const H2 = "font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl";
 const CONTAINER = "mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24";
 // Asymmetric on purpose. Every section on this page uses the same constant, so
@@ -154,8 +150,7 @@ export default function SklepyInternetowePage() {
             <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
               {/* Left: copy */}
               <div>
-                <p className={EYEBROW}>Sklepy internetowe · E-commerce · Poznań</p>
-                <h1 className="mt-5 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl">
+                <h1 className="font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl">
                   Sklepy internetowe i aplikacje mobilne do sklepów, które już działają
                 </h1>
                 <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
@@ -177,25 +172,22 @@ export default function SklepyInternetowePage() {
                     in a smaller, separate line instead of implying they're
                     e-commerce work. */}
                 <div className="mt-10 flex flex-col gap-5 border-t border-outline-variant/30 pt-7">
-                  <div className="flex flex-col gap-3">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">Realizacja flagowa</span>
-                    <div className="flex items-center gap-4">
-                      <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border border-outline-variant/40 bg-surface-container-low">
-                        <Image
-                          src="/screenshots/jedmar-hero.webp"
-                          alt="Aplikacja mobilna sklepu Jedmar - natywne iOS i Android zbudowane przez Programo"
-                          fill
-                          priority
-                          sizes="96px"
-                          className="object-cover"
-                        />
-                      </div>
-                      <div>
-                        <span className="font-headline text-lg font-bold tracking-tight text-on-surface-variant">Jedmar</span>
-                        <p className="text-sm text-on-surface-variant">
-                          Natywne aplikacje iOS + Android · Poznań i cała Polska
-                        </p>
-                      </div>
+                  <div className="flex items-center gap-4">
+                    <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border border-outline-variant/40 bg-surface-container-low">
+                      <Image
+                        src="/screenshots/jedmar-hero.webp"
+                        alt="Aplikacja mobilna sklepu Jedmar - natywne iOS i Android zbudowane przez Programo"
+                        fill
+                        priority
+                        sizes="96px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <span className="font-headline text-lg font-bold tracking-tight text-on-surface-variant">Jedmar</span>
+                      <p className="text-sm text-on-surface-variant">
+                        Natywne aplikacje iOS + Android · Poznań i cała Polska
+                      </p>
                     </div>
                   </div>
                   <p className="text-xs text-on-surface-variant/70">
@@ -220,8 +212,7 @@ export default function SklepyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="mb-10 max-w-3xl md:mb-14">
-              <p className={EYEBROW}>Realizacja flagowa</p>
-              <h2 className={`mt-5 ${H2}`}>Jedmar: dwie aplikacje do sklepu, którego nie musieliśmy przebudowywać</h2>
+              <h2 className={H2}>Jedmar: dwie aplikacje do sklepu, którego nie musieliśmy przebudowywać</h2>
               <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/70">
                 Jedmar miał działający sklep na PrestaShop i nie potrzebował nowego. Brakowało
                 mu wygodnych zakupów z telefonu i sensownej sprzedaży części zamiennych.
@@ -261,25 +252,29 @@ export default function SklepyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="mb-10 max-w-3xl md:mb-14">
-              <p className={EYEBROW}>Zakres usług e-commerce</p>
-              <h2 className={`mt-5 ${H2}`}>Sklep, aplikacja, integracje, migracja</h2>
+              <h2 className={H2}>Sklep, aplikacja, integracje, migracja</h2>
             </Reveal>
-            <div className="grid gap-x-10 gap-y-12 md:grid-cols-2">
+            {/* Numer wchodzi do nagłówka jako prefiks; role="list" wraca po
+                preflightcie Tailwinda, który zdejmuje semantykę z list. */}
+            <ol role="list" className="grid gap-x-10 gap-y-10 md:grid-cols-2">
               {services.map((s, i) => (
-                <Reveal key={s.n} delay={(i % 2) * 0.1} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary">{s.n}</span>
-                  <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">{s.title}</h3>
-                  <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
-                </Reveal>
+                <li key={s.title}>
+                  <Reveal delay={(i % 2) * 0.1} className="flex flex-col gap-3 border-t border-outline-variant/30 pt-6">
+                    <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
+                      <span className="mr-2 text-on-surface-variant" aria-hidden="true">{i + 1}.</span>
+                      {s.title}
+                    </h3>
+                    <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
+                  </Reveal>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </section>
 
         {/* KOMPETENCJE (honest capability proof) */}
         <div id="realizacje" className="scroll-mt-28" />
         <CaseStudies
-          eyebrow="Kompetencje"
           heading="Co jeszcze budowaliśmy i co z tego przydaje się w sklepie"
           intro="Jedmar wyżej to nasze wdrożenie sklepowe. Poniżej dwie własne platformy, przy których robiliśmy to samo, czego wymaga rozbudowany e-commerce: płatności, integracje z zewnętrznymi systemami i frontend, który nie zwalnia przy dużym katalogu."
           items={storeCases}
@@ -289,7 +284,6 @@ export default function SklepyInternetowePage() {
         <CompactLeadForm
           formId="sklepy-compact"
           projectType="Sklep internetowy"
-          eyebrow="Bez zobowiązań"
           heading="Wciąż się rozglądasz? Zostaw numer"
         />
 
@@ -297,8 +291,7 @@ export default function SklepyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="mb-10 max-w-3xl md:mb-14">
-              <p className={EYEBROW}>Najczęstsze pytania</p>
-              <h2 className={`mt-5 ${H2}`}>Zanim napiszesz</h2>
+              <h2 className={H2}>Zanim napiszesz</h2>
             </Reveal>
             <div className="grid gap-x-16 gap-y-10 md:grid-cols-2">
               {faqs.map((f, i) => (

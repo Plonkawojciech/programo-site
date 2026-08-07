@@ -101,6 +101,10 @@ export const home = {
   // shown as actual work in ClientWork, and the 24 h promise still sits next to
   // the phone field where it affects a decision.
   "home.trust.eyebrow": { pl: "Zaufali nam", en: "Trusted by" },
+  // Druga grupa paska zaufania. Celowo "produkty", nie "realizacje": realizacja
+  // czyta się jako robota dla kogoś, a to jest dokładnie ta różnica, którą ten
+  // pasek ma pokazywać.
+  "home.trust.own": { pl: "Własne produkty", en: "Our own products" },
 
   // 1.3 Offer — 4 pillars
   "home.offer.eyebrow": { pl: "Co robimy", en: "What we do" },

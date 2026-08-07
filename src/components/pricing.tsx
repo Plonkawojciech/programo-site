@@ -9,15 +9,14 @@ import { track } from "@/lib/analytics/client";
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
 interface Step {
-  n: string;
   titleKey: TKey;
   descKey: TKey;
 }
 
 const steps: Step[] = [
-  { n: "01", titleKey: "pricing.step1.title", descKey: "pricing.step1.desc" },
-  { n: "02", titleKey: "pricing.step2.title", descKey: "pricing.step2.desc" },
-  { n: "03", titleKey: "pricing.step3.title", descKey: "pricing.step3.desc" },
+  { titleKey: "pricing.step1.title", descKey: "pricing.step1.desc" },
+  { titleKey: "pricing.step2.title", descKey: "pricing.step2.desc" },
+  { titleKey: "pricing.step3.title", descKey: "pricing.step3.desc" },
 ];
 
 interface Factor {
@@ -72,10 +71,7 @@ export default function Pricing() {
     <section ref={ref} className="relative bg-surface py-section">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
         <Reveal className="mb-12 max-w-3xl md:mb-16">
-          <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary">
-            {t("pricing.label")}
-          </p>
-          <h1 className="mt-5 font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-7xl">
+          <h1 className="font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-7xl">
             {t("pricing.title")}
           </h1>
           <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
@@ -83,31 +79,28 @@ export default function Pricing() {
           </p>
         </Reveal>
 
-        {/* Process — 3 steps */}
-        <Reveal className="mb-6 max-w-2xl">
-          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
-            {t("pricing.processLabel")}
-          </p>
-        </Reveal>
-        <div className="grid gap-x-10 gap-y-12 md:grid-cols-3">
+        {/* Process — 3 steps. Ordered list: the sequence is the point, and it
+            lets the screen reader announce the count instead of the numeral
+            baked into the heading. */}
+        <ol role="list" className="grid gap-x-10 gap-y-10 md:grid-cols-3">
           {steps.map((s, i) => (
-            <Reveal key={s.n} delay={i * 0.1} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
-              <span className="font-mono text-xs uppercase tracking-widest text-primary">{s.n}</span>
-              <h2 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
-                {t(s.titleKey)}
-              </h2>
-              <p className="text-base font-light leading-relaxed text-on-surface/70">{t(s.descKey)}</p>
-            </Reveal>
+            <li key={s.titleKey}>
+              <Reveal delay={i * 0.1} className="flex flex-col gap-3 border-t border-outline-variant/30 pt-8">
+                <h2 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
+                  <span className="mr-2 text-on-surface-variant" aria-hidden="true">
+                    {i + 1}.
+                  </span>
+                  {t(s.titleKey)}
+                </h2>
+                <p className="text-base font-light leading-relaxed text-on-surface/70">{t(s.descKey)}</p>
+              </Reveal>
+            </li>
           ))}
-        </div>
+        </ol>
 
-        {/* What drives the cost */}
-        <Reveal className="mb-6 mt-16 max-w-2xl md:mt-20">
-          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
-            {t("pricing.factorsLabel")}
-          </p>
-        </Reveal>
-        <div className="grid gap-x-10 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+        {/* What drives the cost - the block's own top spacing, previously
+            carried by the label above it. */}
+        <div className="mt-16 grid gap-x-10 gap-y-10 md:mt-20 md:grid-cols-2 lg:grid-cols-3">
           {factors.map((f, i) => (
             <Reveal
               key={f.nameKey}

@@ -94,19 +94,20 @@ const pageGraph = renderGraph([
   buildFaqPage(faqs),
 ]);
 
+// Kolejność listy niesie numer w nagłówku — nie trzymamy go w danych.
 const services = [
-  { n: "01", title: "Strony firmowe", desc: "Strona firmowa w Next.js z panelem, w którym sam poprawisz teksty i dodasz podstronę. Zbudowana tak, żeby odwiedzający szybko trafił do formularza albo do numeru telefonu." },
-  { n: "02", title: "Landing page / sprzedażowe", desc: "Strona pod konkretną kampanię i konkretną ofertę, z formularzem jako jedynym wyjściem. Do tego pomiar, który pokazuje, ile zapytań przyszło z której reklamy." },
-  { n: "03", title: "Sklepy internetowe", desc: "Robimy też sklepy: WooCommerce, Shopify, PrestaShop i headless. Opisaliśmy to na osobnej stronie o sklepach internetowych." },
-  { n: "04", title: "Redesign i migracja", desc: "Odświeżamy istniejące strony i przenosimy je na nowy stack. Przy migracji trzymamy przekierowania 301 i strukturę adresów, żeby wypracowane pozycje w Google zostały na miejscu." },
-  { n: "05", title: "Wydajność i SEO", desc: "Core Web Vitals, dane strukturalne, nagłówki, mapa strony i reszta technicznego SEO. Zaczynamy od audytu tego, co masz teraz." },
-  { n: "06", title: "Utrzymanie i rozwój", desc: "Po starcie zostajemy. Aktualizacje, nowe podstrony i poprawki po tym, jak zobaczysz pierwsze dane z ruchu." },
+  { title: "Strony firmowe", desc: "Strona firmowa w Next.js z panelem, w którym sam poprawisz teksty i dodasz podstronę. Zbudowana tak, żeby odwiedzający szybko trafił do formularza albo do numeru telefonu." },
+  { title: "Landing page / sprzedażowe", desc: "Strona pod konkretną kampanię i konkretną ofertę, z formularzem jako jedynym wyjściem. Do tego pomiar, który pokazuje, ile zapytań przyszło z której reklamy." },
+  { title: "Sklepy internetowe", desc: "Robimy też sklepy: WooCommerce, Shopify, PrestaShop i headless. Opisaliśmy to na osobnej stronie o sklepach internetowych." },
+  { title: "Redesign i migracja", desc: "Odświeżamy istniejące strony i przenosimy je na nowy stack. Przy migracji trzymamy przekierowania 301 i strukturę adresów, żeby wypracowane pozycje w Google zostały na miejscu." },
+  { title: "Wydajność i SEO", desc: "Core Web Vitals, dane strukturalne, nagłówki, mapa strony i reszta technicznego SEO. Zaczynamy od audytu tego, co masz teraz." },
+  { title: "Utrzymanie i rozwój", desc: "Po starcie zostajemy. Aktualizacje, nowe podstrony i poprawki po tym, jak zobaczysz pierwsze dane z ruchu." },
 ];
 
 const steps = [
-  { n: "01", title: "Krótka rozmowa", desc: "Pytamy, po co Ci strona, ile ma mieć podstron, jaki masz budżet i termin." },
-  { n: "02", title: "Makieta i wycena", desc: "Dostajesz szkic układu strony, rozpisane etapy i widełki cenowe, zanim zaczniemy kodować." },
-  { n: "03", title: "Budowa i wdrożenie", desc: "Projektujemy, piszemy kod w Next.js i wypuszczamy stronę na produkcję." },
+  { title: "Krótka rozmowa", desc: "Pytamy, po co Ci strona, ile ma mieć podstron, jaki masz budżet i termin." },
+  { title: "Makieta i wycena", desc: "Dostajesz szkic układu strony, rozpisane etapy i widełki cenowe, zanim zaczniemy kodować." },
+  { title: "Budowa i wdrożenie", desc: "Projektujemy, piszemy kod w Next.js i wypuszczamy stronę na produkcję." },
 ];
 
 const webCases = [
@@ -127,7 +128,6 @@ const webCases = [
   },
 ];
 
-const EYEBROW = "text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-primary";
 const H2 = "font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl";
 const CONTAINER = "mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24";
 // Asymmetric on purpose. Every section on this page uses the same constant, so
@@ -156,8 +156,7 @@ export default function StronyInternetowePage() {
             <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
               {/* Left: copy */}
               <div>
-                <p className={EYEBROW}>Tworzenie stron internetowych · Poznań</p>
-                <h1 className="mt-5 font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl">
+                <h1 className="font-headline text-4xl font-bold leading-[1.05] tracking-tighter text-on-surface md:text-6xl 2xl:text-7xl">
                   Strona firmowa, z której przychodzą zapytania
                 </h1>
                 <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
@@ -175,9 +174,6 @@ export default function StronyInternetowePage() {
 
                 {/* Trust strip — static, above the fold, real clients only */}
                 <div className="mt-10 flex flex-col gap-4 border-t border-outline-variant/30 pt-7">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
-                    Wybrane realizacje
-                  </span>
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-headline text-lg font-bold tracking-tight text-on-surface-variant md:text-xl">
                     <span>Jedmar</span>
                     <span aria-hidden="true" className="text-on-surface-variant/40">·</span>
@@ -207,8 +203,7 @@ export default function StronyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="max-w-4xl">
-              <p className={EYEBROW}>Dlaczego to ważne</p>
-              <p className="mt-6 font-headline text-2xl font-light leading-snug tracking-tight text-on-surface md:text-4xl">
+              <p className="font-headline text-2xl font-light leading-snug tracking-tight text-on-surface md:text-4xl">
                 Klient wchodzi na stronę z telefonu, w biegu, i daje jej kilka sekund.{" "}
                 <span className="text-primary">Albo w tym czasie znajdzie numer i powód, żeby zadzwonić, albo wraca do wyników wyszukiwania.</span>
               </p>
@@ -220,18 +215,23 @@ export default function StronyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="mb-10 max-w-3xl md:mb-14">
-              <p className={EYEBROW}>Co robimy ze stronami</p>
-              <h2 className={`mt-5 ${H2}`}>Od wizytówki po serwis z CMS-em</h2>
+              <h2 className={H2}>Od wizytówki po serwis z CMS-em</h2>
             </Reveal>
-            <div className="grid gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+            {/* Numer wchodzi do nagłówka jako prefiks; role="list" wraca po
+                preflightcie Tailwinda, który zdejmuje semantykę z list. */}
+            <ol role="list" className="grid gap-x-10 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
               {services.map((s, i) => (
-                <Reveal key={s.n} delay={(i % 3) * 0.1} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary">{s.n}</span>
-                  <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">{s.title}</h3>
-                  <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
-                </Reveal>
+                <li key={s.title}>
+                  <Reveal delay={(i % 3) * 0.1} className="flex flex-col gap-3 border-t border-outline-variant/30 pt-6">
+                    <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
+                      <span className="mr-2 text-on-surface-variant" aria-hidden="true">{i + 1}.</span>
+                      {s.title}
+                    </h3>
+                    <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
+                  </Reveal>
+                </li>
               ))}
-            </div>
+            </ol>
             <Reveal className="mt-14 rounded-2xl border border-outline-variant/40 bg-surface-container-low px-6 py-5 md:mt-20">
               <p className="max-w-2xl text-sm text-on-surface-variant">
                 Prowadzimy też Google Ads i konfigurujemy pomiar konwersji razem
@@ -247,7 +247,6 @@ export default function StronyInternetowePage() {
         {/* CASE STUDIES */}
         <div id="realizacje" className="scroll-mt-28" />
         <CaseStudies
-          eyebrow="Wybrane realizacje"
           heading="Strony i produkty, które zbudowaliśmy"
           intro="Trzy wdrożenia, przy których pracowaliśmy od pierwszej rozmowy do wypuszczenia strony: klub sportowy, firma doradcza z formularzem kontaktowym i nasza własna platforma SaaS."
           items={webCases}
@@ -257,7 +256,6 @@ export default function StronyInternetowePage() {
         <CompactLeadForm
           formId="strony-compact"
           projectType="Strona / landing"
-          eyebrow="Bez zobowiązań"
           heading="Wciąż się zastanawiasz? Zostaw numer"
         />
 
@@ -265,8 +263,7 @@ export default function StronyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="overflow-hidden rounded-3xl border border-outline-variant/40 bg-surface-container-low p-8 md:p-14">
-              <p className={EYEBROW}>Dlaczego Programo</p>
-              <h2 className={`mt-5 ${H2}`}>Dwóch inżynierów z Poznania i żadnych pośredników</h2>
+              <h2 className={H2}>Dwóch inżynierów z Poznania i żadnych pośredników</h2>
               <p className="mt-6 max-w-3xl text-lg font-light leading-relaxed text-on-surface/70">
                 Programo to Wojciech Płonka i Bartosz Kołaj. Wojtek odpowiada za
                 design i produkt, Bartek za inżynierię, i to my odbieramy telefon,
@@ -288,18 +285,23 @@ export default function StronyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="mb-10 max-w-3xl md:mb-14">
-              <p className={EYEBROW}>Jak pracujemy</p>
-              <h2 className={`mt-5 ${H2}`}>Trzy kroki do gotowej strony</h2>
+              <h2 className={H2}>Trzy kroki do gotowej strony</h2>
             </Reveal>
-            <div className="grid gap-x-10 gap-y-12 md:grid-cols-3">
+            {/* Realna sekwencja — <ol> zgadza się z treścią, numer siedzi
+                w nagłówku i jest aria-hidden, żeby czytnik nie dublował. */}
+            <ol role="list" className="grid gap-x-10 gap-y-10 md:grid-cols-3">
               {steps.map((s, i) => (
-                <Reveal key={s.n} delay={i * 0.12} className="flex flex-col gap-4 border-t border-outline-variant/30 pt-8">
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary">{s.n}</span>
-                  <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface">{s.title}</h3>
-                  <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
-                </Reveal>
+                <li key={s.title}>
+                  <Reveal delay={i * 0.12} className="flex flex-col gap-3 border-t border-outline-variant/30 pt-6">
+                    <h3 className="font-headline text-2xl font-bold tracking-tight text-on-surface">
+                      <span className="mr-2 text-on-surface-variant" aria-hidden="true">{i + 1}.</span>
+                      {s.title}
+                    </h3>
+                    <p className="text-base font-light leading-relaxed text-on-surface/70">{s.desc}</p>
+                  </Reveal>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </section>
 
@@ -307,8 +309,7 @@ export default function StronyInternetowePage() {
         <section className={SECTION}>
           <div className={CONTAINER}>
             <Reveal className="mb-10 max-w-3xl md:mb-14">
-              <p className={EYEBROW}>Najczęstsze pytania</p>
-              <h2 className={`mt-5 ${H2}`}>Zanim napiszesz</h2>
+              <h2 className={H2}>Zanim napiszesz</h2>
             </Reveal>
             <div className="grid gap-x-16 gap-y-10 md:grid-cols-2">
               {faqs.map((f, i) => (
