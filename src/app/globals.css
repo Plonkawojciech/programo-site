@@ -11,6 +11,26 @@
   --theme-bg-2: #0A2A28;      /* surface container low */
   --theme-bg-3: #0B2B26;      /* tech stack, surface container */
   --theme-bg-4: #163832;      /* surface container high */
+
+  /* Card surfaces, split off from the bg ramp on 2026-08-07. A card has to read
+     as lifted OFF the band it sits on, and the two themes need opposite
+     mechanics to get there. Dark raises the fill toward the light — a shadow on
+     #051F20 is nearly free, there is no light left to remove. Light does the
+     reverse: paper-white can only rise if the band drops away from it, because
+     #FFFFFF on #FBFDFB is a 1.02:1 step and simply does not render, so there the
+     shadow does the work and the fill is the reward.
+     Both `--theme-card` values are palette steps already in this file
+     (bg-2 in dark, bg-0 in light) — no new colour enters the system. */
+  --theme-card: #0A2A28;
+  /* The band a card sits on. Equal to the body here — dark already has its
+     separation from the fill step above, and dropping the band further would
+     only crush the section into the page edges. */
+  --theme-card-band: #051F20;
+  --theme-card-shadow: 0 1px 2px rgba(3, 21, 23, 0.4),
+    0 12px 28px -10px rgba(3, 21, 23, 0.55);
+  --theme-card-shadow-hover: 0 2px 4px rgba(3, 21, 23, 0.45),
+    0 26px 50px -14px rgba(3, 21, 23, 0.65);
+
   /* Historically "borders", but nothing draws a border with them any more —
      they feed --color-surface-container-high, --color-primary-container and
      --color-inverse-primary, i.e. FILLS. Left at their exact values because
@@ -145,6 +165,20 @@
   --theme-bg-2: #F2F8F3;      /* very light mint */
   --theme-bg-3: #E6F1E8;      /* light mint container */
   --theme-bg-4: #DAF1DE;      /* mint from palette */
+
+  /* Paper white, as the owner asked for on 2026-08-07 ("zeby mialy biale tlo te
+     boxy"). The shadow is deliberately heavier than the dark one relative to its
+     backdrop: it is the only thing separating the card from the page. */
+  --theme-card: #FFFFFF;
+  /* bg-2, a 3% mint tint. This is the whole trick in light mode: the band steps
+     back so paper-white can step forward. It is NOT the #E6F1E8 slab the cards
+     used to be filled with — that was 8× the tint and read as "green box". */
+  --theme-card-band: #F2F8F3;
+  --theme-card-shadow: 0 1px 2px rgba(5, 31, 32, 0.05),
+    0 12px 28px -10px rgba(5, 31, 32, 0.15);
+  --theme-card-shadow-hover: 0 2px 6px rgba(5, 31, 32, 0.07),
+    0 26px 50px -14px rgba(5, 31, 32, 0.22);
+
   --theme-border-1: #DAF1DE;  /* fill: inverse primary */
   --theme-border-2: #8EB69B;  /* fill: container high, primary container */
 
@@ -210,6 +244,13 @@
   --color-surface-container-high: var(--theme-border-2);
   --color-surface-container-highest: var(--theme-accent);
   --color-surface-container-lowest: var(--theme-bg-1);
+  /* → `bg-card`, `shadow-card`, `shadow-card-hover`. Deliberately NOT another
+     `surface-container-*` step: those describe how deep a fill sits in the ramp,
+     while this one describes an object that floats above the ramp entirely. */
+  --color-card: var(--theme-card);
+  --color-card-band: var(--theme-card-band);
+  --shadow-card: var(--theme-card-shadow);
+  --shadow-card-hover: var(--theme-card-shadow-hover);
   --color-on-surface: var(--theme-text-1);
   --color-on-surface-variant: var(--theme-text-2);
   --color-primary: var(--theme-accent);

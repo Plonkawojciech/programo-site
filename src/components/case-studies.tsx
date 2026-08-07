@@ -39,7 +39,7 @@ export default function CaseStudies({
   const cols = resolved.length >= 3 ? "md:grid-cols-3" : "md:grid-cols-2";
 
   return (
-    <section className="relative bg-surface pt-section pb-section-tight">
+    <section className="relative bg-card-band pt-section pb-section-tight">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-24">
         <Reveal className="mb-12 max-w-3xl md:mb-16">
           <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl">
@@ -58,7 +58,7 @@ export default function CaseStudies({
             const isLive = project.status === "live" && Boolean(project.liveUrl);
             return (
               <Reveal key={project.slug} delay={i * 0.1}>
-                <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-outline-variant/40 bg-surface-container-low transition-colors hover:border-outline">
+                <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-outline-variant/30 bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-outline hover:shadow-card-hover">
                   <div className="relative aspect-[16/10] overflow-hidden bg-surface-container">
                     {shot ? (
                       <Image

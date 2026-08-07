@@ -36,7 +36,10 @@ export default function ProjektyPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
-      <div className="pt-20 md:pt-24">
+      {/* The band carries up through the navbar clearance too. FeaturedWork is
+          the only content on this route, so leaving this strip on the body
+          colour would draw a hairline seam right under the nav. */}
+      <div className="bg-card-band pt-20 md:pt-24">
         <FeaturedWork />
       </div>
     </>

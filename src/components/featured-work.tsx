@@ -82,11 +82,13 @@ function CardMedia({ project }: { project: Project }) {
   const desktop = project.screenshots?.[0];
   // Clean screenshot panel on a per-project canvas: offset down-right so the
   // crop reads as a deliberate diagonal peek, no fake browser chrome.
+  // Light cards get no base fill under the gradient. There used to be a
+  // `bg-surface-container-high/40` here, which is the palette sage — on the
+  // white card body it put a generic mint slab where the project's own accent
+  // is supposed to be the only colour.
   return (
     <div
-      className={`relative h-[230px] overflow-hidden rounded-t-2xl sm:h-[250px] md:h-[270px] ${
-        darkCard ? "" : "bg-surface-container-high/40"
-      }`}
+      className="relative h-[230px] overflow-hidden rounded-t-2xl sm:h-[250px] md:h-[270px]"
       style={canvasStyle}
     >
       {desktop && (
@@ -123,7 +125,7 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
         href={`/projects/${project.slug}`}
         onClick={() => trackPortfolioClick(project.slug, `/projects/${project.slug}`)}
         aria-label={`${project.title} - ${project.subtitle[lang]}`}
-        className="flex h-full flex-col overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+        className="flex h-full flex-col overflow-hidden rounded-2xl border border-outline-variant/30 bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
       >
         {/* Accent line */}
         <span
@@ -175,7 +177,7 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
             {project.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-outline-variant/50 bg-surface px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-on-surface-variant"
+                className="rounded-full border border-outline-variant/50 bg-card-band px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-on-surface-variant"
               >
                 {tag}
               </span>
@@ -194,7 +196,10 @@ export default function FeaturedWork() {
   const filtered = filter ? projects.filter((p) => p.category === filter) : projects;
 
   return (
-    <section id="work" className="relative w-full bg-surface">
+    // `bg-card-band`, not `bg-surface`: the cards are paper-white, and white on
+    // the body's #FBFDFB is a 1.02:1 step — invisible. The band has to give way
+    // for them to read as raised.
+    <section id="work" className="relative w-full bg-card-band">
       <div className="mx-auto max-w-[1400px] px-6 py-section md:px-12 lg:px-24">
         {/* Header */}
         <div className="mb-12 flex flex-col gap-8 md:mb-16 md:flex-row md:items-end md:justify-between">
