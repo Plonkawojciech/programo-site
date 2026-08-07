@@ -59,7 +59,7 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="1. Administrator danych">
         <p>
-          Administratorem danych osobowych jest {COMPANY.legalName} z siedzibą w Poznaniu ({COMPANY_ADDRESS_LINE}), wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS {COMPANY.krs}, NIP {COMPANY.nip}, REGON {COMPANY.regon}. Spółkę prowadzą Wojciech Płonka oraz Bartosz Kolaj. Kontakt: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
+          Administratorem danych osobowych jest {COMPANY.legalName} z siedzibą pod adresem {COMPANY_ADDRESS_LINE}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS {COMPANY.krs}, NIP {COMPANY.nip}, REGON {COMPANY.regon}. Spółkę prowadzą Wojciech Płonka oraz Bartosz Kolaj. Kontakt: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
         </p>
       </Section>
 
@@ -155,7 +155,10 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
 
       <Section title="1. Data controller">
         <p>
-          The data controller is {COMPANY.legalName}, a Polish general partnership seated in Poznań, Poland ({COMPANY_ADDRESS_LINE}), entered in the National Court Register (KRS) under no. {COMPANY.krs}, tax ID (NIP) {COMPANY.nip}, statistical ID (REGON) {COMPANY.regon}. The partnership is run by Wojciech Płonka and Bartosz Kolaj. Contact: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
+          {/* Adres składany z pojedynczych pól, a nie z `COMPANY_ADDRESS_LINE`:
+              ta stała kończy się polskim „Polska", które w akapicie po
+              angielsku wyglądałoby na literówkę. */}
+          The data controller is {COMPANY.legalName}, a Polish general partnership seated at {COMPANY.street}, {COMPANY.postalCode} {COMPANY.city}, Poland, entered in the National Court Register (KRS) under no. {COMPANY.krs}, tax ID (NIP) {COMPANY.nip}, statistical ID (REGON) {COMPANY.regon}. The partnership is run by Wojciech Płonka and Bartosz Kolaj. Contact: <a className="text-primary hover:underline" href="mailto:biuro@programo.pl">biuro@programo.pl</a>.
         </p>
       </Section>
 

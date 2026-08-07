@@ -21,12 +21,19 @@ export const COMPANY = {
   street: "ul. Podkomorska 14/1",
   postalCode: "60-326",
   city: "Poznań",
+  /**
+   * Kraj po polsku, bo `COMPANY_ADDRESS_LINE` jest linią polskiego adresu
+   * pocztowego. Angielskie zdania składają adres z pojedynczych pól i dopisują
+   * „Poland" same - inaczej w akapicie po angielsku wylądowałoby „Polska".
+   * Kod ISO dla schema.org siedzi osobno w `organization.ts`.
+   */
+  country: "Polska",
   /** Data wpisu do rejestru przedsiębiorców, format ISO dla schema.org. */
   foundingDate: "2026-04-02",
 } as const;
 
-/** „ul. Podkomorska 14/1, 60-326 Poznań" - do zdań w prozie i do stopki. */
-export const COMPANY_ADDRESS_LINE = `${COMPANY.street}, ${COMPANY.postalCode} ${COMPANY.city}`;
+/** „ul. Podkomorska 14/1, 60-326 Poznań, Polska" - do zdań w prozie i do stopki. */
+export const COMPANY_ADDRESS_LINE = `${COMPANY.street}, ${COMPANY.postalCode} ${COMPANY.city}, ${COMPANY.country}`;
 
 /** „KRS 0001233841 · NIP 7792604466 · REGON 544443058" */
 export const COMPANY_IDS_LINE = `KRS ${COMPANY.krs} · NIP ${COMPANY.nip} · REGON ${COMPANY.regon}`;
