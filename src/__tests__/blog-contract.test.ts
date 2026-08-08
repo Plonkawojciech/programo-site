@@ -1,8 +1,16 @@
+import fs from "node:fs";
+import path from "node:path";
 import { describe, it, expect } from "vitest";
 import { listPostFilenames, readPostFile } from "@/lib/blog/read";
 import { parsePostFile, type ParsedPost } from "@/lib/blog/parse";
 import { countWords } from "@/lib/blog/word-count";
 import { AUTHOR_SLUGS } from "@/lib/schema/people";
+
+// "Zdjęcie" / "Obraz" openers are the two lazy alt-text patterns a rushed
+// (or automated) writer reaches for - "Zdjęcie biurka" tells a screen reader
+// user nothing a sighted user doesn't already get from "it's an image" being
+// implicit. Case-insensitive so "zdjęcie" mid-sentence-cased slips don't pass.
+const LAZY_ALT_PREFIXES = ["zdjęcie", "obraz"];
 
 // The editorial gate from docs/plans/blog-aeo-2026-08.md section 3.3. Zod
 // (src/lib/blog/schema.ts) only checks frontmatter SHAPE — a field is present
@@ -58,6 +66,20 @@ function checkContract(post: ParsedPost) {
     errors.push(`author "${frontmatter.author}" is not in AUTHOR_SLUGS (src/lib/schema/people.ts)`);
   }
 
+  const coverPath = path.join(process.cwd(), "public", frontmatter.cover);
+  if (!fs.existsSync(coverPath)) {
+    errors.push(`cover "${frontmatter.cover}" does not exist at ${coverPath}`);
+  }
+
+  const coverAltWords = countWords(frontmatter.coverAlt);
+  if (coverAltWords < 5) {
+    errors.push(`coverAlt is ${coverAltWords} words, must be at least 5`);
+  }
+  const lowerCoverAlt = frontmatter.coverAlt.trim().toLowerCase();
+  if (LAZY_ALT_PREFIXES.some((prefix) => lowerCoverAlt.startsWith(prefix))) {
+    errors.push(`coverAlt starts with a lazy "Zdjęcie"/"Obraz" opener`);
+  }
+
   if (!hasTableOrNumberedList(body)) {
     errors.push("body has no markdown table and no numbered list");
   }
@@ -97,6 +119,8 @@ cluster: test-klaster
 author: nieznany-ghostwriter
 datePublished: "2026-08-08"
 dateModified: "2026-08-01"
+cover: /blog/covers/nie-istnieje.webp
+coverAlt: Zdjęcie biurka.
 sources:
   - label: "Przykładowe źródło"
     url: "https://example.com/source"
@@ -132,7 +156,10 @@ tekstu, żeby złamać regułę o strukturze treści.
     expect(errors.some((e) => e.includes("dateModified"))).toBe(true);
     expect(errors.some((e) => e.includes("AUTHOR_SLUGS"))).toBe(true);
     expect(errors.some((e) => e.includes("no markdown table"))).toBe(true);
-    expect(errors.length).toBeGreaterThanOrEqual(5);
+    expect(errors.some((e) => e.includes("does not exist"))).toBe(true);
+    expect(errors.some((e) => e.includes("at least 5"))).toBe(true);
+    expect(errors.some((e) => e.includes("lazy"))).toBe(true);
+    expect(errors.length).toBeGreaterThanOrEqual(8);
   });
 
   it("rejects frontmatter that is not even shape-valid (missing required fields)", () => {

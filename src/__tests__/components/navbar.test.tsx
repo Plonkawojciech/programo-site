@@ -17,21 +17,24 @@ function renderWithI18n() {
 }
 
 describe("Navbar component", () => {
-  it("renders the seven main nav links", () => {
+  // Trimmed from 9 to 6 items 2026-08-08 (blog visual pass) — see the
+  // comment above navLinks in navbar.tsx for why. "Sklepy" and "Strony i
+  // reklamy" moved out of the top-level pill; they're still reachable from
+  // /oferta and the footer, just not asserted here anymore.
+  it("renders the six main nav links", () => {
     renderWithI18n();
     expect(screen.getAllByText("Oferta").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Projekty").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Sklepy").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Strony i reklamy").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Wycena").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Blog").length).toBeGreaterThan(0);
     expect(screen.getAllByText("O nas").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Kontakt").length).toBeGreaterThan(0);
   });
 
-  it("nav link to the marketing landing points at /strony-tracking-reklamy", () => {
+  it("nav link to the offer page points at /oferta", () => {
     renderWithI18n();
     const links = screen.getAllByRole("link").filter(
-      (l) => l.getAttribute("href") === "/strony-tracking-reklamy"
+      (l) => l.getAttribute("href") === "/oferta"
     );
     expect(links.length).toBeGreaterThanOrEqual(1);
   });

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostsPage, getPageCount } from "@/lib/blog";
 import PostCard from "@/components/blog/post-card";
+import ClusterNav from "@/components/blog/cluster-nav";
 import PaginationNav from "@/components/blog/pagination-nav";
 import { buildBreadcrumbs, buildWebPage, renderGraph } from "@/lib/schema";
 
@@ -58,9 +59,10 @@ export default async function BlogPage({ params }: { params: Promise<{ page: str
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
       <div className="min-h-screen bg-surface text-on-surface">
         <div className="mx-auto max-w-5xl px-6 py-16 md:px-10 md:py-24">
-          <h1 className="mb-12 font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl">
+          <h1 className="mb-8 font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl">
             Blog
           </h1>
+          <ClusterNav />
           <div className="grid gap-6 sm:grid-cols-2">
             {posts.map((post) => (
               <PostCard key={post.frontmatter.slug} post={post} />

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getPostsPage, getPageCount } from "@/lib/blog";
 import PostCard from "@/components/blog/post-card";
+import FeaturedPost from "@/components/blog/featured-post";
+import ClusterNav from "@/components/blog/cluster-nav";
 import PaginationNav from "@/components/blog/pagination-nav";
 import {
   buildBreadcrumbs,
@@ -46,6 +48,7 @@ const pageGraph = renderGraph([
 export default function BlogIndexPage() {
   const posts = getPostsPage(1);
   const pageCount = getPageCount();
+  const [featured, ...rest] = posts;
 
   return (
     <>
@@ -63,14 +66,21 @@ export default function BlogIndexPage() {
             </p>
           </header>
 
+          <ClusterNav />
+
           {posts.length === 0 ? (
             <p className="opacity-70">Pierwsze wpisy już wkrótce.</p>
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2">
-              {posts.map((post) => (
-                <PostCard key={post.frontmatter.slug} post={post} />
-              ))}
-            </div>
+            <>
+              <FeaturedPost post={featured} />
+              {rest.length > 0 && (
+                <div className="grid gap-6 sm:grid-cols-2">
+                  {rest.map((post) => (
+                    <PostCard key={post.frontmatter.slug} post={post} />
+                  ))}
+                </div>
+              )}
+            </>
           )}
 
           <PaginationNav currentPage={1} pageCount={pageCount} />

@@ -40,7 +40,10 @@ export function buildPeople(): SchemaNode[] {
  * can never name someone who isn't also a Person node in the site graph;
  * blog-contract.test.ts checks every post's author against this map.
  */
-export const AUTHOR_SLUGS: Record<string, { id: string; name: string }> = {
-  "wojciech-plonka": { id: WOJCIECH_ID, name: "Wojciech Płonka" },
-  "bartosz-kolaj": { id: BARTOSZ_ID, name: "Bartosz Kołaj" },
+export const AUTHOR_SLUGS: Record<string, { id: string; name: string; jobTitle: string }> = {
+  // jobTitle values match buildPeople() above — kept as a literal here rather
+  // than derived, because buildPeople() returns generic SchemaNode[] (no
+  // narrowed jobTitle field to read back without a cast).
+  "wojciech-plonka": { id: WOJCIECH_ID, name: "Wojciech Płonka", jobTitle: "Design & Product" },
+  "bartosz-kolaj": { id: BARTOSZ_ID, name: "Bartosz Kołaj", jobTitle: "Engineering" },
 };

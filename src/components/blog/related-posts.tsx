@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ParsedPost } from "@/lib/blog";
 
@@ -17,8 +18,17 @@ export default function RelatedPosts({ posts }: { posts: ParsedPost[] }) {
           <Link
             key={p.frontmatter.slug}
             href={`/blog/${p.frontmatter.slug}`}
-            className="block rounded-2xl bg-card p-5 shadow-card transition hover:shadow-card-hover"
+            className="group flex items-center gap-4 rounded-2xl bg-card p-4 shadow-card transition hover:shadow-card-hover"
           >
+            <div className="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-xl">
+              <Image
+                src={p.frontmatter.cover}
+                alt={p.frontmatter.coverAlt}
+                fill
+                sizes="96px"
+                className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+              />
+            </div>
             <h3 className="font-headline text-base font-bold tracking-tight">{p.frontmatter.title}</h3>
           </Link>
         ))}

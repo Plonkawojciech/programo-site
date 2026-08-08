@@ -8,4 +8,6 @@ export * from "./read";
 export * from "./parse";
 export * from "./posts";
 export * from "./clusters";
+export * from "./planned-clusters";
 export * from "./word-count";
+export * from "./toc";

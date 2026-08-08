@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getAllClusters, getPostsByCluster } from "@/lib/blog";
+import { PLANNED_CLUSTERS, getAllClusters, getPostsByCluster } from "@/lib/blog";
 import PostCard, { clusterLabel } from "@/components/blog/post-card";
+import ClusterNav from "@/components/blog/cluster-nav";
+import ClusterEmptyState from "@/components/blog/cluster-empty-state";
 import { buildBreadcrumbs, buildWebPage, renderGraph } from "@/lib/schema";
 
+// Static params cover planned clusters (docs/plans/blog-aeo-2026-08.md
+// section 5) even before they have a post, so /blog/klaster/wlasne-dane
+// renders the "coming soon" state instead of 404ing — a cluster nav that
+// links to a 404 is worse than one that links to an honest empty state.
 export function generateStaticParams() {
-  return getAllClusters().map((cluster) => ({ cluster }));
+  const planned = PLANNED_CLUSTERS.map((c) => c.slug);
+  const actual = getAllClusters();
+  const slugs = Array.from(new Set([...planned, ...actual]));
+  return slugs.map((cluster) => ({ cluster }));
 }
 
 export const dynamicParams = false;
@@ -28,7 +36,6 @@ export async function generateMetadata({
 export default async function BlogClusterPage({ params }: { params: Promise<{ cluster: string }> }) {
   const { cluster } = await params;
   const posts = getPostsByCluster(cluster);
-  if (posts.length === 0) notFound();
 
   const label = clusterLabel(cluster);
   const path = `/blog/klaster/${cluster}`;
@@ -52,14 +59,23 @@ export default async function BlogClusterPage({ params }: { params: Promise<{ cl
               {label}
             </h1>
             <p className="max-w-2xl text-lg leading-relaxed opacity-85 md:text-xl">
-              Wszystkie wpisy z tego klastra tematycznego.
+              {posts.length === 0
+                ? "Ten klaster jest w planie redakcyjnym."
+                : "Wszystkie wpisy z tego klastra tematycznego."}
             </p>
           </header>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {posts.map((post) => (
-              <PostCard key={post.frontmatter.slug} post={post} />
-            ))}
-          </div>
+
+          <ClusterNav activeCluster={cluster} />
+
+          {posts.length === 0 ? (
+            <ClusterEmptyState label={label} />
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2">
+              {posts.map((post) => (
+                <PostCard key={post.frontmatter.slug} post={post} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>

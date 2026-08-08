@@ -32,6 +32,9 @@ export interface BlogPostingInput {
   /** @id of a Person node already in the site graph (see AUTHOR_SLUGS in people.ts). */
   authorId: string;
   wordCount: number;
+  /** Post-relative public path, e.g. "/blog/covers/<slug>.webp" — turned into an absolute ImageObject URL. */
+  cover: string;
+  coverAlt: string;
 }
 
 /**
@@ -55,5 +58,10 @@ export function buildBlogPosting(input: BlogPostingInput): SchemaNode {
     publisher: { "@id": ORGANIZATION_ID },
     mainEntityOfPage: { "@id": `${url}#webpage` },
     wordCount: input.wordCount,
+    image: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}${input.cover}`,
+      caption: input.coverAlt,
+    },
   };
 }

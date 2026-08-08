@@ -29,15 +29,22 @@ export default function Navbar() {
   const menuOverlayRef = useRef<HTMLDivElement>(null);
   const wasMobileOpenRef = useRef(false);
 
+  // Trimmed from 9 to 6 top-level items (2026-08-08, blog visual pass).
+  // The comment two blocks down already recorded that 8 items measured
+  // 754px wide at 1280px viewport, before the blog link made it 9 — so this
+  // isn't a cosmetic trim, the pill was structurally broken. "Sklepy
+  // internetowe", "Strony, tracking i reklamy" and "Współpraca" are cut, not
+  // deleted: the first two are pillar cards linked from /oferta itself
+  // (src/components/offer.tsx), and all three stay reachable from the
+  // footer's Oferta/Company columns. What stays are the six destinations a
+  // first-time visitor actually needs: what we do, proof of work, price,
+  // the new content channel, who we are, how to reach us.
   const navLinks = [
     { label: t("nav.offer"), href: "/oferta", section: "oferta" },
     { label: t("nav.work"), href: "/projekty", section: "projekty" },
-    { label: t("nav.stores"), href: "/sklepy-internetowe", section: "sklepy-internetowe" },
-    { label: t("nav.marketing"), href: "/strony-tracking-reklamy", section: "strony-tracking-reklamy" },
     { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
-    { label: t("nav.about"), href: "/o-nas", section: "o-nas" },
     { label: t("nav.blog"), href: "/blog", section: "blog" },
-    { label: t("nav.referral"), href: "/wspolpraca", section: "wspolpraca" },
+    { label: t("nav.about"), href: "/o-nas", section: "o-nas" },
     { label: t("nav.contact"), href: "/kontakt", section: "kontakt" },
   ];
 

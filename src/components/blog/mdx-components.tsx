@@ -1,5 +1,18 @@
 import type { MDXComponents } from "mdx/types";
+import type { ReactNode } from "react";
 import Link from "next/link";
+import { slugifyHeading } from "@/lib/blog/toc";
+
+// Pulls the plain text out of an h2's children so it can be slugged into an
+// `id` — MDXRemote hands us whatever the h2 contains (usually a single
+// string, but bold/code spans inside a heading turn it into an array of
+// nodes), so this only trusts strings and drops the rest rather than
+// crashing on a React element it can't read text from.
+function headingText(children: ReactNode): string {
+  if (typeof children === "string") return children;
+  if (Array.isArray(children)) return children.filter((c) => typeof c === "string").join("");
+  return "";
+}
 
 // Element overrides for MDXRemote — mirrors the typography already used by
 // hand-written SEO pages like /ile-kosztuje-aplikacji (font-headline for
@@ -8,7 +21,8 @@ import Link from "next/link";
 export const mdxComponents: MDXComponents = {
   h2: (props) => (
     <h2
-      className="mb-6 mt-14 font-headline text-2xl font-semibold tracking-tight md:text-3xl"
+      id={slugifyHeading(headingText(props.children))}
+      className="mb-6 mt-14 scroll-mt-28 font-headline text-2xl font-semibold tracking-tight md:text-3xl"
       {...props}
     />
   ),

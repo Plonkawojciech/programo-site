@@ -55,6 +55,13 @@ export const frontmatterSchema = z.object({
   dateModified: dateField(/^\d{4}-\d{2}-\d{2}$/, "dateModified must be YYYY-MM-DD"),
   sources: z.array(sourceSchema).min(1, "at least one source is required"),
   faq: z.array(faqSchema).min(3, "at least 3 FAQ entries are required"),
+  // Public path under /public, e.g. "/blog/covers/<slug>.webp" - see
+  // docs/content/art-direction.md for how the file gets there. Existence on
+  // disk and coverAlt quality (min 5 words, not a lazy "Zdjęcie ..." alt) are
+  // checked in blog-contract.test.ts, which can name the offending file;
+  // this schema only validates shape.
+  cover: z.string().min(1, "cover is required"),
+  coverAlt: z.string().min(1, "coverAlt is required"),
   lang: z.literal("pl"),
 });
 
