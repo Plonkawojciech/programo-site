@@ -241,3 +241,85 @@ oddaje starą wersję z nagłówkiem `X-Nextjs-Cache: HIT` mimo restartu serwera
 **Weryfikacja:** build OK, tsc czysty, 200/200 testów; wizualnie oba motywy na
 1280, przerwy między sekcjami 148/147/98/140/136/124/148 px (próg 160), bez
 poziomego scrolla, konsola bez błędów.
+
+## 2026-08-08 — Blog + AEO/GEO: pipeline MDX, trasy, schema, kontrakt posta
+
+**Co:** Zakres 3 i 6 z `docs/plans/blog-aeo-2026-08.md` — blog jako pliki MDX
+w repo, nie baza. `src/content/blog/<slug>.mdx`, sparsowane przez
+`next-mdx-remote/rsc` (kompilacja server-side, zero dodatkowego runtime'u po
+stronie klienta; wybrane zamiast `@next/mdx`, bo to drugie chce, żeby strony
+MDX SIEDZIAŁY w `app/` jako trasy, a treść ma żyć osobno w `src/content/`).
+Frontmatter walidowany `zod` w `src/lib/blog/schema.ts` — czytany przez
+`generateStaticParams`, więc zepsuty post wywala `next build`, nie tylko
+runtime.
+
+**Trasy:** `/blog` (indeks, 20/stronę), `/blog/strona/[page]` (statyczne, nie
+`?page=`), `/blog/[slug]`, `/blog/klaster/[cluster]`, `/blog/rss.xml`.
+Wszystko `generateStaticParams` + `dynamicParams: false` — zero
+client-side fetchowania treści, bo boty AI nie wykonują JS.
+
+**Schema:** `buildBlogPosting` w `src/lib/schema/article.ts` (datePublished,
+author jako ref do Person, wordCount) + `AUTHOR_SLUGS` w `people.ts` —
+rejestr autorów bloga, żeby frontmatter `author:` mógł zostać zweryfikowany
+przeciwko realnym osobom w grafie, nie zmyślonym nazwiskom.
+
+**Jedno źródło prawdy:** posty NIE trafiają ręcznie do `SITE_PAGES`.
+`sitemap.ts`, `/llms.txt` i `scripts/submit-indexnow.mjs` czytają
+`src/content/blog` (dwa pierwsze przez `getAllPosts()`, IndexNow — z
+zastrzeżeń bez toolchaina TS — z nazw plików, bo kontrakt testu gwarantuje
+`<slug>.mdx` == `frontmatter.slug`). `lastmod` w sitemapie to
+`frontmatter.dateModified`, nigdy `new Date()`.
+
+**Kontrakt posta:** `src/__tests__/blog-contract.test.ts` — odpowiedź
+40-60 słów bez fraz odsyłających ("to zależy", "powyżej"...), min. 1 źródło
+https z datą, min. 3 FAQ z pytajnikiem, `dateModified >= datePublished`,
+autor w `AUTHOR_SLUGS`, treść z tabelą lub listą numerowaną, bezpiecznik
+na keyword stuffing (fraza pytania max 8 razy). Rozmyślnie **nie**
+duplikuje reguł, które już egzekwuje zod (https, min. 3 FAQ, pytajnik) —
+sprawdza tylko to, czego sama walidacja kształtu nie widzi.
+
+**Dowód, że guard test jest czerwony:** zepsucie YAML w seedowym poście
+(złamany fold `answer: >`) wywaliło test z `YAMLException`; osobno
+skrócenie `answer` do 2 słów przy poprawnym YAML dało celny komunikat
+`answer is 2 words, must be 40-60` zamiast przejścia. Oba razy przywrócone
+z kopii przed commitem — `npm test` z powrotem 212/212.
+
+**Landmina:** gray-matter/js-yaml auto-konwertuje niecudzysłowowane daty
+(`2026-08-08`) na obiekt `Date`, co wywalało `next build` komunikatem
+"expected string, received Date". Naprawione w `src/lib/blog/schema.ts`
+przez `z.preprocess` na polach dat (`dateField()`), więc działa niezależnie
+od tego, czy przyszły autor postów zacytuje datę w cudzysłów.
+
+**2 posty seedowe:** klaster `koszty-projektu` (aplikacja mobilna — widełki
+z `/ile-kosztuje-aplikacji`, opłaty Apple/Google zweryfikowane na żywo) i
+`porownania-technologii` (Next.js vs WordPress — udział WordPressa 41,2%
+z W3Techs zweryfikowany na żywo 2026-08-08, dokumentacja ISR i wymagań
+serwerowych WordPressa). Zero zmyślonych liczb — każda ma źródło z linkiem
+i datą.
+
+**Linkowanie:** `/blog` w stopce (`footer.blog`) i w nawigacji (`nav.blog`,
+dziewiąta pozycja w pigułce desktopowej — do zweryfikowania wizualnie na
+1280 px, bo istniejący komentarz w `navbar.tsx` ostrzega, że ósma pozycja
+już rozpychała pigułkę do 754 px). Post linkuje do 2-3 postów z tego
+samego klastra (`RelatedPosts`, puste dla obu seedów, bo są w różnych
+klastrach) i do właściwej strony usługowej w treści.
+
+**Pliki:** `src/lib/blog/*` (schema, read, parse, posts, clusters,
+word-count), `src/content/blog/*.mdx`, `src/app/blog/**`,
+`src/components/blog/*`, `src/lib/schema/article.ts` (+buildBlogPosting),
+`src/lib/schema/people.ts` (+AUTHOR_SLUGS), `src/lib/schema/route-dates.ts`
+(+/blog), `src/lib/site-urls.ts` (+/blog w SITE_PAGES), `src/app/sitemap.ts`,
+`src/app/llms.txt/route.ts`, `scripts/submit-indexnow.mjs`,
+`src/components/footer.tsx`, `src/components/navbar.tsx`,
+`src/lib/i18n/dictionaries/common.ts`, `src/__tests__/blog-contract.test.ts`,
+`src/__tests__/ssr-content.test.ts`. Nowe zależności: `next-mdx-remote`,
+`gray-matter`.
+
+**Weryfikacja:** `npm run build` zielony (42 statyczne trasy, w tym 2 posty +
+2 klastry), `npx tsc --noEmit` czysty, `npm test` 212/212 (w tym 7 nowych w
+blog-contract), `npm run lint` — 1 błąd pre-istniejący w
+`home/client-work.tsx` (potwierdzony przez `git stash` — niezwiązany z tym
+zadaniem, poza zakresem). 16/17 statycznych stron najwyższego poziomu linkuje
+`/blog` (jedyny brak: `_global-error.html`, strona błędu bez navbar/footer —
+oczekiwane). Sitemap i `/llms.txt` zgadzają się co do liczby postów (2 == 2
+== liczba plików w `src/content/blog`).
