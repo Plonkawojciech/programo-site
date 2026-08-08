@@ -1,0 +1,82 @@
+---
+slug: next-js-czy-wordpress-strona-firmowa
+title: Next.js czy WordPress dla strony firmowej
+question: Next.js czy WordPress - co wybrać dla strony firmowej?
+answer: >
+  WordPress napędza dziś 41,2% wszystkich stron internetowych i sprawdza
+  się, gdy treść zmienia częściej niż kod, a redakcja nie zna się na
+  programowaniu. Next.js wygrywa tam, gdzie liczy się wydajność,
+  bezpieczeństwo bez wtyczek i integracja z systemami zewnętrznymi - kosztem
+  tego, że każdą zmianę treści wdraża programista albo osobny panel CMS.
+cluster: porownania-technologii
+author: bartosz-kolaj
+datePublished: "2026-08-08"
+dateModified: "2026-08-08"
+sources:
+  - label: "W3Techs - udział WordPressa wśród wszystkich stron internetowych"
+    url: "https://w3techs.com/technologies/overview/content_management"
+    date: "2026-08-08"
+  - label: "Next.js - Incremental Static Regeneration (dokumentacja)"
+    url: "https://nextjs.org/docs/app/guides/incremental-static-regeneration"
+    date: "2026-08-08"
+  - label: "WordPress.org - wymagania serwerowe"
+    url: "https://wordpress.org/about/requirements/"
+    date: "2026-08-08"
+faq:
+  - q: "Czy WordPress jest tańszy niż Next.js na start?"
+    a: "Zwykle tak, jeśli chodzi o pierwsze wdrożenie na gotowym motywie i wtyczkach. Next.js wymaga więcej pracy programistycznej na starcie, ale ta praca zwraca się w niższym koszcie utrzymania - mniej aktualizacji bezpieczeństwa, mniej wtyczek do pilnowania."
+  - q: "Kiedy Next.js ma sens dla strony firmowej?"
+    a: "Wtedy, gdy strona ma być czymś więcej niż wizytówką: własny tracking, integracje z CRM albo systemem leadów, wysoka wydajność na wolniejszych łączach albo plany rozbudowy o panel klienta czy płatności. Dla prostej wizytówki bez tych potrzeb WordPress bywa szybszym wyborem."
+  - q: "Czy da się migrować z WordPressa na Next.js bez utraty SEO?"
+    a: "Tak, jeśli zachowa się strukturę adresów URL albo ustawi przekierowania 301 ze starych adresów na nowe, oraz przeniesie meta tagi i dane strukturalne. Sama zmiana technologii nie obniża pozycji - obniża ją utrata adresów, treści albo linków przychodzących w trakcie migracji."
+  - q: "Ile kosztuje utrzymanie WordPressa w porównaniu z Next.js?"
+    a: "WordPress wymaga regularnych aktualizacji rdzenia, motywu i wtyczek, bo każda z nich to osobna powierzchnia ataku - to koszt cykliczny, nawet bez zmian w treści. Next.js hostowany na Vercelu czy podobnej platformie nie ma wtyczek do aktualizowania, więc koszt utrzymania spada głównie do hostingu i ewentualnych zmian funkcjonalnych."
+lang: pl
+---
+
+WordPress napędza 41,2% wszystkich stron internetowych na świecie - to nie
+jest pytanie o to, czy WordPress działa, tylko o to, czy pasuje do
+konkretnego przypadku. Next.js to inne narzędzie do innej pracy, nie
+"nowocześniejszy WordPress".
+
+## Porównanie na wprost
+
+| Kryterium | WordPress | Next.js |
+|---|---|---|
+| Edycja treści | Panel dla redakcji, bez programisty | Wymaga programisty lub osobnego CMS-a |
+| Wydajność | Zależna od motywu i liczby wtyczek | Statyczne generowanie stron, wysoka z założenia |
+| Bezpieczeństwo | Regularne aktualizacje rdzenia, motywu, wtyczek | Mniejsza powierzchnia ataku, brak wtyczek |
+| Hosting | PHP 8.3+ i baza MariaDB 10.11+ / MySQL 8.0+ | Node.js, często hosting bezserwerowy (Vercel) |
+| Integracje własne (CRM, tracking, AI) | Przez wtyczki lub customowy kod w PHP | Natywnie w kodzie, bez pośredniczącej warstwy |
+| Koszt startu | Zwykle niższy | Zwykle wyższy |
+| Koszt utrzymania | Cykliczny - aktualizacje, przegląd wtyczek | Głównie hosting, bez pilnowania wtyczek |
+
+## Kiedy wybrać WordPress
+
+1. Strona ma być prostą wizytówką albo blogiem, a treść zmienia się
+   częściej niż funkcje.
+2. Redakcja bez wiedzy technicznej ma samodzielnie dodawać i edytować
+   wpisy.
+3. Budżet na start jest ograniczony, a gotowy motyw pokrywa większość
+   potrzeb.
+
+## Kiedy wybrać Next.js
+
+1. Strona ma własny tracking, integracje z CRM-em albo systemem leadów,
+   które mają działać bez pośredniczącej warstwy wtyczek.
+2. Liczy się wydajność - Next.js generuje strony statycznie z możliwością
+   odświeżania pojedynczych stron bez przebudowy całej witryny
+   (Incremental Static Regeneration).
+3. Plany rozbudowy wykraczają poza wizytówkę: panel klienta, płatności,
+   integracje AI.
+
+Sami budujemy w Next.js - to nasz domyślny stack dla stron i aplikacji
+webowych klientów, opisany na stronie [technologie](/stack). Wchodzimy też
+na cudzy WordPress bez namawiania na przebudowę, jeśli klientowi
+brakuje tylko trackingu i kampanii - tak zrobiliśmy przy
+[Domkach Poznaniak](/projects/domki-poznaniak), gdzie strona zostaje na
+WordPressie, a naszą pracą jest pomiar i prowadzenie reklam.
+
+Nie ma jednej dobrej odpowiedzi niezależnej od tego, co strona ma robić za
+rok. [Napisz do nas](/kontakt), opisz, czego potrzebujesz, a podpowiemy,
+który kierunek ma sens dla Twojego przypadku.

@@ -1,0 +1,96 @@
+---
+slug: ile-kosztuje-aplikacja-mobilna-2026
+title: Ile kosztuje aplikacja mobilna w 2026 roku
+question: Ile kosztuje zbudowanie aplikacji mobilnej?
+answer: >
+  Prosta aplikacja mobilna z jedną platformą i podstawowym zakresem zwykle
+  zaczyna się od 6-8 tygodni pracy, licząc od makiety do wdrożenia.
+  Rozbudowana aplikacja z płatnościami, kontem klienta i integracjami trwa
+  dłużej i kosztuje więcej. Do tego dochodzą opłaty producentów: 99 dolarów
+  rocznie w Apple Developer Program i jednorazowe 25 dolarów w Google Play.
+cluster: koszty-projektu
+author: wojciech-plonka
+datePublished: "2026-08-08"
+dateModified: "2026-08-08"
+sources:
+  - label: "Ile kosztuje aplikacja lub strona - widełki czasowe Programo"
+    url: "https://programo.pl/ile-kosztuje-aplikacji"
+    date: "2026-08-03"
+  - label: "Apple Developer Program - opłata roczna"
+    url: "https://developer.apple.com/programs/"
+    date: "2026-08-08"
+  - label: "Google Play Console - opłata rejestracyjna"
+    url: "https://support.google.com/googleplay/android-developer/answer/6112435"
+    date: "2026-08-08"
+faq:
+  - q: "Ile kosztuje prosta aplikacja mobilna na jedną platformę?"
+    a: "Prosta aplikacja na jedną platformę, bez płatności i kont użytkowników, to zwykle 6-8 tygodni pracy od makiety do wdrożenia. Dokładny koszt zależy od liczby ekranów i tego, czy potrzebne jest własne API, ale to najtańszy realny punkt startu."
+  - q: "Czy aplikacja natywna jest droższa niż cross-platformowa?"
+    a: "Aplikacja natywna na iOS i Androida osobno to w praktyce dwa wydania i dwa razy więcej testów, więc kosztuje więcej niż jedno cross-platformowe wydanie. Wybieramy natywnie tam, gdzie liczy się wydajność albo dostęp do funkcji systemowych, np. skanera kodów czy Face ID."
+  - q: "Jakie opłaty trzeba ponieść niezależnie od budżetu na wykonawcę?"
+    a: "Niezależnie od tego, kto buduje aplikację, publikacja w sklepach kosztuje osobno: 99 dolarów rocznie za Apple Developer Program i jednorazowe 25 dolarów za konto Google Play Developer. To opłaty producentów platform, nie wykonawcy."
+  - q: "Czy da się obniżyć koszt aplikacji mobilnej, zaczynając od jednej platformy?"
+    a: "Tak. Start od jednej platformy, zwykle iOS albo Androida w zależności od tego, gdzie są klienci, obniża pierwszy budżet i skraca czas do wdrożenia. Drugą platformę da się dobudować w kolejnym etapie, gdy pierwsza wersja już działa."
+lang: pl
+---
+
+Koszt aplikacji mobilnej zależy przede wszystkim od trzech rzeczy: liczby
+platform, zakresu funkcji i integracji, które muszą z nią rozmawiać. Poniżej
+rozbijamy to na konkretne widełki czasowe, bo czas pracy jest tym, co
+realnie przekłada się na budżet.
+
+## Widełki czasowe według zakresu
+
+| Zakres | Czas | Co w nim jest |
+|---|---|---|
+| Prosta aplikacja, jedna platforma | 6-8 tygodni | Kilka ekranów, bez płatności i kont użytkowników |
+| Aplikacja z kontem i płatnościami | 8-12 tygodni | Rejestracja, koszyk lub subskrypcja, integracja płatności |
+| System z integracjami zewnętrznymi | od 12 tygodni | API firm trzecich, powiadomienia push, panel administracyjny |
+
+Te same widełki, w wersji ogólnej dla stron i aplikacji webowych, opisaliśmy
+też na stronie [ile kosztuje aplikacja](/ile-kosztuje-aplikacji) - tu
+skupiamy się na tym, co jest specyficzne dla mobile.
+
+## Co dokłada koszt w aplikacji mobilnej, a nie ma odpowiednika w stronie
+
+- **Dwie platformy zamiast jednej.** iOS i Android to dwa osobne wydania,
+  dwa procesy review w sklepach i dwa razy więcej scenariuszy testowych,
+  jeśli aplikacja ma być natywna na obu.
+- **Dostęp do sprzętu.** Skaner kodów kreskowych, logowanie biometryczne,
+  powiadomienia push czy praca offline wymagają integracji z systemem
+  telefonu, których strona internetowa nie potrzebuje.
+- **Opłaty producentów platform.** Niezależnie od wykonawcy, publikacja
+  wymaga 99 dolarów rocznie za Apple Developer Program i jednorazowych
+  25 dolarów za konto Google Play Developer.
+- **Review sklepowe.** Apple i Google sprawdzają każde wydanie przed
+  publikacją, co dokłada dni do harmonogramu, których nie ma przy wdrożeniu
+  strony internetowej.
+
+## Natywnie czy cross-platform
+
+Aplikacja cross-platformowa (jeden kod na obie platformy) jest zwykle
+tańsza w pierwszym wydaniu, bo nie trzeba pisać dwóch osobnych aplikacji.
+Natywne aplikacje kosztują więcej, ale mają sens tam, gdzie liczy się
+płynność interfejsu albo dostęp do funkcji systemowych.
+
+Przykład z naszej pracy: w [aplikacjach dla Jedmara](/projects/jedmar)
+zdecydowaliśmy się na pełną natywność (Swift/SwiftUI na iOS, Kotlin/Jetpack
+Compose na Androidzie) właśnie z powodu skanera kodów EAN i logowania Face
+ID - obu tych rzeczy w cross-platformowym frameworku nie da się dostać za
+darmo, trzeba je integrować osobno i tak, więc różnica w koszcie się
+zamazuje.
+
+## Jak realnie obniżyć budżet
+
+1. **Zacznij od jednej platformy.** Sprawdź pomysł na iOS albo Androidzie,
+   w zależności od tego, gdzie są Twoi klienci, i dobuduj drugą platformę
+   w kolejnym etapie.
+2. **Ogranicz pierwszy zakres do MVP.** Mniej ekranów w pierwszym wydaniu to
+   krótszy czas pracy i szybsza informacja zwrotna od pierwszych
+   użytkowników.
+3. **Sprawdź, czy potrzebujesz aplikacji natywnej.** Jeśli w grze nie są
+   funkcje systemowe telefonu, cross-platformowe wydanie bywa tańszym
+   startem.
+
+Chcesz konkretne widełki dla swojego pomysłu? [Napisz do nas](/kontakt) -
+odpowiadamy w 24 godziny z pierwszą oceną zakresu.
