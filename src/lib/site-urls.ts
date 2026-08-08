@@ -64,6 +64,11 @@ export const SITE_PAGES: SitePage[] = [
     summary: "co podbija i co obniża koszt aplikacji oraz od czego zależy termin",
   },
   { path: "/projekty", label: "Realizacje", summary: "portfolio — produkty własne i prace dla klientów" },
+  {
+    path: "/blog",
+    label: "Blog",
+    summary: "poradniki i porównania: koszty projektów, wybór technologii, dane własne",
+  },
   { path: "/o-nas", label: "O nas", summary: "kto stoi za Programo i jak pracujemy" },
   { path: "/stack", label: "Stack technologiczny", summary: "technologie, których używamy i dlaczego" },
   { path: "/kontakt", label: "Kontakt", summary: "formularz, e-mail, telefon" },

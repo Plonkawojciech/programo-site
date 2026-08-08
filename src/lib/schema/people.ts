@@ -33,3 +33,14 @@ export function buildPeople(): SchemaNode[] {
     },
   ];
 }
+
+/**
+ * Byline registry for blog posts — frontmatter's `author` field (e.g.
+ * "wojciech-plonka") must be a key here. Kept next to buildPeople() so the two
+ * can never name someone who isn't also a Person node in the site graph;
+ * blog-contract.test.ts checks every post's author against this map.
+ */
+export const AUTHOR_SLUGS: Record<string, { id: string; name: string }> = {
+  "wojciech-plonka": { id: WOJCIECH_ID, name: "Wojciech Płonka" },
+  "bartosz-kolaj": { id: BARTOSZ_ID, name: "Bartosz Kołaj" },
+};
