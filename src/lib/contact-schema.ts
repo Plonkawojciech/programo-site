@@ -16,22 +16,22 @@ export const contactSchema = z
   .object({
     // Required in practice, but enforced in the superRefine below so it can be
     // waived for a dialable phone. See the `name` rule at the bottom.
-    name: z.string().max(120, "Name too long").optional().or(z.literal("")),
+    name: z.string().max(120, "Imię i nazwisko są za długie.").optional().or(z.literal("")),
     email: z.string().email("Nieprawidłowy adres email").optional().or(z.literal("")),
-    phone: z.string().max(30, "Phone too long").optional().or(z.literal("")),
+    phone: z.string().max(30, "Numer telefonu jest za długi.").optional().or(z.literal("")),
     subject: z
       .enum(["Współpraca", "Wycena projektu", "Pytanie techniczne", "Inne"])
       .optional()
       .default("Inne"),
     message: z
       .string()
-      .max(2000, "Message must be at most 2000 characters")
+      .max(2000, "Wiadomość może mieć najwyżej 2000 znaków.")
       .optional()
       .or(z.literal("")),
     // Lead qualification (chips on the form) — optional
     projectType: z.string().max(60).optional().or(z.literal("")),
     budget: z.string().max(60).optional().or(z.literal("")),
-    consent: z.literal(true, { message: "Consent is required" }),
+    consent: z.literal(true, { message: "Potrzebujemy Twojej zgody na kontakt." }),
     consentTimestamp: z.string().datetime().optional(),
     // Ad attribution (captured client-side) — all optional
     gclid: z.string().max(300).optional(),
@@ -83,7 +83,7 @@ export const contactSchema = z
     const digits = (d.phone ?? "").replace(/\D/g, "");
     if (digits.length >= PHONE_MIN_DIGITS) return;
     if (!d.name?.trim()) {
-      ctx.addIssue({ code: "custom", path: ["name"], message: "Name is required" });
+      ctx.addIssue({ code: "custom", path: ["name"], message: "Podaj imię albo numer telefonu." });
     }
   });
 
@@ -94,18 +94,34 @@ export const rateLimitMap = new Map<string, number[]>();
 const RATE_LIMIT = 3;
 const RATE_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 
-export function isRateLimited(ip: string): boolean {
+/**
+ * Whether this IP has already used up its budget. PURE CHECK — it prunes the
+ * expired timestamps but never spends one.
+ *
+ * Split out from the old check-and-spend `isRateLimited` because that version
+ * charged for the attempt before anyone knew whether it was a submission at
+ * all. Every 400 cost a slot, so a visitor who mistyped their e-mail twice had
+ * one attempt left, and the third — the correct one — came back "Too many
+ * messages. Try again later." Spam still costs exactly the same, because spam
+ * that validates is spam that gets recorded.
+ */
+export function isOverRateLimit(ip: string): boolean {
   const now = Date.now();
-  const timestamps = rateLimitMap.get(ip) || [];
-  const recent = timestamps.filter((t) => now - t < RATE_WINDOW_MS);
+  const recent = (rateLimitMap.get(ip) || []).filter(
+    (t) => now - t < RATE_WINDOW_MS,
+  );
   rateLimitMap.set(ip, recent);
+  return recent.length >= RATE_LIMIT;
+}
 
-  if (recent.length >= RATE_LIMIT) {
-    return true;
-  }
+/** Spends one slot. Call only once a payload has passed validation. */
+export function recordSubmission(ip: string): void {
+  const now = Date.now();
+  const recent = (rateLimitMap.get(ip) || []).filter(
+    (t) => now - t < RATE_WINDOW_MS,
+  );
   recent.push(now);
   rateLimitMap.set(ip, recent);
-  return false;
 }
 
 /** Escapes HTML so a submitted value can never inject markup into the e-mail. */

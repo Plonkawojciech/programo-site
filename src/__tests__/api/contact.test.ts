@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { contactSchema, rateLimitMap, isRateLimited, sanitize } from "@/lib/contact-schema";
+import {
+  contactSchema,
+  rateLimitMap,
+  isOverRateLimit,
+  recordSubmission,
+  sanitize,
+} from "@/lib/contact-schema";
 
 describe("contact API validation", () => {
   it("valid submission passes schema", () => {
@@ -146,40 +152,58 @@ describe("rate limiting", () => {
     rateLimitMap.clear();
   });
 
-  it("allows first 3 requests", () => {
-    expect(isRateLimited("1.2.3.4")).toBe(false);
-    expect(isRateLimited("1.2.3.4")).toBe(false);
-    expect(isRateLimited("1.2.3.4")).toBe(false);
+  it("allows first 3 submissions", () => {
+    const ip = "1.2.3.4";
+    for (let i = 0; i < 3; i++) {
+      expect(isOverRateLimit(ip)).toBe(false);
+      recordSubmission(ip);
+    }
   });
 
-  it("blocks 4th request from same IP", () => {
-    isRateLimited("5.6.7.8");
-    isRateLimited("5.6.7.8");
-    isRateLimited("5.6.7.8");
-    expect(isRateLimited("5.6.7.8")).toBe(true);
+  it("blocks 4th submission from same IP", () => {
+    const ip = "5.6.7.8";
+    recordSubmission(ip);
+    recordSubmission(ip);
+    recordSubmission(ip);
+    expect(isOverRateLimit(ip)).toBe(true);
   });
 
   it("different IPs are independent", () => {
-    isRateLimited("10.0.0.1");
-    isRateLimited("10.0.0.1");
-    isRateLimited("10.0.0.1");
-    expect(isRateLimited("10.0.0.2")).toBe(false);
+    recordSubmission("10.0.0.1");
+    recordSubmission("10.0.0.1");
+    recordSubmission("10.0.0.1");
+    expect(isOverRateLimit("10.0.0.2")).toBe(false);
   });
 
   it("rate limit resets after 15 min window", () => {
     const testIp = "192.168.1.1";
-    // Fill up the rate limit
-    isRateLimited(testIp);
-    isRateLimited(testIp);
-    isRateLimited(testIp);
-    expect(isRateLimited(testIp)).toBe(true);
+    recordSubmission(testIp);
+    recordSubmission(testIp);
+    recordSubmission(testIp);
+    expect(isOverRateLimit(testIp)).toBe(true);
 
     // Manually set old timestamps (>15 min ago)
     const old = Date.now() - 16 * 60 * 1000;
     rateLimitMap.set(testIp, [old, old, old]);
 
     // Should be allowed again since old timestamps are outside the window
-    expect(isRateLimited(testIp)).toBe(false);
+    expect(isOverRateLimit(testIp)).toBe(false);
+  });
+
+  // The regression this split exists for. Checking the limit must not spend a
+  // slot, otherwise a visitor who mistypes twice is locked out on the attempt
+  // that would finally have succeeded — and the only forms on the site are the
+  // conversion path.
+  it("a rejected attempt does not consume the budget", () => {
+    const ip = "203.0.113.7";
+    // Three failed validations: the route checks, gets a 400, never records.
+    expect(isOverRateLimit(ip)).toBe(false);
+    expect(isOverRateLimit(ip)).toBe(false);
+    expect(isOverRateLimit(ip)).toBe(false);
+    // The fourth attempt is the correct one and must still get through.
+    expect(isOverRateLimit(ip)).toBe(false);
+    recordSubmission(ip);
+    expect(rateLimitMap.get(ip)).toHaveLength(1);
   });
 });
 

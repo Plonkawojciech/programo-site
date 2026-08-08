@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse, after } from "next/server";
 import { storeLead } from "@/lib/leads";
-import { contactSchema, isRateLimited, sanitize } from "@/lib/contact-schema";
+import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-schema";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 
@@ -17,9 +17,9 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-real-ip") ||
     "unknown";
 
-  if (isRateLimited(ip)) {
+  if (isOverRateLimit(ip)) {
     return NextResponse.json(
-      { error: "Too many messages. Try again later." },
+      { error: "Za dużo prób. Spróbuj ponownie za kilkanaście minut." },
       { status: 429 }
     );
   }
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { error: "Invalid request body" },
+      { error: "Nieprawidłowe zgłoszenie." },
       { status: 400 }
     );
   }
@@ -37,20 +37,22 @@ export async function POST(request: NextRequest) {
   const result = contactSchema.safeParse(body);
 
   if (!result.success) {
-    const firstError = result.error.issues[0]?.message || "Validation failed";
+    const firstError = result.error.issues[0]?.message || "Sprawdź wypełnione pola.";
     return NextResponse.json({ error: firstError }, { status: 400 });
   }
+
+  // Charged here, not at the top of the handler: only a payload that actually
+  // parses is a submission. Rejected attempts are typos, not traffic.
+  recordSubmission(ip);
 
   const { name, email, phone, subject, message, projectType, budget, consentTimestamp } = result.data;
   // A phone-only lead legitimately has no name, so the notifications need a
   // label instead of a dangling "od ". The CRM keeps the field genuinely empty.
   const displayName = name?.trim() || "(bez nazwiska)";
-  // HTML-escaped copies, kept only for the fields that still reach a rendered
-  // surface. The rest were escaped solely for the e-mail body that Resend used
-  // to send; Telegram escapes for MarkdownV2 on its own and the CRM stores raw.
-  const safeName = sanitize(displayName);
-  const safeEmail = email ? sanitize(email) : "";
-  const safeSubject = sanitize(subject);
+  // The HTML-escaped copies that used to live here are gone. They were escaped
+  // for the Resend e-mail body, and once Resend went (2026-08-04) their only
+  // remaining reader was a dev-only console.log. Telegram escapes for MarkdownV2
+  // itself and the CRM stores raw, so nothing on this path renders HTML.
   const consentAt = consentTimestamp || new Date().toISOString();
 
   // Lead source (Google Ads / UTM) - which keyword/campaign produced this lead
@@ -240,16 +242,15 @@ export async function POST(request: NextRequest) {
       })()
     );
   } else {
-    console.log("[DEV] No TELEGRAM_BOT_TOKEN/CHAT_ID - skipping Telegram.");
-  }
-
-  if (tasks.length === 0) {
-    console.log("[DEV] No notification channels configured. Submission:", {
-      name: safeName,
-      email: safeEmail,
-      subject: safeSubject,
-    });
-    return NextResponse.json({ success: true });
+    // Deliberately console.error and deliberately not tagged [DEV]. This line
+    // used to read "[DEV] No TELEGRAM_BOT_TOKEN/CHAT_ID - skipping Telegram."
+    // at log level `log`, which is exactly what a missing production env var
+    // looks like when nobody is looking: a routine dev note, filtered out of
+    // sight, on the only channel that tells a human a lead came in.
+    console.error(
+      "[contact] TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID missing — no lead notification will be sent. " +
+        "If this is production, the variables are not set for the Production environment.",
+    );
   }
 
   const results = await Promise.all(tasks);
@@ -264,9 +265,21 @@ export async function POST(request: NextRequest) {
   // trackLead(), so the Google Ads and Meta conversions never fired either. One
   // dead channel cost the lead twice — once in the inbox, once in the bidding
   // signal — while the lead itself was safe the whole time.
+  //
+  // This check used to be UNREACHABLE whenever no channel was configured at
+  // all: an early `if (tasks.length === 0) return { success: true }` sat above
+  // it and answered before persistence was ever consulted. So a deployment with
+  // neither Telegram nor Redis nor the CRM webhook told every visitor "dziękuję,
+  // odezwiemy się" and dropped the lead on the floor — the one failure mode a
+  // lead pipeline must never have, and the one that is hardest to notice,
+  // because from the outside it looks exactly like working.
   if (!persisted && !anyNotified) {
+    console.error(
+      `[contact] lead ${leadId} LOST — nothing persisted it and no channel took it. ` +
+        "Check KV_REST_API_URL/KV_REST_API_TOKEN, CRM_WEBHOOK_SECRET and TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID.",
+    );
     return NextResponse.json(
-      { error: "Failed to deliver notification" },
+      { error: "Nie udało się przyjąć zgłoszenia. Spróbuj ponownie lub zadzwoń." },
       { status: 500 },
     );
   }
