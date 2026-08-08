@@ -1,4 +1,5 @@
 import { projects } from "@/lib/projects";
+import { getAllPosts } from "@/lib/blog";
 import { SITE_PAGES, SITE_URL } from "@/lib/site-urls";
 
 // /llms.txt — generated, never hand-maintained.
@@ -40,6 +41,14 @@ export function GET(): Response {
     )
     .join("\n");
 
+  // Same source src/content/blog reads for /blog, /blog/[slug] and
+  // sitemap.ts — so this section cannot drift from what actually publishes.
+  const posts = getAllPosts();
+  const blogSection =
+    posts.length > 0
+      ? posts.map((p) => line(`${SITE_URL}/blog/${p.frontmatter.slug}`, p.frontmatter.title, p.frontmatter.answer.replace(/\s+/g, " ").trim())).join("\n")
+      : "(brak opublikowanych wpisów)";
+
   const body = `# Programo
 
 > Programo to software house z Poznania (założyciele: Wojciech Płonka i Bartosz Kolaj).
@@ -54,6 +63,10 @@ ${pages}
 ## Realizacje i produkty
 
 ${work}
+
+## Blog
+
+${blogSection}
 
 ## Kontakt
 

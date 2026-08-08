@@ -47,7 +47,7 @@ if (!key) {
 
 // The URL list is derived from the same sources the site renders from, so it
 // cannot drift: static pages from src/lib/site-urls.ts, project pages from
-// src/lib/projects.ts. Both are TS modules, so read the paths out textually
+// src/lib/projects.ts, blog posts from src/content/blog. All read textually
 // rather than pulling a TS toolchain into a build script.
 function extractStaticPaths() {
   const src = readFileSync("src/lib/site-urls.ts", "utf8");
@@ -59,11 +59,25 @@ function extractProjectSlugs() {
   return [...src.matchAll(/^\s{4}slug:\s*"([^"]+)"/gm)].map((m) => m[1]);
 }
 
+// Filenames, not frontmatter — the blog contract test guarantees
+// `<slug>.mdx` matches the file's own `slug:` field, so the filename is a
+// safe, YAML-free way to get the list here.
+function extractBlogSlugs() {
+  try {
+    return readdirSync("src/content/blog")
+      .filter((f) => f.endsWith(".mdx"))
+      .map((f) => f.replace(/\.mdx$/, ""));
+  } catch {
+    return [];
+  }
+}
+
 let urlList;
 try {
   urlList = [
     ...extractStaticPaths().map((p) => `${SITE_URL}${p}`),
     ...extractProjectSlugs().map((s) => `${SITE_URL}/projects/${s}`),
+    ...extractBlogSlugs().map((s) => `${SITE_URL}/blog/${s}`),
   ];
 } catch (e) {
   console.error("[indexnow] could not build URL list:", e.message);

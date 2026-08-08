@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { projects } from "@/lib/projects";
+import { getAllPosts } from "@/lib/blog";
 import { STATIC_ROUTE_UPDATED_AT } from "@/lib/schema";
 
 // `priority` and `changeFrequency` are both no-ops for Google (it ignores
@@ -86,6 +87,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://programo.pl/blog",
+      lastModified: STATIC_ROUTE_UPDATED_AT["/blog"],
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: "https://programo.pl/wspolpraca",
       lastModified: STATIC_ROUTE_UPDATED_AT["/wspolpraca"],
       changeFrequency: "monthly",
@@ -104,6 +111,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ...(p.updatedAt && { lastModified: p.updatedAt }),
       changeFrequency: "monthly" as const,
       priority: 0.8,
+    })),
+    // Blog posts, generated from src/content/blog — lastModified is each
+    // post's own frontmatter dateModified, never `new Date()` (the exact
+    // landmine this file's header comment warns about).
+    ...getAllPosts().map((p) => ({
+      url: `https://programo.pl/blog/${p.frontmatter.slug}`,
+      lastModified: p.frontmatter.dateModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
   ];
 }
