@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
+import { getAllPosts } from "@/lib/blog";
 
 // Guard against the one regression that would quietly destroy AI visibility.
 //
@@ -45,12 +46,23 @@ const PAGES: { file: string; label: string; min: number }[] = [
   { file: "sklepy-internetowe.html", label: "/sklepy-internetowe", min: 4000 },
   { file: "ile-kosztuje-aplikacji.html", label: "/ile-kosztuje-aplikacji", min: 2000 },
   { file: "wspolpraca.html", label: "/wspolpraca", min: 2000 },
+  { file: "blog.html", label: "/blog", min: 200 },
 ];
+
+// Blog posts are generated from src/content/blog, so their entries are too —
+// hardcoding slugs here would silently stop checking new posts.
+const BLOG_POST_PAGES: { file: string; label: string; min: number }[] = getAllPosts().map((p) => ({
+  file: `blog/${p.frontmatter.slug}.html`,
+  label: `/blog/${p.frontmatter.slug}`,
+  // The answer block + FAQ + sources + MDX body comfortably clear this on
+  // their own; a post that fell back to client-only MDX rendering would not.
+  min: 1500,
+}));
 
 const built = existsSync(APP_DIR);
 
 describe.skipIf(!built)("server-rendered content (AI crawlers do not run JS)", () => {
-  for (const page of PAGES) {
+  for (const page of [...PAGES, ...BLOG_POST_PAGES]) {
     it(`${page.label} ships real text in the HTML`, () => {
       const path = join(APP_DIR, page.file);
       if (!existsSync(path)) {
@@ -63,6 +75,13 @@ describe.skipIf(!built)("server-rendered content (AI crawlers do not run JS)", (
     });
   }
 
+  it("every blog post ships BlogPosting JSON-LD in server-rendered HTML", () => {
+    for (const page of BLOG_POST_PAGES) {
+      const html = readFileSync(join(APP_DIR, page.file), "utf8");
+      expect(html, `${page.label} missing BlogPosting JSON-LD`).toContain('"@type":"BlogPosting"');
+    }
+  });
+
   it("the homepage ships a single H1 and structured data", () => {
     const html = readFileSync(join(APP_DIR, "index.html"), "utf8");
     const h1s = html.match(/<h1[\s>]/g) ?? [];
@@ -71,7 +90,7 @@ describe.skipIf(!built)("server-rendered content (AI crawlers do not run JS)", (
   });
 
   it("every page declares a canonical and a meta description", () => {
-    for (const page of PAGES) {
+    for (const page of [...PAGES, ...BLOG_POST_PAGES]) {
       const path = join(APP_DIR, page.file);
       if (!existsSync(path)) continue;
       const html = readFileSync(path, "utf8");
