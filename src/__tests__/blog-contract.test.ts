@@ -106,6 +106,32 @@ describe("blog post contract", () => {
   }
 });
 
+describe("blog post contract — default cover warning", () => {
+  // The fallback cover (docs/content/PUBLISHING.md section 5) is a permitted,
+  // not an error — the cloud publishing agent has no Codex access and is
+  // expected to reach for it. But "permitted" must not mean "invisible": a
+  // human reviewing the PR needs to see at a glance that the cover is a
+  // placeholder, not the dedicated one the automation's PR body asks Wojtek
+  // to generate before merge. console.warn (not a thrown/failed assertion)
+  // is the right signal — it shows up in `npm test` output without turning
+  // a legitimate, contract-compliant post red.
+  const filenames = listPostFilenames();
+
+  for (const filename of filenames) {
+    it(`warns if ${filename} uses the fallback cover`, () => {
+      const post = parsePostFile(readPostFile(filename), filename);
+      if (post.frontmatter.cover === "/blog/covers/default.webp") {
+        console.warn(
+          `[blog-contract] ${filename} uses the fallback cover (/blog/covers/default.webp) — ` +
+            `generate a dedicated one before merge (docs/content/PUBLISHING.md section 5).`,
+        );
+      }
+      // No assertion — this block exists to warn, not to fail the suite.
+      expect(true).toBe(true);
+    });
+  }
+});
+
 describe("blog post contract — adversarial guard", () => {
   // Frontmatter-shape-valid (passes zod) but violates every rule the
   // contract adds on top. If this suite ever goes green, the contract test

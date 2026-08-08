@@ -1,0 +1,279 @@
+# Kolejka tematów bloga programo.pl — kwartał 3/2026 (sierpień-październik).
+#
+# KTO I KIEDY UZUPEŁNIA: człowiek (Wojtek, ew. z Bartoszem), raz na kwartał,
+# w osobnej sesji planującej. NIE automat. Cotygodniowa rutyna w chmurze
+# (docs/content/PUBLISHING.md) tylko CZYTA ten plik i bierze pierwszą pozycję
+# ready — nigdy go nie dopisuje ani nie wymyśla tematów sama, bo kolejka to
+# jedyne miejsce, gdzie człowiek decyduje o priorytetach i widzi z wyprzedzeniem,
+# co się opublikuje.
+#
+# DLACZEGO KLASTRY, A NIE POJEDYNCZE FRAZY: Google (i asystenci AI) rozsyłają
+# jedno zapytanie na wiele powiązanych (query fan-out) — kto pyta "ile kosztuje
+# aplikacja mobilna", dostaje też odpowiedź złożoną z pytań o natywność, opłaty
+# sklepowe, MVP. Wygrywa pokrycie całego klastra pytań, nie jeden zoptymalizowany
+# tekst pod jedną frazę. Stąd `cluster` grupuje posty, a `fanout` w każdej
+# pozycji to lista pytań pobocznych, na które TEN tekst ma dać odpowiedź —
+# krótką, nawet jednym zdaniem w treści albo w FAQ, nie osobnym akapitem.
+#
+# Klastry wzięte z docs/plans/blog-aeo-2026-08.md, sekcja 5. Kolejność pozycji
+# w tym pliku odzwierciedla priorytet z tamtej sekcji (koszty projektu i własne
+# dane pierwsze), nie kolejność alfabetyczną ani wolumen wyszukiwań.
+#
+# STATUSY: ready (agent może wziąć w najbliższym przebiegu) / blocked (czeka na
+# coś — powód zawsze w `notes`) / done (opublikowane, zostaje w pliku jako
+# historia, żeby nikt nie zaproponował tego samego tematu drugi raz).
+
+- slug: ile-kosztuje-aplikacja-mobilna-2026
+  cluster: koszty-projektu
+  question: Ile kosztuje zbudowanie aplikacji mobilnej?
+  angle: >
+    Widełki czasowe (nie tylko cenowe) rozbite na trzy poziomy zakresu, plus
+    opłaty producentów (Apple/Google), których inne teksty na rynku pomijają.
+  fanout:
+    - Ile kosztuje prosta aplikacja na jedną platformę?
+    - Czy aplikacja natywna jest droższa niż cross-platformowa?
+    - Jakie opłaty trzeba ponieść niezależnie od wykonawcy?
+    - Jak obniżyć koszt, zaczynając od jednej platformy?
+    - Ile trwa zbudowanie aplikacji z płatnościami i kontem klienta?
+  sources_hint: "/ile-kosztuje-aplikacji na programo.pl, developer.apple.com, support.google.com/googleplay"
+  status: done
+  notes: Opublikowany 2026-08-08, src/content/blog/ile-kosztuje-aplikacja-mobilna-2026.mdx.
+
+- slug: next-js-czy-wordpress-strona-firmowa
+  cluster: porownania-technologii
+  question: Next.js czy WordPress dla strony firmowej?
+  angle: >
+    Porównanie po realnych kryteriach decyzyjnych (wydajność, koszt utrzymania,
+    kto może edytować treść), nie po "co jest nowsze".
+  fanout:
+    - Czy WordPress jest wolniejszy od Next.js?
+    - Ile kosztuje utrzymanie strony na WordPressie w porównaniu do Next.js?
+    - Kto może samodzielnie edytować treść na obu platformach?
+    - Kiedy WordPress jest lepszym wyborem niż framework JS?
+    - Jaki jest realny udział WordPressa wśród stron internetowych?
+  sources_hint: W3Techs (udział WordPressa), dokumentacja Next.js ISR
+  status: done
+  notes: Opublikowany 2026-08-08, src/content/blog/next-js-czy-wordpress-strona-firmowa.mdx.
+
+- slug: ile-kosztuje-strona-internetowa-mala-firma-2026
+  cluster: koszty-projektu
+  question: Ile kosztuje strona internetowa dla małej firmy w 2026 roku?
+  angle: >
+    Odpowiednik posta o aplikacji mobilnej, ale dla stron www — widełki wg
+    zakresu (wizytówka, strona z CMS-em, strona z integracjami), bez podawania
+    całkowitych cen (decyzja Wojtka z 2026-08-08, patrz plan sekcja 5) tylko
+    czasu pracy jako proxy kosztu.
+  fanout:
+    - Ile kosztuje prosta strona wizytówkowa?
+    - Ile kosztuje strona z panelem CMS do samodzielnej edycji?
+    - Od czego zależy cena strony internetowej?
+    - Czy tańsza strona się opłaca na dłuższą metę?
+    - Ile trwa zbudowanie strony firmowej?
+  sources_hint: /ile-kosztuje-aplikacji na programo.pl, własne dane z projects.ts
+  status: ready
+  notes: ""
+
+- slug: ile-kosztuje-sklep-internetowy-2026
+  cluster: koszty-projektu
+  question: Ile kosztuje sklep internetowy w 2026 roku?
+  angle: >
+    Widełki czasowe dla e-commerce z rozbiciem na platformę gotową vs. sklep
+    szyty na miarę — czego brakuje w typowych cennikach agencji (integracja
+    płatności, magazyn, wysyłki).
+  fanout:
+    - Ile kosztuje sklep na gotowej platformie (Shopify, WooCommerce)?
+    - Ile kosztuje sklep internetowy szyty na miarę?
+    - Co podnosi koszt integracji płatności i wysyłek?
+    - Czy warto zaczynać od gotowej platformy i migrować później?
+    - Czy sklep szyty na miarę zwraca się przy większej skali?
+  sources_hint: cenniki Shopify/WooCommerce (publiczne, do sprawdzenia na żywo), własne dane
+  status: ready
+  notes: ""
+
+- slug: woocommerce-czy-shopify-maly-sklep
+  cluster: porownania-technologii
+  question: WooCommerce czy Shopify dla małego sklepu internetowego?
+  angle: >
+    Porównanie modelu kosztowego (subskrypcja vs. hosting własny) i realnej
+    elastyczności, nie tylko listy funkcji ze stron marketingowych obu platform.
+  fanout:
+    - Ile kosztuje Shopify miesięcznie?
+    - Czy WooCommerce jest darmowy?
+    - Który jest łatwiejszy do samodzielnego prowadzenia?
+    - Który lepiej się skaluje przy dużym katalogu produktów?
+    - Czy da się przenieść sklep z Shopify na WooCommerce później?
+  sources_hint: cenniki Shopify i kosztorys hostingu WooCommerce (do sprawdzenia na żywo)
+  status: ready
+  notes: ""
+
+- slug: aplikacja-natywna-czy-cross-platform
+  cluster: porownania-technologii
+  question: Aplikacja natywna czy cross-platform (React Native, Flutter)?
+  angle: >
+    Kryteria decyzyjne z realnego projektu (Jedmar — natywnie ze względu na
+    skaner EAN i Face ID), nie ogólnikowa lista plusów/minusów.
+  fanout:
+    - Czym różni się aplikacja natywna od cross-platformowej?
+    - Kiedy cross-platform wystarcza?
+    - Czy cross-platform jest zawsze tańszy?
+    - Jak dostęp do funkcji systemowych wpływa na wybór technologii?
+    - Ile trwa wydanie aplikacji na obu platformach naraz?
+  sources_hint: /projects/jedmar na programo.pl, dokumentacja React Native / Flutter
+  status: ready
+  notes: ""
+
+- slug: software-house-czy-freelancer
+  cluster: software-house-vs-alternatywy
+  question: Software house czy freelancer — co wybrać do projektu?
+  angle: >
+    Uczciwe zestawienie ryzyk (ciągłość, dostępność kompetencji, odpowiedzialność
+    prawna) zamiast jednostronnej promocji software house'u.
+  fanout:
+    - Czym różni się współpraca z software house'em od freelancerem?
+    - Co się dzieje, gdy freelancer zniknie w trakcie projektu?
+    - Kiedy freelancer jest lepszym wyborem?
+    - Jak wygląda odpowiedzialność prawna w obu modelach?
+    - Jak wygląda wsparcie po zakończeniu projektu w obu modelach?
+  sources_hint: własne doświadczenie Programo (2-osobowa firma — punkt wyjścia do uczciwości)
+  status: ready
+  notes: ""
+
+- slug: no-code-czy-wlasny-kod
+  cluster: software-house-vs-alternatywy
+  question: No-code czy własny kod — kiedy no-code wystarczy?
+  angle: >
+    Konkretne progi, po których no-code przestaje się skalować (integracje,
+    wydajność, koszt narzędzia przy skali), nie ogólne "to zależy".
+  fanout:
+    - Jakie projekty da się zrobić w no-code?
+    - Kiedy no-code przestaje wystarczać?
+    - Czy da się migrować z no-code do własnego kodu?
+    - Ile kosztuje narzędzie no-code przy dużej skali?
+    - Czy no-code nadaje się do projektu z integracjami zewnętrznymi?
+  sources_hint: cenniki popularnych narzędzi no-code (do sprawdzenia na żywo)
+  status: ready
+  notes: ""
+
+- slug: wlasny-zespol-it-czy-software-house
+  cluster: software-house-vs-alternatywy
+  question: Własny zespół IT czy zewnętrzny software house?
+  angle: >
+    Próg opłacalności (liczba projektów rocznie, ciągłość pracy), po którym
+    warto zatrudnić własny zespół zamiast zlecać na zewnątrz.
+  fanout:
+    - Kiedy opłaca się zatrudnić własny zespół IT?
+    - Ile kosztuje utrzymanie jednego programisty w porównaniu do zlecenia?
+    - Czy da się połączyć własny zespół z zewnętrznym wsparciem?
+    - Jakie ryzyko niesie zależność od jednej osoby w zespole?
+    - Jak długo trwa rekrutacja własnego programisty?
+  sources_hint: dane rynkowe wynagrodzeń IT (do zweryfikowania na żywo, źródło jawnie podane)
+  status: ready
+  notes: ""
+
+- slug: ktore-boty-ai-odwiedzaja-polska-strone-firmowa
+  cluster: wlasne-dane
+  question: Które boty AI faktycznie odwiedzają polską stronę firmową?
+  angle: >
+    Największa dźwignia klastra "własne dane" — realne logi crawlerów
+    (OAI-SearchBot, Claude-SearchBot, PerplexityBot) z src/lib/analytics/ai-crawlers.ts
+    i store.ts, czyli dane, których nie ma nikt inny publikujący po polsku.
+  fanout:
+    - Jak często boty AI odwiedzają małą stronę firmową?
+    - Który silnik AI crawluje najczęściej — ChatGPT, Perplexity, Claude?
+    - Czy boty AI czytają /llms.txt?
+    - Jak sprawdzić, które boty odwiedzają własną stronę?
+    - Czy liczba wizyt botów AI rośnie z czasem?
+  sources_hint: src/lib/analytics/ai-crawlers.ts + store.ts (Redis), min. 90 dni logów
+  status: blocked
+  notes: >
+    Wdrożenie logowania crawlerów AI miało miejsce 2026-08-08 — potrzeba
+    min. 90 dni danych, żeby liczby były reprezentatywne, nie przypadkowym
+    zrzutem tygodnia. Odblokuje się w listopadzie 2026.
+
+- slug: ile-realnie-trwaja-projekty-programo
+  cluster: wlasne-dane
+  question: Ile realnie trwają projekty budowane przez software house?
+  angle: >
+    Rzeczywiste terminy własnych wdrożeń Programo (nie widełki z ofertowego
+    slajdu) zestawione z deklarowanym zakresem — pokazuje, gdzie terminy
+    realnie się przesuwają i dlaczego.
+  fanout:
+    - Ile trwa typowy projekt strony internetowej od startu do wdrożenia?
+    - Co najczęściej wydłuża termin projektu?
+    - Czy mniejsze projekty kończą się bliżej deklarowanego terminu?
+    - Jak realistycznie planować termin własnego projektu?
+    - Czy większe projekty przesuwają się bardziej niż małe?
+  sources_hint: własne briefy i historia projektów (projects.ts + wewnętrzne notatki), wymaga zestawienia
+  status: blocked
+  notes: >
+    Dane istnieją rozproszone w projects.ts i notatkach z projektów, ale nikt
+    ich jeszcze nie zestawił w jedną tabelę z realnymi datami start/koniec.
+    Do zrobienia ręcznie przed odblokowaniem (Wojtek + Bartosz).
+
+- slug: domki-poznaniak-podwojna-konwersja-formularza
+  cluster: studia-przypadku
+  question: Jak naprawiliśmy podwójną konwersję formularza w kampanii Ads?
+  angle: >
+    Konkretny bug (WPCode dublował zdarzenie konwersji), jak go znaleziono
+    i naprawiono — techniczna historia z liczbami, nie case study marketingowe
+    bez szczegółów.
+  fanout:
+    - Co to jest podwójna konwersja formularza w Google Ads?
+    - Jak wykryć zdublowane zdarzenia konwersji?
+    - Jak WPCode może powodować podwójne wysyłki zdarzeń?
+    - Jak zweryfikować, że naprawa faktycznie zadziałała?
+    - Jak długo utrzymywał się błąd przed wykryciem?
+  sources_hint: pamięć projektu Domki Poznaniak, panel Google Ads (zrzuty przed/po, bez danych klienta)
+  status: ready
+  notes: ""
+
+- slug: jedmar-dwie-natywne-aplikacje-w-sklepach
+  cluster: studia-przypadku
+  question: Jak zbudowaliśmy dwie natywne aplikacje dla Jedmara?
+  angle: >
+    Dlaczego padło na pełną natywność (Swift/SwiftUI + Kotlin/Jetpack Compose)
+    zamiast cross-platform — konkretne wymagania (skaner EAN, Face ID), które
+    to zdecydowały, plus co się nie udało za pierwszym razem.
+  fanout:
+    - Dlaczego wybrano natywne aplikacje zamiast cross-platform?
+    - Ile czasu zajęło wydanie dwóch aplikacji w sklepach?
+    - Jakie funkcje wymagały natywnego dostępu do systemu?
+    - Co poszło nie tak w pierwszym podejściu?
+    - Ile osób pracowało nad obiema aplikacjami?
+  sources_hint: /projects/jedmar na programo.pl, pamięć projektu (piotr@jedmar.pl za zgodą klienta)
+  status: ready
+  notes: Wymaga zgody Piotra Jędrasa na publikację szczegółów — sprawdzić przed pisaniem, nie po.
+
+- slug: estalo-crm-dla-jednej-branzy-od-zera
+  cluster: studia-przypadku
+  question: Jak wygląda budowa CRM-a dla jednej wąskiej branży od zera?
+  angle: >
+    Decyzje architektoniczne specyficzne dla biur nieruchomości (multi-tenant,
+    integracje portali, role OWNER/MANAGER/DIRECTOR/AGENT), których nie ma
+    w generycznym CRM-ie.
+  fanout:
+    - Czym różni się CRM dla jednej branży od uniwersalnego CRM-a?
+    - Dlaczego Estalo integruje się bezpośrednio z portalami ogłoszeniowymi?
+    - Jak wygląda podział ról w CRM-ie dla biura nieruchomości?
+    - Ile czasu zajęła budowa pierwszej wersji?
+    - Dlaczego wybrano multi-tenant zamiast osobnej instancji na biuro?
+  sources_hint: ~/Programo/estalo CLAUDE.md, progress.md, /projects/estalo na programo.pl
+  status: ready
+  notes: ""
+
+- slug: od-czego-zalezy-termin-wdrozenia-projektu
+  cluster: koszty-projektu
+  question: Od czego zależy termin wdrożenia strony lub aplikacji?
+  angle: >
+    Rozbicie czynników wpływających na termin (zakres, integracje, tempo
+    decyzji klienta) niezależnie od budżetu — uzupełnienie klastra "koszty
+    projektu" o oś czasu, nie tylko cenę.
+  fanout:
+    - Co najbardziej wydłuża termin projektu?
+    - Czy większy budżet skraca czas realizacji?
+    - Jak tempo decyzji klienta wpływa na harmonogram?
+    - Czy da się przyspieszyć projekt bez utraty jakości?
+    - Czy zmiana zakresu w trakcie projektu zawsze wydłuża termin?
+  sources_hint: /ile-kosztuje-aplikacji na programo.pl, własne dane z projects.ts
+  status: ready
+  notes: ""
