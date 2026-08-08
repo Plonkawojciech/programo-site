@@ -3,6 +3,7 @@ import { storeLead } from "@/lib/leads";
 import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-schema";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
+import { buildLeadMessage } from "@/lib/telegram-message";
 
 /**
  * Estimated value of one lead, in PLN. A Smart Bidding / value-optimisation
@@ -200,23 +201,17 @@ export async function POST(request: NextRequest) {
     tasks.push(
       (async () => {
         try {
-          const esc = (s: string) =>
-            s.replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, "\\$1");
-          const srcLines = sources.map(([k, v]) => `*${esc(k)}:* ${esc(v)}`);
-          const lines = [
-            `*Nowa wiadomość - Programo*`,
-            ``,
-            `*Imię:* ${esc(displayName)}`,
-            email ? `*Email:* ${esc(email)}` : "",
-            phone ? `*Telefon:* ${esc(phone)}` : "",
-            `*Temat:* ${esc(subject)}`,
-            projectType ? `*Rodzaj projektu:* ${esc(projectType)}` : "",
-            budget ? `*Budżet:* ${esc(budget)}` : "",
-            ...(message ? ["", `*Wiadomość:*`, esc(message)] : []),
-            ...(srcLines.length ? ["", `*Źródło leada:*`, ...srcLines] : []),
-            ``,
-            `_Zgoda RODO: ${esc(consentAt)}_`,
-          ].filter(Boolean);
+          const text = buildLeadMessage({
+            displayName,
+            email: email || undefined,
+            phone: phone || undefined,
+            subject,
+            projectType: projectType || undefined,
+            budget: budget || undefined,
+            message: message || undefined,
+            sources,
+            consentAt,
+          });
 
           const res = await fetch(
             `https://api.telegram.org/bot${tgToken}/sendMessage`,
@@ -225,7 +220,7 @@ export async function POST(request: NextRequest) {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 chat_id: tgChatId,
-                text: lines.join("\n"),
+                text,
                 parse_mode: "MarkdownV2",
                 disable_web_page_preview: true,
               }),
