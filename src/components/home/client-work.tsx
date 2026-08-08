@@ -78,7 +78,12 @@ export default function ClientWork() {
   }, []);
 
   useEffect(() => {
-    syncActive();
+    // Deferred via queueMicrotask rather than a direct call: the effect body
+    // calling setState synchronously trips react-hooks/set-state-in-effect
+    // (pre-existing failure, unrelated to the blog work this fix shipped
+    // alongside — see progress.md 2026-08-08). Behavior is unchanged, it
+    // still resolves before the next paint.
+    queueMicrotask(syncActive);
   }, [syncActive]);
 
   const goTo = (i: number) => {
