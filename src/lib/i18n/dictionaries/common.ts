@@ -12,6 +12,7 @@ export const common = {
   // Krótsza etykieta niż `footer.referral` ("Program poleceń") i to jest
   // celowe: pigułka nawigacji ma teraz osiem pozycji i mierzy się na 1280 px.
   "nav.referral": { pl: "Współpraca", en: "Partners" },
+  "nav.blog": { pl: "Blog", en: "Blog" },
   "nav.cta": { pl: "Umów rozmowę", en: "Book a call" },
   "nav.phone": { pl: "Zadzwoń", en: "Call" },
 
@@ -40,6 +41,7 @@ export const common = {
   "footer.websites": { pl: "Strony internetowe", en: "Websites" },
   "footer.appCost": { pl: "Ile kosztuje aplikacja", en: "How much does an app cost" },
   "footer.stack": { pl: "Stack technologiczny", en: "Tech stack" },
+  "footer.blog": { pl: "Blog", en: "Blog" },
   // Sama strona /wspolpraca jest tylko po polsku (polskie faktury, umowa
   // o dzieło, podatki). Angielska etykieta istnieje po to, żeby link w stopce
   // nie znikał po przełączeniu języka.

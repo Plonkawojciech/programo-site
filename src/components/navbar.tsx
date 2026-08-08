@@ -36,6 +36,7 @@ export default function Navbar() {
     { label: t("nav.marketing"), href: "/strony-tracking-reklamy", section: "strony-tracking-reklamy" },
     { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
     { label: t("nav.about"), href: "/o-nas", section: "o-nas" },
+    { label: t("nav.blog"), href: "/blog", section: "blog" },
     { label: t("nav.referral"), href: "/wspolpraca", section: "wspolpraca" },
     { label: t("nav.contact"), href: "/kontakt", section: "kontakt" },
   ];
