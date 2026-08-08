@@ -289,6 +289,14 @@ export const home = {
   "home.hero.ctaSecondary": { pl: "Zobacz realizacje", en: "See our work" },
 
   /* --- Homepage redesign: hero callback form --- */
+  "home.hero.nameLabel": {
+    pl: "Imię",
+    en: "First name",
+  },
+  "home.hero.namePlaceholder": {
+    pl: "Jak masz na imię?",
+    en: "What's your first name?",
+  },
   "home.hero.phoneLabel": {
     pl: "Twój numer telefonu",
     en: "Your phone number",
@@ -313,9 +321,14 @@ export const home = {
     pl: "Oddzwaniamy w ciągu 24 h. Bez zobowiązań.",
     en: "We call back within 24 h. No obligation.",
   },
-  "home.hero.phoneConsentNote": {
-    pl: "Wysyłając numer, wyrażasz zgodę na kontakt telefoniczny.",
-    en: "By sending your number, you consent to being contacted by phone.",
+  // `home.hero.phoneConsentNote` used to sit here: "Wysyłając numer, wyrażasz
+  // zgodę na kontakt telefoniczny." It went out with the checkbox that replaced
+  // it. Consent inferred from the act of submitting is not consent given by a
+  // clear affirmative action, so leaving the sentence in place next to a real
+  // checkbox would have described a mechanism the form no longer uses.
+  "home.hero.errorName": {
+    pl: "Podaj imię, żebyśmy wiedzieli, jak się do Ciebie zwracać.",
+    en: "Enter your first name so we know how to address you.",
   },
   "home.hero.phoneErrorEmpty": {
     pl: "Wpisz numer telefonu.",
