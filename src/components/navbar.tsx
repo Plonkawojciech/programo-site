@@ -39,11 +39,15 @@ export default function Navbar() {
   // request: the referral programme pays people to send work our way, so
   // burying it in the footer defeats the point of having it.
   //
-  // Still cut, deliberately: "Sklepy internetowe" and "Strony, tracking i
-  // reklamy". Those two are pillar cards on /oferta itself, so the top nav
-  // would be duplicating a link the visitor meets one click in — and they are
-  // the two longest labels in the set, so they cost the most width for the
-  // least reach. Both remain in the footer.
+  // Still out, and this one is the OWNER'S call, not a judgement of ours:
+  // asked on 2026-08-09 whether to bring them back, he said "narazie nie rob
+  // na nawigacji strony internetowej i reklam". So "Sklepy internetowe" and
+  // "Strony, tracking i reklamy" stay out until he says otherwise — don't
+  // re-add them as a tidy-up. The supporting reasons still hold: both are
+  // pillar cards on /oferta itself, so the top nav would duplicate a link the
+  // visitor meets one click in, and they are the two longest labels in the
+  // set, so they cost the most width for the least reach. Both stay in the
+  // footer, so nothing is unreachable.
   //
   // Before adding an eighth, measure the pill and the logo at 1280px. The
   // failure mode is silent.
