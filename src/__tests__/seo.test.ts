@@ -183,7 +183,7 @@ describe("SEO", () => {
       const [wojciech, bartosz] = buildPeople();
       expect(org.founder).toEqual([{ "@id": wojciech["@id"] }, { "@id": bartosz["@id"] }]);
       expect(wojciech.name).toBe("Wojciech Płonka");
-      expect(bartosz.name).toBe("Bartosz Kołaj");
+      expect(bartosz.name).toBe("Bartosz Kolaj");
     });
 
     it("renderGraph wraps nodes in one @context + @graph", () => {

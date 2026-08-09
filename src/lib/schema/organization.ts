@@ -30,7 +30,7 @@ export function buildOrganization(): SchemaNode {
     logo: `${SITE_URL}/programo-logo-gradient.svg`,
     image: `${SITE_URL}/opengraph-image`,
     email: "biuro@programo.pl",
-    telephone: "+48797222363",
+    telephone: COMPANY.phone,
     priceRange: "$$",
     knowsLanguage: ["pl", "en"],
     knowsAbout: ["Aplikacje webowe", "Systemy SaaS", "Aplikacje mobilne", "Integracje AI"],
@@ -57,7 +57,7 @@ export function buildOrganization(): SchemaNode {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
-      telephone: "+48797222363",
+      telephone: COMPANY.phone,
       email: "biuro@programo.pl",
       availableLanguage: ["Polish", "English"],
     },

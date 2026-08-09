@@ -1,6 +1,7 @@
 import { projects } from "@/lib/projects";
 import { getAllPosts } from "@/lib/blog";
 import { SITE_PAGES, SITE_URL } from "@/lib/site-urls";
+import { COMPANY } from "@/lib/company";
 
 // /llms.txt — generated, never hand-maintained.
 //
@@ -71,7 +72,8 @@ ${blogSection}
 ## Kontakt
 
 - E-mail: biuro@programo.pl
-- Telefon: +48 797 222 363 (Wojciech Płonka), +48 509 123 434 (Bartosz Kolaj)
+- Telefon: +48 ${COMPANY.phoneDisplay} - główny numer firmy (Bartosz Kolaj)
+- Telefon: +48 797 222 363 - Wojciech Płonka
 - Lokalizacja: Poznań, Wielkopolska, Polska — pracujemy zdalnie dla całej Polski i z zagranicy
 - Języki: polski, angielski
 

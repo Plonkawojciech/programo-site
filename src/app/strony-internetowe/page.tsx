@@ -265,7 +265,7 @@ export default function StronyInternetowePage() {
             <Reveal className="overflow-hidden rounded-3xl bg-card p-8 shadow-card md:p-14">
               <h2 className={H2}>Dwóch inżynierów z Poznania i żadnych pośredników</h2>
               <p className="mt-6 max-w-3xl text-lg font-light leading-relaxed text-on-surface/70">
-                Programo to Wojciech Płonka i Bartosz Kołaj. Wojtek odpowiada za
+                Programo to Wojciech Płonka i Bartosz Kolaj. Wojtek odpowiada za
                 design i produkt, Bartek za inżynierię, i to my odbieramy telefon,
                 projektujemy i piszemy kod. Pracujemy w Next.js, React
                 i TypeScript. Prowadzimy też własne produkty, Estalo i Rejestr Pro,

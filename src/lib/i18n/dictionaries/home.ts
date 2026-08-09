@@ -512,7 +512,7 @@ export const home = {
     pl: "",
     en: "",
   },
-  "home.team.bartek.name": { pl: "Bartosz Kołaj", en: "Bartosz Kołaj" },
+  "home.team.bartek.name": { pl: "Bartosz Kolaj", en: "Bartosz Kolaj" },
   "home.team.bartek.desc": {
     pl: "",
     en: "",
