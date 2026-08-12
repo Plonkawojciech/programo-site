@@ -17,9 +17,12 @@ export const offer = {
 
   // Pillar 1 — Web applications & SaaS
   "offer.pillar1.title": { pl: "Aplikacje webowe i SaaS", en: "Web applications and SaaS" },
+  // Trimmed 2026-08-12: the sentence naming Estalo's specifics moved into the
+  // visual example card next to this text (screenshot + `.example` caption),
+  // so keeping it here duplicated what the reader already sees.
   "offer.pillar1.desc": {
-    pl: "Budujemy systemy, w których firma pracuje na co dzień: CRM-y, panele klienta, platformy z płatnościami i wieloma poziomami uprawnień. Nasz własny produkt, Estalo, to działający produkcyjnie CRM dla biur nieruchomości z płatnościami, integracjami czterech portali ogłoszeniowych i sztuczną inteligencją wpiętą w codzienną pracę agenta. W projektach klienckich pracujemy tak samo.",
-    en: "We build the systems a company works in daily: CRMs, client panels, platforms with payments and multiple permission levels. Our own product, Estalo, is a production CRM for real estate agencies with live billing, integrations with four listing portals, and AI wired into an agent's daily work. We work the same way on client projects.",
+    pl: "Budujemy systemy, w których firma pracuje na co dzień: CRM-y, panele klienta, platformy z płatnościami i wieloma poziomami uprawnień. W projektach klienckich pracujemy dokładnie tak, jak przy naszym własnym produkcie obok.",
+    en: "We build the systems a company works in daily: CRMs, client panels, platforms with payments and multiple permission levels. We work the same way on client projects as we do on our own product shown alongside.",
   },
   "offer.pillar1.example": {
     pl: "Estalo - CRM dla biur nieruchomości, live z płatnościami",
@@ -33,9 +36,11 @@ export const offer = {
 
   // Pillar 2 — Native iOS & Android apps
   "offer.pillar2.title": { pl: "Natywne aplikacje iOS i Android", en: "Native iOS and Android apps" },
+  // Trimmed 2026-08-12: the Jedmar sentence now duplicates the visual example
+  // card (app screenshots + `.example` caption) next to this text.
   "offer.pillar2.desc": {
-    pl: "Aplikacje mobilne piszemy natywnie: iOS w Swift i SwiftUI, Android w Kotlinie z Jetpack Compose. Nie używamy nakładek typu webview, bo różnicę czuć w pierwszej sekundzie, a potem przy aparacie, powiadomieniach, Face ID i pracy bez zasięgu. Dla Jedmara zbudowaliśmy w ten sposób dwie aplikacje sklepowe, opublikowane i działające w App Store oraz Google Play.",
-    en: "We write mobile apps natively: iOS in Swift and SwiftUI, Android in Kotlin with Jetpack Compose. We skip webview wrappers, because you feel the difference in the first second, and then again with the camera, notifications, Face ID, and working with no signal. For Jedmar we built two store apps this way, published and live on the App Store and Google Play.",
+    pl: "Aplikacje mobilne piszemy natywnie: iOS w Swift i SwiftUI, Android w Kotlinie z Jetpack Compose. Nie używamy nakładek typu webview, bo różnicę czuć w pierwszej sekundzie, a potem przy aparacie, powiadomieniach, Face ID i pracy bez zasięgu.",
+    en: "We write mobile apps natively: iOS in Swift and SwiftUI, Android in Kotlin with Jetpack Compose. We skip webview wrappers, because you feel the difference in the first second, and then again with the camera, notifications, Face ID, and working with no signal.",
   },
   "offer.pillar2.example": {
     pl: "Jedmar - dwie aplikacje sklepowe opublikowane w obu sklepach",
@@ -49,9 +54,11 @@ export const offer = {
 
   // Pillar 3 — Online stores
   "offer.pillar3.title": { pl: "Sklepy internetowe", en: "Online stores" },
+  // Trimmed 2026-08-12: the Jedmar detail now duplicates the visual example
+  // card (parts-diagram screenshot + `.example` caption) next to this text.
   "offer.pillar3.desc": {
-    pl: "E-commerce robimy na dwa sposoby. Możemy rozbudować sklep, który już masz, jak u Jedmara, gdzie do działającego PrestaShopa dołożyliśmy dwie natywne aplikacje mobilne i interaktywne schematy części zamiennych. Możemy też postawić sklep od zera, na WooCommerce, PrestaShop albo headless na Next.js.",
-    en: "We do e-commerce two ways. We can extend the store you already have, as with Jedmar, where we added two native mobile apps and interactive spare-parts diagrams to a running PrestaShop. Or we can build a store from scratch, on WooCommerce, PrestaShop, or headless Next.js.",
+    pl: "E-commerce robimy na dwa sposoby: rozbudowujemy sklep, który już masz, albo stawiamy nowy od zera na WooCommerce, PrestaShop albo headless na Next.js.",
+    en: "We do e-commerce two ways: we extend the store you already have, or we build a new one from scratch on WooCommerce, PrestaShop, or headless Next.js.",
   },
   "offer.pillar3.example": {
     pl: "Jedmar - aplikacje i interaktywne schematy części do istniejącego sklepu",
@@ -67,9 +74,11 @@ export const offer = {
   // Was `""` on both sides, which rendered pillar "04" with a number and no
   // heading — the only unlabelled block on the page.
   "offer.pillar4.title": { pl: "Strony, tracking i reklamy Google", en: "Websites, tracking and Google Ads" },
+  // Trimmed 2026-08-12: the funnel detail now duplicates the visual example
+  // card (desktop + mobile screenshots + `.example` caption) next to this text.
   "offer.pillar4.desc": {
-    pl: "Strona, na którą nikt nie wchodzi i której nikt nie mierzy, to wydatek bez zwrotu. Dlatego stronę lub landing, pomiar konwersji i kampanię Google Ads prowadzimy razem. Dla Skupu Nieruchomości zbudowaliśmy kompletny lejek: sześć podstron dopasowanych do treści reklam, dwukrokowy widżet oddzwonienia i pełny tracking z enhanced conversions.",
-    en: "A website nobody visits and nobody measures is money spent for nothing. That's why we handle the site or landing page, conversion tracking, and the Google Ads campaign together. For Skup Nieruchomości we built a complete funnel: six pages matched to ad copy, a two-step callback widget, and full tracking with enhanced conversions.",
+    pl: "Strona, na którą nikt nie wchodzi i której nikt nie mierzy, to wydatek bez zwrotu. Dlatego stronę lub landing, pomiar konwersji i kampanię Google Ads prowadzimy razem.",
+    en: "A website nobody visits and nobody measures is money spent for nothing. That's why we handle the site or landing page, conversion tracking, and the Google Ads campaign together.",
   },
   "offer.pillar4.example": {
     pl: "Skup Nieruchomości - kompletny lejek: strona, tracking i kampania",
@@ -81,6 +90,25 @@ export const offer = {
   "offer.pillar4.b4": { pl: "SEO techniczne: szybkość, dane strukturalne, indeksacja", en: "Technical SEO: speed, structured data, indexing" },
   "offer.pillar4.b5": { pl: "Możliwość pracy na Twojej istniejącej stronie", en: "The option to work on your existing website" },
 
+  // Pillar 5 — AI and automation (added 2026-08-12, matches the cennik.md
+  // category of the same name so /oferta and /cennik list the same five
+  // products - no numbers here, those live only on /cennik).
+  "offer.pillar5.title": { pl: "AI i automatyzacja", en: "AI and automation" },
+  "offer.pillar5.desc": {
+    pl: "Budujemy rozwiązania, które robią papierkową robotę zamiast zespołu: klasyfikują zgłoszenia, wyciągają fakty z dokumentów i odpowiadają na pytania na bazie wiedzy firmy.",
+    en: "We build systems that do the paperwork instead of a team: classifying submissions, extracting facts from documents, and answering questions from a company's own knowledge base.",
+  },
+  "offer.pillar5.example": {
+    pl: "ePortal Prawny - dwustopniowy pipeline AI klasyfikujący sprawy klientów",
+    en: "ePortal Prawny - a two-stage AI pipeline classifying client cases",
+  },
+  "offer.pillar5.b1": { pl: "Audyt procesu - znajdujemy, co faktycznie warto zautomatyzować", en: "Process audit - we find what's actually worth automating" },
+  "offer.pillar5.b2": { pl: "Automatyzację procesu: od dokumentu do systemu, bez ręcznego przepisywania", en: "Process automation: from document to system, no manual retyping" },
+  "offer.pillar5.b3": { pl: "Asystenta AI na bazie wiedzy Twojej firmy, z barierą przeciw halucynacjom", en: "An AI assistant on your company's own knowledge base, fenced against hallucination" },
+  "offer.pillar5.b4": { pl: "Szkolenie zespołu z korzystania z nowych narzędzi", en: "Team training on using the new tools" },
+  "offer.pillar5.b5": { pl: "Opiekę po wdrożeniu - dopracowujemy system na realnych danych", en: "Post-launch support - we refine the system on real data" },
+
   "offer.getBullets": { pl: "Co dostajesz", en: "What you get" },
   "offer.seeExample": { pl: "Zobacz realizację", en: "See the example" },
+  "offer.learnMore": { pl: "Dowiedz się więcej", en: "Learn more" },
 } as const satisfies Record<string, { pl: string; en: string }>;
