@@ -188,9 +188,11 @@ export default function Pricing() {
               {priceCategories.map((cat, i) => (
                 <button
                   key={cat.key}
+                  id={`pricing-tab-${cat.key}`}
                   type="button"
                   role="tab"
                   aria-selected={activeCategory === i}
+                  aria-controls={`pricing-panel-${cat.key}`}
                   onClick={() => setActiveCategory(i)}
                   className={`min-h-[40px] cursor-pointer rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-widest transition-colors ${
                     activeCategory === i
@@ -203,33 +205,49 @@ export default function Pricing() {
               ))}
             </div>
 
-            <div role="tabpanel" className="mt-6 overflow-hidden rounded-3xl bg-card shadow-card">
-              <ul role="list" className="divide-y divide-outline-variant/20 px-6 md:px-8">
-                {priceCategories[activeCategory].items.map((item) => (
-                  <li
-                    key={item.nameKey}
-                    className="flex flex-col gap-1 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
-                  >
-                    <div>
-                      <p className="font-medium text-on-surface">{t(item.nameKey)}</p>
-                      {item.terminKey && (
-                        <p className="mt-0.5 text-xs uppercase tracking-wide text-on-surface-variant">
-                          {t(item.terminKey)}
-                        </p>
-                      )}
-                    </div>
-                    <p className="shrink-0 font-headline text-lg font-bold text-primary md:text-xl">
-                      {priceRange(item.standard, item.extended, lang)}
-                      {item.unit === "month" && (
-                        <span className="ml-1 text-sm font-medium text-on-surface-variant">
-                          {t("pricing.unitMonth")}
-                        </span>
-                      )}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* All three categories render into the HTML unconditionally - the
+                tab only toggles visibility (CSS `hidden`), never what reaches
+                the DOM. An index-only render would ship just the active tab's
+                prices in the server HTML, invisible to AI crawlers that never
+                click - the exact `{open && <Content/>}` pattern the repo's
+                ssr-content rule forbids. */}
+            {priceCategories.map((cat, i) => (
+              <div
+                key={cat.key}
+                id={`pricing-panel-${cat.key}`}
+                role="tabpanel"
+                aria-labelledby={`pricing-tab-${cat.key}`}
+                hidden={activeCategory !== i}
+                aria-hidden={activeCategory !== i}
+                className="mt-6 overflow-hidden rounded-3xl bg-card shadow-card"
+              >
+                <ul role="list" className="divide-y divide-outline-variant/20 px-6 md:px-8">
+                  {cat.items.map((item) => (
+                    <li
+                      key={item.nameKey}
+                      className="flex flex-col gap-1 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+                    >
+                      <div>
+                        <p className="font-medium text-on-surface">{t(item.nameKey)}</p>
+                        {item.terminKey && (
+                          <p className="mt-0.5 text-xs uppercase tracking-wide text-on-surface-variant">
+                            {t(item.terminKey)}
+                          </p>
+                        )}
+                      </div>
+                      <p className="shrink-0 font-headline text-lg font-bold text-primary md:text-xl">
+                        {priceRange(item.standard, item.extended, lang)}
+                        {item.unit === "month" && (
+                          <span className="ml-1 text-sm font-medium text-on-surface-variant">
+                            {t("pricing.unitMonth")}
+                          </span>
+                        )}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
 
             <p className="mt-4 text-xs font-light leading-relaxed text-on-surface-variant">
               {t("pricing.disclaimer")}
