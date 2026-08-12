@@ -389,7 +389,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                           required
                           aria-invalid={errors.consent ? true : undefined}
                           aria-describedby={errors.consent ? "quick-consent-error" : undefined}
-                          className="peer h-5 w-5 appearance-none rounded-md border-2 border-outline bg-surface transition-colors checked:bg-primary checked:border-primary hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer"
+                          className="peer h-5 w-5 appearance-none rounded-md border-2 border-on-surface-variant bg-surface transition-colors checked:bg-primary checked:border-primary hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer"
                         />
                         <svg
                           aria-hidden="true"

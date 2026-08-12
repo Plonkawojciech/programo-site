@@ -20,12 +20,23 @@ type PhoneFormState = "idle" | "submitting" | "success" | "error";
  * at a size where it is actually legible, which the four shrunken devices
  * never were on a phone.
  *
- * The phone capture posts to /api/contact with a number and nothing else. That
- * shape is only valid because the route waives the `name` requirement when the
- * phone carries >= 9 digits (see the `superRefine` in api/contact/route.ts and
- * the "phone-only lead" tests). Don't reinstate a required name there without
- * changing this form too - the failure is silent, a 400 the visitor reads as
- * "the form is broken" while we never see the lead at all.
+ * The capture takes a first name, a phone number and an explicit consent tick,
+ * as of 2026-08-08. It used to post a number and nothing else, leaning on the
+ * route's waiver of `name` for a dialable phone (the `superRefine` in
+ * contact-schema.ts). That waiver still stands and still guards the endpoint -
+ * this form simply no longer relies on it.
+ *
+ * The consent is a real checkbox and not the notice it replaced. The old copy
+ * read "Wysyłając numer, wyrażasz zgodę na kontakt telefoniczny", which asks the
+ * visitor to agree by doing the thing they came to do. Consent bundled into a
+ * submit is not given by a clear affirmative action, and a callback is precisely
+ * the case where you want the record to be unambiguous. `consent` in the payload
+ * now mirrors the box; unticked, nothing is sent.
+ *
+ * Adding two controls to the primary CTA costs conversions and that is a known,
+ * accepted trade - the owner asked for both. If the name ever needs to come back
+ * out, drop the field and its guard; the endpoint accepts a phone-only lead
+ * unchanged, so nothing downstream has to move.
  *
  * Nothing here animates. This is the LCP surface and it holds the only
  * conversion control on the page, so it renders complete in the SSR HTML. An
@@ -37,23 +48,42 @@ export default function HomeHero() {
 
   // --- Phone form state ---
   const [formState, setFormState] = useState<PhoneFormState>("idle");
+  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [consent, setConsent] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Accessible IDs
+  const nameInputId = useId();
   const phoneInputId = useId();
+  const consentId = useId();
   const errorId = useId();
   const successId = useId();
 
+  /** Which control the current error belongs to, so focus and aria-invalid land
+   *  on it rather than colouring every field red at once. */
+  const [errorField, setErrorField] = useState<"name" | "phone" | "consent" | null>(null);
+
   // --- Validation ---
-  function validatePhone(value: string): string | null {
-    const trimmed = value.trim();
-    if (!trimmed) return t("home.hero.phoneErrorEmpty");
+  function validate(): { field: "name" | "phone" | "consent"; message: string } | null {
+    if (!name.trim()) {
+      return { field: "name", message: t("home.hero.errorName") };
+    }
+    const trimmed = phone.trim();
+    if (!trimmed) {
+      return { field: "phone", message: t("home.hero.phoneErrorEmpty") };
+    }
     // Strip formatting, count digits
     const digits = trimmed.replace(/[\s\-\(\)\+]/g, "");
     if (digits.length < 9 || !/^\d+$/.test(digits)) {
-      return t("home.hero.phoneErrorInvalid");
+      return { field: "phone", message: t("home.hero.phoneErrorInvalid") };
+    }
+    // The endpoint is the hard guard (it rejects consent !== true with 400);
+    // this check exists so the visitor is told why, in their own language,
+    // without a round trip.
+    if (!consent) {
+      return { field: "consent", message: t("forms.consentPhoneRequired") };
     }
     return null;
   }
@@ -62,26 +92,31 @@ export default function HomeHero() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const validationError = validatePhone(phone);
+    const validationError = validate();
     if (validationError) {
-      setErrorMsg(validationError);
+      setErrorMsg(validationError.message);
+      setErrorField(validationError.field);
       setFormState("error");
-      // Don't clear the phone input on validation error
+      // Don't clear what was typed on a validation error
       return;
     }
 
     setFormState("submitting");
     setErrorMsg("");
+    setErrorField(null);
 
-    // Phone-only lead. The message names the originating form, which is the one
-    // thing the inbox cannot infer from the number itself.
+    // The message names the originating form, which is the one thing the inbox
+    // cannot infer from the number itself.
     const payload = {
-      name: "",
+      name: name.trim(),
       email: "",
       phone: phone.trim(),
       message: "Prośba o kontakt telefoniczny - formularz w nagłówku strony głównej.",
       projectType: "",
       budget: "",
+      // Literal true, and only reachable once the box is ticked - validate()
+      // returns above otherwise. The endpoint's schema demands the literal, so
+      // this can never be a variable that quietly carries `false` through.
       consent: true as const,
       consentTimestamp: new Date().toISOString(),
       ...getAttribution(),
@@ -224,12 +259,36 @@ export default function HomeHero() {
                 noValidate
                 className="flex flex-col gap-4"
               >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-3">
+                {/* Name and phone share a row from sm up. Two short fields
+                    stacked would push the consent tick and the button below the
+                    fold on a phone, which is where this form earns its living. */}
+                <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
+                  <div className="flex flex-col gap-1.5 sm:w-[38%]">
+                    <label htmlFor={nameInputId} className="sr-only">
+                      {t("home.hero.nameLabel")}
+                    </label>
+                    <input
+                      id={nameInputId}
+                      type="text"
+                      autoComplete="given-name"
+                      name="name"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        if (formState === "error") {
+                          setFormState("idle");
+                          setErrorMsg("");
+                          setErrorField(null);
+                        }
+                      }}
+                      placeholder={t("home.hero.namePlaceholder")}
+                      aria-describedby={errorField === "name" ? errorId : undefined}
+                      aria-invalid={errorField === "name" ? "true" : undefined}
+                      className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary"
+                    />
+                  </div>
                   <div className="flex flex-1 flex-col gap-1.5">
-                    <label
-                      htmlFor={phoneInputId}
-                      className="sr-only"
-                    >
+                    <label htmlFor={phoneInputId} className="sr-only">
                       {t("home.hero.phoneLabel")}
                     </label>
                     <input
@@ -246,26 +305,79 @@ export default function HomeHero() {
                         if (formState === "error") {
                           setFormState("idle");
                           setErrorMsg("");
+                          setErrorField(null);
                         }
                       }}
                       placeholder={t("home.hero.phonePlaceholder")}
-                      aria-describedby={
-                        formState === "error" && errorMsg ? errorId : undefined
-                      }
-                      aria-invalid={formState === "error" ? "true" : undefined}
-                      className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary sm:min-w-[240px]"
+                      aria-describedby={errorField === "phone" ? errorId : undefined}
+                      aria-invalid={errorField === "phone" ? "true" : undefined}
+                      className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary sm:min-w-[220px]"
                     />
                   </div>
-                  <button
-                    type="submit"
-                    disabled={formState === "submitting"}
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold uppercase tracking-wider text-on-primary transition-colors hover:bg-primary-container disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {formState === "submitting"
-                      ? t("home.hero.phoneSending")
-                      : t("home.hero.phoneCta")}
-                  </button>
                 </div>
+
+                {/* Consent. The whole row is the label, so the hit target is the
+                    sentence and not just the 20px box - this is the control the
+                    lead legally hinges on and it is being tapped with a thumb. */}
+                <label
+                  htmlFor={consentId}
+                  className="flex min-h-[48px] cursor-pointer items-start gap-3 rounded-xl bg-surface-container-low/70 p-3.5"
+                >
+                  <span className="relative mt-0.5 shrink-0">
+                    <input
+                      id={consentId}
+                      type="checkbox"
+                      name="consent"
+                      checked={consent}
+                      onChange={(e) => {
+                        setConsent(e.target.checked);
+                        if (formState === "error" && errorField === "consent") {
+                          setFormState("idle");
+                          setErrorMsg("");
+                          setErrorField(null);
+                        }
+                      }}
+                      required
+                      aria-describedby={errorField === "consent" ? errorId : undefined}
+                      aria-invalid={errorField === "consent" ? "true" : undefined}
+                      className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-on-surface-variant bg-surface transition-colors checked:border-primary checked:bg-primary hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+                    />
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      className="pointer-events-none absolute inset-0 m-auto h-3.5 w-3.5 text-on-primary opacity-0 transition-opacity peer-checked:opacity-100"
+                    >
+                      <path
+                        d="M3 8l3.5 3.5L13 5"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        fill="none"
+                      />
+                    </svg>
+                  </span>
+                  <span className="text-xs leading-relaxed text-on-surface/80">
+                    {t("forms.consentPhone")}{" "}
+                    <a
+                      href="/polityka-prywatnosci"
+                      className="font-medium text-primary underline underline-offset-2"
+                    >
+                      {t("quick.privacyLink")}
+                    </a>
+                    .
+                  </span>
+                </label>
+
+                <button
+                  type="submit"
+                  disabled={formState === "submitting"}
+                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold uppercase tracking-wider text-on-primary transition-colors hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-50 sm:self-start sm:px-10"
+                >
+                  {formState === "submitting"
+                    ? t("home.hero.phoneSending")
+                    : t("home.hero.phoneCta")}
+                </button>
 
                 {/* Error message */}
                 {formState === "error" && errorMsg && (
@@ -279,18 +391,8 @@ export default function HomeHero() {
                   </p>
                 )}
 
-                {/* Reassurance + consent micro-copy. Consent here is given by
-                    the act of submitting under a clear notice, so the notice
-                    has to carry the privacy policy link with it. */}
                 <p className="text-sm text-on-surface-variant">
-                  {t("home.hero.phoneReassurance")}{" "}
-                  {t("home.hero.phoneConsentNote")}{" "}
-                  <a
-                    href="/polityka-prywatnosci"
-                    className="underline underline-offset-2 transition-colors hover:text-primary"
-                  >
-                    {t("quick.privacyLink")}
-                  </a>
+                  {t("home.hero.phoneReassurance")}
                 </p>
               </form>
             )}

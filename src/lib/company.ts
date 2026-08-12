@@ -30,6 +30,25 @@ export const COMPANY = {
   country: "Polska",
   /** Data wpisu do rejestru przedsiębiorców, format ISO dla schema.org. */
   foundingDate: "2026-04-02",
+  /**
+   * OFICJALNY numer firmy - ten, który idzie do schema.org, a stamtąd do
+   * Google jako telefon przedsiębiorstwa. Potwierdzony przez właściciela
+   * 2026-08-09.
+   *
+   * Do 2026-08-09 graf deklarował numer Wojtka, co nie było literówką, tylko
+   * cichym rozjazdem: strona w treści woła „Zadzwoń: 509 123 434" w każdym CTA,
+   * a maszynom podawała inny numer. Google czyta `telephone` z ProfessionalService
+   * przy dopasowywaniu wizytówki i cytatów, więc dwa różne numery dla tej samej
+   * encji to sygnał sprzeczny, a nie szczegół.
+   *
+   * NIE jest to jedyny numer na stronie i nie ma nim być. Wojtek i Bartosz mają
+   * swoje numery w stopce, w sekcji „o nas" i na /software-house-poznan - tam
+   * kontakt jest imienny i ma zostać. Ta stała odpowiada wyłącznie na pytanie
+   * „pod jaki numer dzwoni się do firmy".
+   */
+  phone: "+48509123434",
+  /** Ten sam numer w zapisie do czytania przez człowieka. */
+  phoneDisplay: "509 123 434",
 } as const;
 
 /** „ul. Podkomorska 14/1, 60-326 Poznań, Polska" - do zdań w prozie i do stopki. */

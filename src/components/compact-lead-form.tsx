@@ -98,7 +98,7 @@ export default function CompactLeadForm({
     // Consent is checked last and never disables the button — we let the user
     // click, then highlight the checkbox. The backend stays the hard RODO guard
     // (/api/contact rejects consent !== true with 400).
-    if (!consent) nextErrors.consent = t("compact.errorConsent");
+    if (!consent) nextErrors.consent = t("forms.consentPhoneRequired");
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -276,7 +276,7 @@ export default function CompactLeadForm({
             required
             aria-invalid={errors.consent ? true : undefined}
             aria-describedby={errors.consent ? `${formId}-consent-error` : undefined}
-            className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-outline bg-surface transition-colors checked:border-primary checked:bg-primary hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+            className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-on-surface-variant bg-surface transition-colors checked:border-primary checked:bg-primary hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           />
           <svg
             aria-hidden="true"
@@ -287,7 +287,7 @@ export default function CompactLeadForm({
           </svg>
         </span>
         <span className="text-xs leading-relaxed text-on-surface/80">
-          {t("compact.consentLabel")}{" "}
+          {t("forms.consentPhone")}{" "}
           <Link href="/polityka-prywatnosci" className="font-medium text-primary underline underline-offset-2">
             {t("quick.privacyLink")}
           </Link>

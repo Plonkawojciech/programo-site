@@ -29,22 +29,35 @@ export default function Navbar() {
   const menuOverlayRef = useRef<HTMLDivElement>(null);
   const wasMobileOpenRef = useRef(false);
 
-  // Trimmed from 9 to 6 top-level items (2026-08-08, blog visual pass).
-  // The comment two blocks down already recorded that 8 items measured
-  // 754px wide at 1280px viewport, before the blog link made it 9 — so this
-  // isn't a cosmetic trim, the pill was structurally broken. "Sklepy
-  // internetowe", "Strony, tracking i reklamy" and "Współpraca" are cut, not
-  // deleted: the first two are pillar cards linked from /oferta itself
-  // (src/components/offer.tsx), and all three stay reachable from the
-  // footer's Oferta/Company columns. What stays are the six destinations a
-  // first-time visitor actually needs: what we do, proof of work, price,
-  // the new content channel, who we are, how to reach us.
+  // Seven top-level items. The history matters, because the count here is
+  // bounded by measurement and not by taste.
+  //
+  // Nine items measured 754px at a 1280px viewport and squeezed the logo in
+  // the `1fr | auto | 1fr` grid down from 200px to 104px — nothing overflowed,
+  // so a deformed wordmark would have shipped unnoticed. The 2026-08-08 blog
+  // pass cut it to six. "Współpraca" is back on 2026-08-09 at the owner's
+  // request: the referral programme pays people to send work our way, so
+  // burying it in the footer defeats the point of having it.
+  //
+  // Still out, and this one is the OWNER'S call, not a judgement of ours:
+  // asked on 2026-08-09 whether to bring them back, he said "narazie nie rob
+  // na nawigacji strony internetowej i reklam". So "Sklepy internetowe" and
+  // "Strony, tracking i reklamy" stay out until he says otherwise — don't
+  // re-add them as a tidy-up. The supporting reasons still hold: both are
+  // pillar cards on /oferta itself, so the top nav would duplicate a link the
+  // visitor meets one click in, and they are the two longest labels in the
+  // set, so they cost the most width for the least reach. Both stay in the
+  // footer, so nothing is unreachable.
+  //
+  // Before adding an eighth, measure the pill and the logo at 1280px. The
+  // failure mode is silent.
   const navLinks = [
     { label: t("nav.offer"), href: "/oferta", section: "oferta" },
     { label: t("nav.work"), href: "/projekty", section: "projekty" },
     { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
     { label: t("nav.blog"), href: "/blog", section: "blog" },
     { label: t("nav.about"), href: "/o-nas", section: "o-nas" },
+    { label: t("nav.referral"), href: "/wspolpraca", section: "wspolpraca" },
     { label: t("nav.contact"), href: "/kontakt", section: "kontakt" },
   ];
 

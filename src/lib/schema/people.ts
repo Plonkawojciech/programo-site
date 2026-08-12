@@ -7,7 +7,7 @@ import type { SchemaNode } from "./types";
  * (e.g. the ile-kosztuje-aplikacji Article).
  *
  * Name spelling follows the homepage founders section
- * (`home.team.bartek.name` = "Bartosz Kołaj"), which is the most prominent,
+ * (`home.team.bartek.name` = "Bartosz Kolaj"), which is the most prominent,
  * user-facing instance of the name on the site. Most of the rest of the
  * codebase spells it "Bartosz Kolaj" (no ł) — that split predates this task
  * and is flagged in the report rather than fixed here (out of scope: it's
@@ -26,7 +26,7 @@ export function buildPeople(): SchemaNode[] {
     {
       "@type": "Person",
       "@id": BARTOSZ_ID,
-      name: "Bartosz Kołaj",
+      name: "Bartosz Kolaj",
       jobTitle: "Engineering",
       knowsAbout: ["Software engineering"],
       worksFor: { "@id": ORGANIZATION_ID },
@@ -45,5 +45,5 @@ export const AUTHOR_SLUGS: Record<string, { id: string; name: string; jobTitle: 
   // than derived, because buildPeople() returns generic SchemaNode[] (no
   // narrowed jobTitle field to read back without a cast).
   "wojciech-plonka": { id: WOJCIECH_ID, name: "Wojciech Płonka", jobTitle: "Design & Product" },
-  "bartosz-kolaj": { id: BARTOSZ_ID, name: "Bartosz Kołaj", jobTitle: "Engineering" },
+  "bartosz-kolaj": { id: BARTOSZ_ID, name: "Bartosz Kolaj", jobTitle: "Engineering" },
 };

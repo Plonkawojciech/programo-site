@@ -25,7 +25,14 @@ export const forms = {
   "compact.namePlaceholder": { pl: "Jak masz na imię?", en: "What's your first name?" },
   "compact.phoneLabel": { pl: "Numer telefonu", en: "Phone number" },
   "compact.phonePlaceholder": { pl: "600 000 000", en: "+48 600 000 000" },
-  "compact.consentLabel": {
+  // Single source for the phone-contact consent. The hero on the homepage and
+  // every CompactLeadForm render THIS string, deliberately not a copy of it:
+  // RODO art. 7 requires being able to show WHAT someone agreed to, and two
+  // near-identical consent texts drifting apart would leave consents in the
+  // wild with no record of which wording applied to which lead.
+  // QuickContact keeps its own wording on purpose - it accepts an e-mail too,
+  // so promising "kontakt telefoniczny" there would be wrong.
+  "forms.consentPhone": {
     pl: "Wyrażam zgodę na kontakt telefoniczny w sprawie mojego zapytania. Administratorem danych jest Programo s.j. Szczegóły w",
     en: "I consent to being contacted by phone about my inquiry. Programo s.j. is the data controller. Details in the",
   },
@@ -49,7 +56,7 @@ export const forms = {
     pl: "Ten numer wygląda na niepełny. Sprawdź, czy ma 9 cyfr.",
     en: "This number looks incomplete. Check that it's a valid phone number.",
   },
-  "compact.errorConsent": {
+  "forms.consentPhoneRequired": {
     pl: "Zaznacz zgodę na kontakt. Bez niej nie możemy oddzwonić.",
     en: "Tick the contact consent. Without it we can't call you back.",
   },

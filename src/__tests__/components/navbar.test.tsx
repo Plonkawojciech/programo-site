@@ -17,18 +17,27 @@ function renderWithI18n() {
 }
 
 describe("Navbar component", () => {
-  // Trimmed from 9 to 6 items 2026-08-08 (blog visual pass) — see the
-  // comment above navLinks in navbar.tsx for why. "Sklepy" and "Strony i
-  // reklamy" moved out of the top-level pill; they're still reachable from
-  // /oferta and the footer, just not asserted here anymore.
-  it("renders the six main nav links", () => {
+  // Seven items since 2026-08-09, when "Współpraca" came back at the owner's
+  // request — see the comment above navLinks in navbar.tsx for why the count
+  // is bounded by measurement. "Sklepy" and "Strony i reklamy" stay out of the
+  // top-level pill; they're pillar cards on /oferta and links in the footer.
+  it("renders the seven main nav links", () => {
     renderWithI18n();
-    expect(screen.getAllByText("Oferta").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Projekty").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Wycena").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Blog").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("O nas").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Kontakt").length).toBeGreaterThan(0);
+    for (const label of ["Oferta", "Projekty", "Wycena", "Blog", "O nas", "Współpraca", "Kontakt"]) {
+      expect(screen.getAllByText(label).length, `brak pozycji "${label}"`).toBeGreaterThan(0);
+    }
+  });
+
+  // The referral programme pays people to send work our way, so it has to be
+  // reachable from the top nav and not only from the footer. Asserting the
+  // href, not just the label, because the label alone would still pass if the
+  // link pointed nowhere useful.
+  it("Współpraca points at /wspolpraca", () => {
+    renderWithI18n();
+    const links = screen.getAllByRole("link").filter(
+      (l) => l.getAttribute("href") === "/wspolpraca"
+    );
+    expect(links.length).toBeGreaterThanOrEqual(1);
   });
 
   it("nav link to the offer page points at /oferta", () => {
