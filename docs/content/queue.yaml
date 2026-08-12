@@ -70,8 +70,8 @@
     - Czy tańsza strona się opłaca na dłuższą metę?
     - Ile trwa zbudowanie strony firmowej?
   sources_hint: /ile-kosztuje-aplikacji na programo.pl, własne dane z projects.ts
-  status: ready
-  notes: ""
+  status: done
+  notes: Opublikowany 2026-08-12, src/content/blog/ile-kosztuje-strona-internetowa-mala-firma-2026.mdx.
 
 - slug: ile-kosztuje-sklep-internetowy-2026
   cluster: koszty-projektu
@@ -87,8 +87,8 @@
     - Czy warto zaczynać od gotowej platformy i migrować później?
     - Czy sklep szyty na miarę zwraca się przy większej skali?
   sources_hint: cenniki Shopify/WooCommerce (publiczne, do sprawdzenia na żywo), własne dane
-  status: ready
-  notes: ""
+  status: done
+  notes: Opublikowany 2026-08-12, src/content/blog/ile-kosztuje-sklep-internetowy-2026.mdx.
 
 - slug: woocommerce-czy-shopify-maly-sklep
   cluster: porownania-technologii

@@ -58,12 +58,12 @@ export default async function BlogPage({ params }: { params: Promise<{ page: str
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
       <div className="min-h-screen bg-surface text-on-surface">
-        <div className="mx-auto max-w-5xl px-6 py-16 md:px-10 md:py-24">
+        <div className="mx-auto w-full max-w-[1400px] px-6 py-16 md:px-12 md:py-24 lg:px-24">
           <h1 className="mb-8 font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl">
             Blog
           </h1>
           <ClusterNav />
-          <div className="grid gap-6 sm:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
               <PostCard key={post.frontmatter.slug} post={post} />
             ))}
