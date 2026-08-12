@@ -50,17 +50,21 @@ interface PriceCategory {
   items: PriceItem[];
 }
 
+// Revised 2026-08-12 per owner: previous ranges read as "wygórowane" once
+// published (a number that's fine said out loud on a call reads different in
+// print). Landing page + strona firmowa merged into one row (same price, no
+// distinction); SEO + Google Ads + GA4/GTM merged the same way. Source:
+// ~/Programo/marketing/FIRMA/sprzedaz/cennik.md, updated in the same pass.
 const priceCategories: PriceCategory[] = [
   {
     key: "projects",
     labelKey: "pricing.catProjects",
     items: [
-      { nameKey: "pricing.itemLanding.name", terminKey: "pricing.itemLanding.termin", standard: 3000, extended: 6000 },
-      { nameKey: "pricing.itemCorporate.name", terminKey: "pricing.itemCorporate.termin", standard: 6000, extended: 12000 },
-      { nameKey: "pricing.itemStoreWoo.name", terminKey: "pricing.itemStoreWoo.termin", standard: 10000, extended: 18000 },
-      { nameKey: "pricing.itemStoreCustom.name", terminKey: "pricing.itemStoreCustom.termin", standard: 18000, extended: 40000 },
-      { nameKey: "pricing.itemWebapp.name", terminKey: "pricing.itemWebapp.termin", standard: 20000, extended: 50000 },
-      { nameKey: "pricing.itemMobile.name", terminKey: "pricing.itemMobile.termin", standard: 18000, extended: 40000 },
+      { nameKey: "pricing.itemWebsite.name", terminKey: "pricing.itemWebsite.termin", standard: 2000, extended: 6000 },
+      { nameKey: "pricing.itemStoreWoo.name", terminKey: "pricing.itemStoreWoo.termin", standard: 4000, extended: 8000 },
+      { nameKey: "pricing.itemStoreCustom.name", terminKey: "pricing.itemStoreCustom.termin", standard: 6000, extended: 10000 },
+      { nameKey: "pricing.itemWebapp.name", terminKey: "pricing.itemWebapp.termin", standard: 4000, extended: 8000 },
+      { nameKey: "pricing.itemMobile.name", terminKey: "pricing.itemMobile.termin", standard: 4000, extended: 8000 },
     ],
   },
   {
@@ -69,22 +73,20 @@ const priceCategories: PriceCategory[] = [
     items: [
       { nameKey: "pricing.itemCareSite.name", standard: 300, extended: 600, unit: "month" },
       { nameKey: "pricing.itemCareShop.name", standard: 800, extended: 1500, unit: "month" },
-      { nameKey: "pricing.itemSeo.name", standard: 1800, extended: 3500, unit: "month" },
-      { nameKey: "pricing.itemAds.name", standard: 1000, extended: 2000, unit: "month" },
-      { nameKey: "pricing.itemGa4.name", terminKey: "pricing.itemGa4.termin", standard: 1500, extended: 3500 },
+      { nameKey: "pricing.itemMarketing.name", standard: 150, extended: 300, unit: "month" },
     ],
   },
   {
     key: "ai",
     labelKey: "pricing.catAi",
     items: [
-      { nameKey: "pricing.itemAudit.name", terminKey: "pricing.itemAudit.termin", standard: 5000, extended: 9000 },
-      { nameKey: "pricing.itemAutomation.name", terminKey: "pricing.itemAutomation.termin", standard: 9000, extended: 20000 },
-      { nameKey: "pricing.itemAssistant.name", terminKey: "pricing.itemAssistant.termin", standard: 16000, extended: 40000 },
-      { nameKey: "pricing.itemTraining.name", terminKey: "pricing.itemTraining.termin", standard: 4500, extended: 9000 },
+      { nameKey: "pricing.itemAudit.name", terminKey: "pricing.itemAudit.termin", standard: 1500, extended: 6000 },
+      { nameKey: "pricing.itemAutomation.name", terminKey: "pricing.itemAutomation.termin", standard: 1500, extended: 6000 },
+      { nameKey: "pricing.itemAssistant.name", terminKey: "pricing.itemAssistant.termin", standard: 2000, extended: 4000 },
+      { nameKey: "pricing.itemTraining.name", terminKey: "pricing.itemTraining.termin", standard: 4000, extended: 8000 },
       // "Opieka po wdrożeniu" has no fixed term in cennik.md (Termin: "—") — it
       // is an ongoing retainer like the "monthly collaboration" rows above.
-      { nameKey: "pricing.itemAiCare.name", standard: 2000, extended: 4500, unit: "month" },
+      { nameKey: "pricing.itemAiCare.name", standard: 500, extended: 2000, unit: "month" },
     ],
   },
 ];

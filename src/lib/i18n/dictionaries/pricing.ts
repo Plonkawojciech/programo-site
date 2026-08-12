@@ -74,18 +74,18 @@ export const pricing = {
   },
   "pricing.unitMonth": { pl: "/ mies.", en: "/ mo" },
   "pricing.disclaimer": {
-    pl: "Ceny netto, doliczamy 23% VAT. Wycena jest stała od podpisania - żadnych aneksów w trakcie projektu.",
-    en: "Prices are net, we add 23% VAT. The quote is fixed once signed - no add-ons mid-project.",
+    pl: "Ceny netto, doliczamy 23% VAT. Wycena jest stała od podpisania - żadnych aneksów w trakcie projektu. Google Ads powyżej 10 000 zł budżetu miesięcznego: 10% wydatku zamiast stawki z tabeli.",
+    en: "Prices are net, we add 23% VAT. The quote is fixed once signed - no add-ons mid-project. Google Ads above a 10,000 PLN monthly budget: 10% of spend instead of the table rate.",
   },
 
   "pricing.catProjects": { pl: "Projekty", en: "Projects" },
   "pricing.catMonthly": { pl: "Współpraca miesięczna", en: "Monthly collaboration" },
   "pricing.catAi": { pl: "AI i automatyzacja", en: "AI and automation" },
 
-  "pricing.itemLanding.name": { pl: "Landing page", en: "Landing page" },
-  "pricing.itemLanding.termin": { pl: "5 dni", en: "5 days" },
-  "pricing.itemCorporate.name": { pl: "Strona firmowa", en: "Company website" },
-  "pricing.itemCorporate.termin": { pl: "2 tyg.", en: "2 weeks" },
+  // Landing page i strona firmowa scalone 2026-08-12 (Wojtek: ta sama cena,
+  // nie rozgraniczać) - jedna pozycja zamiast dwóch.
+  "pricing.itemWebsite.name": { pl: "Strona internetowa (wizytówka lub firmowa)", en: "Website (landing page or company site)" },
+  "pricing.itemWebsite.termin": { pl: "5 dni - 2 tyg.", en: "5 days - 2 weeks" },
   "pricing.itemStoreWoo.name": { pl: "Sklep Woo / Shopify", en: "Woo / Shopify store" },
   "pricing.itemStoreWoo.termin": { pl: "3 tyg.", en: "3 weeks" },
   "pricing.itemStoreCustom.name": { pl: "Sklep na własnym silniku", en: "Custom-built store" },
@@ -97,10 +97,10 @@ export const pricing = {
 
   "pricing.itemCareSite.name": { pl: "Opieka nad stroną", en: "Website care" },
   "pricing.itemCareShop.name": { pl: "Opieka nad sklepem / systemem", en: "Store / system care" },
-  "pricing.itemSeo.name": { pl: "SEO", en: "SEO" },
-  "pricing.itemAds.name": { pl: "Google Ads", en: "Google Ads" },
-  "pricing.itemGa4.name": { pl: "GA4 + GTM", en: "GA4 + GTM" },
-  "pricing.itemGa4.termin": { pl: "jednorazowo", en: "one-time" },
+  // SEO, Google Ads i GA4+GTM scalone 2026-08-12 (Wojtek: ta sama cena) -
+  // jedna pozycja zamiast trzech. Reguła "powyżej 10 000 zł budżetu Ads: 10%
+  // wydatku" z cennik.md nadal obowiązuje wewnętrznie, tylko nie na stronie.
+  "pricing.itemMarketing.name": { pl: "SEO, Google Ads, GA4 + GTM", en: "SEO, Google Ads, GA4 + GTM" },
 
   "pricing.itemAudit.name": { pl: "Audyt procesów", en: "Process audit" },
   "pricing.itemAudit.termin": { pl: "1 tydz.", en: "1 week" },
