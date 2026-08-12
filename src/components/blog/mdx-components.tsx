@@ -1,5 +1,6 @@
 import type { MDXComponents } from "mdx/types";
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { slugifyHeading } from "@/lib/blog/toc";
 
@@ -33,6 +34,32 @@ export const mdxComponents: MDXComponents = {
   ul: (props) => <ul className="mb-6 list-disc space-y-2 pl-5 text-base leading-relaxed opacity-85 md:text-lg" {...props} />,
   ol: (props) => <ol className="mb-6 list-decimal space-y-2 pl-5 text-base leading-relaxed opacity-85 md:text-lg" {...props} />,
   li: (props) => <li {...props} />,
+  // Inline post images (markdown `![alt](src)`). No width/height reach us
+  // through plain markdown syntax, so the aspect box is picked from our own
+  // filename convention (docs/content/PUBLISHING.md, art-direction.md
+  // pipeline): "-1" is generated 4:3, "-2" is generated square. Anything
+  // that doesn't match falls back to the site's standard 16:9 (same as
+  // covers) rather than guessing wrong and cropping content.
+  // Wrapped in <span>, not <div> - remark turns a lone image on its own
+  // line into `<p><img /></p>`, and a block element inside a <p> is invalid
+  // HTML even though it renders fine visually.
+  img: ({ src, alt }) => {
+    if (!src) return null;
+    const aspect = src.endsWith("-2.webp") ? "aspect-square" : /-1\.webp$/.test(src) ? "aspect-[4/3]" : "aspect-[16/9]";
+    return (
+      <span className="my-8 block overflow-hidden rounded-2xl">
+        <span className={`relative block w-full ${aspect}`}>
+          <Image
+            src={src}
+            alt={alt ?? ""}
+            fill
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover"
+          />
+        </span>
+      </span>
+    );
+  },
   strong: (props) => <strong className="font-semibold text-on-surface" {...props} />,
   a: ({ href, ...props }) => {
     // Internal links go through next/link so navigation between the site and

@@ -330,3 +330,55 @@ zadaniem, poza zakresem). 16/17 statycznych stron najwyższego poziomu linkuje
 `/blog` (jedyny brak: `_global-error.html`, strona błędu bez navbar/footer —
 oczekiwane). Sitemap i `/llms.txt` zgadzają się co do liczby postów (2 == 2
 == liczba plików w `src/content/blog`).
+
+## 2026-08-12 — Blog: fix wyśrodkowania layoutu + 2 nowe posty z kolejki
+
+**Fix responsywności:** `/blog`, `/blog/strona/[page]`, `/blog/klaster/[cluster]`
+i `/blog/[slug]` używały własnego kontenera (`max-w-5xl`/`max-w-6xl` +
+`px-6 md:px-10`), inny niż reszta strony (`max-w-[1400px] px-6 md:px-12
+lg:px-24` z `pricing.tsx`/`offer.tsx`). Na 1440px to dawało: listing węższy
+i bardziej wycentrowany niż reszta serwisu, a na stronie posta hero (własny
+`mx-auto max-w-3xl`) i treść artykułu (osobny `mx-auto max-w-6xl` grid)
+centrowały się NIEZALEŻNIE od siebie — dwa różne lewe marginesy na tej samej
+stronie (zmierzone: hero od x=376, treść od x=184 na 1440px). To był realny
+bug, nie tylko "wygląda inaczej". Fix: jeden wspólny kontener
+`max-w-[1400px]` na całą stronę posta, hero i treść dostają `max-w-3xl` BEZ
+własnego `mx-auto` — oba trzymają się tego samego lewego brzegu (stretch
+grid item zamiast centrowania). Zweryfikowane realnie w przeglądarce
+(iframe injection w tabie Chrome, bo `resize_window` nie działał w tym
+środowisku) na 375px, 768px i 1440px. Przy okazji: siatka kart na `/blog`
+dostała `lg:grid-cols-3` (było tylko `sm:grid-cols-2`) — na szerszym
+kontenerze dwie kolumny robiły się nieproporcjonalnie szerokie.
+
+**2 nowe posty z kolejki** (pierwsze dwie pozycje `ready`, klaster
+`koszty-projektu`): `ile-kosztuje-strona-internetowa-mala-firma-2026`
+(bez cen całkowitych — zgodnie z notatką w `queue.yaml` z 2026-08-08 —
+tylko widełki czasowe + link do `/cennik`) i `ile-kosztuje-sklep-internetowy-2026`
+(z realnymi, zweryfikowanymi na żywo cenami Shopify i WooCommerce —
+`shopify.com/pricing`, `woocommerce.com/pricing`, sprawdzone 2026-08-12).
+Oba linkują do `/cennik` po dokładne widełki zamiast duplikować liczby,
+i do siebie nawzajem (ten sam klaster).
+
+**Obrazki — Codex, nie ja:** wygenerowane przez `~/.claude/codex/delegate.sh`
+(`gpt-5.6-luna`, effort `medium`, tryb `rw`, w tle — budżet w momencie startu:
+CODEX-OSTROZNIE) — 6 zdjęć (2 okładki 16:9 + 4 inline, po 2 na post: jedno
+4:3, jedno 1:1), jednym promptem z pełnym stylem z `art-direction.md` +
+kontekst tematyczny per zdjęcie. Obejrzane `Read` przed użyciem — wszystkie
+zaakceptowane bez poprawek. Konwersja PNG→WebP przez `sharp` (okładki
+1600px, inline 1100px, q82) — wszystkie pliki 22-59 KB, poniżej celu 250 KB.
+Ścieżki: `public/blog/covers/<slug>.webp` (jak dotąd) i nowy katalog
+`public/blog/inline/<slug>-{1,2}.webp`.
+
+**Kod mój:** tekst obu postów, frontmatter, fix layoutu, i mapowanie `img`
+w `src/components/blog/mdx-components.tsx` (dotąd nie istniało — żaden post
+nie miał obrazków w treści). Markdown `![]()` nie niesie width/height, więc
+box aspektu wybiera się z konwencji nazwy pliku (`-1.webp` → 4:3, `-2.webp`
+→ kwadrat, fallback 16:9) zamiast zgadywać — to jest coupling do własnej
+konwencji nazewnictwa, udokumentowany komentarzem w kodzie.
+
+**Weryfikacja:** `npm run build` zielony (4 posty statyczne), `npx tsc
+--noEmit` czysty, `npm test` 233/233 (w tym `blog-contract.test.ts` i
+`ssr-content.test.ts`), `npm run lint` czysty. Wizualnie w przeglądarce:
+`/blog` (4 posty, 3 kolumny na 1440px), oba nowe posty na 375/768/1440px —
+tabele, listy numerowane i inline images renderują się poprawnie, bez
+przycięć i bez psucia layoutu.
