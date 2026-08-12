@@ -373,3 +373,14 @@ przebiegu) - nie udało się zweryfikować dokładnie 375px/1440px+, tylko
 ~1000px (poniżej `lg`, powyżej `sm`), gdzie layout poprawnie się złożył do
 jednej kolumny. Pełny check 375/1440 zostaje do zrobienia przy kolejnej
 weryfikacji wizualnej (np. z sesji bez dzielonego okna).
+
+**Poprawka po review (ten sam dzień):** tabela cen renderowała do DOM tylko
+`priceCategories[activeCategory].items` - `.next/server/app/cennik.html`
+zawierał wyłącznie kategorię "Projekty", pozostałe dwie pojawiały się dopiero
+po kliknięciu w przeglądarce. Dokładnie zakazany wzorzec `{open && <Content/>}`
+z CLAUDE.md (crawlery AI nie klikają). Naprawione: wszystkie 3 kategorie
+renderują się zawsze, tab przełącza tylko `hidden`/`aria-hidden` (+ id/aria-controls
+tab↔panel). Zweryfikowane po `npm run build`: wszystkich 16 pozycji ze
+wszystkich 3 kategorii obecnych w server-rendered HTML (sprawdzone node-owym
+skryptem po nazwie każdej pozycji, nie tylko trzech przykładowych z review).
+Bramka ponownie zielona.
