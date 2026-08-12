@@ -70,7 +70,13 @@ function CardMedia({ project }: { project: Project }) {
         }}
       >
         {src && (
-          <div className="w-[46%] max-w-[150px] shrink-0 transition-transform duration-500 ease-out group-hover:-translate-y-1.5">
+          // PhoneFrame's chassis has a fixed ~2.08:1 aspect ratio, so at the old
+          // 150px cap it rendered ~312px tall inside this 230-270px card — more
+          // than a third of the phone got clipped by `overflow-hidden`, looking
+          // oversized and broken instead of a deliberate peek (like the desktop
+          // screenshot cards below, which crop ~25%). 128px keeps that same
+          // ~25% crop ratio at every breakpoint.
+          <div className="w-[40%] max-w-[128px] shrink-0 transition-transform duration-500 ease-out group-hover:-translate-y-1.5">
             <PhoneFrame src={src} alt={project.title} fadeBottom ownStatusBar={/-app[-\d]/.test(src)} />
           </div>
         )}
