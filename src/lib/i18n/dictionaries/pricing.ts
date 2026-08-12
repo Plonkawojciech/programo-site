@@ -61,4 +61,54 @@ export const pricing = {
     en: "You'll get a range within 24 hours.",
   },
   "pricing.cta": { pl: "Zadzwoń: 509 123 434", en: "Call +48 509 123 434" },
+
+  // Price table — 3 categories, one active at a time (tabs). Numbers copied
+  // 1:1 from ~/Programo/marketing/FIRMA/sprzedaz/cennik.md (28.07.2026), the
+  // only source of truth. Only the Standard-Rozszerzony range is public — the
+  // owner's rule (cennik.md "Zasady"): "Klient słyszy kolumnę Standard, Start
+  // tylko za case study, opinię albo polecenie." "Start" never appears here.
+  "pricing.tableLabel": { pl: "Widełki cenowe", en: "Price ranges" },
+  "pricing.tableLead": {
+    pl: "Od czego zaczyna standardowy zakres i ile kosztuje wersja rozszerzona - wybierz kategorię.",
+    en: "What a standard scope starts at and what the extended version costs - pick a category.",
+  },
+  "pricing.unitMonth": { pl: "/ mies.", en: "/ mo" },
+  "pricing.disclaimer": {
+    pl: "Ceny netto, doliczamy 23% VAT. Wycena jest stała od podpisania - żadnych aneksów w trakcie projektu.",
+    en: "Prices are net, we add 23% VAT. The quote is fixed once signed - no add-ons mid-project.",
+  },
+
+  "pricing.catProjects": { pl: "Projekty", en: "Projects" },
+  "pricing.catMonthly": { pl: "Współpraca miesięczna", en: "Monthly collaboration" },
+  "pricing.catAi": { pl: "AI i automatyzacja", en: "AI and automation" },
+
+  "pricing.itemLanding.name": { pl: "Landing page", en: "Landing page" },
+  "pricing.itemLanding.termin": { pl: "5 dni", en: "5 days" },
+  "pricing.itemCorporate.name": { pl: "Strona firmowa", en: "Company website" },
+  "pricing.itemCorporate.termin": { pl: "2 tyg.", en: "2 weeks" },
+  "pricing.itemStoreWoo.name": { pl: "Sklep Woo / Shopify", en: "Woo / Shopify store" },
+  "pricing.itemStoreWoo.termin": { pl: "3 tyg.", en: "3 weeks" },
+  "pricing.itemStoreCustom.name": { pl: "Sklep na własnym silniku", en: "Custom-built store" },
+  "pricing.itemStoreCustom.termin": { pl: "6 tyg.", en: "6 weeks" },
+  "pricing.itemWebapp.name": { pl: "System / aplikacja webowa", en: "System / web application" },
+  "pricing.itemWebapp.termin": { pl: "od 4 tyg.", en: "from 4 weeks" },
+  "pricing.itemMobile.name": { pl: "Aplikacja mobilna iOS + Android", en: "iOS + Android mobile app" },
+  "pricing.itemMobile.termin": { pl: "6 tyg.", en: "6 weeks" },
+
+  "pricing.itemCareSite.name": { pl: "Opieka nad stroną", en: "Website care" },
+  "pricing.itemCareShop.name": { pl: "Opieka nad sklepem / systemem", en: "Store / system care" },
+  "pricing.itemSeo.name": { pl: "SEO", en: "SEO" },
+  "pricing.itemAds.name": { pl: "Google Ads", en: "Google Ads" },
+  "pricing.itemGa4.name": { pl: "GA4 + GTM", en: "GA4 + GTM" },
+  "pricing.itemGa4.termin": { pl: "jednorazowo", en: "one-time" },
+
+  "pricing.itemAudit.name": { pl: "Audyt procesów", en: "Process audit" },
+  "pricing.itemAudit.termin": { pl: "1 tydz.", en: "1 week" },
+  "pricing.itemAutomation.name": { pl: "Automatyzacja procesu", en: "Process automation" },
+  "pricing.itemAutomation.termin": { pl: "2-4 tyg.", en: "2-4 weeks" },
+  "pricing.itemAssistant.name": { pl: "Asystent na danych firmy", en: "Assistant on company data" },
+  "pricing.itemAssistant.termin": { pl: "3-6 tyg.", en: "3-6 weeks" },
+  "pricing.itemTraining.name": { pl: "Szkolenie zespołu", en: "Team training" },
+  "pricing.itemTraining.termin": { pl: "1 dzień", en: "1 day" },
+  "pricing.itemAiCare.name": { pl: "Opieka po wdrożeniu", en: "Post-launch support" },
 } as const satisfies Record<string, { pl: string; en: string }>;

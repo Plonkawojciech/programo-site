@@ -330,3 +330,46 @@ zadaniem, poza zakresem). 16/17 statycznych stron najwyższego poziomu linkuje
 `/blog` (jedyny brak: `_global-error.html`, strona błędu bez navbar/footer —
 oczekiwane). Sitemap i `/llms.txt` zgadzają się co do liczby postów (2 == 2
 == liczba plików w `src/content/blog`).
+
+---
+
+## 2026-08-12 — /cennik price table + /oferta visual realizations (5. filar AI)
+
+Część fazy „redesign cennik/oferta/blog/mockup" (docs/plans/redesign-cennik-oferta-blog-mockup-2026-08.md,
+sekcje 1-2). Realizowane w worktree, PhoneFrame fix już scalony na main przed
+startem.
+
+**`/cennik`** (`src/components/pricing.tsx` + `dictionaries/pricing.ts`): pod
+sekcją procesu doszła tabela widełek cenowych, przełączana trzema tabami
+(Projekty / Współpraca miesięczna / AI i automatyzacja) zamiast trzech tabel
+jedna pod drugą. Liczby przepisane 1:1 z `~/Programo/marketing/FIRMA/sprzedaz/cennik.md`
+(28.07.2026) — zero zaokrągleń. Publicznie tylko widełki Standard-Rozszerzony
+(„od X do Y zł"), kolumna Start (lewar handlowy właściciela) nigdzie się nie
+pojawia. Kwoty formatowane ręcznie (spacja PL / przecinek EN), bez
+`Intl.NumberFormat` — jego wynik zależy od ICU danych środowiska i bywa
+niedeterministyczny (`3000` bez spacji w małym-ICU Node). Dopisane jednym
+zdaniem: ceny netto + 23% VAT + „stała cena, żadnych aneksów w trakcie" -
+bez duplikowania treści `pricing.step3`.
+
+**`/oferta`** (`src/components/offer.tsx` + `dictionaries/offer.ts`): piąty
+filar „AI i automatyzacja" (1:1 z kategorią w cenniku), przykład ePortal
+Prawny - jedyny projekt z uczciwym przykładem AI (dwustopniowy pipeline
+Claude klasyfikujący sprawy). Każdy z 5 filarów dostał widoczną, klikalną
+realizację (`PhoneFrame`/`BrowserFrame`/`DeviceDuo`, te same komponenty co na
+/projekty) zamiast tekstowej linijki "zobacz przykład" - cała karta linkuje
+do `/projects/[slug]`. Opisy filarów 1-4 skrócone o zdanie, które teraz
+duplikowałoby to, co pokazuje wizualka (ta sama zasada co przy skrótach
+2026-08-05). Link "Dowiedz się więcej" do podstrony ofertowej zachowany tam,
+gdzie realnie istnieje (sklepy-internetowe, strony-tracking-reklamy).
+
+**Weryfikacja:** `npm run build && npx tsc --noEmit && npm run test && npm run lint`
+zielone (227/227 testów, w tym i18n parity i ssr-content). Realny podgląd w
+Chrome (PL i EN, tab-switch cennika, klik z /oferta do /projects/eportal-prawny)
+- worktree node_modules był symlinkiem/brakiem, skopiowany z main repo
+(`cp -Rc`) przed buildem. `resize_window` w tej sesji nie zmieniał realnego
+`window.innerWidth` (utknięty na ~1000px niezależnie od żądanej szerokości -
+prawdopodobnie dzielone okno Chrome między równoległymi agentami w tym
+przebiegu) - nie udało się zweryfikować dokładnie 375px/1440px+, tylko
+~1000px (poniżej `lg`, powyżej `sm`), gdzie layout poprawnie się złożył do
+jednej kolumny. Pełny check 375/1440 zostaje do zrobienia przy kolejnej
+weryfikacji wizualnej (np. z sesji bez dzielonego okna).
