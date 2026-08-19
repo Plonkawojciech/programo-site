@@ -18,4 +18,10 @@ export const contact = {
     pl: "Rozmawiasz bezpośrednio z osobami, które będą budować Twój projekt, bez handlowców po drodze.",
     en: "You talk directly to the people who will build your project, with no salespeople in between.",
   },
+  // /kontakt — sekcja z twarzami założycieli (nad pełnym formularzem)
+  "contactPeople.eyebrow": { pl: "Kto odbiera", en: "Who picks up" },
+  "contactPeople.title": {
+    pl: "Dwie osoby, z którymi będziesz rozmawiać",
+    en: "The two people you will be talking to",
+  },
 } as const satisfies Record<string, { pl: string; en: string }>;

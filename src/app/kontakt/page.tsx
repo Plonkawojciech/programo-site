@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import QuickContact from "@/components/quick-contact";
 import CompactLeadForm from "@/components/compact-lead-form";
 import ContactHero from "./contact-hero";
+import ContactPeople from "./contact-people";
 import {
   buildBreadcrumbs,
   buildWebPage,
@@ -42,6 +43,7 @@ export default function KontaktPage() {
         <ContactHero />
         {/* Low-friction 2-field catcher first; full brief below for those who want it. */}
         <CompactLeadForm formId="kontakt-compact" projectType="Zapytanie z /kontakt" />
+        <ContactPeople />
         <QuickContact formId="kontakt-full" />
       </div>
     </>
