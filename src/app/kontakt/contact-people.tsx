@@ -9,6 +9,11 @@ import Reveal from "@/components/ui/reveal";
 // zielone do ciemnego. Podmiana leci CSS-em (.photo-light/.photo-dark w
 // globals.css), a nie przez useTheme() — inaczej po hydracji mignęłoby złe
 // zdjęcie, zanim provider zdąży odczytać localStorage.
+//
+// `unoptimized`: optymalizator obrazów Vercela oddaje na tych plikach HTTP 402
+// (wyczerpany limit transformacji) — nowe zdjęcie po prostu się nie ładuje.
+// Pliki są już przygotowane pod docelowy rozmiar (1120x1400 WebP, 57-89 KB),
+// więc przepuszczanie ich przez /_next/image nic nie dawało poza ryzykiem.
 const PEOPLE = [
   {
     name: "Wojciech Płonka",
@@ -52,6 +57,7 @@ export default function ContactPeople() {
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1400px) 45vw, 620px"
                     className="photo-light object-cover"
+                    unoptimized
                     priority={i === 0}
                   />
                   <Image
@@ -61,6 +67,7 @@ export default function ContactPeople() {
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1400px) 45vw, 620px"
                     className="photo-dark object-cover"
+                    unoptimized
                   />
                 </div>
                 <figcaption className="flex flex-col gap-2">
