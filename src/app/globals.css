@@ -734,3 +734,18 @@ body {
 [data-theme="dark"] .photo-dark {
   opacity: 1;
 }
+
+/* Kafle założycieli: kontakt wjeżdża na hover. Na ekranach dotykowych hover nie
+   istnieje, więc overlay musi być widoczny od razu — inaczej numer i mail są na
+   telefonie nieosiągalne. */
+@media (hover: none) {
+  .portrait-veil {
+    opacity: 1;
+  }
+
+  .portrait-overlay {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}

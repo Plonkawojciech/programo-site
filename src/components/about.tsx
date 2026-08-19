@@ -3,17 +3,15 @@
 import { useI18n } from "@/lib/i18n";
 import Reveal from "@/components/ui/reveal";
 import CtaButton from "@/components/ui/cta-button";
+import FounderCards from "@/components/founder-cards";
 
 // /o-nas — rewritten from zero (content-deck-2026-07.md section 5). No
 // "digital future", no "international expansion", no "builders" — just the
-// company, how the two of us work, and the two founders (no stock photos).
+// company, how the two of us work, and the two founders. Portrety założycieli
+// (realne zdjęcia, nie stock) siedzą we wspólnym `FounderCards` — ten sam
+// komponent renderuje /kontakt, żeby jedna zmiana zdjęcia szła w oba miejsca.
 export default function About() {
   const { t } = useI18n();
-
-  const founders = [
-    { name: "Wojciech Płonka", roleKey: "about.wojciech.role", descKey: "about.wojciech.desc", tel: "+48797222363", telLabel: "797 222 363" },
-    { name: "Bartosz Kolaj", roleKey: "about.bartosz.role", descKey: "about.bartosz.desc", tel: "+48509123434", telLabel: "509 123 434" },
-  ] as const;
 
   return (
     <section id="about" className="relative bg-surface py-section">
@@ -49,30 +47,7 @@ export default function About() {
               {t("about.people.title")}
             </h2>
           </Reveal>
-          <div className="grid gap-12 md:grid-cols-2 md:gap-16">
-            {founders.map((f, i) => (
-              <Reveal key={f.name} delay={i * 0.12} className="flex flex-col gap-4">
-                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
-                  {t(f.roleKey)}
-                </span>
-                <h3 className="font-headline text-3xl font-bold tracking-tighter text-on-surface md:text-4xl">
-                  {f.name}
-                </h3>
-                {/* Owner-editable: the column is a flex stack with gap-4, so a
-                    cleared bio would still open a 16px hole between the name
-                    and the phone number. */}
-                {t(f.descKey).trim() && (
-                  <p className="max-w-sm text-base font-light leading-relaxed text-on-surface/70">{t(f.descKey)}</p>
-                )}
-                <a
-                  href={`tel:${f.tel}`}
-                  className="mt-1 inline-flex w-fit items-center gap-2 text-sm font-medium text-primary underline underline-offset-4 transition hover:text-on-surface"
-                >
-                  {f.telLabel}
-                </a>
-              </Reveal>
-            ))}
-          </div>
+          <FounderCards />
         </div>
 
         {/* Company data + CTA */}

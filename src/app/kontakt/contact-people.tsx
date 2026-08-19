@@ -1,36 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 import Reveal from "@/components/ui/reveal";
+import FounderCards from "@/components/founder-cards";
 
-// /kontakt — twarze przed formularzem: "wiesz, kto odbierze telefon".
-// Zdjęcia są w dwóch wersjach, bo strona ma dwa motywy: białe tło do jasnego,
-// zielone do ciemnego. Podmiana leci CSS-em (.photo-light/.photo-dark w
-// globals.css), a nie przez useTheme() — inaczej po hydracji mignęłoby złe
-// zdjęcie, zanim provider zdąży odczytać localStorage.
-//
-// `unoptimized`: optymalizator obrazów Vercela oddaje na tych plikach HTTP 402
-// (wyczerpany limit transformacji) — nowe zdjęcie po prostu się nie ładuje.
-// Pliki są już przygotowane pod docelowy rozmiar (1120x1400 WebP, 57-89 KB),
-// więc przepuszczanie ich przez /_next/image nic nie dawało poza ryzykiem.
-const PEOPLE = [
-  {
-    name: "Wojciech Płonka",
-    roleKey: "about.wojciech.role",
-    slug: "wojciech-plonka",
-    tel: "+48797222363",
-    telLabel: "797 222 363",
-  },
-  {
-    name: "Bartosz Kolaj",
-    roleKey: "about.bartosz.role",
-    slug: "bartosz-kolaj",
-    tel: "+48509123434",
-    telLabel: "509 123 434",
-  },
-] as const;
-
+// /kontakt — twarze przed pełnym formularzem: "wiesz, kto odbierze telefon".
+// Same kafle siedzą w `FounderCards`, bo ta sama para zdjęć jest też na /o-nas.
 export default function ContactPeople() {
   const { t } = useI18n();
 
@@ -46,47 +21,8 @@ export default function ContactPeople() {
           </h2>
         </Reveal>
 
-        <div className="mt-10 grid gap-8 sm:grid-cols-2 md:mt-14 md:gap-12">
-          {PEOPLE.map((p, i) => (
-            <Reveal key={p.slug} delay={i * 0.1}>
-              <figure className="flex flex-col gap-5">
-                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-card shadow-card">
-                  <Image
-                    src={`/team/${p.slug}-light.webp`}
-                    alt={`${p.name} - ${t(p.roleKey)}, Programo`}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1400px) 45vw, 620px"
-                    className="photo-light object-cover"
-                    unoptimized
-                    priority={i === 0}
-                  />
-                  <Image
-                    src={`/team/${p.slug}-dark.webp`}
-                    alt=""
-                    aria-hidden="true"
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1400px) 45vw, 620px"
-                    className="photo-dark object-cover"
-                    unoptimized
-                  />
-                </div>
-                <figcaption className="flex flex-col gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
-                    {t(p.roleKey)}
-                  </span>
-                  <span className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
-                    {p.name}
-                  </span>
-                  <a
-                    href={`tel:${p.tel}`}
-                    className="mt-1 inline-flex w-fit items-center gap-2 text-sm font-medium text-primary underline underline-offset-4 transition hover:text-on-surface"
-                  >
-                    {p.telLabel}
-                  </a>
-                </figcaption>
-              </figure>
-            </Reveal>
-          ))}
+        <div className="mt-10 md:mt-14">
+          <FounderCards />
         </div>
       </div>
     </section>
