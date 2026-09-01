@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "Muszę mieć firmę?",
-    a: "Nie. Jeśli masz działalność, wystawiasz nam fakturę. Jeśli nie masz, podpisujemy umowę o dzieło albo zlecenia - wtedy podana kwota jest brutto, a należne podatki i składki rozliczamy po naszej stronie.",
+    a: "Tak. Obecnie współpracujemy wyłącznie z partnerami prowadzącymi działalność gospodarczą - za każde skuteczne polecenie wystawiasz nam fakturę za usługę pośrednictwa. Jeśli nie masz działalności, napisz do nas - damy znać, gdy otworzymy program szerzej.",
   },
   {
     q: "Kiedy dostanę pieniądze?",
@@ -86,7 +86,7 @@ const pageGraph = renderGraph([
 const steps = [
   {
     title: "Dzwonisz i ustalamy zasady",
-    desc: "Krótka rozmowa, w której mówimy wprost, ile płacimy i kiedy. Na koniec zakładamy Ci indywidualny kod polecający.",
+    desc: "Krótka rozmowa, w której mówimy wprost, ile płacimy i kiedy. Do udziału potrzebujesz zarejestrowanej działalności gospodarczej, bo rozliczamy się fakturą. Na koniec zakładamy Ci indywidualny kod polecający.",
   },
   {
     title: "Podsyłasz nam kontakt",
@@ -94,7 +94,7 @@ const steps = [
   },
   {
     title: "Klient dostaje coś od siebie",
-    desc: "Każda firma z Twojego polecenia ma pierwszy miesiąc opieki nad stroną albo sklepem gratis. Masz więc co powiedzieć znajomemu poza tym, że znasz kogoś, kto to zrobi.",
+    desc: "Firma z Twojego polecenia, która zamówi u nas stronę albo sklep i zdecyduje się na stałą opiekę, ma pierwszy miesiąc tej opieki gratis. Masz więc co powiedzieć znajomemu poza tym, że znasz kogoś, kto to zrobi.",
   },
   {
     title: "Wypłacamy 25%",
@@ -133,7 +133,10 @@ const rules = [
   "Przy stałej obsłudze płacimy co miesiąc przez pierwsze 6 miesięcy współpracy z tym klientem.",
   "Liczy się pierwsze zgłoszenie. Jeśli akurat rozmawiamy już z tą firmą, mówimy Ci o tym od razu.",
   "Wypłatę robimy w ciągu 14 dni od zaksięgowania wpłaty od klienta.",
-  "Masz działalność? Wystawiasz fakturę. Nie masz? Rozliczamy się umową o dzieło albo zlecenia.",
+  "Program jest obecnie dostępny wyłącznie dla partnerów z zarejestrowaną działalnością gospodarczą. Rozliczenie następuje na podstawie faktury za usługę pośrednictwa, wystawianej osobno za każde skuteczne polecenie.",
+  // Dupochron: bez tego zdania ktoś mógłby argumentować, że program to stała
+  // współpraca i należy mu się zapłata za sam czas, nie za efekt.
+  "Program nie tworzy stosunku pracy, zlecenia ani stałej współpracy. Nie zobowiązujesz się do pozyskiwania klientów ani do żadnej aktywności - wynagrodzenie należy się wyłącznie za skuteczne polecenie zakończone opłaconą fakturą.",
   "Wszystkie kwoty w tym programie podajemy netto.",
   "Nie ma limitu poleceń ani minimum, którego trzeba dowieźć.",
 ];
@@ -257,8 +260,9 @@ export default function WspolpracaPage() {
                 obsłudze to tysiąc złotych miesięcznie.
               </p>
               <p className="mt-4 text-sm text-on-surface-variant">
-                Kwoty są przykładowe. Prowizja zawsze liczy się od wartości netto
-                konkretnej faktury.
+                Kwoty są przykładowe i netto. Prowizja zawsze liczy się od
+                wartości netto konkretnej faktury opłaconej przez poleconego
+                klienta.
               </p>
             </Reveal>
           </div>
@@ -284,10 +288,10 @@ export default function WspolpracaPage() {
                     pracodawcy. Ten akapit nie jest ozdobą - jest tu po to. */}
                 <Reveal delay={0.2}>
                   <p className="mt-8 max-w-xl text-sm leading-relaxed text-on-surface-variant">
-                    Program jest dla osób działających we własnym imieniu. Jeśli
-                    jesteś gdzieś zatrudniony, sprawdź najpierw, czy taka
-                    współpraca nie koliduje z Twoją umową i obowiązkami wobec
-                    pracodawcy.
+                    Program jest dla osób i firm prowadzących działalność
+                    gospodarczą. Jeśli jesteś gdzieś zatrudniony, sprawdź
+                    najpierw, czy taka współpraca nie koliduje z Twoją umową
+                    i obowiązkami wobec pracodawcy.
                   </p>
                 </Reveal>
               </div>
@@ -370,8 +374,8 @@ export default function WspolpracaPage() {
                 Kwadrans i wiesz, czy to dla Ciebie. Nic nie podpisujesz na
                 starcie i do niczego się nie zobowiązujesz. A jeśli okaże się,
                 że dobrze nam się razem pracuje, jesteśmy otwarci na szerszą
-                współpracę - ale najpierw zobaczmy, jak pójdzie pierwsze
-                polecenie.
+                współpracę - bez zobowiązań po żadnej ze stron, i najpierw
+                zobaczmy, jak pójdzie pierwsze polecenie.
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-4">
                 <CtaButton href="tel:+48509123434">Zadzwoń: 509 123 434</CtaButton>

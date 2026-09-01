@@ -30,9 +30,9 @@ export const STATIC_ROUTE_UPDATED_AT: Record<string, string> = {
   "/strony-internetowe": "2026-08-03T16:23:25+02:00",
   "/strony-tracking-reklamy": "2026-08-03T20:20:31+02:00",
   "/ile-kosztuje-aplikacji": "2026-08-03T16:23:25+02:00",
-  // Nowa trasa - data utworzenia pliku. Przy następnej realnej zmianie treści
-  // wyprowadzić z `git log -1 --format=%cI -- src/app/wspolpraca/page.tsx`.
-  "/wspolpraca": "2026-08-07T12:00:00+02:00",
+  // Przy następnej realnej zmianie treści wyprowadzić z
+  // `git log -1 --format=%cI -- src/app/wspolpraca/page.tsx`.
+  "/wspolpraca": "2026-09-01T18:27:01+02:00",
   // /blog index - data utworzenia. Samo indeksowanie zmienia się co publikację
   // (nowy post = nowa treść na liście), ale jego sitemap entry i tak jest
   // dominowane przez lastmod poszczególnych postów (frontmatter dateModified,
