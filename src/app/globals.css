@@ -168,22 +168,25 @@
 }
 
 [data-theme="light"] {
-  /* Light mode — near-white with green palette accents */
-  --theme-bg-0: #FFFFFF;      /* sunken — reads as paper-white here: the step
-                                 always moves AWAY from the text colour. */
-  --theme-bg-1: #FBFDFB;      /* near-white base with subtle mint hint */
-  --theme-bg-2: #F2F8F3;      /* very light mint */
-  --theme-bg-3: #E6F1E8;      /* light mint container */
-  --theme-bg-4: #DAF1DE;      /* mint from palette */
+  /* Light mode — pure white backgrounds with green palette accents.
+     Owner, 2026-09-03: "zmien wszedzie tla na bialy kolor" — the whole mint
+     bg ramp (#FBFDFB/#F2F8F3/#E6F1E8/#DAF1DE) collapsed to #FFFFFF. Section
+     separation now rides on borders and card shadows alone; the greens live
+     on in text, accents and the inverted alt section. */
+  --theme-bg-0: #FFFFFF;
+  --theme-bg-1: #FFFFFF;
+  --theme-bg-2: #FFFFFF;
+  --theme-bg-3: #FFFFFF;
+  --theme-bg-4: #FFFFFF;
 
   /* Paper white, as the owner asked for on 2026-08-07 ("zeby mialy biale tlo te
      boxy"). The shadow is deliberately heavier than the dark one relative to its
      backdrop: it is the only thing separating the card from the page. */
   --theme-card: #FFFFFF;
-  /* bg-2, a 3% mint tint. This is the whole trick in light mode: the band steps
-     back so paper-white can step forward. It is NOT the #E6F1E8 slab the cards
-     used to be filled with — that was 8× the tint and read as "green box". */
-  --theme-card-band: #F2F8F3;
+  /* White band under white cards: with the mint ramp gone the fill step no
+     longer exists, so the shadow ring below is the ONLY thing separating a
+     card from the page. Do not weaken it. */
+  --theme-card-band: #FFFFFF;
   /* Ring flips direction here: DARKER than the card, because on a light page an
      edge casts rather than catches. 7% rather than dark's 6% — the same ring has
      less work to do against a near-black card than against paper on paper. */
@@ -213,10 +216,10 @@
 
   /* RGB variants */
   --theme-bg-0-rgb: 255, 255, 255;
-  --theme-bg-1-rgb: 251, 253, 251;
-  --theme-bg-2-rgb: 242, 248, 243;
-  --theme-bg-3-rgb: 230, 241, 232;
-  --theme-bg-4-rgb: 218, 241, 222;
+  --theme-bg-1-rgb: 255, 255, 255;
+  --theme-bg-2-rgb: 255, 255, 255;
+  --theme-bg-3-rgb: 255, 255, 255;
+  --theme-bg-4-rgb: 255, 255, 255;
   --theme-border-1-rgb: 218, 241, 222;
   --theme-border-2-rgb: 142, 182, 155;
   --theme-text-1-rgb: 5, 31, 32;
@@ -261,7 +264,7 @@
   --theme-nav-text: #DAF1DE;
   --theme-nav-text-rgb: 218, 241, 222;
 
-  --theme-nav-band: rgba(251, 253, 251, 0.78);
+  --theme-nav-band: rgba(255, 255, 255, 0.78);
   --theme-nav-band-border: rgba(5, 31, 32, 0.08);
 }
 

@@ -71,7 +71,9 @@ src/
 - `lastModified` w sitemapie to realne daty z historii gita — **nie** `new Date()`.
   Google traktuje zaufanie do `lastmod` binarnie.
 - **Paleta**: ciemna zieleń + mięta (`#051F20`/`#DAF1DE`/`#8EB69B`, tokeny w globals.css),
-  light mode odwrócony. Logo i kolory NIE do zmiany.
+  light mode odwrócony. Logo i kolory NIE do zmiany. Wyjątek (decyzja właściciela,
+  2026-09-03): tła w light mode są CZYSTO BIAŁE (`#FFFFFF`), nie miętowe — zieleń
+  w light mode zostaje tylko w tekstach, akcentach i sekcji alt.
 - **Fakty w portfolio**: statusy i liczby tylko z `projects.ts` / briefu — zero zmyślonych
   statystyk. Kategorie uczciwie rozdzielają produkty własne od pracy dla klientów.
 - Teksty przez `t()` z i18n (wyjątek: strony SEO `strony-internetowe`, `sklepy-internetowe`,
