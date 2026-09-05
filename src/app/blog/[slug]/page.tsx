@@ -41,12 +41,18 @@ export async function generateMetadata({
   const { title, answer } = post.frontmatter;
   const description = answer.length > 160 ? `${answer.slice(0, 157).trimEnd()}...` : answer;
   const url = `https://programo.pl/blog/${slug}`;
+  // Google truncates around 60 characters and cuts from the END, so appending
+  // the brand to an already-long post headline throws away part of the headline
+  // itself and gains nothing — the site name is shown separately in the result
+  // anyway. Append it only when it fits.
+  const withBrand = `${title} - Programo`;
+  const seoTitle = withBrand.length <= 60 ? withBrand : title;
   return {
-    title: `${title} - Programo`,
+    title: seoTitle,
     description,
     alternates: { canonical: url },
     openGraph: {
-      title: `${title} - Programo`,
+      title: seoTitle,
       description,
       url,
       siteName: "Programo",
