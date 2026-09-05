@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import MarketingTrackingLanding from "@/components/marketing-tracking";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
   buildFaqPage,
@@ -14,12 +15,13 @@ const PATH = "/strony-tracking-reklamy";
 
 // Metadata: content-deck-2026-07.md section 8.
 export const metadata: Metadata = {
-  title: "Strony internetowe z trackingiem i kampanią Google Ads | Programo",
+  title: "Strony z trackingiem i kampanią Google Ads | Programo",
   description:
     "Strona, pomiar konwersji (GA4, Consent Mode v2) i kampania Google Ads w jednych rękach. Pracujemy też na Twojej istniejącej stronie. Odpowiadamy w 24 h.",
   alternates: { canonical: "https://programo.pl/strony-tracking-reklamy" },
   openGraph: {
-    title: "Strony internetowe z trackingiem i kampanią Google Ads | Programo",
+    images: [OG_IMAGE],
+    title: "Strony z trackingiem i kampanią Google Ads | Programo",
     description:
       "Strona, pomiar konwersji (GA4, Consent Mode v2) i kampania Google Ads w jednych rękach.",
     url: "https://programo.pl/strony-tracking-reklamy",
@@ -70,7 +72,7 @@ const service = buildService({
 const pageGraph = renderGraph([
   buildWebPage({
     path: PATH,
-    name: "Strony internetowe z trackingiem i kampanią Google Ads | Programo",
+    name: "Strony z trackingiem i kampanią Google Ads | Programo",
     description:
       "Strona, pomiar konwersji (GA4, Consent Mode v2) i kampania Google Ads w jednych rękach. Pracujemy też na Twojej istniejącej stronie.",
     dateModified: STATIC_ROUTE_UPDATED_AT[PATH],

@@ -1,4 +1,6 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { projects } from "@/lib/projects";
@@ -280,4 +282,40 @@ describe("SEO", () => {
       expect(second).toEqual(first);
     });
   });
+
+  describe("Open Graph image", () => {
+    // A page that declares its own `openGraph` block REPLACES the metadata that
+    // app/opengraph-image.tsx contributes, rather than merging with it. Ten
+    // pages had lost their preview card that way — invisible to any check that
+    // only looks for og:title. This walks the route tree so a new page cannot
+    // reintroduce it.
+    function pageFiles(dir: string): string[] {
+      const out: string[] = [];
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const full = join(dir, entry.name);
+        if (entry.isDirectory()) out.push(...pageFiles(full));
+        else if (entry.name === "page.tsx") out.push(full);
+      }
+      return out;
+    }
+
+    it("every page declaring openGraph also declares an image", () => {
+      const offenders = pageFiles("src/app").filter((file) => {
+        const src = readFileSync(file, "utf8");
+        if (!src.includes("openGraph:")) return false;
+        // Either the shared descriptor, or an explicit per-page image — a route
+        // segment with its own opengraph-image.tsx counts as the latter.
+        if (src.includes("OG_IMAGE") || src.includes("images:")) return false;
+        const segmentImage = join(file, "..", "opengraph-image.tsx");
+        try {
+          readFileSync(segmentImage, "utf8");
+          return false;
+        } catch {
+          return true;
+        }
+      });
+      expect(offenders).toEqual([]);
+    });
+  });
+
 });

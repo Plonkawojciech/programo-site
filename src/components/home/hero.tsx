@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useId } from "react";
+import { useState, useRef, useId, useEffect } from "react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
@@ -60,6 +60,14 @@ export default function HomeHero() {
   const consentId = useId();
   const errorId = useId();
   const successId = useId();
+  /** The success block replaces the form, so focus has to be moved into it
+   *  deliberately - otherwise a keyboard or screen-reader user is left on a
+   *  button that no longer exists and hears nothing. Matches CompactLeadForm. */
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (formState === "success") successHeadingRef.current?.focus();
+  }, [formState]);
 
   /** Which control the current error belongs to, so focus and aria-invalid land
    *  on it rather than colouring every field red at once. */
@@ -245,14 +253,30 @@ export default function HomeHero() {
               to 896px reads as an unfinished layout. */}
           <div className="mt-10 max-w-2xl">
             {formState === "success" ? (
-              <p
+              <div
                 id={successId}
                 role="status"
                 aria-live="polite"
-                className="text-lead font-medium text-primary"
+                className="flex items-start gap-4 rounded-2xl bg-card p-6 shadow-card"
               >
-                {t("home.hero.phoneSuccess")}
-              </p>
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+                    <path d="M4 12.5l5 5L20 6.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <div>
+                  <h3
+                    ref={successHeadingRef}
+                    tabIndex={-1}
+                    className="font-semibold text-on-surface outline-none"
+                  >
+                    {t("home.hero.phoneSuccess")}
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-on-surface-variant">
+                    {t("home.hero.phoneSuccessBody")}
+                  </p>
+                </div>
+              </div>
             ) : (
               <form
                 onSubmit={handleSubmit}

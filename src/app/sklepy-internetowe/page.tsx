@@ -9,6 +9,7 @@ import CompactLeadForm from "@/components/compact-lead-form";
 import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
 import BrowserFrame from "@/components/ui/browser-frame";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
   buildFaqPage,
@@ -28,6 +29,7 @@ export const metadata: Metadata = {
     "Sklepy internetowe na WooCommerce, PrestaShop i headless oraz aplikacje mobilne do sklepów, które już działają. Płatności, InPost, migracja bez utraty SEO.",
   alternates: { canonical: "https://programo.pl/sklepy-internetowe" },
   openGraph: {
+    images: [OG_IMAGE],
     title: "Sklepy internetowe i aplikacje mobilne do sklepów | Programo",
     description:
       "Sklepy internetowe na WooCommerce, PrestaShop i headless oraz natywne aplikacje mobilne do sklepów, które już działają.",

@@ -58,7 +58,21 @@ export async function generateMetadata({
   // scannable. Splits on a colon or a spaced dash (hyphen, en, em) so hyphenated
   // words like "mobile-first" survive.
   const shortSubtitle = project.subtitle.pl.split(/:|\s[-\u2013\u2014]\s/)[0].trim();
-  const title = `${project.title} - ${shortSubtitle} | Programo`;
+  // Google truncates the title tag around 60 characters, and five project pages
+  // were shipping 65-95: the brand suffix — the part that makes the result
+  // recognisable in a list — was the half being cut. Trim the SUBTITLE to fit
+  // instead, on a word boundary, and drop it entirely when even one word will
+  // not fit. The project name and "| Programo" are never sacrificed.
+  const TITLE_BUDGET = 60;
+  const titleBase = `${project.title} | Programo`;
+  const room = TITLE_BUDGET - titleBase.length - " - ".length;
+  let fittedSubtitle = shortSubtitle;
+  if (fittedSubtitle.length > room) {
+    fittedSubtitle = room > 0 ? fittedSubtitle.slice(0, room).replace(/\s+\S*$/, "").trim() : "";
+  }
+  const title = fittedSubtitle
+    ? `${project.title} - ${fittedSubtitle} | Programo`
+    : titleBase;
   // Meta description: whole sentences up to the 160-char limit, never a cut-off
   // fragment. The inner lookbehind keeps initials from ending a sentence -
   // without it "W. Safe Finance" splits after the "W." and the description for

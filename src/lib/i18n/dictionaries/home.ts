@@ -317,6 +317,10 @@ export const home = {
     pl: "Gotowe. Oddzwonimy najszybciej, jak się da.",
     en: "Done. We'll call back as soon as we can.",
   },
+  "home.hero.phoneSuccessBody": {
+    pl: "Jeśli sprawa jest pilna, zadzwoń: 509 123 434.",
+    en: "If it's urgent, call us: +48 509 123 434.",
+  },
   "home.hero.phoneReassurance": {
     pl: "Oddzwaniamy w ciągu 24 h. Bez zobowiązań.",
     en: "We call back within 24 h. No obligation.",

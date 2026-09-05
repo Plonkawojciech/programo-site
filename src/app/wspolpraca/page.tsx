@@ -3,6 +3,7 @@ import Link from "next/link";
 import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
 import { COMPANY, COMPANY_ADDRESS_LINE } from "@/lib/company";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
   buildFaqPage,
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
     "Polecasz nam firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 25% wartości netto opłaconej faktury. Bez etatu, bez limitów, bez minimum.",
   alternates: { canonical: "https://programo.pl/wspolpraca" },
   openGraph: {
+    images: [OG_IMAGE],
     title: "Program poleceń - zarabiaj 25% na polecaniu Programo",
     description:
       "Polecasz nam firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 25% wartości netto opłaconej faktury.",

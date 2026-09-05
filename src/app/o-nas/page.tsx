@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import About from "@/components/about";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
   buildWebPage,
@@ -31,6 +32,7 @@ export const metadata: Metadata = {
     "Programo s.j. to Wojciech Płonka i Bartosz Kolaj. Projektujemy i budujemy oprogramowanie sami - bez handlowców i podwykonawców. Poznań, cała Polska zdalnie.",
   alternates: { canonical: "https://programo.pl/o-nas" },
   openGraph: {
+    images: [OG_IMAGE],
     title: "O nas - dwóch inżynierów z Poznania | Programo",
     description: "Programo s.j. to Wojciech Płonka i Bartosz Kolaj. Projektujemy i budujemy oprogramowanie sami.",
     url: "https://programo.pl/o-nas",

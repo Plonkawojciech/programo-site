@@ -4,6 +4,7 @@ import PostCard from "@/components/blog/post-card";
 import FeaturedPost from "@/components/blog/featured-post";
 import ClusterNav from "@/components/blog/cluster-nav";
 import PaginationNav from "@/components/blog/pagination-nav";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
   buildWebPage,
@@ -13,7 +14,7 @@ import {
 } from "@/lib/schema";
 
 const PATH = "/blog";
-const TITLE = "Blog - Programo";
+const TITLE = "Blog - aplikacje, sklepy, SEO i reklamy | Programo";
 const DESCRIPTION =
   "Poradniki i porównania o budowie oprogramowania: koszty projektów, wybór technologii, dane własne z projektów Programo.";
 
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: "https://programo.pl/blog" },
   openGraph: {
+    images: [OG_IMAGE],
     title: TITLE,
     description: DESCRIPTION,
     url: "https://programo.pl/blog",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CompactLeadForm from "@/components/compact-lead-form";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildArticle,
   buildBreadcrumbs,
@@ -14,12 +15,13 @@ import {
 const PATH = "/ile-kosztuje-aplikacji";
 
 export const metadata: Metadata = {
-  title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy - Programo",
+  title: "Ile kosztuje aplikacja lub strona? Wycena | Programo",
   description:
     "Ile kosztuje aplikacja, strona lub system SaaS? Tłumaczymy, co podnosi i co obniża koszt oraz jak przygotowujemy wycenę. Programo, software house z Poznania.",
   alternates: { canonical: "https://programo.pl/ile-kosztuje-aplikacji" },
   openGraph: {
-    title: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy - Programo",
+    images: [OG_IMAGE],
+    title: "Ile kosztuje aplikacja lub strona? Wycena | Programo",
     description:
       "Co realnie wpływa na koszt aplikacji, strony lub systemu SaaS i jak wygląda nasza indywidualna wycena.",
     url: "https://programo.pl/ile-kosztuje-aplikacji",
@@ -114,7 +116,7 @@ const article = buildArticle({
 const pageGraph = renderGraph([
   buildWebPage({
     path: PATH,
-    name: "Ile kosztuje aplikacja lub strona? Jak to wyceniamy - Programo",
+    name: "Ile kosztuje aplikacja lub strona? Wycena | Programo",
     description:
       "Ile kosztuje aplikacja, strona lub system SaaS? Tłumaczymy, co podnosi i co obniża koszt oraz jak przygotowujemy wycenę.",
     dateModified: STATIC_ROUTE_UPDATED_AT[PATH],

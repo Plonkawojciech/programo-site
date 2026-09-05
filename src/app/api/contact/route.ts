@@ -4,6 +4,7 @@ import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 import { buildLeadMessage } from "@/lib/telegram-message";
+import { isLeadMailConfigured, sendLeadMail } from "@/lib/mail/graph";
 
 /**
  * Estimated value of one lead, in PLN. A Smart Bidding / value-optimisation
@@ -245,6 +246,38 @@ export async function POST(request: NextRequest) {
     console.error(
       "[contact] TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID missing — no lead notification will be sent. " +
         "If this is production, the variables are not set for the Production environment.",
+    );
+  }
+
+  // E-mail notification via Microsoft 365 (Graph). Second independent channel:
+  // Telegram is the one that gets read in minutes, the mailbox is the one that
+  // is still searchable in six months. Deliberately NOT a third-party e-mail
+  // provider — see the header of lib/mail/graph.ts for why.
+  if (isLeadMailConfigured()) {
+    tasks.push(
+      (async () => {
+        const r = await sendLeadMail({
+          displayName,
+          email: email || undefined,
+          phone: phone || undefined,
+          subject,
+          projectType: projectType || undefined,
+          budget: budget || undefined,
+          message: message || undefined,
+          sources,
+          consentAt,
+          formId: result.data.form_id,
+        });
+        return { channel: "mail", ok: r.ok, error: r.error };
+      })(),
+    );
+  } else {
+    // Same reasoning as the Telegram branch below-left: an unconfigured
+    // delivery channel must be loud, because from the outside it looks exactly
+    // like a quiet week.
+    console.error(
+      "[contact] Microsoft Graph mail not configured — no e-mail notification will be sent. " +
+        "Set MS_GRAPH_TENANT_ID / MS_GRAPH_CLIENT_ID / MS_GRAPH_CLIENT_SECRET / LEAD_MAIL_FROM.",
     );
   }
 

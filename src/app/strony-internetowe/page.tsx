@@ -7,6 +7,7 @@ import CaseStudies from "@/components/case-studies";
 import CompactLeadForm from "@/components/compact-lead-form";
 import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
   buildFaqPage,
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
     "Projektujemy i wdrażamy strony internetowe dla firm z Poznania i całej Polski. Next.js, panel do edycji treści, formularz i pomiar zapytań od startu.",
   alternates: { canonical: "https://programo.pl/strony-internetowe" },
   openGraph: {
+    images: [OG_IMAGE],
     title: "Strony internetowe dla firm - projekt i wdrożenie | Programo",
     description:
       "Projektujemy i wdrażamy strony internetowe dla firm. Next.js, panel do edycji treści i formularz, z którego zapytania trafiają prosto do Ciebie.",

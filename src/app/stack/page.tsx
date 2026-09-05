@@ -13,7 +13,7 @@ const PATH = "/stack";
 const pageGraph = renderGraph([
   buildWebPage({
     path: PATH,
-    name: "Technologie - Programo",
+    name: "Stack technologiczny - czym budujemy | Programo",
     description:
       "Nasz stack technologiczny: Next.js, React, TypeScript, Tailwind, Supabase, Neon, Vercel i więcej.",
     dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
@@ -26,7 +26,7 @@ const pageGraph = renderGraph([
 ]);
 
 export const metadata: Metadata = {
-  title: "Technologie - Programo",
+  title: "Stack technologiczny - czym budujemy | Programo",
   description:
     "Nasz stack technologiczny: Next.js, React, TypeScript, Tailwind, Supabase, Neon, Vercel i więcej.",
   alternates: { canonical: "https://programo.pl/stack" },

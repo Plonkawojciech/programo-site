@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Offer from "@/components/offer";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
   buildWebPage,
@@ -13,7 +14,7 @@ const PATH = "/oferta";
 const pageGraph = renderGraph([
   buildWebPage({
     path: PATH,
-    name: "Oferta - aplikacje, sklepy, strony i reklamy Google | Programo",
+    name: "Oferta - aplikacje, sklepy i strony WWW | Programo",
     description:
       "Aplikacje webowe i SaaS, natywne aplikacje iOS i Android, sklepy internetowe oraz strony z trackingiem i kampaniami Google Ads.",
     dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
@@ -26,12 +27,13 @@ const pageGraph = renderGraph([
 ]);
 
 export const metadata: Metadata = {
-  title: "Oferta - aplikacje, sklepy, strony i reklamy Google | Programo",
+  title: "Oferta - aplikacje, sklepy i strony WWW | Programo",
   description:
     "Aplikacje webowe i SaaS, natywne aplikacje iOS i Android, sklepy internetowe oraz strony z trackingiem i kampaniami Google Ads. Widełki wyceny w 24 h.",
   alternates: { canonical: "https://programo.pl/oferta" },
   openGraph: {
-    title: "Oferta - aplikacje, sklepy, strony i reklamy Google | Programo",
+    images: [OG_IMAGE],
+    title: "Oferta - aplikacje, sklepy i strony WWW | Programo",
     description:
       "Aplikacje webowe i SaaS, natywne aplikacje iOS i Android, sklepy internetowe oraz strony z trackingiem i kampaniami Google Ads.",
     url: "https://programo.pl/oferta",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
   buildFaqPage,
@@ -14,13 +15,14 @@ const PATH = "/software-house-poznan";
 
 export const metadata: Metadata = {
   title:
-    "Software House Poznań - Programo | Oprogramowanie na zamówienie",
+    "Software House Poznań - aplikacje na zamówienie | Programo",
   description:
     "Software house Poznań. Budujemy aplikacje webowe, mobilne i systemy SaaS w Next.js i React. Pracujemy z firmami z Poznania i całej Polski. Bezpłatna wycena.",
   alternates: {
     canonical: "https://programo.pl/software-house-poznan",
   },
   openGraph: {
+    images: [OG_IMAGE],
     title: "Software House Poznań - Programo",
     description:
       "Software house z Poznania. Aplikacje webowe, mobilne, systemy SaaS, integracje AI.",
