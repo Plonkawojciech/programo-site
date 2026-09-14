@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import FeaturedWork from "@/components/featured-work";
+import DemoCrossLink from "@/components/demos/demo-cross-link";
+import { demos } from "@/lib/demos";
 import {
   buildBreadcrumbs,
   buildWebPage,
@@ -41,6 +43,7 @@ export default function ProjektyPage() {
           colour would draw a hairline seam right under the nav. */}
       <div className="bg-card-band pt-20 md:pt-24">
         <FeaturedWork />
+        <DemoCrossLink count={demos.length} />
       </div>
     </>
   );

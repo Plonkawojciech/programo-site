@@ -15,4 +15,5 @@ export * from "./service";
 export * from "./faq";
 export * from "./article";
 export * from "./software-application";
+export * from "./item-list";
 export * from "./route-dates";

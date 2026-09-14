@@ -138,6 +138,12 @@ export default function Footer() {
             >
               {t("footer.allProjects")}
             </Link>
+            <Link
+              href="/dema"
+              className="-my-2 min-h-[44px] py-2 text-sm font-medium text-primary hover-underline transition-colors duration-300"
+            >
+              {t("footer.demos")}
+            </Link>
           </nav>
 
           {/* Company */}

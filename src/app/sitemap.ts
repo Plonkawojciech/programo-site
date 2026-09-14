@@ -69,6 +69,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://programo.pl/dema",
+      lastModified: STATIC_ROUTE_UPDATED_AT["/dema"],
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://programo.pl/o-nas",
       lastModified: STATIC_ROUTE_UPDATED_AT["/o-nas"],
       changeFrequency: "monthly",

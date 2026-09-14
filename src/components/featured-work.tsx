@@ -261,7 +261,7 @@ export default function FeaturedWork() {
           </p>
           <Link
             href="/kontakt"
-            className="inline-flex items-center gap-3 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5 hover:bg-primary-container"
+            className="inline-flex items-center gap-3 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5 hover:bg-primary-hover"
           >
             {t("nav.cta")} <span aria-hidden="true">→</span>
           </Link>

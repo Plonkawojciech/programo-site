@@ -2,6 +2,7 @@ import { projects } from "@/lib/projects";
 import { getAllPosts } from "@/lib/blog";
 import { SITE_PAGES, SITE_URL } from "@/lib/site-urls";
 import { COMPANY } from "@/lib/company";
+import { demos } from "@/lib/demos";
 
 // /llms.txt — generated, never hand-maintained.
 //
@@ -42,6 +43,10 @@ export function GET(): Response {
     )
     .join("\n");
 
+  const demoSection = demos
+    .map((demo) => `- ${demo.name} - ${demo.sector.pl} - ${demo.host}`)
+    .join("\n");
+
   // Same source src/content/blog reads for /blog, /blog/[slug] and
   // sitemap.ts — so this section cannot drift from what actually publishes.
   const posts = getAllPosts();
@@ -64,6 +69,10 @@ ${pages}
 ## Realizacje i produkty
 
 ${work}
+
+## Dema stron
+
+${demoSection}
 
 ## Blog
 

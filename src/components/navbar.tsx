@@ -29,7 +29,7 @@ export default function Navbar() {
   const menuOverlayRef = useRef<HTMLDivElement>(null);
   const wasMobileOpenRef = useRef(false);
 
-  // Seven top-level items. The history matters, because the count here is
+  // Eight top-level items. The history matters, because the count here is
   // bounded by measurement and not by taste.
   //
   // Nine items measured 754px at a 1280px viewport and squeezed the logo in
@@ -54,6 +54,7 @@ export default function Navbar() {
   const navLinks = [
     { label: t("nav.offer"), href: "/oferta", section: "oferta" },
     { label: t("nav.work"), href: "/projekty", section: "projekty" },
+    { label: t("nav.demos"), href: "/dema", section: "dema" },
     { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
     { label: t("nav.blog"), href: "/blog", section: "blog" },
     { label: t("nav.about"), href: "/o-nas", section: "o-nas" },
@@ -284,7 +285,7 @@ export default function Navbar() {
           >
             {lang === "pl" ? "EN" : "PL"}
           </button>
-          <ContactCtaLink className="whitespace-nowrap bg-primary px-4 lg:px-5 py-2.5 rounded-full text-on-primary text-[12px] lg:text-[13px] uppercase tracking-wide font-medium hover:bg-primary-container transition-all">
+          <ContactCtaLink className="whitespace-nowrap bg-primary px-4 lg:px-5 py-2.5 rounded-full text-on-primary text-[12px] lg:text-[13px] uppercase tracking-wide font-medium hover:bg-primary-hover transition-all">
             {t("nav.cta")}
           </ContactCtaLink>
         </div>

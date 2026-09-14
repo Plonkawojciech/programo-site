@@ -6,6 +6,7 @@ import sitemap from "@/app/sitemap";
 import { projects } from "@/lib/projects";
 import {
   buildBreadcrumbs,
+  buildCreativeWorkItemList,
   buildOrganization,
   buildPeople,
   buildSoftwareApplication,
@@ -40,6 +41,7 @@ describe("SEO", () => {
       expect(urls).toContain("https://programo.pl");
       expect(urls).toContain("https://programo.pl/software-house-poznan");
       expect(urls).toContain("https://programo.pl/ile-kosztuje-aplikacji");
+      expect(urls).toContain("https://programo.pl/dema");
       expect(entries.length).toBeGreaterThanOrEqual(10);
       // no duplicate URLs
       expect(new Set(urls).size).toBe(urls.length);
@@ -217,6 +219,16 @@ describe("SEO", () => {
         { "@type": "ListItem", position: 1, name: "Programo", item: "https://programo.pl" },
         { "@type": "ListItem", position: 2, name: "Oferta", item: "https://programo.pl/oferta" },
       ]);
+    });
+
+    it("buildCreativeWorkItemList keeps external demos in sameAs, not url", () => {
+      const list = buildCreativeWorkItemList("/dema", "Dema", [
+        { name: "Demo", description: "Opis", sameAs: "https://demo.programo.pl/" },
+      ]);
+      const [entry] = list.itemListElement as Array<{ item: Record<string, unknown> }>;
+      expect(list["@id"]).toBe("https://programo.pl/dema#demo-list");
+      expect(entry.item.sameAs).toBe("https://demo.programo.pl/");
+      expect(entry.item.url).toBeUndefined();
     });
 
     it("SoftwareApplication is valid for each project and creator references the Organization by @id", () => {

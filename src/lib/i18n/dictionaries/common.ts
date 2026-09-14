@@ -4,6 +4,7 @@ export const common = {
   // Navbar
   "nav.offer": { pl: "Oferta", en: "Services" },
   "nav.work": { pl: "Projekty", en: "Projects" },
+  "nav.demos": { pl: "Dema", en: "Demos" },
   "nav.stores": { pl: "Sklepy", en: "Stores" },
   "nav.marketing": { pl: "Strony i reklamy", en: "Websites & ads" },
   "nav.pricing": { pl: "Wycena", en: "Pricing" },
@@ -28,6 +29,7 @@ export const common = {
   "footer.colProjects": { pl: "Projekty", en: "Projects" },
   "footer.colCompany": { pl: "Firma", en: "Company" },
   "footer.allProjects": { pl: "Wszystkie projekty", en: "All projects" },
+  "footer.demos": { pl: "Dema stron dla firm", en: "Website demos for companies" },
   // Bez `footer.location` - stopka pokazuje teraz pełny adres siedziby
   // z src/lib/company.ts, a nie samo miasto.
   "footer.companyName": { pl: "Programo s.j.", en: "Programo s.j." },

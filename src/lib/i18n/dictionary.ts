@@ -7,6 +7,7 @@ import { pricing } from "./dictionaries/pricing";
 import { contact } from "./dictionaries/contact";
 import { forms } from "./dictionaries/forms";
 import { marketing } from "./dictionaries/marketing";
+import { demos } from "./dictionaries/demos";
 
 export type Lang = "pl" | "en";
 
@@ -29,6 +30,7 @@ const translations = {
   ...contact,
   ...forms,
   ...marketing,
+  ...demos,
 } as const;
 
 export type TranslationKey = keyof typeof translations;

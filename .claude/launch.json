@@ -4,9 +4,23 @@
     {
       "name": "programo-site",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "programo-site-prod",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "--port",
+        "3200"
+      ],
+      "port": 3200
     }
   ]
 }

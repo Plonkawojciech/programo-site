@@ -65,6 +65,11 @@ export const SITE_PAGES: SitePage[] = [
   },
   { path: "/projekty", label: "Realizacje", summary: "portfolio — produkty własne i prace dla klientów" },
   {
+    path: "/dema",
+    label: "Dema stron",
+    summary: "bezpłatne dema nowych stron dla firm, z prawdziwymi treściami i wersją mobilną",
+  },
+  {
     path: "/blog",
     label: "Blog",
     summary: "poradniki i porównania: koszty projektów, wybór technologii, dane własne",

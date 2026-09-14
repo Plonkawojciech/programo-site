@@ -254,6 +254,25 @@ export default function StronyInternetowePage() {
           items={webCases}
         />
 
+        <section className={SECTION}>
+          <div className={CONTAINER}>
+            <div className="grid gap-6 rounded-3xl bg-card p-7 shadow-card md:grid-cols-[1fr_auto] md:items-center md:p-10">
+              <div>
+                <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface">Najpierw demo</h2>
+                <p className="mt-3 max-w-2xl text-base font-light leading-relaxed text-on-surface/70">
+                  Zanim zdecydujesz się na wdrożenie, możemy pokazać nową stronę z treściami, zdjęciami i kolorami Twojej firmy.
+                </p>
+              </div>
+              <Link
+                href="/dema"
+                className="inline-flex min-h-12 items-center justify-center rounded-full bg-primary px-6 py-3.5 text-sm font-medium text-on-primary transition-colors hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+              >
+                Zobacz wszystkie dema
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Powtórzony szybki formularz — wzmocnienie dla scrollujących (osobny formId = osobny tracking) */}
         <CompactLeadForm
           formId="strony-compact"

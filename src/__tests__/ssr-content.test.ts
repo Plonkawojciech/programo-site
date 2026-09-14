@@ -41,6 +41,7 @@ const PAGES: { file: string; label: string; min: number }[] = [
   { file: "kontakt.html", label: "/kontakt", min: 500 },
   { file: "o-nas.html", label: "/o-nas", min: 800 },
   { file: "projekty.html", label: "/projekty", min: 1000 },
+  { file: "dema.html", label: "/dema", min: 5000 },
   { file: "software-house-poznan.html", label: "/software-house-poznan", min: 2000 },
   { file: "strony-internetowe.html", label: "/strony-internetowe", min: 4000 },
   { file: "sklepy-internetowe.html", label: "/sklepy-internetowe", min: 4000 },

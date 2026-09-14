@@ -2,6 +2,8 @@ import { WEBSITE_ID, SITE_URL } from "./constants";
 import type { SchemaNode, SchemaRef } from "./types";
 
 export interface WebPageInput {
+  /** More specific page type for index/list routes. Defaults to WebPage. */
+  type?: "WebPage" | "CollectionPage";
   /** Site-relative path, e.g. "/oferta". Use "/" for the homepage. */
   path: string;
   name: string;
@@ -21,7 +23,7 @@ export interface WebPageInput {
 export function buildWebPage(input: WebPageInput): SchemaNode {
   const url = input.path === "/" ? SITE_URL : `${SITE_URL}${input.path}`;
   return {
-    "@type": "WebPage",
+    "@type": input.type ?? "WebPage",
     "@id": `${url}#webpage`,
     url,
     name: input.name,
