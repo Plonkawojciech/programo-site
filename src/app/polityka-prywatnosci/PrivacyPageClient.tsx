@@ -137,7 +137,7 @@ function PolishContent({ openSettings }: { openSettings: () => void }) {
         <button
           type="button"
           onClick={openSettings}
-          className="self-start mt-2 inline-flex items-center bg-primary text-on-primary px-6 py-3 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-primary-container transition-all"
+          className="self-start mt-2 inline-flex items-center bg-primary text-on-primary px-6 py-3 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-primary-hover transition-all"
         >
           Zmień ustawienia cookies
         </button>
@@ -236,7 +236,7 @@ function EnglishContent({ openSettings }: { openSettings: () => void }) {
         <button
           type="button"
           onClick={openSettings}
-          className="self-start mt-2 inline-flex items-center bg-primary text-on-primary px-6 py-3 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-primary-container transition-all"
+          className="self-start mt-2 inline-flex items-center bg-primary text-on-primary px-6 py-3 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-primary-hover transition-all"
         >
           Open cookie settings
         </button>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { projects, type Project } from "@/lib/projects";
 import ProjectDetailClient from "./ProjectDetailClient";
 import {
@@ -121,16 +122,17 @@ export default async function ProjectPage({
 }) {
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
-  const pageGraph = project ? buildProjectGraph(project, slug) : null;
+  // A real 404, not a 200 with an empty body: an unknown slug used to render the
+  // shell (client returned null) and Google indexed it as a soft 404.
+  if (!project) notFound();
+  const pageGraph = buildProjectGraph(project, slug);
 
   return (
     <>
-      {pageGraph && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: pageGraph }}
-        />
-      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: pageGraph }}
+      />
       <ProjectDetailClient slug={slug} />
     </>
   );

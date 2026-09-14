@@ -18,7 +18,7 @@ export default function ClusterEmptyState({ label }: { label: string }) {
       <div className="flex flex-wrap justify-center gap-4">
         <Link
           href="/blog"
-          className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
+          className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-hover"
         >
           Wszystkie wpisy
         </Link>

@@ -182,7 +182,7 @@ export default function SoftwareHousePoznanPage() {
             <div className="mt-8 flex flex-wrap gap-4">
               <a
                 href="mailto:biuro@programo.pl"
-                className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-on-primary transition hover:bg-primary-container"
+                className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-on-primary transition hover:bg-primary-hover"
               >
                 Bezpłatna wycena
               </a>

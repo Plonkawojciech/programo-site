@@ -209,6 +209,11 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
       // writing more. Meta's cookies are cleared separately in meta-pixel.tsx.
       clearIdentity();
       clearAttribution();
+    }
+    // The Ads once-per-session guard is marketing state: drop it only when
+    // marketing consent goes away, never as a side effect of an analytics-only
+    // choice (that used to let one visitor fire the Ads Lead conversion twice).
+    if (!categories.marketing) {
       try {
         sessionStorage.removeItem("programo-lead-fired");
       } catch {

@@ -83,35 +83,8 @@ export async function POST(request: NextRequest) {
   const requestTs = new Date().toISOString();
   const leadId = crypto.randomUUID();
 
-  // Server-side conversion signal (Meta CAPI + GA4 Measurement Protocol),
-  // dispatched AFTER the response so the visitor never waits on a third party.
-  // Consent is verified inside, from the cookie — never from the request body,
-  // which is only a claim by the client. Fires only once the payload has passed
-  // validation, so form spam can never inflate the conversion count.
-  after(async () => {
-    await dispatchLeadConversions({
-      consentCookie: request.cookies.get(CONSENT_COOKIE)?.value,
-      eventId: result.data.event_id,
-      leadId,
-      formId: result.data.form_id,
-      leadValuePln: LEAD_VALUE_PLN,
-      email: email || undefined,
-      phone: phone || undefined,
-      fullName: name || undefined,
-      pageUrl: result.data.page_url,
-      visitorId: result.data.visitor_id,
-      // Prefer the cookies the browser actually sent; fall back to what the
-      // client derived (it can rebuild fbc from an fbclid the pixel missed).
-      fbp: request.cookies.get("_fbp")?.value ?? result.data.fbp,
-      fbc: request.cookies.get("_fbc")?.value ?? result.data.fbc,
-      gaClientId: result.data.ga_client_id,
-      gaSessionId: result.data.ga_session_id,
-      clientIp: ip !== "unknown" ? ip : undefined,
-      userAgent: request.headers.get("user-agent") ?? undefined,
-      leadSource: result.data.utm_source || (result.data.gclid ? "google_ads" : undefined),
-      channel: result.data.referrer_class,
-    });
-  });
+  // Server-side conversion signal (Meta CAPI + GA4 Measurement Protocol) is
+  // scheduled further down, once the lead has been accepted.
 
   // Whether the submission is durably recorded somewhere. Notifications are a
   // convenience on top of this; the response status must follow persistence,
@@ -311,6 +284,35 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
+
+  // Consent is verified inside, from the cookie — never from the request body,
+  // which is only a claim by the client. Scheduled only now, once the lead was
+  // actually accepted (persisted or delivered): a submission that ended in the
+  // 500 above must not become a paid conversion in Ads, Meta or GA4.
+  after(async () => {
+    await dispatchLeadConversions({
+      consentCookie: request.cookies.get(CONSENT_COOKIE)?.value,
+      eventId: result.data.event_id,
+      leadId,
+      formId: result.data.form_id,
+      leadValuePln: LEAD_VALUE_PLN,
+      email: email || undefined,
+      phone: phone || undefined,
+      fullName: name || undefined,
+      pageUrl: result.data.page_url,
+      visitorId: result.data.visitor_id,
+      // Prefer the cookies the browser actually sent; fall back to what the
+      // client derived (it can rebuild fbc from an fbclid the pixel missed).
+      fbp: request.cookies.get("_fbp")?.value ?? result.data.fbp,
+      fbc: request.cookies.get("_fbc")?.value ?? result.data.fbc,
+      gaClientId: result.data.ga_client_id,
+      gaSessionId: result.data.ga_session_id,
+      clientIp: ip !== "unknown" ? ip : undefined,
+      userAgent: request.headers.get("user-agent") ?? undefined,
+      leadSource: result.data.utm_source || (result.data.gclid ? "google_ads" : undefined),
+      channel: result.data.referrer_class,
+    });
+  });
 
   if (!anyNotified) {
     console.error(

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
 import { track } from "@/lib/analytics/client";
+import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 
 type PhoneFormState = "idle" | "submitting" | "success" | "error";
 
@@ -45,6 +46,9 @@ type PhoneFormState = "idle" | "submitting" | "success" | "error";
  */
 export default function HomeHero() {
   const { t } = useI18n();
+  // Puts the hero into the same viewed → started → error → submit funnel as the
+  // other forms; until now the most prominent form on the site was invisible to it.
+  const fa = useFormAnalytics("hero-phone");
 
   // --- Phone form state ---
   const [formState, setFormState] = useState<PhoneFormState>("idle");
@@ -105,6 +109,7 @@ export default function HomeHero() {
       setErrorMsg(validationError.message);
       setErrorField(validationError.field);
       setFormState("error");
+      fa.reportErrors({ [validationError.field]: validationError.message });
       // Don't clear what was typed on a validation error
       return;
     }
@@ -146,6 +151,7 @@ export default function HomeHero() {
       if (!res.ok) {
         setErrorMsg(t("home.hero.phoneErrorNetwork"));
         setFormState("error");
+        fa.reportErrors({ server: String(res.status) }, "server");
         track("form_submit_failed", {
           form_id: "hero-phone",
           http_status: res.status,
@@ -155,10 +161,19 @@ export default function HomeHero() {
       }
 
       setFormState("success");
-      trackLead({ form: "hero-phone", method: "phone", phone, eventId: conversion.event_id });
+      fa.markSubmitted();
+      trackLead({
+        form: "hero-phone",
+        method: "phone",
+        phone,
+        eventId: conversion.event_id,
+        seconds: fa.elapsedSeconds(),
+      });
     } catch {
       setErrorMsg(t("home.hero.phoneErrorNetwork"));
       setFormState("error");
+      fa.reportErrors({ server: "network" }, "server");
+      track("form_submit_failed", { form_id: "hero-phone", http_status: 0, message: "network" });
     }
   }
 
@@ -279,6 +294,10 @@ export default function HomeHero() {
               </div>
             ) : (
               <form
+                // Passing the RefObject itself (as quick-contact does); the rule
+                // misreads it as a `.current` read during render.
+                // eslint-disable-next-line react-hooks/refs
+                ref={fa.ref}
                 onSubmit={handleSubmit}
                 noValidate
                 className="flex flex-col gap-4"
@@ -297,7 +316,10 @@ export default function HomeHero() {
                       autoComplete="given-name"
                       name="name"
                       value={name}
+                      onFocus={() => fa.onFieldFocus("name")}
+                      onBlur={(e) => fa.onFieldBlur("name", e.target.value)}
                       onChange={(e) => {
+                        fa.onFieldInput("name");
                         setName(e.target.value);
                         if (formState === "error") {
                           setFormState("idle");
@@ -323,7 +345,10 @@ export default function HomeHero() {
                       autoComplete="tel"
                       name="phone"
                       value={phone}
+                      onFocus={() => fa.onFieldFocus("phone")}
+                      onBlur={(e) => fa.onFieldBlur("phone", e.target.value)}
                       onChange={(e) => {
+                        fa.onFieldInput("phone");
                         setPhone(e.target.value);
                         // Clear error when user starts typing again
                         if (formState === "error") {
@@ -353,7 +378,9 @@ export default function HomeHero() {
                       type="checkbox"
                       name="consent"
                       checked={consent}
+                      onFocus={() => fa.onFieldFocus("consent")}
                       onChange={(e) => {
+                        fa.onFieldInput("consent");
                         setConsent(e.target.checked);
                         if (formState === "error" && errorField === "consent") {
                           setFormState("idle");
@@ -396,7 +423,7 @@ export default function HomeHero() {
                 <button
                   type="submit"
                   disabled={formState === "submitting"}
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold uppercase tracking-wider text-on-primary transition-colors hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-50 sm:self-start sm:px-10"
+                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold uppercase tracking-wider text-on-primary transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50 sm:self-start sm:px-10"
                 >
                   {formState === "submitting"
                     ? t("home.hero.phoneSending")

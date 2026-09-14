@@ -9,7 +9,7 @@ const base =
   "inline-flex items-center justify-center gap-3 rounded-full px-6 py-3.5 text-sm font-medium uppercase tracking-widest transition-all hover:gap-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
 
 const variants = {
-  primary: "bg-primary text-on-primary hover:bg-primary-container",
+  primary: "bg-primary text-on-primary hover:bg-primary-hover",
   secondary: "border border-on-surface/30 text-on-surface hover:border-primary",
 } as const;
 

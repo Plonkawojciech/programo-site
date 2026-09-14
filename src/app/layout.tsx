@@ -62,11 +62,12 @@ export const metadata: Metadata = {
     locale: "pl_PL",
     type: "website",
   },
+  // Card type only. A title/description here would be inherited verbatim by
+  // every route that does not redefine `twitter`, so shares of /oferta or a
+  // blog post carried the homepage copy. Left unset, Next resolves them from
+  // each page's own openGraph/title.
   twitter: {
     card: "summary_large_image",
-    title: "Programo - Studio Software z Poznania",
-    description:
-      "Projektujemy i budujemy oprogramowanie. Studio software z Poznania.",
   },
   alternates: {
     canonical: "https://programo.pl",

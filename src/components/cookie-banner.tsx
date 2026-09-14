@@ -158,7 +158,7 @@ export default function CookieBanner() {
                 <button
                   type="button"
                   onClick={acceptAll}
-                  className="flex-1 whitespace-nowrap rounded-full bg-primary px-3 py-2 text-[11px] font-semibold text-on-primary shadow-lg shadow-primary/20 transition-all hover:bg-primary-container hover:text-on-primary-container md:flex-none md:px-5 md:py-2.5 md:text-xs md:uppercase md:tracking-widest"
+                  className="flex-1 whitespace-nowrap rounded-full bg-primary px-3 py-2 text-[11px] font-semibold text-on-primary shadow-lg shadow-primary/20 transition-all hover:bg-primary-hover hover:text-on-primary-container md:flex-none md:px-5 md:py-2.5 md:text-xs md:uppercase md:tracking-widest"
                 >
                   {t("cookie.acceptAll")}
                 </button>
@@ -245,7 +245,7 @@ export default function CookieBanner() {
                 <button
                   type="button"
                   onClick={() => save({ analytics, marketing })}
-                  className="flex-1 bg-primary text-on-primary px-5 py-3 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md"
+                  className="flex-1 bg-primary text-on-primary px-5 py-3 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-primary-hover hover:text-on-primary-container transition-all shadow-md"
                 >
                   {t("cookie.savePrefs")}
                 </button>

@@ -208,7 +208,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <div className="flex flex-wrap gap-4">
                   <Link
                     href="/kontakt"
-                    className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-container"
+                    className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-hover"
                   >
                     Bezpłatna wycena
                   </Link>

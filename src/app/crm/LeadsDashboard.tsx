@@ -376,7 +376,7 @@ function LeadEntry({
               type="button"
               onClick={saveEdit}
               disabled={busy}
-              className="cursor-pointer rounded-full bg-primary px-5 py-2 text-sm font-medium text-on-primary transition-colors hover:bg-primary-container disabled:opacity-50"
+              className="cursor-pointer rounded-full bg-primary px-5 py-2 text-sm font-medium text-on-primary transition-colors hover:bg-primary-hover disabled:opacity-50"
             >
               {busy ? "Zapisywanie…" : "Zapisz zmiany"}
             </button>

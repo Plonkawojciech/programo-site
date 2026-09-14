@@ -161,6 +161,8 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
     } catch {
       setErrors({ server: t("quick.error") });
       setState("idle");
+      fa.reportErrors({ server: "network" }, "server");
+      track("form_submit_failed", { form_id: formId, http_status: 0, message: "network" });
     } finally {
       submittingRef.current = false;
     }
@@ -454,7 +456,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                   <button
                     type="submit"
                     disabled={state === "submitting"}
-                    className="w-full md:w-auto md:self-start inline-flex min-h-[48px] items-center justify-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-container transition-all disabled:opacity-60 disabled:cursor-not-allowed hover:gap-5"
+                    className="w-full md:w-auto md:self-start inline-flex min-h-[48px] items-center justify-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-primary-hover transition-all disabled:opacity-60 disabled:cursor-not-allowed hover:gap-5"
                   >
                     {state === "submitting" ? (
                       <>

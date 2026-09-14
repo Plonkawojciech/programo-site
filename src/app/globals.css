@@ -71,6 +71,9 @@
   --theme-text-1: #DAF1DE;    /* main text — light mint */
   --theme-text-2: #8EB69B;    /* muted text — sage */
   --theme-accent: #8EB69B;    /* primary brand color */
+  /* Hover fill for solid primary buttons. Keeps text-on-primary (#051F20) at
+     11.4:1; the old hover (primary-container #235347) dropped it to 1.96:1. */
+  --theme-accent-hover: #A6C7B1;
   /* Error text. Per-theme because no single red clears 4.5:1 against both
      #051F20 and #FBFDFB — the two constraints are disjoint. 6.2:1 here. */
   --theme-error: #F87171;
@@ -211,6 +214,7 @@
   --theme-text-1: #051F20;    /* deepest dark green — main text */
   --theme-text-2: #235347;    /* medium dark green — muted text */
   --theme-accent: #235347;    /* dark green accent for strong contrast on white */
+  --theme-accent-hover: #163832; /* hover fill; white text stays at 13.6:1 (was #8EB69B, 2.25:1) */
   --theme-error: #B91C1C;     /* 6.3:1 on --theme-bg-1 */
   --theme-glow: 35, 83, 71;
 
@@ -291,6 +295,7 @@
   --color-on-surface-variant: var(--theme-text-2);
   --color-primary: var(--theme-accent);
   --color-primary-container: var(--theme-border-2);
+  --color-primary-hover: var(--theme-accent-hover);
   --color-on-primary: var(--theme-bg-1);
   --color-on-primary-container: var(--theme-text-1);
   --color-outline: var(--theme-outline);

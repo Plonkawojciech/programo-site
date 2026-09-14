@@ -302,7 +302,7 @@ function ProjectContent({ slug }: { slug: string }) {
                     className={`inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-sm font-medium uppercase tracking-widest transition-all hover:gap-5 ${
                       darkHero
                         ? "bg-white text-[#0a0a0a] hover:bg-white/90"
-                        : "bg-primary text-on-primary hover:bg-primary-container"
+                        : "bg-primary text-on-primary hover:bg-primary-hover"
                     }`}
                   >
                     {liveLabel} <span aria-hidden="true">↗</span>
@@ -450,7 +450,7 @@ function ProjectContent({ slug }: { slug: string }) {
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/kontakt"
-              className="inline-flex items-center gap-3 rounded-full bg-primary px-7 py-4 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5 hover:bg-primary-container"
+              className="inline-flex items-center gap-3 rounded-full bg-primary px-7 py-4 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5 hover:bg-primary-hover"
             >
               {t("project.letsTalk")} <span aria-hidden="true">→</span>
             </Link>

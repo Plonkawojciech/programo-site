@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/og-image";
 import QuickContact from "@/components/quick-contact";
 import CompactLeadForm from "@/components/compact-lead-form";
 import ContactHero from "./contact-hero";
@@ -33,6 +34,15 @@ export const metadata: Metadata = {
   description:
     "Zadzwoń: 509 123 434 albo zostaw numer w formularzu. Porozmawiajmy o Twojej aplikacji, sklepie lub stronie. Programo, Poznań.",
   alternates: { canonical: "https://programo.pl/kontakt" },
+  openGraph: {
+    images: [OG_IMAGE],
+    title: "Kontakt - odpowiadamy w 24 h | Programo",
+    description: "Zadzwoń: 509 123 434 albo zostaw numer w formularzu. Porozmawiajmy o Twojej aplikacji, sklepie lub stronie.",
+    url: "https://programo.pl/kontakt",
+    siteName: "Programo",
+    locale: "pl_PL",
+    type: "website",
+  },
 };
 
 export default function KontaktPage() {

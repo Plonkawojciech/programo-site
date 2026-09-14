@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_IMAGE } from "@/lib/og-image";
 import TechStack from "@/components/tech-stack";
 import {
   buildBreadcrumbs,
@@ -30,6 +31,15 @@ export const metadata: Metadata = {
   description:
     "Nasz stack technologiczny: Next.js, React, TypeScript, Tailwind, Supabase, Neon, Vercel i więcej.",
   alternates: { canonical: "https://programo.pl/stack" },
+  openGraph: {
+    images: [OG_IMAGE],
+    title: "Stack technologiczny - czym budujemy | Programo",
+    description: "Next.js, React, TypeScript, Tailwind, Supabase, Neon i więcej: technologie, których używamy, i dlaczego.",
+    url: "https://programo.pl/stack",
+    siteName: "Programo",
+    locale: "pl_PL",
+    type: "website",
+  },
 };
 
 export default function StackPage() {
