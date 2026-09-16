@@ -16,7 +16,7 @@ import {
 
 const PATH = "/dema";
 const TITLE = "Dema stron dla firm - darmowe demo nowej strony | Programo";
-const DESCRIPTION = "Zobacz 22 dema stron dla firm. Budujemy bezpłatne demo z prawdziwymi treściami, zdjęciami marki i wersją mobilną, zanim podejmiesz decyzję.";
+const DESCRIPTION = "Zobacz 21 dem stron dla firm. Budujemy bezpłatne demo z prawdziwymi treściami, zdjęciami marki i wersją mobilną, zanim podejmiesz decyzję.";
 
 export const metadata: Metadata = {
   title: TITLE,

@@ -352,20 +352,6 @@ export const demos: Demo[] = [
     date: "2026-05",
   },
   {
-    slug: "hooplytics",
-    name: "Hooplytics",
-    sector: { pl: "Aplikacja do statystyk rzutów w koszykówce", en: "Basketball shot-tracking app" },
-    industry: "sport",
-    url: "https://hooplytics-redesign.vercel.app/",
-    host: "hooplytics-redesign.vercel.app",
-    summary: {
-      pl: "Redesign strony produktu w języku angielskim: mapa rzutów jako główny obraz, jeden złocisty akcent.",
-      en: "A product landing redesign in English: the shot chart as the hero image, one gold accent.",
-    },
-    accentColor: "#E9B949",
-    date: "2026-05",
-  },
-  {
     slug: "gaming-ui",
     name: "Szablon strony serwera gry",
     sector: { pl: "Zestaw UI w stylu gry: ramki 9-slice, przyciski, suwaki", en: "Game-styled UI kit: 9-slice frames, buttons, sliders" },
