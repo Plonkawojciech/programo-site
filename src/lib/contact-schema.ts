@@ -71,6 +71,10 @@ export const contactSchema = z
     ga_session_id: z.string().max(100).optional(),
     page_url: z.string().max(1000).optional(),
     form_id: z.string().max(80).optional(),
+    // Cloudflare Turnstile response. Optional at the schema level — whether it
+    // is REQUIRED is decided by /api/contact via isTurnstileEnforced(), so a
+    // deploy without the keys keeps accepting the old payload unchanged.
+    turnstileToken: z.string().max(2048).optional(),
   })
   .refine(
     (d) => Boolean((d.email && d.email.length) || (d.phone && d.phone.length)),

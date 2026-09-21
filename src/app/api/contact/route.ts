@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse, after } from "next/server";
 import { storeLead } from "@/lib/leads";
 import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-schema";
+import { verifyTurnstile } from "@/lib/turnstile";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 import { buildLeadMessage } from "@/lib/telegram-message";
@@ -46,6 +47,18 @@ export async function POST(request: NextRequest) {
   // Charged here, not at the top of the handler: only a payload that actually
   // parses is a submission. Rejected attempts are typos, not traffic.
   recordSubmission(ip);
+
+  // Anti-bot gate. Sits AFTER recordSubmission on purpose: a flood of
+  // well-formed payloads with bad tokens is exactly the traffic the rate
+  // limit exists for. No-op until both Turnstile env vars are set — see
+  // src/lib/turnstile.ts for the fail-open/closed policy.
+  const turnstile = await verifyTurnstile(result.data.turnstileToken, ip);
+  if (!turnstile.ok) {
+    return NextResponse.json(
+      { error: "Nie udało się potwierdzić, że nie jesteś robotem. Odśwież stronę i spróbuj ponownie." },
+      { status: 403 },
+    );
+  }
 
   const { name, email, phone, subject, message, projectType, budget, consentTimestamp } = result.data;
   // A phone-only lead legitimately has no name, so the notifications need a

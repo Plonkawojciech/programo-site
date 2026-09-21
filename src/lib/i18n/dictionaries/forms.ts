@@ -64,6 +64,13 @@ export const forms = {
     pl: "Nie udało się wysłać. Spróbuj ponownie albo zadzwoń: 509 123 434.",
     en: "Sending failed. Try again or call us: +48 509 123 434.",
   },
+  // Turnstile (anti-bot). Shown only if the visitor hits "send" before the
+  // widget has produced a token — managed mode normally solves itself in
+  // under a second, so this is a "wait a moment", not a puzzle prompt.
+  "forms.turnstileRequired": {
+    pl: "Poczekaj chwilę na potwierdzenie, że nie jesteś robotem, i wyślij ponownie.",
+    en: "Wait a moment for the anti-bot check to finish, then send again.",
+  },
 
   // --- QuickContact (imię, e-mail LUB telefon, chipy, wiadomość opcjonalna) ----
   "quick.title": { pl: "Opowiedz nam, co chcesz zbudować", en: "Tell us what you want to build" },

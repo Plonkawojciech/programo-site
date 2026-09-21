@@ -68,6 +68,11 @@ src/
   Conversions `+48601234567`. Polskie znaki w nazwiskach ZOSTAJĄ (Meta wymaga UTF-8).
   `fbc`/`fbp`/IP/user-agent NIGDY nie hashowane.
 - **Zgodę server-side czyta się z cookie `programo-consent`**, nigdy z body requestu.
+- **Anti-bot (Cloudflare Turnstile) na każdym formularzu leadowym** — widget
+  `components/ui/turnstile.tsx`, weryfikacja w `/api/contact` przez `lib/turnstile.ts`.
+  Działa TYLKO gdy ustawione są OBIE zmienne `NEXT_PUBLIC_TURNSTILE_SITE_KEY` +
+  `TURNSTILE_SECRET_KEY`; bez nich no-op. Nowy formularz = `<Turnstile>` + `turnstileToken`
+  w payloadzie + `reset()` w `finally` (token jest jednorazowy).
 - `lastModified` w sitemapie to realne daty z historii gita — **nie** `new Date()`.
   Google traktuje zaufanie do `lastmod` binarnie.
 - **Paleta**: ciemna zieleń + mięta (`#051F20`/`#DAF1DE`/`#8EB69B`, tokeny w globals.css),

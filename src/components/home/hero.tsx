@@ -6,6 +6,7 @@ import { useI18n } from "@/lib/i18n";
 import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
 import { track } from "@/lib/analytics/client";
 import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
+import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 
 type PhoneFormState = "idle" | "submitting" | "success" | "error";
 
@@ -57,6 +58,10 @@ export default function HomeHero() {
   const [consent, setConsent] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  // Anti-bot token from the Turnstile widget; null until solved and again
+  // after every submit, because a token is spent the moment it is verified.
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   // Accessible IDs
   const nameInputId = useId();
@@ -75,10 +80,10 @@ export default function HomeHero() {
 
   /** Which control the current error belongs to, so focus and aria-invalid land
    *  on it rather than colouring every field red at once. */
-  const [errorField, setErrorField] = useState<"name" | "phone" | "consent" | null>(null);
+  const [errorField, setErrorField] = useState<"name" | "phone" | "consent" | "turnstile" | null>(null);
 
   // --- Validation ---
-  function validate(): { field: "name" | "phone" | "consent"; message: string } | null {
+  function validate(): { field: "name" | "phone" | "consent" | "turnstile"; message: string } | null {
     if (!name.trim()) {
       return { field: "name", message: t("home.hero.errorName") };
     }
@@ -96,6 +101,9 @@ export default function HomeHero() {
     // without a round trip.
     if (!consent) {
       return { field: "consent", message: t("forms.consentPhoneRequired") };
+    }
+    if (TURNSTILE_ENABLED && !turnstileToken) {
+      return { field: "turnstile", message: t("forms.turnstileRequired") };
     }
     return null;
   }
@@ -145,7 +153,12 @@ export default function HomeHero() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...payload, form_id: "hero-phone", ...conversion }),
+        body: JSON.stringify({
+          ...payload,
+          form_id: "hero-phone",
+          turnstileToken: turnstileToken ?? undefined,
+          ...conversion,
+        }),
       });
 
       if (!res.ok) {
@@ -174,6 +187,9 @@ export default function HomeHero() {
       setFormState("error");
       fa.reportErrors({ server: "network" }, "server");
       track("form_submit_failed", { form_id: "hero-phone", http_status: 0, message: "network" });
+    } finally {
+      // Spent either way — the server consumed it whether it said yes or no.
+      turnstileRef.current?.reset();
     }
   }
 
@@ -419,6 +435,18 @@ export default function HomeHero() {
                     .
                   </span>
                 </label>
+
+                <Turnstile
+                  ref={turnstileRef}
+                  onToken={(tok) => {
+                    setTurnstileToken(tok);
+                    if (tok && errorField === "turnstile") {
+                      setErrorMsg("");
+                      setErrorField(null);
+                      setFormState("idle");
+                    }
+                  }}
+                />
 
                 <button
                   type="submit"

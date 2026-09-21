@@ -6,11 +6,13 @@ import { useI18n } from "@/lib/i18n";
 import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
 import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import { track } from "@/lib/analytics/client";
+import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 
 type FieldErrors = {
   name?: string;
   phone?: string;
   consent?: string;
+  turnstile?: string;
   server?: string;
 };
 type FormState = "idle" | "submitting" | "success";
@@ -67,6 +69,10 @@ export default function CompactLeadForm({
   const [consent, setConsent] = useState(false);
   const submittingRef = useRef(false);
   const successRef = useRef<HTMLHeadingElement>(null);
+  // Anti-bot token from the Turnstile widget; null until solved and again
+  // after every submit, because a token is spent the moment it is verified.
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   // Turns this form from a single "submitted / didn't" bit into a funnel:
   // viewed → started → per-field completion → error → submit / abandoned.
   const fa = useFormAnalytics(formId);
@@ -99,6 +105,7 @@ export default function CompactLeadForm({
     // click, then highlight the checkbox. The backend stays the hard RODO guard
     // (/api/contact rejects consent !== true with 400).
     if (!consent) nextErrors.consent = t("forms.consentPhoneRequired");
+    if (TURNSTILE_ENABLED && !turnstileToken) nextErrors.turnstile = t("forms.turnstileRequired");
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -126,6 +133,7 @@ export default function CompactLeadForm({
           consent: true,
           consentTimestamp: new Date().toISOString(),
           form_id: formId,
+          turnstileToken: turnstileToken ?? undefined,
           ...getAttribution(),
           ...conversion,
         }),
@@ -162,6 +170,8 @@ export default function CompactLeadForm({
       setState("idle");
     } finally {
       submittingRef.current = false;
+      // Spent either way — the server consumed it whether it said yes or no.
+      turnstileRef.current?.reset();
     }
   }
 
@@ -297,6 +307,19 @@ export default function CompactLeadForm({
       {errors.consent && (
         <p id={`${formId}-consent-error`} role="alert" className="-mt-2 text-xs text-error">
           {errors.consent}
+        </p>
+      )}
+
+      <Turnstile
+        ref={turnstileRef}
+        onToken={(tok) => {
+          setTurnstileToken(tok);
+          if (tok) clearFieldError("turnstile");
+        }}
+      />
+      {errors.turnstile && (
+        <p role="alert" className="-mt-2 text-xs text-error">
+          {errors.turnstile}
         </p>
       )}
 

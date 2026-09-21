@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
 import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import { track } from "@/lib/analytics/client";
+import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 type FormState = "idle" | "submitting" | "success";
@@ -14,6 +15,7 @@ type FieldErrors = {
   name?: string;
   contact?: string;
   consent?: string;
+  turnstile?: string;
   server?: string;
 };
 
@@ -62,6 +64,10 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
   // Funnel instrumentation: viewed → started → per-field → error → submitted.
   const fa = useFormAnalytics(formId);
   const successRef = useRef<HTMLHeadingElement>(null);
+  // Anti-bot token from the Turnstile widget; null until solved and again
+  // after every submit, because a token is spent the moment it is verified.
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   // Move focus to the success message so keyboard/screen-reader users are told
   // the submission worked, since the form disappears (pattern from compact-lead-form.tsx).
@@ -95,6 +101,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
       nextErrors.contact = t("quick.phoneInvalid");
     }
     if (!consent) nextErrors.consent = t("quick.consentRequired");
+    if (TURNSTILE_ENABLED && !turnstileToken) nextErrors.turnstile = t("forms.turnstileRequired");
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -120,6 +127,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
         consent: true,
         consentTimestamp: new Date().toISOString(),
         form_id: formId,
+        turnstileToken: turnstileToken ?? undefined,
         ...getAttribution(),
         ...conversion,
       };
@@ -165,6 +173,8 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
       track("form_submit_failed", { form_id: formId, http_status: 0, message: "network" });
     } finally {
       submittingRef.current = false;
+      // Spent either way — the server consumed it whether it said yes or no.
+      turnstileRef.current?.reset();
     }
   }
 
@@ -453,6 +463,18 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                     fields end right above this block, so a rule line only reads as an
                     orphaned stray under it. */}
                 <div className="flex flex-col gap-3">
+                  <Turnstile
+                    ref={turnstileRef}
+                    onToken={(tok) => {
+                      setTurnstileToken(tok);
+                      if (tok) clearFieldError("turnstile");
+                    }}
+                  />
+                  {errors.turnstile && (
+                    <p role="alert" className="text-sm text-error">
+                      {errors.turnstile}
+                    </p>
+                  )}
                   <button
                     type="submit"
                     disabled={state === "submitting"}
