@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { NextRequest } from "next/server";
+import { createHash } from "node:crypto";
+import { issueChallenge, leadingZeroBits, DIFFICULTY_BITS, MIN_AGE_MS } from "@/lib/form-challenge";
 
 // The bug this pins: /api/contact returned 500 for a lead that was already
 // durably stored, whenever the last notification channel failed.
@@ -39,12 +41,28 @@ const validLead = {
   consent: true as const,
 };
 
+/**
+ * A solved anti-bot challenge (lib/form-challenge.ts), issued far enough in
+ * the past to clear the minimum age. The signing key derives from the env
+ * this file sets, so a token minted here verifies inside the freshly
+ * re-imported route module too.
+ */
+function solvedChallenge() {
+  const { token } = issueChallenge(Date.now() - MIN_AGE_MS - 1_000);
+  for (let pow = 0; ; pow++) {
+    const d = createHash("sha256").update(`${token}:${pow}`).digest();
+    if (leadingZeroBits(d) >= DIFFICULTY_BITS) return { challenge: token, pow };
+  }
+}
+
 /** NextRequest, not Request — the route reads request.cookies. */
 function post(body: unknown): NextRequest {
+  const withChallenge =
+    body && typeof body === "object" ? { ...(body as object), ...solvedChallenge() } : body;
   return new NextRequest("https://programo.pl/api/contact", {
     method: "POST",
     headers: { "Content-Type": "application/json", "user-agent": "vitest" },
-    body: JSON.stringify(body),
+    body: JSON.stringify(withChallenge),
   });
 }
 

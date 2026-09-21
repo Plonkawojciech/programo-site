@@ -75,6 +75,12 @@ export const contactSchema = z
     // is REQUIRED is decided by /api/contact via isTurnstileEnforced(), so a
     // deploy without the keys keeps accepting the old payload unchanged.
     turnstileToken: z.string().max(2048).optional(),
+    // Keyless anti-bot (lib/form-challenge.ts): signed challenge + proof of
+    // work + honeypot. Optional here; /api/contact enforces the first two and
+    // silently drops on the third.
+    challenge: z.string().max(512).optional(),
+    pow: z.number().int().min(0).optional(),
+    company_website: z.string().max(500).optional(),
   })
   .refine(
     (d) => Boolean((d.email && d.email.length) || (d.phone && d.phone.length)),

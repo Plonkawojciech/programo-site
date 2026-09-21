@@ -7,6 +7,9 @@ import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking
 import { track } from "@/lib/analytics/client";
 import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
+import Honeypot from "@/components/ui/honeypot";
+import { useFormChallenge } from "@/lib/form-challenge-client";
+import { HONEYPOT_FIELD } from "@/lib/form-challenge-shared";
 
 type PhoneFormState = "idle" | "submitting" | "success" | "error";
 
@@ -62,6 +65,8 @@ export default function HomeHero() {
   // after every submit, because a token is spent the moment it is verified.
   const turnstileRef = useRef<TurnstileHandle>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  // Keyless anti-bot: pre-solved on mount, handed over at submit.
+  const challenge = useFormChallenge();
 
   // Accessible IDs
   const nameInputId = useId();
@@ -111,6 +116,7 @@ export default function HomeHero() {
   // --- Submit ---
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const honeypot = String(new FormData(e.currentTarget).get(HONEYPOT_FIELD) || "");
 
     const validationError = validate();
     if (validationError) {
@@ -157,6 +163,8 @@ export default function HomeHero() {
           ...payload,
           form_id: "hero-phone",
           turnstileToken: turnstileToken ?? undefined,
+          ...(await challenge.take() ?? {}),
+          [HONEYPOT_FIELD]: honeypot,
           ...conversion,
         }),
       });
@@ -190,6 +198,7 @@ export default function HomeHero() {
     } finally {
       // Spent either way — the server consumed it whether it said yes or no.
       turnstileRef.current?.reset();
+      challenge.refresh();
     }
   }
 
@@ -316,8 +325,9 @@ export default function HomeHero() {
                 ref={fa.ref}
                 onSubmit={handleSubmit}
                 noValidate
-                className="flex flex-col gap-4"
+                className="relative flex flex-col gap-4"
               >
+                <Honeypot />
                 {/* Name and phone share a row from sm up. Two short fields
                     stacked would push the consent tick and the button below the
                     fold on a phone, which is where this form earns its living. */}

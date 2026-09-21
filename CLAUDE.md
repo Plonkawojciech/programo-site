@@ -68,11 +68,14 @@ src/
   Conversions `+48601234567`. Polskie znaki w nazwiskach ZOSTAJĄ (Meta wymaga UTF-8).
   `fbc`/`fbp`/IP/user-agent NIGDY nie hashowane.
 - **Zgodę server-side czyta się z cookie `programo-consent`**, nigdy z body requestu.
-- **Anti-bot (Cloudflare Turnstile) na każdym formularzu leadowym** — widget
-  `components/ui/turnstile.tsx`, weryfikacja w `/api/contact` przez `lib/turnstile.ts`.
-  Działa TYLKO gdy ustawione są OBIE zmienne `NEXT_PUBLIC_TURNSTILE_SITE_KEY` +
-  `TURNSTILE_SECRET_KEY`; bez nich no-op. Nowy formularz = `<Turnstile>` + `turnstileToken`
-  w payloadzie + `reset()` w `finally` (token jest jednorazowy).
+- **Anti-bot na każdym formularzu leadowym — bez kluczy, zawsze włączony**
+  (`lib/form-challenge.ts`): honeypot + podpisany token z minimalnym wiekiem 3 s +
+  proof-of-work 14 bitów. Klucz HMAC wyprowadzany z `CRM_WEBHOOK_SECRET` (albo
+  `FORM_CHALLENGE_SECRET`, jeśli ustawiony). Nowy formularz = `<Honeypot />` w `<form
+  className="relative …">` + `useFormChallenge()` → `...(await challenge.take() ?? {})`
+  i pole `HONEYPOT_FIELD` w payloadzie + `challenge.refresh()` w `finally`.
+  Warstwa opcjonalna: Cloudflare Turnstile (`lib/turnstile.ts`, `components/ui/turnstile.tsx`)
+  — no-op, dopóki nie ma OBU zmiennych `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY`.
 - `lastModified` w sitemapie to realne daty z historii gita — **nie** `new Date()`.
   Google traktuje zaufanie do `lastmod` binarnie.
 - **Paleta**: ciemna zieleń + mięta (`#051F20`/`#DAF1DE`/`#8EB69B`, tokeny w globals.css),

@@ -8,6 +8,9 @@ import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking
 import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import { track } from "@/lib/analytics/client";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
+import Honeypot from "@/components/ui/honeypot";
+import { useFormChallenge } from "@/lib/form-challenge-client";
+import { HONEYPOT_FIELD } from "@/lib/form-challenge-shared";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 type FormState = "idle" | "submitting" | "success";
@@ -68,6 +71,8 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
   // after every submit, because a token is spent the moment it is verified.
   const turnstileRef = useRef<TurnstileHandle>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  // Keyless anti-bot: pre-solved on mount, handed over at submit.
+  const challenge = useFormChallenge();
 
   // Move focus to the success message so keyboard/screen-reader users are told
   // the submission worked, since the form disappears (pattern from compact-lead-form.tsx).
@@ -84,6 +89,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
     if (submittingRef.current) return;
 
     const formData = new FormData(e.currentTarget);
+    const honeypot = String(formData.get(HONEYPOT_FIELD) || "");
     const name = String(formData.get("name") || "").trim();
     const contactRaw = String(formData.get("contact") || "").trim();
     const message = String(formData.get("message") || "").trim();
@@ -128,6 +134,8 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
         consentTimestamp: new Date().toISOString(),
         form_id: formId,
         turnstileToken: turnstileToken ?? undefined,
+        ...(await challenge.take() ?? {}),
+        [HONEYPOT_FIELD]: honeypot,
         ...getAttribution(),
         ...conversion,
       };
@@ -175,6 +183,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
       submittingRef.current = false;
       // Spent either way — the server consumed it whether it said yes or no.
       turnstileRef.current?.reset();
+      challenge.refresh();
     }
   }
 
@@ -298,8 +307,9 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="flex flex-col gap-8 rounded-3xl bg-card p-8 shadow-card md:p-12"
+                className="relative flex flex-col gap-8 rounded-3xl bg-card p-8 shadow-card md:p-12"
               >
+                <Honeypot />
                 {/* Project type chips */}
                 <div className="flex flex-col gap-3">
                   <span className={labelClass}>{t("quick.typeLabel")}</span>

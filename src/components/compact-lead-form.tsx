@@ -7,6 +7,9 @@ import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking
 import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import { track } from "@/lib/analytics/client";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
+import Honeypot from "@/components/ui/honeypot";
+import { useFormChallenge } from "@/lib/form-challenge-client";
+import { HONEYPOT_FIELD } from "@/lib/form-challenge-shared";
 
 type FieldErrors = {
   name?: string;
@@ -73,6 +76,8 @@ export default function CompactLeadForm({
   // after every submit, because a token is spent the moment it is verified.
   const turnstileRef = useRef<TurnstileHandle>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  // Keyless anti-bot: pre-solved on mount, handed over at submit.
+  const challenge = useFormChallenge();
   // Turns this form from a single "submitted / didn't" bit into a funnel:
   // viewed → started → per-field completion → error → submit / abandoned.
   const fa = useFormAnalytics(formId);
@@ -93,6 +98,7 @@ export default function CompactLeadForm({
     const fd = new FormData(e.currentTarget);
     const name = String(fd.get("name") || "").trim();
     const phone = String(fd.get("phone") || "").trim();
+    const honeypot = String(fd.get(HONEYPOT_FIELD) || "");
 
     const nextErrors: FieldErrors = {};
     if (!name) nextErrors.name = t("compact.errorName");
@@ -121,6 +127,7 @@ export default function CompactLeadForm({
       // the server-side conversion twin carries the same event_id as the browser
       // pixel and Meta collapses the pair instead of counting it twice.
       const conversion = await prepareLeadConversion();
+      const proof = await challenge.take();
 
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -134,6 +141,8 @@ export default function CompactLeadForm({
           consentTimestamp: new Date().toISOString(),
           form_id: formId,
           turnstileToken: turnstileToken ?? undefined,
+          ...(proof ?? {}),
+          [HONEYPOT_FIELD]: honeypot,
           ...getAttribution(),
           ...conversion,
         }),
@@ -172,6 +181,7 @@ export default function CompactLeadForm({
       submittingRef.current = false;
       // Spent either way — the server consumed it whether it said yes or no.
       turnstileRef.current?.reset();
+      challenge.refresh();
     }
   }
 
@@ -202,7 +212,8 @@ export default function CompactLeadForm({
   );
 
   const form = (
-    <form ref={fa.ref} onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+    <form ref={fa.ref} onSubmit={handleSubmit} noValidate className="relative flex flex-col gap-4">
+      <Honeypot />
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`${formId}-name`} className={labelClass}>

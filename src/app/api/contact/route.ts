@@ -2,6 +2,7 @@ import { NextRequest, NextResponse, after } from "next/server";
 import { storeLead } from "@/lib/leads";
 import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-schema";
 import { verifyTurnstile } from "@/lib/turnstile";
+import { isHoneypotTripped, verifyChallenge } from "@/lib/form-challenge";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 import { buildLeadMessage } from "@/lib/telegram-message";
@@ -48,7 +49,28 @@ export async function POST(request: NextRequest) {
   // parses is a submission. Rejected attempts are typos, not traffic.
   recordSubmission(ip);
 
-  // Anti-bot gate. Sits AFTER recordSubmission on purpose: a flood of
+  // Anti-bot, keyless layers — see lib/form-challenge.ts. Honeypot first: a
+  // filled decoy field gets the same 200 a real lead gets, and nothing else.
+  // Telling a bot it failed only teaches it what to change.
+  if (isHoneypotTripped(body)) {
+    console.warn(`[contact] honeypot tripped from ${ip} (form ${result.data.form_id ?? "?"}) — dropped`);
+    return NextResponse.json({ success: true });
+  }
+  const challenge = verifyChallenge(result.data.challenge, result.data.pow);
+  if (!challenge.ok) {
+    console.warn(`[contact] challenge ${challenge.reason} from ${ip} (form ${result.data.form_id ?? "?"})`);
+    return NextResponse.json(
+      {
+        error:
+          challenge.reason === "too_fast"
+            ? "Za szybko. Odczekaj chwilę i wyślij ponownie."
+            : "Nie udało się potwierdzić, że nie jesteś robotem. Odśwież stronę i spróbuj ponownie.",
+      },
+      { status: 403 },
+    );
+  }
+
+  // Optional extra layer, Cloudflare Turnstile. Sits AFTER recordSubmission on purpose: a flood of
   // well-formed payloads with bad tokens is exactly the traffic the rate
   // limit exists for. No-op until both Turnstile env vars are set — see
   // src/lib/turnstile.ts for the fail-open/closed policy.
