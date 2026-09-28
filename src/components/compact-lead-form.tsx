@@ -9,7 +9,7 @@ import { track } from "@/lib/analytics/client";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 import Honeypot from "@/components/ui/honeypot";
 import { useFormChallenge } from "@/lib/form-challenge-client";
-import { HONEYPOT_FIELD } from "@/lib/form-challenge-shared";
+import { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN } from "@/lib/form-challenge-shared";
 
 type FieldErrors = {
   name?: string;
@@ -99,6 +99,7 @@ export default function CompactLeadForm({
     const name = String(fd.get("name") || "").trim();
     const phone = String(fd.get("phone") || "").trim();
     const honeypot = String(fd.get(HONEYPOT_FIELD) || "");
+    const honeypotHidden = String(fd.get(HONEYPOT_FIELD_HIDDEN) || "");
 
     const nextErrors: FieldErrors = {};
     if (!name) nextErrors.name = t("compact.errorName");
@@ -143,6 +144,7 @@ export default function CompactLeadForm({
           turnstileToken: turnstileToken ?? undefined,
           ...(proof ?? {}),
           [HONEYPOT_FIELD]: honeypot,
+          [HONEYPOT_FIELD_HIDDEN]: honeypotHidden,
           ...getAttribution(),
           ...conversion,
         }),

@@ -1,4 +1,4 @@
-import { HONEYPOT_FIELD } from "@/lib/form-challenge-shared";
+import { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN } from "@/lib/form-challenge-shared";
 
 /**
  * Honeypot: a text input pushed off-canvas, out of the tab order and out of
@@ -13,6 +13,10 @@ export default function Honeypot() {
       <label>
         Website
         <input type="text" name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" defaultValue="" />
+      </label>
+      <label style={{ display: "none" }}>
+        Fax
+        <input type="text" name={HONEYPOT_FIELD_HIDDEN} tabIndex={-1} autoComplete="off" defaultValue="" />
       </label>
     </div>
   );

@@ -10,7 +10,7 @@ import { track } from "@/lib/analytics/client";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 import Honeypot from "@/components/ui/honeypot";
 import { useFormChallenge } from "@/lib/form-challenge-client";
-import { HONEYPOT_FIELD } from "@/lib/form-challenge-shared";
+import { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN } from "@/lib/form-challenge-shared";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 type FormState = "idle" | "submitting" | "success";
@@ -90,6 +90,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
 
     const formData = new FormData(e.currentTarget);
     const honeypot = String(formData.get(HONEYPOT_FIELD) || "");
+    const honeypotHidden = String(formData.get(HONEYPOT_FIELD_HIDDEN) || "");
     const name = String(formData.get("name") || "").trim();
     const contactRaw = String(formData.get("contact") || "").trim();
     const message = String(formData.get("message") || "").trim();
@@ -136,6 +137,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
         turnstileToken: turnstileToken ?? undefined,
         ...(await challenge.take() ?? {}),
         [HONEYPOT_FIELD]: honeypot,
+          [HONEYPOT_FIELD_HIDDEN]: honeypotHidden,
         ...getAttribution(),
         ...conversion,
       };

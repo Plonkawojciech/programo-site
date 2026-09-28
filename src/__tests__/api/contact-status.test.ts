@@ -19,6 +19,8 @@ const storeLead = vi.fn();
 
 vi.mock("@/lib/leads", () => ({
   storeLead: (...args: unknown[]) => storeLead(...args),
+  // No Redis in tests: the request guard falls back to its in-process counter.
+  getRedis: () => null,
 }));
 
 // Conversions are dispatched via after(); irrelevant to the status contract.
@@ -61,7 +63,11 @@ function post(body: unknown): NextRequest {
     body && typeof body === "object" ? { ...(body as object), ...solvedChallenge() } : body;
   return new NextRequest("https://programo.pl/api/contact", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "user-agent": "vitest" },
+    headers: {
+      "Content-Type": "application/json",
+      "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/128.0 Safari/537.36",
+      origin: "https://programo.pl",
+    },
     body: JSON.stringify(withChallenge),
   });
 }

@@ -81,6 +81,7 @@ export const contactSchema = z
     challenge: z.string().max(512).optional(),
     pow: z.number().int().min(0).optional(),
     company_website: z.string().max(500).optional(),
+    fax_number: z.string().max(500).optional(),
   })
   .refine(
     (d) => Boolean((d.email && d.email.length) || (d.phone && d.phone.length)),

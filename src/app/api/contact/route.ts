@@ -3,6 +3,7 @@ import { storeLead } from "@/lib/leads";
 import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-schema";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { isHoneypotTripped, verifyChallenge } from "@/lib/form-challenge";
+import { isForeignOrigin, isOverAttemptLimit, isToolUserAgent } from "@/lib/request-guard";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 import { buildLeadMessage } from "@/lib/telegram-message";
@@ -20,6 +21,24 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip") ||
     "unknown";
+
+  // Request-level filters (lib/request-guard.ts), before we even parse the
+  // body. Scripts and HTTP libraries, posts from outside our own pages, and
+  // anyone hammering the endpoint. A person in a browser never trips these.
+  const ua = request.headers.get("user-agent");
+  const origin = request.headers.get("origin");
+  if (isToolUserAgent(ua) || isForeignOrigin(origin)) {
+    console.warn(`[contact] blocked request from ${ip} (ua: ${(ua ?? "").slice(0, 80)}, origin: ${origin ?? "none"})`);
+    return NextResponse.json({ error: "Nieprawidłowe zgłoszenie." }, { status: 403 });
+  }
+  // 10 attempts per 10 min per IP, counting rejected ones — a real visitor
+  // fixing a typo needs two or three.
+  if (await isOverAttemptLimit("contact", ip, 10, 600)) {
+    return NextResponse.json(
+      { error: "Za dużo prób. Spróbuj ponownie za kilkanaście minut." },
+      { status: 429 }
+    );
+  }
 
   if (isOverRateLimit(ip)) {
     return NextResponse.json(

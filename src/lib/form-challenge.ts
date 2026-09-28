@@ -1,7 +1,7 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
-import { HONEYPOT_FIELD } from "@/lib/form-challenge-shared";
+import { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN } from "@/lib/form-challenge-shared";
 
-export { HONEYPOT_FIELD };
+export { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN };
 
 /**
  * Keyless anti-bot for the lead forms — three layers, no third party, no
@@ -155,6 +155,6 @@ export function verifyChallenge(
 
 export function isHoneypotTripped(body: unknown): boolean {
   if (!body || typeof body !== "object") return false;
-  const v = (body as Record<string, unknown>)[HONEYPOT_FIELD];
-  return typeof v === "string" && v.trim().length > 0;
+  const b = body as Record<string, unknown>;
+  return [HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN].some((f) => typeof b[f] === "string" && (b[f] as string).trim().length > 0);
 }
