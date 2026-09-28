@@ -119,8 +119,6 @@ const scope = [
   "aplikacje webowe",
   "aplikacje mobilne",
   "integracje płatności",
-  "kurierzy i Paczkomaty",
-  "Allegro i BaseLinker",
   "systemy magazynowe",
   "automatyzacje i AI",
   "stała opieka nad stroną",
