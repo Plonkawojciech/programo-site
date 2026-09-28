@@ -22,6 +22,7 @@ const FOUNDERS = [
     slug: "wojciech-plonka",
     tel: "+48797222363",
     telLabel: "797 222 363",
+    email: "wojciech.plonka@programo.pl",
   },
   {
     name: "Bartosz Kolaj",
@@ -29,6 +30,7 @@ const FOUNDERS = [
     slug: "bartosz-kolaj",
     tel: "+48509123434",
     telLabel: "509 123 434",
+    email: "bartosz.kolaj@programo.pl",
   },
 ] as const;
 
@@ -78,10 +80,10 @@ export default function FounderCards() {
                   {f.telLabel}
                 </a>
                 <a
-                  href="mailto:biuro@programo.pl"
+                  href={`mailto:${f.email}`}
                   className="w-fit text-sm font-medium text-white/80 underline-offset-4 transition hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4"
                 >
-                  biuro@programo.pl
+                  {f.email}
                 </a>
               </div>
             </div>
