@@ -1,9 +1,14 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { Metadata } from "next";
 import FeaturedWork from "@/components/featured-work";
-import DemoCrossLink from "@/components/demos/demo-cross-link";
+import DemosSection from "@/components/demos/demos-section";
 import { demos } from "@/lib/demos";
+import { projects } from "@/lib/projects";
+import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
+  buildCreativeWorkItemList,
   buildWebPage,
   ORGANIZATION_ID,
   renderGraph,
@@ -11,13 +16,23 @@ import {
 } from "@/lib/schema";
 
 const PATH = "/projekty";
+const TITLE = "Projekty, realizacje i dema stron | Programo";
+const DESCRIPTION = `Portfolio Programo: ${projects.length} realizacji (aplikacje Jedmar w App Store i Google Play, CRM Estalo, strony i kampanie) oraz ${demos.length} dem stron dla firm. Każdy projekt możesz kliknąć i sprawdzić.`;
+
+// /dema was merged into this route (2026-09-28) — its item list lives here now,
+// as #demo-list on this page.
+const demoList = buildCreativeWorkItemList(
+  PATH,
+  "Dema stron dla firm",
+  demos.map((demo) => ({ name: demo.name, description: demo.summary.pl, sameAs: demo.url })),
+);
 
 const pageGraph = renderGraph([
   buildWebPage({
+    type: "CollectionPage",
     path: PATH,
-    name: "Projekty i realizacje - portfolio wdrożeń | Programo",
-    description:
-      "Portfolio Programo: natywne aplikacje Jedmar w App Store i Google Play, CRM Estalo, strony i kampanie Google Ads.",
+    name: TITLE,
+    description: DESCRIPTION,
     dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
     about: { "@id": ORGANIZATION_ID },
   }),
@@ -25,25 +40,40 @@ const pageGraph = renderGraph([
     { name: "Programo", path: "/" },
     { name: "Projekty", path: PATH },
   ]),
+  demoList,
 ]);
 
 export const metadata: Metadata = {
-  title: "Projekty i realizacje - portfolio wdrożeń | Programo",
-  description:
-    "Portfolio Programo: natywne aplikacje Jedmar w App Store i Google Play, CRM Estalo, strony i kampanie Google Ads. Każdy projekt można kliknąć i sprawdzić.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: "https://programo.pl/projekty" },
+  openGraph: {
+    images: [OG_IMAGE],
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "https://programo.pl/projekty",
+    siteName: "Programo",
+    locale: "pl_PL",
+    type: "website",
+  },
 };
 
 export default function ProjektyPage() {
+  const demosWithScreenshots = demos.map((demo) => ({
+    ...demo,
+    hasDesktopScreenshot: existsSync(
+      join(process.cwd(), "public", "screenshots", "demos", `${demo.slug}-desktop.webp`),
+    ),
+  }));
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
-      {/* The band carries up through the navbar clearance too. FeaturedWork is
-          the only content on this route, so leaving this strip on the body
-          colour would draw a hairline seam right under the nav. */}
+      {/* The band carries up through the navbar clearance too, so there is no
+          hairline seam on the body colour right under the nav. */}
       <div className="bg-card-band pt-20 md:pt-24">
-        <FeaturedWork />
-        <DemoCrossLink count={demos.length} />
+        <FeaturedWork demoCount={demos.length} hideCta />
+        <DemosSection demos={demosWithScreenshots} />
       </div>
     </>
   );

@@ -54,7 +54,6 @@ export default function Navbar() {
   const navLinks = [
     { label: t("nav.offer"), href: "/oferta", section: "oferta" },
     { label: t("nav.work"), href: "/projekty", section: "projekty" },
-    { label: t("nav.demos"), href: "/dema", section: "dema" },
     { label: t("nav.pricing"), href: "/cennik", section: "cennik" },
     { label: t("nav.blog"), href: "/blog", section: "blog" },
     { label: t("nav.about"), href: "/o-nas", section: "o-nas" },

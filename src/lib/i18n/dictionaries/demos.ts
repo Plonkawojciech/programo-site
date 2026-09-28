@@ -55,5 +55,4 @@ export const demos = {
     pl: "Bez umowy, bez zaliczki. Demo jest nasze, decyzja Twoja.",
     en: "No contract and no deposit. We make the demo; the decision is yours.",
   },
-  "demos.cross.projects": { pl: "Zobacz też: {count} dem stron dla firm", en: "See also: {count} website demos" },
 } as const satisfies Record<string, { pl: string; en: string }>;

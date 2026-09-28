@@ -195,7 +195,7 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
   );
 }
 
-export default function FeaturedWork() {
+export default function FeaturedWork({ demoCount, hideCta = false }: { demoCount?: number; hideCta?: boolean } = {}) {
   const { t, lang } = useI18n();
   const [filter, setFilter] = useState<Project["category"] | null>(null);
 
@@ -219,6 +219,21 @@ export default function FeaturedWork() {
                 ? "Uczciwie rozdzielone: nasze własne produkty i praca dla klientów. Każdy projekt możesz kliknąć i sprawdzić."
                 : "Honestly separated: our own products and client work. Every project is one click away from verification."}
             </p>
+            {demoCount !== undefined && (
+              // Counts come straight from projects.ts and demos.ts — no rounding up.
+              <dl className="mt-8 grid max-w-xl grid-cols-3 gap-4">
+                {[
+                  [String(projects.length), lang === "pl" ? "realizacji" : "projects"],
+                  [String(demoCount), lang === "pl" ? "dem stron dla firm" : "website demos"],
+                  [String(projects.length + demoCount), lang === "pl" ? "projektów do kliknięcia" : "live links to click"],
+                ].map(([value, label]) => (
+                  <div key={label} className="border-t border-outline-variant/50 pt-3">
+                    <dt className="font-headline text-3xl font-bold tracking-tight text-on-surface tabular-nums md:text-4xl">{value}</dt>
+                    <dd className="mt-1 text-xs leading-snug text-on-surface-variant">{label}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
           </div>
 
           {/* Filters */}
@@ -253,6 +268,7 @@ export default function FeaturedWork() {
         </motion.div>
 
         {/* Footer CTA */}
+        {!hideCta && (
         <div className="mt-12 flex flex-col items-start gap-4 border-t border-outline-variant/20 pt-8 md:flex-row md:items-center md:justify-between">
           <p className="max-w-md text-base font-light text-on-surface/70 md:text-lg">
             {lang === "pl"
@@ -266,6 +282,7 @@ export default function FeaturedWork() {
             {t("nav.cta")} <span aria-hidden="true">→</span>
           </Link>
         </div>
+        )}
       </div>
     </section>
   );

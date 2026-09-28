@@ -17,21 +17,21 @@ function renderWithI18n() {
 }
 
 describe("Navbar component", () => {
-  // Eight items since /dema joined the portfolio routes. "Współpraca" came back at the owner's
+  // Seven items: /dema was merged into /projekty (2026-09-28). "Współpraca" came back at the owner's
   // request — see the comment above navLinks in navbar.tsx for why the count
   // is bounded by measurement. "Sklepy" and "Strony i reklamy" stay out of the
   // top-level pill; they're pillar cards on /oferta and links in the footer.
-  it("renders the eight main nav links", () => {
+  it("renders the seven main nav links", () => {
     renderWithI18n();
-    for (const label of ["Oferta", "Projekty", "Dema", "Wycena", "Blog", "O nas", "Współpraca", "Kontakt"]) {
+    for (const label of ["Oferta", "Projekty", "Wycena", "Blog", "O nas", "Współpraca", "Kontakt"]) {
       expect(screen.getAllByText(label).length, `brak pozycji "${label}"`).toBeGreaterThan(0);
     }
   });
 
-  it("Dema points at /dema", () => {
+  it("no longer links the retired /dema route", () => {
     renderWithI18n();
     const links = screen.getAllByRole("link").filter((link) => link.getAttribute("href") === "/dema");
-    expect(links.length).toBeGreaterThanOrEqual(1);
+    expect(links).toHaveLength(0);
   });
 
   // The referral programme pays people to send work our way, so it has to be

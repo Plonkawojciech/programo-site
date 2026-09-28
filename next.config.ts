@@ -43,6 +43,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // /dema was merged into /projekty on 2026-09-28 — demos now sit below the
+  // work grid on the same page. Permanent, so old links and the indexed URL
+  // hand their weight over.
+  async redirects() {
+    return [{ source: "/dema", destination: "/projekty#dema", permanent: true }];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

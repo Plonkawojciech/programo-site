@@ -264,7 +264,7 @@ export default function StronyInternetowePage() {
                 </p>
               </div>
               <Link
-                href="/dema"
+                href="/projekty#dema"
                 className="inline-flex min-h-12 items-center justify-center rounded-full bg-primary px-6 py-3.5 text-sm font-medium text-on-primary transition-colors hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
               >
                 Zobacz wszystkie dema

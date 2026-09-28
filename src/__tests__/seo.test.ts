@@ -41,7 +41,7 @@ describe("SEO", () => {
       expect(urls).toContain("https://programo.pl");
       expect(urls).toContain("https://programo.pl/software-house-poznan");
       expect(urls).toContain("https://programo.pl/ile-kosztuje-aplikacji");
-      expect(urls).toContain("https://programo.pl/dema");
+      expect(urls).not.toContain("https://programo.pl/dema");
       expect(entries.length).toBeGreaterThanOrEqual(10);
       // no duplicate URLs
       expect(new Set(urls).size).toBe(urls.length);

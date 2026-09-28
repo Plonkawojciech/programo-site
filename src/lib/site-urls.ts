@@ -63,11 +63,10 @@ export const SITE_PAGES: SitePage[] = [
     label: "Ile kosztuje aplikacja",
     summary: "co podbija i co obniża koszt aplikacji oraz od czego zależy termin",
   },
-  { path: "/projekty", label: "Realizacje", summary: "portfolio — produkty własne i prace dla klientów" },
   {
-    path: "/dema",
-    label: "Dema stron",
-    summary: "bezpłatne dema nowych stron dla firm, z prawdziwymi treściami i wersją mobilną",
+    path: "/projekty",
+    label: "Realizacje i dema",
+    summary: "portfolio — produkty własne, prace dla klientów i bezpłatne dema stron dla firm",
   },
   {
     path: "/blog",
