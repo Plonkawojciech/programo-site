@@ -79,7 +79,7 @@ export const SITE_PAGES: SitePage[] = [
   {
     path: "/wspolpraca",
     label: "Program poleceń",
-    summary: "zasady polecania Programo - 25% prowizji od wartości netto opłaconej faktury",
+    summary: "zasady polecania Programo dla przedsiębiorców - 10% prowizji od wartości netto opłaconej faktury",
   },
   {
     path: "/polityka-prywatnosci",

@@ -178,7 +178,11 @@ export default function Navbar() {
                 pointer events over the top of the hero, and far too tall a
                 ground for the scroll band. Cropping to the ink's aspect with
                 object-cover leaves the rendered wordmark pixel-identical (both
-                scale by width) and drops the dead space. */}
+                scale by width) and drops the dead space.
+                The crop is 141.3 units, not the ink's exact 121.3: with zero
+                margin the box lands on fractional pixels (24.2px at y=31.9) and
+                the antialiased tops of o/g/r and the tail of p got shaved off.
+                10 units each side = ~2px of air; the wordmark size is unchanged. */}
             <Image
               key={theme}
               src={theme === "dark" ? "/programo-logo-white.svg" : "/programo-logo-dark.svg"}
@@ -186,7 +190,7 @@ export default function Navbar() {
               width={300}
               height={212}
               priority
-              className="w-[168px] 2xl:w-[200px] shrink-0 aspect-[841.89/121.3] object-cover select-none"
+              className="w-[168px] 2xl:w-[200px] shrink-0 aspect-[841.89/141.3] object-cover select-none"
             />
           </Link>
         </div>
@@ -346,7 +350,7 @@ export default function Navbar() {
               width={170}
               height={120}
               priority
-              className="w-[78px] aspect-[841.89/121.3] object-cover select-none"
+              className="w-[78px] aspect-[841.89/141.3] object-cover select-none"
             />
           </Link>
 

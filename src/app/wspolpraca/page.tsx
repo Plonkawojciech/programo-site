@@ -23,15 +23,15 @@ const PATH = "/wspolpraca";
 // KC ciągnie za sobą świadczenie wyrównawcze po zakończeniu współpracy. To jest
 // program poleceń i tak ma się nazywać w każdym miejscu na stronie.
 export const metadata: Metadata = {
-  title: "Program poleceń - zarabiaj 25% na polecaniu Programo",
+  title: "Program poleceń - zarabiaj 10% na polecaniu Programo",
   description:
-    "Polecasz nam firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 25% wartości netto opłaconej faktury. Bez etatu, bez limitów, bez minimum.",
+    "Polecasz nam firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 10% wartości netto opłaconej faktury. Program dla firm. Dla przedsiębiorców, bez limitów, bez minimum.",
   alternates: { canonical: "https://programo.pl/wspolpraca" },
   openGraph: {
     images: [OG_IMAGE],
-    title: "Program poleceń - zarabiaj 25% na polecaniu Programo",
+    title: "Program poleceń - zarabiaj 10% na polecaniu Programo",
     description:
-      "Polecasz nam firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 25% wartości netto opłaconej faktury.",
+      "Polecasz nam firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 10% wartości netto opłaconej faktury. Program dla firm.",
     url: "https://programo.pl/wspolpraca",
     siteName: "Programo",
     locale: "pl_PL",
@@ -73,9 +73,9 @@ const faqs = [
 const pageGraph = renderGraph([
   buildWebPage({
     path: PATH,
-    name: "Program poleceń - zarabiaj 25% na polecaniu Programo",
+    name: "Program poleceń - zarabiaj 10% na polecaniu Programo",
     description:
-      "Polecasz nam firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 25% wartości netto opłaconej faktury.",
+      "Polecasz nam firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 10% wartości netto opłaconej faktury. Program dla firm.",
     dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
   }),
   buildBreadcrumbs([
@@ -99,7 +99,7 @@ const steps = [
     desc: "Firma z Twojego polecenia, która zamówi u nas stronę albo sklep i zdecyduje się na stałą opiekę, ma pierwszy miesiąc tej opieki gratis. Masz więc co powiedzieć znajomemu poza tym, że znasz kogoś, kto to zrobi.",
   },
   {
-    title: "Wypłacamy 25%",
+    title: "Wypłacamy 10%",
     desc: "Prowizja liczy się od wartości netto opłaconej faktury. Pieniądze idą do Ciebie w ciągu 14 dni od tego, jak klient zapłaci.",
   },
 ];
@@ -131,7 +131,7 @@ const rules = [
   // dokumentu przed sprawdzeniem go przez prawnika jest gorsza niż jego brak.
   // Ta zasada mówi wprost, w którym momencie uczestnik go dostaje.
   "Regulamin programu dostajesz do wglądu przy zakładaniu Twojego indywidualnego kodu polecającego. Zaczynasz, mając zasady na piśmie, a nie po rozmowie telefonicznej.",
-  "Prowizja to 25% wartości netto faktury opłaconej przez poleconego klienta.",
+  "Prowizja to 10% wartości netto faktury opłaconej przez poleconego klienta.",
   "Przy stałej obsłudze płacimy co miesiąc przez pierwsze 6 miesięcy współpracy z tym klientem.",
   "Liczy się pierwsze zgłoszenie. Jeśli akurat rozmawiamy już z tą firmą, mówimy Ci o tym od razu.",
   "Wypłatę robimy w ciągu 14 dni od zaksięgowania wpłaty od klienta.",
@@ -171,8 +171,12 @@ export default function WspolpracaPage() {
               <p className="mt-6 text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
                 Znasz firmę, która potrzebuje strony, sklepu albo kogoś, kto
                 w końcu ogarnie jej zaplecze? Podeślij nam kontakt. Jeśli
-                wyjdzie z tego płatny projekt, dostajesz 25% z każdej opłaconej
+                wyjdzie z tego płatny projekt, dostajesz 10% z każdej opłaconej
                 faktury.
+              </p>
+              <p className="mt-4 text-base font-medium text-on-surface">
+                Program jest obecnie tylko dla przedsiębiorców - osób i firm
+                z zarejestrowaną działalnością gospodarczą.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <CtaButton href="tel:+48509123434">Zadzwoń: 509 123 434</CtaButton>
@@ -181,8 +185,8 @@ export default function WspolpracaPage() {
                 </CtaButton>
               </div>
               <p className="mt-5 text-sm text-on-surface-variant">
-                Jeden telefon wystarczy. Ustalamy zasady, dostajesz regulamin
-                i swój kod polecający.
+                Jeden telefon wystarczy. Sprawdzamy Twoją działalność, ustalamy
+                zasady, dostajesz regulamin i swój kod polecający.
               </p>
             </div>
           </div>
@@ -230,7 +234,7 @@ export default function WspolpracaPage() {
                   </div>
                   <div className="flex justify-between gap-6 border-t border-outline-variant/30 pt-3 font-normal text-on-surface">
                     <dt>Twoja prowizja</dt>
-                    <dd className="shrink-0 tabular-nums font-bold">2 500 zł</dd>
+                    <dd className="shrink-0 tabular-nums font-bold">1 000 zł</dd>
                   </div>
                 </dl>
               </Reveal>
@@ -246,11 +250,11 @@ export default function WspolpracaPage() {
                   </div>
                   <div className="flex justify-between gap-6">
                     <dt>Dostajesz co miesiąc</dt>
-                    <dd className="shrink-0 tabular-nums">250 zł przez 6 mies.</dd>
+                    <dd className="shrink-0 tabular-nums">100 zł przez 6 mies.</dd>
                   </div>
                   <div className="flex justify-between gap-6 border-t border-outline-variant/30 pt-3 font-normal text-on-surface">
                     <dt>Razem z jednego polecenia</dt>
-                    <dd className="shrink-0 tabular-nums font-bold">1 500 zł</dd>
+                    <dd className="shrink-0 tabular-nums font-bold">600 zł</dd>
                   </div>
                 </dl>
               </Reveal>
@@ -259,7 +263,8 @@ export default function WspolpracaPage() {
             <Reveal delay={0.15} className="mt-12 max-w-2xl">
               <p className="text-lg font-light leading-relaxed text-on-surface/70">
                 Prowizje się sumują. Czterech poleconych klientów na stałej
-                obsłudze to tysiąc złotych miesięcznie.
+                obsłudze to 400 zł miesięcznie, a każdy nowy projekt dokłada
+                swoje 10%.
               </p>
               <p className="mt-4 text-sm text-on-surface-variant">
                 Kwoty są przykładowe i netto. Prowizja zawsze liczy się od

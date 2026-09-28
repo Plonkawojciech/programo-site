@@ -79,7 +79,7 @@ export default function Footer() {
               alt="Programo"
               width={320}
               height={226}
-              className="w-[200px] aspect-[841.89/121.3] object-cover select-none"
+              className="w-[200px] aspect-[841.89/141.3] object-cover select-none"
               loading="lazy"
             />
             {/* Conditional: these are owner-editable, and an empty <p> still
