@@ -4,6 +4,7 @@ import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-
 import { verifyTurnstile } from "@/lib/turnstile";
 import { isHoneypotTripped, verifyChallenge } from "@/lib/form-challenge";
 import { isForeignOrigin, isOverAttemptLimit, isToolUserAgent } from "@/lib/request-guard";
+import { describeSignals, scoreBotSignals } from "@/lib/bot-score";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 import { buildLeadMessage } from "@/lib/telegram-message";
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
   // Telling a bot it failed only teaches it what to change.
   if (isHoneypotTripped(body)) {
     console.warn(`[contact] honeypot tripped from ${ip} (form ${result.data.form_id ?? "?"}) — dropped`);
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, counted: false });
   }
   const challenge = verifyChallenge(result.data.challenge, result.data.pow);
   if (!challenge.ok) {
@@ -87,6 +88,21 @@ export async function POST(request: NextRequest) {
       },
       { status: 403 },
     );
+  }
+
+  // Behaviour verdict (lib/bot-score.ts). Certain bots are answered 200 and
+  // dropped; likely bots are delivered flagged, and neither kind is ever
+  // counted as a conversion — a bot counted as a 500 zł lead teaches Google
+  // Ads to buy more bots.
+  const bot = scoreBotSignals(result.data.sig);
+  const sigLine = describeSignals(result.data.sig);
+  if (bot.level === "drop") {
+    console.warn(`[contact] bot dropped from ${ip} (form ${result.data.form_id ?? "?"}): ${bot.reasons.join("; ")} | ${sigLine}`);
+    return NextResponse.json({ success: true, counted: false });
+  }
+  const suspicious = bot.level === "suspicious";
+  if (suspicious) {
+    console.warn(`[contact] suspicious lead from ${ip} (form ${result.data.form_id ?? "?"}): ${bot.reasons.join("; ")} | ${sigLine}`);
   }
 
   // Optional extra layer, Cloudflare Turnstile. Sits AFTER recordSubmission on purpose: a flood of
@@ -178,7 +194,7 @@ export async function POST(request: NextRequest) {
   const crmSecret = process.env.CRM_WEBHOOK_SECRET;
   const crmUrl =
     process.env.CRM_WEBHOOK_URL || "https://crm.programo.pl/api/forms/programo";
-  if (crmSecret) {
+  if (crmSecret && !suspicious) {
     try {
       const utm: Record<string, string> = {};
       for (const [k, v] of sources) utm[k] = v;
@@ -239,6 +255,7 @@ export async function POST(request: NextRequest) {
             message: message || undefined,
             sources,
             consentAt,
+            suspicion: suspicious ? { reasons: bot.reasons, signals: sigLine } : undefined,
           });
 
           const res = await fetch(
@@ -343,7 +360,7 @@ export async function POST(request: NextRequest) {
   // which is only a claim by the client. Scheduled only now, once the lead was
   // actually accepted (persisted or delivered): a submission that ended in the
   // 500 above must not become a paid conversion in Ads, Meta or GA4.
-  after(async () => {
+  if (!suspicious) after(async () => {
     await dispatchLeadConversions({
       consentCookie: request.cookies.get(CONSENT_COOKIE)?.value,
       eventId: result.data.event_id,
@@ -374,5 +391,5 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, counted: !suspicious });
 }

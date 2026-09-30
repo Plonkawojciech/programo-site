@@ -10,6 +10,7 @@ import { track } from "@/lib/analytics/client";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 import Honeypot from "@/components/ui/honeypot";
 import { useFormChallenge } from "@/lib/form-challenge-client";
+import { collectBotSignals } from "@/lib/bot-signals";
 import { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN } from "@/lib/form-challenge-shared";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
@@ -138,6 +139,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
         ...(await challenge.take() ?? {}),
         [HONEYPOT_FIELD]: honeypot,
           [HONEYPOT_FIELD_HIDDEN]: honeypotHidden,
+          sig: collectBotSignals(),
         ...getAttribution(),
         ...conversion,
       };
@@ -164,9 +166,13 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
 
       // Success branch only (API returned ok) — fire the primary Google Ads "Lead"
       // conversion exactly once per successful submit.
+      // The server answers 200 to a bot it dropped or flagged (telling it would
+      // only teach it what to change) and sets counted: false. Show success,
+      // but never count it as an Ads/Meta conversion.
+      const okData = (await res.json().catch(() => ({}))) as { counted?: boolean };
       setState("success");
       fa.markSubmitted();
-      trackLead({
+      if (okData.counted !== false) trackLead({
         form: formId,
         email,
         phone,

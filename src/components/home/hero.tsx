@@ -9,6 +9,7 @@ import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 import Honeypot from "@/components/ui/honeypot";
 import { useFormChallenge } from "@/lib/form-challenge-client";
+import { collectBotSignals } from "@/lib/bot-signals";
 import { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN } from "@/lib/form-challenge-shared";
 
 type PhoneFormState = "idle" | "submitting" | "success" | "error";
@@ -168,6 +169,7 @@ export default function HomeHero() {
           ...(await challenge.take() ?? {}),
           [HONEYPOT_FIELD]: honeypot,
           [HONEYPOT_FIELD_HIDDEN]: honeypotHidden,
+          sig: collectBotSignals(),
           ...conversion,
         }),
       });
@@ -184,9 +186,13 @@ export default function HomeHero() {
         return;
       }
 
+      // The server answers 200 to a bot it dropped or flagged (telling it would
+      // only teach it what to change) and sets counted: false. Show success,
+      // but never count it as an Ads/Meta conversion.
+      const okData = (await res.json().catch(() => ({}))) as { counted?: boolean };
       setFormState("success");
       fa.markSubmitted();
-      trackLead({
+      if (okData.counted !== false) trackLead({
         form: "hero-phone",
         method: "phone",
         phone,

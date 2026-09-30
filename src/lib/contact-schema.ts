@@ -6,6 +6,7 @@
 // The tests import from here.
 
 import { z } from "zod/v4";
+import { botSignalsSchema } from "@/lib/bot-score";
 
 // A phone number with enough digits to actually dial is a complete lead on its
 // own — the homepage hero asks for a number first and treats every other field
@@ -82,6 +83,8 @@ export const contactSchema = z
     pow: z.number().int().min(0).optional(),
     company_website: z.string().max(500).optional(),
     fax_number: z.string().max(500).optional(),
+    // Behaviour counts from lib/bot-signals.ts, scored by lib/bot-score.ts.
+    sig: botSignalsSchema.optional(),
   })
   .refine(
     (d) => Boolean((d.email && d.email.length) || (d.phone && d.phone.length)),

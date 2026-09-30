@@ -60,7 +60,14 @@ function solvedChallenge() {
 /** NextRequest, not Request — the route reads request.cookies. */
 function post(body: unknown): NextRequest {
   const withChallenge =
-    body && typeof body === "object" ? { ...(body as object), ...solvedChallenge() } : body;
+    body && typeof body === "object"
+      ? {
+          ...(body as object),
+          ...solvedChallenge(),
+          // A person: typed, moved the mouse, clicked, spent 40 s on the page.
+          sig: { wd: false, kd: 22, pm: 140, pd: 3, ts: 0, sc: 4, paste: 0, ms: 40_000, tz: "Europe/Warsaw", lang: "pl-PL", sw: 1440, sh: 900 },
+        }
+      : body;
   return new NextRequest("https://programo.pl/api/contact", {
     method: "POST",
     headers: {
@@ -106,7 +113,7 @@ describe("/api/contact — status follows persistence, not notification", () => 
     const res = await POST(post(validLead));
 
     expect(res.status, "a stored lead is not a failed submission").toBe(200);
-    expect(await res.json()).toEqual({ success: true });
+    expect(await res.json()).toEqual({ success: true, counted: true });
     expect(storeLead).toHaveBeenCalledOnce();
   });
 

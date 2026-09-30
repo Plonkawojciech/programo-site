@@ -31,6 +31,8 @@ export type LeadNotification = {
   /** [label, value] pairs — UTM / gclid / landing page, already filtered. */
   sources: [string, string][];
   consentAt: string;
+  /** Set when lib/bot-score.ts thinks this is probably a bot. */
+  suspicion?: { reasons: string[]; signals: string };
 };
 
 /**
@@ -42,7 +44,17 @@ export type LeadNotification = {
 export function buildLeadMessage(n: LeadNotification): string {
   const srcLines = n.sources.map(([k, v]) => line(k, v));
 
+  const warn = n.suspicion
+    ? [
+        bold("PODEJRZANE - prawdopodobnie bot"),
+        escapeMarkdownV2(`Powód: ${n.suspicion.reasons.join("; ")}`),
+        italic(n.suspicion.signals),
+        "",
+      ]
+    : [];
+
   return [
+    ...warn,
     bold("Nowa wiadomość - Programo"),
     ``,
     line("Imię", n.displayName),
