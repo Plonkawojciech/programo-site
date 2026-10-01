@@ -20,6 +20,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Self-contained server for the Docker image (see Dockerfile). Opt-in, so the
+  // Vercel build is byte-for-byte what it was until the cutover is done.
+  ...(process.env.BUILD_STANDALONE === "1" ? { output: "standalone" as const } : {}),
   // Pins the build root to the project being built. This repo is routinely
   // checked out as git worktrees nested under the main repo
   // (.claude/worktrees/<name>/), each with its own package-lock.json. Turbopack

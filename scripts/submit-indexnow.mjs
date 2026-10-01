@@ -33,7 +33,8 @@ function findKey() {
 
 // Only production deploys. VERCEL_ENV is set by Vercel; locally it is undefined,
 // so a developer running `npm run build` never pings the search engines.
-const isProd = process.env.VERCEL_ENV === "production";
+// Off Vercel (Coolify), set INDEXNOW_SUBMIT=1 for the one build that should ping.
+const isProd = process.env.VERCEL_ENV === "production" || process.env.INDEXNOW_SUBMIT === "1";
 const key = findKey();
 
 if (!isProd) {
