@@ -214,3 +214,17 @@ przeglądarki):
 Świadomie nie zrobione w tym wdrożeniu: nowe strony SEO (etap 5), zdania zakresu pod logotypami,
 klastry bloga w sitemapie, przeniesienie animacji sekcji z Framer Motion na CSS (punkt 9 audytu Codexa:
 duża zmiana, osobny etap z pomiarem Lighthouse przed i po).
+
+### 1.10.2026, wdrożenie 2 (etap 5: strony usługowe)
+
+- wspólny komponent `src/components/service-landing.tsx` (serwerowy, schema `Service` + `FAQPage` +
+  breadcrumbs, formularz `CompactLeadForm` z własnym `formId` na każdej stronie);
+- cztery nowe trasy: `/strony-internetowe-poznan`, `/aplikacje-mobilne-dla-firm`,
+  `/aplikacje-webowe-dla-firm`, `/wdrozenie-ga4-tracking-konwersji`. Ceny i terminy 1:1 z tabeli
+  `/cennik`, opisy realizacji z `projects.ts`;
+- `/sklepy-internetowe-poznan` świadomie pominięta: nie mamy poznańskiego sklepu zbudowanego od zera,
+  więc byłaby kopią `/sklepy-internetowe` z dopisanym miastem. Wróci, gdy będzie realizacja (Innochem);
+- linkowanie: stopka (filary oferty prowadzą teraz do stron usług, plus „Cała oferta"), kafle na stronie
+  głównej, filary `/oferta`, sitemap (33 adresy), `llms.txt`.
+
+Do sprawdzenia za 4 tygodnie w Search Console: wyświetlenia i pozycje nowych adresów oraz `/cennik`.

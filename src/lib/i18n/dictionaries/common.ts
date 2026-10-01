@@ -41,6 +41,9 @@ export const common = {
   // zero clicks at an average position of ~26.
   "footer.softwareHousePoznan": { pl: "Software house Poznań", en: "Software house in Poznan" },
   "footer.websites": { pl: "Strony internetowe", en: "Websites" },
+  "footer.websitesPoznan": { pl: "Strony internetowe Poznań", en: "Websites in Poznan" },
+  "footer.allOffer": { pl: "Cała oferta", en: "All services" },
+  "footer.tracking": { pl: "Wdrożenie GA4 i konwersji", en: "GA4 and conversion tracking setup" },
   "footer.appCost": { pl: "Ile kosztuje aplikacja", en: "How much does an app cost" },
   "footer.stack": { pl: "Stack technologiczny", en: "Tech stack" },
   "footer.blog": { pl: "Blog", en: "Blog" },

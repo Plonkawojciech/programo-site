@@ -30,6 +30,11 @@ export const STATIC_ROUTE_UPDATED_AT: Record<string, string> = {
   "/strony-internetowe": "2026-08-03T16:23:25+02:00",
   "/strony-tracking-reklamy": "2026-08-03T20:20:31+02:00",
   "/ile-kosztuje-aplikacji": "2026-08-03T16:23:25+02:00",
+  // Service pages added 2026-10-01 (docs/plans/odswiezenie-portfolio-seo-konwersja-2026-10.md).
+  "/strony-internetowe-poznan": "2026-10-01T11:22:20+02:00",
+  "/aplikacje-mobilne-dla-firm": "2026-10-01T11:22:20+02:00",
+  "/aplikacje-webowe-dla-firm": "2026-10-01T11:22:20+02:00",
+  "/wdrozenie-ga4-tracking-konwersji": "2026-10-01T11:22:20+02:00",
   // Przy następnej realnej zmianie treści wyprowadzić z
   // `git log -1 --format=%cI -- src/app/wspolpraca/page.tsx`.
   "/wspolpraca": "2026-09-28T23:10:09+02:00",

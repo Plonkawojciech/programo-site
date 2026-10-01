@@ -45,6 +45,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     {
+      url: "https://programo.pl/strony-internetowe-poznan",
+      lastModified: STATIC_ROUTE_UPDATED_AT["/strony-internetowe-poznan"],
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://programo.pl/aplikacje-mobilne-dla-firm",
+      lastModified: STATIC_ROUTE_UPDATED_AT["/aplikacje-mobilne-dla-firm"],
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://programo.pl/aplikacje-webowe-dla-firm",
+      lastModified: STATIC_ROUTE_UPDATED_AT["/aplikacje-webowe-dla-firm"],
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://programo.pl/wdrozenie-ga4-tracking-konwersji",
+      lastModified: STATIC_ROUTE_UPDATED_AT["/wdrozenie-ga4-tracking-konwersji"],
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://programo.pl/ile-kosztuje-aplikacji",
       lastModified: STATIC_ROUTE_UPDATED_AT["/ile-kosztuje-aplikacji"],
       changeFrequency: "monthly",

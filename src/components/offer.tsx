@@ -40,7 +40,7 @@ const pillars: Pillar[] = [
     descKey: "offer.pillar1.desc",
     captionKey: "offer.pillar1.example",
     bulletKeys: ["offer.pillar1.b1", "offer.pillar1.b2", "offer.pillar1.b3", "offer.pillar1.b4", "offer.pillar1.b5"],
-    href: "/oferta",
+    href: "/aplikacje-webowe-dla-firm",
     projectSlug: "estalo",
     visual: { kind: "browser", screenshot: "/screenshots/v2/estalo-enterprise-desktop.webp" },
   },
@@ -49,7 +49,7 @@ const pillars: Pillar[] = [
     descKey: "offer.pillar2.desc",
     captionKey: "offer.pillar2.example",
     bulletKeys: ["offer.pillar2.b1", "offer.pillar2.b2", "offer.pillar2.b3", "offer.pillar2.b4", "offer.pillar2.b5"],
-    href: "/oferta",
+    href: "/aplikacje-mobilne-dla-firm",
     projectSlug: "jedmar",
     visual: {
       kind: "phones",

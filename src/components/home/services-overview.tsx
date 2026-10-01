@@ -29,7 +29,7 @@ const blocks: {
     bodyKey: "home.svc.block2.body",
     labelKey: "home.svc.block2.label",
     linkKey: "home.svc.block2.link",
-    href: "/oferta",
+    href: "/aplikacje-webowe-dla-firm",
   },
   {
     situationKey: "home.svc.block3.situation",

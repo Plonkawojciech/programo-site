@@ -43,6 +43,26 @@ export const SITE_PAGES: SitePage[] = [
     summary: "lokalna strona usługowa — współpraca z firmami z Poznania i Wielkopolski",
   },
   {
+    path: "/strony-internetowe-poznan",
+    label: "Strony internetowe Poznań",
+    summary: "lokalna strona usługowa: strony firmowe i sklepy dla firm z Poznania, ceny i terminy",
+  },
+  {
+    path: "/aplikacje-mobilne-dla-firm",
+    label: "Aplikacje mobilne dla firm",
+    summary: "natywne aplikacje iOS i Android spięte z istniejącym sklepem lub systemem, cena i etapy",
+  },
+  {
+    path: "/aplikacje-webowe-dla-firm",
+    label: "Aplikacje webowe i systemy dla firm",
+    summary: "panele, CRM, SaaS i automatyzacje zamiast Excela, cena i etapy",
+  },
+  {
+    path: "/wdrozenie-ga4-tracking-konwersji",
+    label: "Wdrożenie GA4 i śledzenia konwersji",
+    summary: "GA4, konwersje Google Ads, Meta Pixel i Consent Mode v2 na istniejącej stronie",
+  },
+  {
     path: "/strony-internetowe",
     label: "Strony internetowe",
     summary: "strony firmowe i landing page'e w Next.js, z trackingiem i SEO",

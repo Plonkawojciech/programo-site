@@ -12,13 +12,17 @@ import { COMPANY_ADDRESS_LINE, COMPANY_IDS_LINE } from "@/lib/company";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
-// Offer column — same four pillars as /oferta, each linking to its subpage.
+// Offer column — the /oferta pillars, each linking to its own service page,
+// then the local and tracking pages, then the overview itself.
 const offerLinks: { titleKey: TKey; href: string }[] = [
-  { titleKey: "offer.pillar1.title", href: "/oferta" },
-  { titleKey: "offer.pillar2.title", href: "/oferta" },
+  { titleKey: "offer.pillar1.title", href: "/aplikacje-webowe-dla-firm" },
+  { titleKey: "offer.pillar2.title", href: "/aplikacje-mobilne-dla-firm" },
   { titleKey: "offer.pillar3.title", href: "/sklepy-internetowe" },
   { titleKey: "offer.pillar4.title", href: "/strony-tracking-reklamy" },
   { titleKey: "footer.websites", href: "/strony-internetowe" },
+  { titleKey: "footer.websitesPoznan", href: "/strony-internetowe-poznan" },
+  { titleKey: "footer.tracking", href: "/wdrozenie-ga4-tracking-konwersji" },
+  { titleKey: "footer.allOffer", href: "/oferta" },
 ];
 
 // Projects column — top 6 (content-deck / brief section 5.4 portfolio picks).
