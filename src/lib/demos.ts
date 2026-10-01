@@ -17,8 +17,12 @@
 //   or "concept" (industry only, header cropped out of the screenshot, no link).
 //   Nothing outside this file may read `name`, `url` or `host` directly — use
 //   `demoViews()`, which already applies the disclosure.
-// - Screenshots: public/screenshots/demos/<slug>[-concept]-{desktop,mobile}.webp,
-//   generated with `node scripts/shoot-demos.mjs` (slug list in scripts/demos.json).
+// - Screenshots come from `node scripts/shoot-demos.mjs` (slug list in
+//   scripts/demos.json). Concept captures are served from
+//   public/screenshots/demos/<slug>-concept-{desktop,mobile}.webp. Named ones
+//   carry the company's logo, so they live in assets/demos-named/ and are not
+//   served; `node scripts/publish-named-demo.mjs <slug>` copies them into
+//   public/ for a demo that is allowed to be named.
 
 export type DemoIndustry = "sklepy" | "produkcja" | "uslugi" | "sport" | "media";
 

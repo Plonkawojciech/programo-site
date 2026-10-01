@@ -15,11 +15,22 @@ describe("website demos", () => {
     }
   });
 
-  it("has every screenshot both disclosure modes can ask for", () => {
-    for (const mode of ["named", "concept"] as const) {
-      for (const view of demoViews(mode)) {
-        for (const file of [view.desktop, view.mobile]) {
-          expect(existsSync(join(process.cwd(), "public", file)), file).toBe(true);
+  it("serves every screenshot the page asks for under the current disclosure", () => {
+    for (const view of demoViews()) {
+      for (const file of [view.desktop, view.mobile]) {
+        expect(existsSync(join(process.cwd(), "public", file)), file).toBe(true);
+      }
+    }
+  });
+
+  it("keeps named captures out of public/ unless the demo is named", () => {
+    const named = new Set(demoViews().filter((v) => !v.concept).map((v) => v.slug));
+    for (const demo of demos) {
+      for (const size of ["desktop", "mobile"]) {
+        const file = `${demo.slug}-${size}.webp`;
+        expect(existsSync(join(process.cwd(), "assets", "demos-named", file)), `assets/demos-named/${file}`).toBe(true);
+        if (!named.has(demo.slug)) {
+          expect(existsSync(join(process.cwd(), "public", "screenshots", "demos", file)), `public copy of ${file}`).toBe(false);
         }
       }
     }

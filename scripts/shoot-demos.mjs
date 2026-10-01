@@ -5,7 +5,8 @@
 //   desktop 1440×900 → 1600 px wide, mobile 390×844 → 780 px wide, DPR 2, WebP q80.
 // Each demo is shot twice:
 //   <slug>-{desktop,mobile}.webp          as the visitor sees it (cookie bars and
-//                                          "demo version" strips removed)
+//                                          "demo version" strips removed). Written to
+//                                          assets/demos-named/, NOT served.
 //   <slug>-concept-{desktop,mobile}.webp  header and navigation removed as well, so the
 //                                          company's logo and name are not in the frame.
 //                                          Used when a demo is shown as an unnamed concept.
@@ -14,8 +15,13 @@ import { readFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 
+// Concept captures are served; named ones (company logo in the frame) are kept
+// outside public/ and only copied in for a demo that is allowed to be named,
+// with `node scripts/publish-named-demo.mjs <slug>`.
 const OUT = path.resolve("public/screenshots/demos");
+const OUT_NAMED = path.resolve("assets/demos-named");
 mkdirSync(OUT, { recursive: true });
+mkdirSync(OUT_NAMED, { recursive: true });
 const demos = JSON.parse(readFileSync(new URL("./demos.json", import.meta.url), "utf8"));
 const only = process.argv.slice(2);
 
@@ -73,7 +79,7 @@ for (const { slug, url } of demos) {
         await page.waitForTimeout(300);
         const png = await page.screenshot({ type: "png" });
         const name = `${slug}${concept ? "-concept" : ""}-${s.name}.webp`;
-        await sharp(png).resize({ width: s.outW }).webp({ quality: 80, effort: 6 }).toFile(path.join(OUT, name));
+        await sharp(png).resize({ width: s.outW }).webp({ quality: 80, effort: 6 }).toFile(path.join(concept ? OUT : OUT_NAMED, name));
         console.log("ok", name);
       }
     } catch (e) {
