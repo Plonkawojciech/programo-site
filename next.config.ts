@@ -30,6 +30,9 @@ const nextConfig: NextConfig = {
   // deploy there is one lockfile and this is a no-op.
   turbopack: { root: __dirname },
   images: {
+    // Static preview snapshots (v3.programo.pl) are plain files on a static
+    // host with no image optimizer behind /_next/image.
+    unoptimized: process.env.STATIC_PREVIEW === "1",
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
