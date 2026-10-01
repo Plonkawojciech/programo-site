@@ -1,0 +1,9 @@
+<!-- Estalo - CRM dla biur nieruchomości. Dach nad dwiema belkami: nieruchomość
+     nad kartoteką. Znak pochodzi z estalo.pl/icon.svg; zdjęte zostało pełne tło
+     kafelka (rect 64x64), bo jako maska alfa zamalowałoby cały kwadrat.
+     viewBox przycięty do samego tuszu, więc proporcja 43:45.5 jest dokładna. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10.5 8.5 43 45.5" fill="#000">
+  <path d="M14 27L32 12L50 27" fill="none" stroke="#000" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="16" y="35" width="32" height="7" rx="3.5"/>
+  <rect x="16" y="47" width="22" height="7" rx="3.5"/>
+</svg>
