@@ -40,7 +40,10 @@ const PAGES: { file: string; label: string; min: number }[] = [
   { file: "cennik.html", label: "/cennik", min: 800 },
   { file: "kontakt.html", label: "/kontakt", min: 500 },
   { file: "o-nas.html", label: "/o-nas", min: 800 },
-  { file: "projekty.html", label: "/projekty", min: 6000 },
+  // 6000 while the page listed 21 named demos (2026-09-28). Since 2026-10-01 it
+  // shows 12 unnamed concept cards, about 5800 characters in total; the floor
+  // still sits far above an empty shell (work grid alone is ~3500).
+  { file: "projekty.html", label: "/projekty", min: 4500 },
   { file: "software-house-poznan.html", label: "/software-house-poznan", min: 2000 },
   { file: "strony-internetowe.html", label: "/strony-internetowe", min: 4000 },
   { file: "sklepy-internetowe.html", label: "/sklepy-internetowe", min: 4000 },
