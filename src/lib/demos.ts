@@ -60,10 +60,11 @@ export interface Demo {
 
 export type DemoDisclosure = "named" | "concept";
 
-// The owner's decision, in one place. "named" matches what has been live since
-// 2026-09-14; switching to "concept" anonymises every demo that has no
-// per-demo override.
-export const DEFAULT_DISCLOSURE: DemoDisclosure = "named";
+// The owner's decision, in one place (2026-10-01): we have no consent to show
+// these companies by name, so every demo is an unnamed concept. Set
+// `disclosure: "named"` on a single demo once its company agrees in writing
+// or becomes a client.
+export const DEFAULT_DISCLOSURE: DemoDisclosure = "concept";
 
 // What the page, the schema and llms.txt are allowed to know about a demo.
 export interface DemoView {

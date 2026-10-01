@@ -224,8 +224,8 @@ export default function FeaturedWork({ demoCount, hideCta = false }: { demoCount
               <dl className="mt-8 grid max-w-xl grid-cols-3 gap-4">
                 {[
                   [String(projects.length), lang === "pl" ? "realizacji" : "projects"],
-                  [String(demoCount), lang === "pl" ? "dem stron dla firm" : "website demos"],
-                  [String(projects.length + demoCount), lang === "pl" ? "projektów do kliknięcia" : "live links to click"],
+                  [String(demoCount), lang === "pl" ? "koncepcji stron dla firm" : "website concepts"],
+                  [String(projects.length + demoCount), lang === "pl" ? "projektów łącznie" : "projects in total"],
                 ].map(([value, label]) => (
                   <div key={label} className="border-t border-outline-variant/50 pt-3">
                     <dt className="font-headline text-3xl font-bold tracking-tight text-on-surface tabular-nums md:text-4xl">{value}</dt>

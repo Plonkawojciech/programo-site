@@ -107,7 +107,7 @@ export default function DemosSection({ demos }: { demos: DemoView[] }) {
             <h2 className="mt-5 max-w-2xl font-headline text-4xl font-bold leading-tight tracking-tight md:text-5xl">{t("demos.cta.title")}</h2>
             <p className="mt-5 max-w-xl text-base font-light leading-relaxed text-[#DAF1DE]/75 md:text-lg">{t("demos.cta.lead")}</p>
           </div>
-          <CompactLeadForm bare formId="dema" projectType={t("demos.form.projectType")} heading={t("demos.hero.primaryCta")} />
+          <CompactLeadForm bare formId="dema" anchorId="dema-formularz" projectType={t("demos.form.projectType")} heading={t("demos.hero.primaryCta")} />
         </div>
       </section>
     </>

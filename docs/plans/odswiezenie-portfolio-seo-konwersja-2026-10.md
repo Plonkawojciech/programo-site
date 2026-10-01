@@ -239,3 +239,14 @@ Do sprawdzenia za 4 tygodnie w Search Console: wyświetlenia i pozycje nowych ad
   `docs/ochrona-formularzy-2026-10.md`;
 - lista ujęć na sesję 2.10: `docs/sesja-zdjeciowa-2026-10-02.md`. Warianty portretów do wyboru:
   `~/Programo/marketing/portrety/2026-10-01-warianty/`. Na stronę trafia dopiero wybrany.
+
+### 1.10.2026, wdrożenie 4 (decyzje przekazane przez sesję prowadzącą dzień)
+
+- dema w trybie koncepcyjnym: `DEFAULT_DISCLOSURE = "concept"`, 12 kart bez nazw, hostów i linków (Życie
+  Stolicy i KS Posnania wypadają, bo nazwy nie da się wyciąć z kadru). Sprawdzone: żadna nazwa ani host
+  dema nie występuje w tekście sekcji, w źródle `/projekty` ani w `llms.txt`. Powrót do nazwy dla jednej
+  firmy: `disclosure: "named"` przy jej wpisie w `src/lib/demos.ts`;
+- portrety przejściowe: wariant C (wnętrze) w jasnym motywie, B (zieleń marki) w ciemnym, dla obu osób,
+  oczy na tej samej wysokości, 47–63 KB na plik. Źródła i pozostałe warianty:
+  `~/Programo/marketing/portrety/2026-10-01-warianty/`. Do podmiany po sesji 2.10;
+- naprawiony zdublowany `id="dema"` (sekcja i formularz miały to samo id).

@@ -16,7 +16,7 @@ import {
 const PATH = "/projekty";
 const demos = demoViews();
 const TITLE = "Projekty, realizacje i dema stron | Programo";
-const DESCRIPTION = `Portfolio Programo: ${projects.length} realizacji (aplikacje Jedmar, CRM Estalo, strony i kampanie) oraz ${demos.length} dem stron dla firm. Każdy projekt możesz otworzyć.`;
+const DESCRIPTION = `Portfolio Programo: ${projects.length} realizacji (aplikacje Jedmar, CRM Estalo, strony i kampanie) oraz ${demos.length} koncepcji stron dla firm z różnych branż. Realizacje możesz otworzyć i sprawdzić.`;
 
 // /dema was merged into this route (2026-09-28) — its item list lives here now,
 // as #demo-list on this page.
