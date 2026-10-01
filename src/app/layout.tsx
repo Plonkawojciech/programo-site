@@ -27,7 +27,7 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   title: "Programo - Studio Software z Poznania",
   description:
-    "Projektujemy i budujemy oprogramowanie. Studio software Wojciecha Płonki i Bartosza Kolaja z Poznania.",
+    "Strony, sklepy internetowe, aplikacje i automatyzacje dla firm. Od rozmowy do wdrożenia projekt prowadzą Wojciech Płonka i Bartosz Kolaj z Poznania.",
   metadataBase: new URL("https://programo.pl"),
   icons: {
     icon: [
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Programo - Studio Software z Poznania",
     description:
-      "Projektujemy i budujemy oprogramowanie. Studio software Wojciecha Płonki i Bartosza Kolaja z Poznania.",
+      "Strony, sklepy internetowe, aplikacje i automatyzacje dla firm. Projekt od rozmowy do wdrożenia prowadzi dwóch inżynierów z Poznania.",
     url: "https://programo.pl",
     siteName: "Programo",
     locale: "pl_PL",

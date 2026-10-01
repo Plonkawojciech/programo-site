@@ -281,7 +281,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="flex flex-col items-start gap-6 rounded-3xl bg-card p-8 shadow-card md:p-12"
+                className="flex flex-col items-start gap-6 rounded-3xl bg-card p-5 shadow-card sm:p-8 md:p-12"
               >
                 <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
                   <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" aria-hidden="true">
@@ -315,7 +315,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="relative flex flex-col gap-8 rounded-3xl bg-card p-8 shadow-card md:p-12"
+                className="relative flex flex-col gap-8 rounded-3xl bg-card p-5 shadow-card sm:p-8 md:p-12"
               >
                 <Honeypot />
                 {/* Project type chips */}
@@ -386,7 +386,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         type="text"
                         name="contact"
                         required
-                        autoComplete="tel"
+                        autoComplete="off"
                         inputMode="text"
                         aria-invalid={errors.contact ? true : undefined}
                         aria-describedby={errors.contact ? "quick-contact-error" : undefined}

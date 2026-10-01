@@ -32,6 +32,7 @@ export default function PhoneFrame({
   fadeBottom = false,
   ownStatusBar = false,
   priority = false,
+  sizes = "(max-width: 768px) 60vw, 300px",
   className,
 }: {
   src: string;
@@ -42,6 +43,8 @@ export default function PhoneFrame({
   fadeBottom?: boolean;
   ownStatusBar?: boolean;
   priority?: boolean;
+  /** Override when the frame renders much smaller than the default assumes. */
+  sizes?: string;
   className?: string;
 }) {
   return (
@@ -66,7 +69,7 @@ export default function PhoneFrame({
             width={width}
             height={height}
             priority={priority}
-            sizes="(max-width: 768px) 60vw, 300px"
+            sizes={sizes}
             className={`w-full ${
               scrollOnHover
                 ? "h-auto transition-transform duration-[3500ms] ease-linear md:group-hover:-translate-y-[38%]"

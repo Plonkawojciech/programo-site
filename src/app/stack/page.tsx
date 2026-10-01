@@ -29,7 +29,7 @@ const pageGraph = renderGraph([
 export const metadata: Metadata = {
   title: "Stack technologiczny - czym budujemy | Programo",
   description:
-    "Nasz stack technologiczny: Next.js, React, TypeScript, Tailwind, Supabase, Neon, Vercel i więcej.",
+    "Technologie, na których budujemy strony, sklepy i aplikacje: Next.js, React, TypeScript, Tailwind, Supabase i Neon. Do każdej krótkie uzasadnienie wyboru.",
   alternates: { canonical: "https://programo.pl/stack" },
   openGraph: {
     images: [OG_IMAGE],

@@ -4,6 +4,7 @@ import PostCard, { clusterLabel } from "@/components/blog/post-card";
 import ClusterNav from "@/components/blog/cluster-nav";
 import ClusterEmptyState from "@/components/blog/cluster-empty-state";
 import { buildBreadcrumbs, buildWebPage, renderGraph } from "@/lib/schema";
+import { OG_IMAGE } from "@/lib/og-image";
 
 // Static params cover planned clusters (docs/plans/blog-aeo-2026-08.md
 // section 5) even before they have a post, so /blog/klaster/wlasne-dane
@@ -26,10 +27,16 @@ export async function generateMetadata({
   const { cluster } = await params;
   const label = clusterLabel(cluster);
   const url = `https://programo.pl/blog/klaster/${cluster}`;
+  const count = getPostsByCluster(cluster).length;
+  const description = `${label}: ${count} ${count === 1 ? "wpis" : "wpisów"} na blogu Programo o budowie stron, sklepów i aplikacji. Poradniki, porównania i dane z własnych wdrożeń.`;
   return {
     title: `${label} - Blog - Programo`,
-    description: `Wpisy z klastra "${label}" na blogu Programo.`,
+    description,
     alternates: { canonical: url },
+    // A planned cluster with no posts is an honest empty state for visitors,
+    // but thin content for an index.
+    ...(count === 0 ? { robots: { index: false, follow: true } } : {}),
+    openGraph: { images: [OG_IMAGE], title: `${label} - Blog - Programo`, description, url, siteName: "Programo", locale: "pl_PL", type: "website" },
   };
 }
 

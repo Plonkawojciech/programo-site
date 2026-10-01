@@ -4,7 +4,7 @@ import type { SchemaNode } from "./types";
 export interface CreativeWorkListItem {
   name: string;
   description: string;
-  sameAs: string;
+  sameAs?: string;
 }
 
 /** A stable ItemList node used as the CollectionPage's main entity. */
@@ -26,7 +26,7 @@ export function buildCreativeWorkItemList(
         "@type": "CreativeWork",
         name: item.name,
         description: item.description,
-        sameAs: item.sameAs,
+        ...(item.sameAs ? { sameAs: item.sameAs } : {}),
       },
     })),
   };

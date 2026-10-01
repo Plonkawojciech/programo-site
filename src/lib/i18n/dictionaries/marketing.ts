@@ -40,8 +40,8 @@ export const marketing = {
   },
   "mkt.elements.2.title": { pl: "Tracking: GA4, konwersje, Consent Mode", en: "Tracking: GA4, conversions, Consent Mode" },
   "mkt.elements.2.desc": {
-    pl: "Wpinamy Google Analytics 4, śledzenie konwersji Google Ads z enhanced conversions i Consent Mode v2, więc pomiar jest zgodny z RODO i żaden piksel nie startuje bez zgody użytkownika. Każde kliknięcie w telefon i każdy formularz jest policzony i przypisany do źródła.",
-    en: "We wire in Google Analytics 4, Google Ads conversion tracking with enhanced conversions, and Consent Mode v2, so measurement is GDPR-compliant and no pixel fires without user consent. Every phone tap and every form submission is counted and attributed to its source.",
+    pl: "Wpinamy Google Analytics 4, śledzenie konwersji Google Ads z enhanced conversions i Consent Mode v2, więc pomiar jest zgodny z RODO: przed zgodą Google działa w trybie bez cookies, a Meta Pixel i pozostałe narzędzia startują dopiero po zgodzie użytkownika. Każde kliknięcie w telefon i każdy formularz jest policzony i przypisany do źródła.",
+    en: "We wire in Google Analytics 4, Google Ads conversion tracking with enhanced conversions, and Consent Mode v2, so measurement is GDPR-compliant: before consent Google runs in cookieless mode, and Meta Pixel and the other tools start only after the user agrees. Every phone tap and every form submission is counted and attributed to its source.",
   },
   "mkt.elements.3.title": { pl: "Kampanie Google Ads + SEO techniczne", en: "Google Ads campaigns + technical SEO" },
   "mkt.elements.3.desc": {

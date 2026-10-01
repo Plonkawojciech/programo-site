@@ -2,7 +2,7 @@ import { projects } from "@/lib/projects";
 import { getAllPosts } from "@/lib/blog";
 import { SITE_PAGES, SITE_URL } from "@/lib/site-urls";
 import { COMPANY } from "@/lib/company";
-import { demos } from "@/lib/demos";
+import { demoViews } from "@/lib/demos";
 
 // /llms.txt — generated, never hand-maintained.
 //
@@ -43,8 +43,9 @@ export function GET(): Response {
     )
     .join("\n");
 
-  const demoSection = demos
-    .map((demo) => `- ${demo.name} - ${demo.sector.pl} - ${demo.host}`)
+  const demoSection = demoViews()
+    .map((demo) => [demo.title.pl, demo.concept ? "projekt koncepcyjny" : demo.eyebrow.pl, demo.host].filter(Boolean).join(" - "))
+    .map((entry) => `- ${entry}`)
     .join("\n");
 
   // Same source src/content/blog reads for /blog, /blog/[slug] and

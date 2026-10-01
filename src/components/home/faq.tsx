@@ -42,14 +42,14 @@ export default function Faq() {
   // than the fifth.
   const faqOpenOrder = useRef(0);
 
-  const reveal = prefersReduced
-    ? {}
-    : {
-        initial: { opacity: 0, y: 14 } as const,
-        whileInView: { opacity: 1, y: 0 } as const,
-        viewport: { once: true, margin: "-10% 0px" } as const,
-        transition: { duration: durationMedium, ease: easeEntry } as const,
-      };
+  // Always animate to visible: the server ships `initial` to everyone, so
+  // skipping the props under reduced motion would leave the heading hidden.
+  const reveal = {
+    initial: { opacity: 0, y: prefersReduced ? 0 : 14 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-10% 0px" },
+    transition: prefersReduced ? { duration: 0 } : { duration: durationMedium, ease: easeEntry },
+  } as const;
 
   // Asymmetric since Founders was removed (2026-08-05). Process above is also
   // `tight`, so a symmetric `py-section-tight` here would put a 104px seam

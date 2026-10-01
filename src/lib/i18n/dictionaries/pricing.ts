@@ -3,7 +3,7 @@
 // section 6.
 export const pricing = {
   "pricing.label": { pl: "Przejrzyste zasady wyceny", en: "Transparent pricing rules" },
-  "pricing.title": { pl: "Wycena", en: "Pricing" },
+  "pricing.title": { pl: "Ile kosztuje strona, sklep lub aplikacja?", en: "What does a website, shop or app cost?" },
   "pricing.lead": {
     pl: "Strony wizytówkowej i platformy SaaS nie da się wycenić z jednego cennika, bo skala pracy różni się o rząd wielkości. Dlatego wyceniamy każdy projekt osobno, a zanim zapłacisz pierwszą złotówkę, wiesz, co dostaniesz i za ile.",
     en: "You can't price a simple website and a SaaS platform off the same list, because the scale of work differs by an order of magnitude. So we quote every project separately, and before you pay anything you know what you'll get and for how much.",

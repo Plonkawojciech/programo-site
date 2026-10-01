@@ -16,7 +16,7 @@ import {
 const PATH = "/blog";
 const TITLE = "Blog - aplikacje, sklepy, SEO i reklamy | Programo";
 const DESCRIPTION =
-  "Poradniki i porównania o budowie oprogramowania: koszty projektów, wybór technologii, dane własne z projektów Programo.";
+  "Poradniki i porównania o budowie stron, sklepów i aplikacji: koszty projektów, wybór technologii oraz dane z własnych wdrożeń Programo.";
 
 export const metadata: Metadata = {
   title: TITLE,

@@ -1,9 +1,7 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import type { Metadata } from "next";
 import FeaturedWork from "@/components/featured-work";
 import DemosSection from "@/components/demos/demos-section";
-import { demos } from "@/lib/demos";
+import { demoViews } from "@/lib/demos";
 import { projects } from "@/lib/projects";
 import { OG_IMAGE } from "@/lib/og-image";
 import {
@@ -16,15 +14,16 @@ import {
 } from "@/lib/schema";
 
 const PATH = "/projekty";
+const demos = demoViews();
 const TITLE = "Projekty, realizacje i dema stron | Programo";
-const DESCRIPTION = `Portfolio Programo: ${projects.length} realizacji (aplikacje Jedmar w App Store i Google Play, CRM Estalo, strony i kampanie) oraz ${demos.length} dem stron dla firm. Każdy projekt możesz kliknąć i sprawdzić.`;
+const DESCRIPTION = `Portfolio Programo: ${projects.length} realizacji (aplikacje Jedmar, CRM Estalo, strony i kampanie) oraz ${demos.length} dem stron dla firm. Każdy projekt możesz otworzyć.`;
 
 // /dema was merged into this route (2026-09-28) — its item list lives here now,
 // as #demo-list on this page.
 const demoList = buildCreativeWorkItemList(
   PATH,
   "Dema stron dla firm",
-  demos.map((demo) => ({ name: demo.name, description: demo.summary.pl, sameAs: demo.url })),
+  demos.map((demo) => ({ name: demo.title.pl, description: demo.summary.pl, sameAs: demo.url })),
 );
 
 const pageGraph = renderGraph([
@@ -59,13 +58,6 @@ export const metadata: Metadata = {
 };
 
 export default function ProjektyPage() {
-  const demosWithScreenshots = demos.map((demo) => ({
-    ...demo,
-    hasDesktopScreenshot: existsSync(
-      join(process.cwd(), "public", "screenshots", "demos", `${demo.slug}-desktop.webp`),
-    ),
-  }));
-
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
@@ -73,7 +65,7 @@ export default function ProjektyPage() {
           hairline seam on the body colour right under the nav. */}
       <div className="bg-card-band pt-20 md:pt-24">
         <FeaturedWork demoCount={demos.length} hideCta />
-        <DemosSection demos={demosWithScreenshots} />
+        <DemosSection demos={demos} />
       </div>
     </>
   );

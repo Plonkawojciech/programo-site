@@ -27,13 +27,13 @@ const pageGraph = renderGraph([
 ]);
 
 export const metadata: Metadata = {
-  title: "Wycena - proces i czynniki ceny | Programo",
+  title: "Cennik stron, sklepów i aplikacji | Programo",
   description:
-    "Rozmowa, widełki w 24 h, stała wycena przed startem. Sprawdź, co wpływa na cenę aplikacji, sklepu lub strony. Bez ukrytych kosztów w trakcie projektu.",
+    "Ile kosztuje strona, sklep internetowy lub aplikacja: orientacyjne przedziały cen, co wpływa na wycenę i jak ją ustalamy. Stała cena przed startem prac.",
   alternates: { canonical: "https://programo.pl/cennik" },
   openGraph: {
     images: [OG_IMAGE],
-    title: "Wycena - proces i czynniki ceny | Programo",
+    title: "Cennik stron, sklepów i aplikacji | Programo",
     description: "Rozmowa, widełki w 24 h, stała wycena przed startem. Bez ukrytych kosztów w trakcie projektu.",
     url: "https://programo.pl/cennik",
     siteName: "Programo",

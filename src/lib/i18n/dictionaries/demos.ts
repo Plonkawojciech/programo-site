@@ -41,6 +41,25 @@ export const demos = {
     pl: "Każde demo to atrapa: formularze i koszyki nie działają. Treści, adresy i ceny pochodzą ze stron klientów.",
     en: "Each demo is a mock-up: forms and carts do not work. Copy, addresses and prices come from the clients' websites.",
   },
+  "demos.section.title": { pl: "Dema stron dla firm", en: "Website demos" },
+  "demos.section.lead": {
+    pl: "Strony, które zbudowaliśmy dla konkretnych firm, zanim cokolwiek podpisały. Ich treści, ich zdjęcia, wersja na telefon. Każde demo działa i możesz je otworzyć.",
+    en: "Sites we built for specific companies before they signed anything. Their copy, their photos, a mobile version. Every demo is live and one click away.",
+  },
+  "demos.section.leadConcept": {
+    pl: "Projekty stron, które przygotowaliśmy dla firm z różnych branż, zanim cokolwiek podpisały. Prawdziwe treści i wersja na telefon, bez szablonów.",
+    en: "Website designs we prepared for companies in different industries before they signed anything. Real copy and a mobile version, no templates.",
+  },
+  "demos.section.showAll": { pl: "Pokaż pozostałe ({count})", en: "Show the rest ({count})" },
+  "demos.section.note": {
+    pl: "Dema to projekty przygotowane w ramach oferty. Firmy na tej liście nie są naszymi klientami, a nazwy i znaki należą do ich właścicieli. Formularze i koszyki w demach są wyłączone.",
+    en: "Demos are designs prepared as part of an offer. The companies listed are not our clients, and all names and marks belong to their owners. Forms and carts in the demos are switched off.",
+  },
+  "demos.section.noteConcept": {
+    pl: "To projekty koncepcyjne przygotowane w ramach oferty, niewdrożone u tych firm. Dlatego pokazujemy branżę, a nie nazwę.",
+    en: "These are concept designs prepared as part of an offer and not deployed for those companies, which is why we show the industry rather than the name.",
+  },
+  "demos.card.conceptAlt": { pl: "Projekt koncepcyjny strony: {name}", en: "Concept website design: {name}" },
   "demos.filter.all": { pl: "Wszystkie", en: "All" },
   "demos.filter.label": { pl: "Filtruj dema według branży", en: "Filter demos by industry" },
   "demos.card.open": { pl: "Otwórz demo", en: "Open demo" },

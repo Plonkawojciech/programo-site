@@ -177,10 +177,9 @@ export default function SklepyInternetowePage() {
                   <div className="flex items-center gap-4">
                     <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-card shadow-card">
                       <Image
-                        src="/screenshots/jedmar-hero.webp"
-                        alt="Aplikacja mobilna sklepu Jedmar - natywne iOS i Android zbudowane przez Programo"
+                        src="/screenshots/v2/jedmar-shop-desktop.webp"
+                        alt="Sklep internetowy Jedmar - strona główna z kategoriami narzędzi"
                         fill
-                        priority
                         sizes="96px"
                         className="object-cover"
                       />

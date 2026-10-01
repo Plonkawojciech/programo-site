@@ -1,5 +1,6 @@
 "use client";
 
+import { COMPANY } from "@/lib/company";
 import { useState, useRef, useId, useEffect } from "react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
@@ -90,9 +91,8 @@ export default function HomeHero() {
 
   // --- Validation ---
   function validate(): { field: "name" | "phone" | "consent" | "turnstile"; message: string } | null {
-    if (!name.trim()) {
-      return { field: "name", message: t("home.hero.errorName") };
-    }
+    // The name is optional: /api/contact accepts a dialable phone on its own,
+    // and every required field in the first form a visitor sees costs leads.
     const trimmed = phone.trim();
     if (!trimmed) {
       return { field: "phone", message: t("home.hero.phoneErrorEmpty") };
@@ -212,7 +212,7 @@ export default function HomeHero() {
   }
 
   return (
-    <section className="relative isolate overflow-hidden bg-surface pt-28 pb-section-major md:pt-36 lg:pt-40">
+    <section className="relative isolate overflow-hidden bg-surface pt-24 pb-section-major sm:pt-28 md:pt-36 lg:pt-40">
       {/* Background photograph, blurred to a suggestion of a desk rather than a
           picture of one. Two rules govern every number below.
 
@@ -293,14 +293,14 @@ export default function HomeHero() {
           </h1>
 
           {/* Description - one sentence, max 65ch */}
-          <p className="mt-6 max-w-[60ch] text-lead leading-relaxed text-on-surface-variant text-pretty">
+          <p className="mt-4 max-w-[60ch] text-lead leading-relaxed text-on-surface-variant text-pretty sm:mt-6">
             {t("home.hero.desc.v2")}
           </p>
 
           {/* ── Phone capture form ── */}
           {/* Capped narrower than the headline: a single phone field stretched
               to 896px reads as an unfinished layout. */}
-          <div className="mt-10 max-w-2xl">
+          <div className="mt-7 max-w-2xl sm:mt-10">
             {formState === "success" ? (
               <div
                 id={successId}
@@ -334,14 +334,15 @@ export default function HomeHero() {
                 ref={fa.ref}
                 onSubmit={handleSubmit}
                 noValidate
-                className="relative flex flex-col gap-4"
+                className="relative flex flex-col gap-3 sm:gap-4"
               >
                 <Honeypot />
-                {/* Name and phone share a row from sm up. Two short fields
-                    stacked would push the consent tick and the button below the
-                    fold on a phone, which is where this form earns its living. */}
+                {/* Name and phone share a row from sm up. On a phone the name
+                    field is not rendered at all: it is optional, and stacked it
+                    pushed the submit button under the cookie bar on the first
+                    screen (375×812), which is where this form earns its living. */}
                 <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
-                  <div className="flex flex-col gap-1.5 sm:w-[38%]">
+                  <div className="hidden flex-col gap-1.5 sm:flex sm:w-[38%]">
                     <label htmlFor={nameInputId} className="sr-only">
                       {t("home.hero.nameLabel")}
                     </label>
@@ -490,7 +491,14 @@ export default function HomeHero() {
                 )}
 
                 <p className="text-sm text-on-surface-variant">
-                  {t("home.hero.phoneReassurance")}
+                  {t("home.hero.phoneReassurance")}{" "}
+                  {/* Counted by the delegated tel: listener in AnalyticsTracker. */}
+                  <a
+                    href={`tel:${COMPANY.phone}`}
+                    className="inline-flex min-h-11 items-center whitespace-nowrap font-medium text-on-surface underline decoration-on-surface-variant/50 underline-offset-4 transition-colors hover:text-primary"
+                  >
+                    {t("home.hero.callInstead")} {COMPANY.phoneDisplay}
+                  </a>
                 </p>
               </form>
             )}
@@ -500,7 +508,7 @@ export default function HomeHero() {
           <div className="mt-6">
             <a
               href="#realizacje"
-              className="inline-flex min-h-[24px] items-center gap-2 py-1 text-sm font-medium text-on-surface-variant transition-colors hover:text-primary"
+              className="inline-flex min-h-11 items-center gap-2 py-1 text-sm font-medium text-on-surface-variant transition-colors hover:text-primary"
             >
               {t("home.hero.ctaSecondary")}
               <span aria-hidden="true" className="transition-transform duration-300 ease-out">

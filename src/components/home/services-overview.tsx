@@ -22,7 +22,7 @@ const blocks: {
     bodyKey: "home.svc.block1.body",
     labelKey: "home.svc.block1.label",
     linkKey: "home.svc.block1.link",
-    href: "/sklepy-internetowe",
+    href: "/strony-internetowe",
   },
   {
     situationKey: "home.svc.block2.situation",
@@ -44,14 +44,18 @@ export default function ServicesOverview() {
   const { t } = useI18n();
   const prefersReduced = useReducedMotion();
 
-  const reveal = prefersReduced
-    ? {}
-    : {
-        initial: { opacity: 0, y: 16 } as const,
-        whileInView: { opacity: 1, y: 0 } as const,
-        viewport: { once: true, margin: "-12% 0px" } as const,
-        transition: { duration: durationMedium, ease: easeEntry } as const,
-      };
+  // The server renders `initial` (opacity 0) into the HTML for everyone, because
+  // it cannot know the visitor's motion preference. So the reveal must always
+  // run on the client; with reduced motion it runs instantly and without the
+  // offset. Dropping the props instead (the previous version) left the section
+  // invisible for every visitor with "Reduce motion" switched on.
+  const reveal = (delay = 0) =>
+    ({
+      initial: { opacity: 0, y: prefersReduced ? 0 : 16 },
+      whileInView: { opacity: 1, y: 0 },
+      viewport: { once: true, margin: "-8% 0px" },
+      transition: prefersReduced ? { duration: 0 } : { duration: durationMedium, ease: easeEntry, delay },
+    }) as const;
 
   return (
     <section
@@ -61,7 +65,7 @@ export default function ServicesOverview() {
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         {/* Section heading */}
         <motion.h2
-          {...reveal}
+          {...reveal()}
           className="font-headline text-h2 font-bold tracking-[-0.02em] text-on-surface text-balance [font-stretch:110%]"
         >
           {t("home.svc.title")}
@@ -74,18 +78,7 @@ export default function ServicesOverview() {
             return (
               <motion.article
                 key={block.situationKey}
-                {...(prefersReduced
-                  ? {}
-                  : {
-                      initial: { opacity: 0, y: 12 },
-                      whileInView: { opacity: 1, y: 0 },
-                      viewport: { once: true, margin: "-8% 0px" },
-                      transition: {
-                        duration: durationMedium,
-                        ease: easeEntry,
-                        delay: 0.06,
-                      },
-                    })}
+                {...reveal(0.06)}
                 className={`border-t border-outline-variant py-10 md:py-14 ${
                   isLast ? "border-b" : ""
                 }`}
@@ -116,7 +109,7 @@ export default function ServicesOverview() {
                     </p>
                     <Link
                       href={block.href}
-                      className="group inline-flex items-center gap-2 text-lead font-medium text-primary transition-colors hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      className="group inline-flex min-h-11 items-center gap-2 text-lead font-medium text-primary transition-colors hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                     >
                       {t(block.linkKey)}
                       <span

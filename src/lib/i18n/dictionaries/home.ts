@@ -294,9 +294,10 @@ export const home = {
     en: "First name",
   },
   "home.hero.namePlaceholder": {
-    pl: "Jak masz na imię?",
-    en: "What's your first name?",
+    pl: "Imię (opcjonalnie)",
+    en: "First name (optional)",
   },
+  "home.hero.callInstead": { pl: "Albo zadzwoń:", en: "Or call:" },
   "home.hero.phoneLabel": {
     pl: "Twój numer telefonu",
     en: "Your phone number",

@@ -42,7 +42,7 @@ const pillars: Pillar[] = [
     bulletKeys: ["offer.pillar1.b1", "offer.pillar1.b2", "offer.pillar1.b3", "offer.pillar1.b4", "offer.pillar1.b5"],
     href: "/oferta",
     projectSlug: "estalo",
-    visual: { kind: "browser", screenshot: "/screenshots/v2/estalo-enterprise-desktop.webp", tone: "dark" },
+    visual: { kind: "browser", screenshot: "/screenshots/v2/estalo-enterprise-desktop.webp" },
   },
   {
     titleKey: "offer.pillar2.title",

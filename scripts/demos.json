@@ -1,24 +1,58 @@
 [
- {"slug":"supermozaika","url":"https://supermozaika.programo.pl/"},
- {"slug":"anvapol","url":"https://anvapol.programo.pl/"},
- {"slug":"biuroaga","url":"https://biuroaga.programo.pl/"},
- {"slug":"intergraf","url":"https://intergraf.programo.pl/"},
- {"slug":"czystaprzyszlosc","url":"https://czystaprzyszlosc.programo.pl/"},
- {"slug":"bezpieczneplace","url":"https://bezpieczneplace.programo.pl/"},
- {"slug":"trendcars","url":"https://trendcars.programo.pl/"},
- {"slug":"sklepmaniek","url":"https://sklepmaniek.programo.pl/"},
- {"slug":"pzskatslp","url":"https://pzskatslp.programo.pl/"},
- {"slug":"elzakup","url":"https://elzakup.programo.pl/"},
- {"slug":"fineartfilm","url":"https://fineartfilm.programo.pl/"},
- {"slug":"innochem","url":"https://innochem.programo.pl/"},
- {"slug":"lumen","url":"https://lumen.programo.pl/"},
- {"slug":"manix","url":"https://manix.programo.pl/"},
- {"slug":"pressence","url":"https://pressence.programo.pl/"},
- {"slug":"underwater","url":"https://underwater.programo.pl/"},
- {"slug":"wojtplast","url":"https://wojtplast.programo.pl/"},
- {"slug":"zyciestolicy","url":"https://demo.programo.pl/"},
- {"slug":"terapiadens","url":"https://terapiadens.vercel.app/"},
- {"slug":"terapiadens-v2","url":"https://terapiadens.vercel.app/v2/"},
- {"slug":"gaming-ui","url":"https://gaming-ui-template.vercel.app/"},
- {"slug":"ks-posnania","url":"https://ks-posnania.vercel.app/"}
+ {
+  "slug": "lumen",
+  "url": "https://lumen.programo.pl/"
+ },
+ {
+  "slug": "wojtplast",
+  "url": "https://wojtplast.programo.pl/"
+ },
+ {
+  "slug": "anvapol",
+  "url": "https://anvapol.programo.pl/"
+ },
+ {
+  "slug": "trendcars",
+  "url": "https://trendcars.programo.pl/"
+ },
+ {
+  "slug": "sklepmaniek",
+  "url": "https://sklepmaniek.programo.pl/"
+ },
+ {
+  "slug": "intergraf",
+  "url": "https://intergraf.programo.pl/"
+ },
+ {
+  "slug": "pressence",
+  "url": "https://pressence.programo.pl/"
+ },
+ {
+  "slug": "elzakup",
+  "url": "https://elzakup.programo.pl/"
+ },
+ {
+  "slug": "manix",
+  "url": "https://manix.programo.pl/"
+ },
+ {
+  "slug": "czystaprzyszlosc",
+  "url": "https://czystaprzyszlosc.programo.pl/"
+ },
+ {
+  "slug": "zyciestolicy",
+  "url": "https://demo.programo.pl/"
+ },
+ {
+  "slug": "biuroaga",
+  "url": "https://biuroaga.programo.pl/"
+ },
+ {
+  "slug": "bezpieczneplace",
+  "url": "https://bezpieczneplace.programo.pl/"
+ },
+ {
+  "slug": "ks-posnania",
+  "url": "https://ks-posnania.vercel.app/"
+ }
 ]

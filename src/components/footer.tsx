@@ -66,7 +66,7 @@ export default function Footer() {
         style={{ y: contentY }}
         className="flex flex-col gap-14 px-6 md:px-12 lg:px-24 py-12 md:py-16 2xl:py-24 w-full max-w-[1400px] mx-auto will-change-transform transform-gpu"
       >
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1fr]">
           {/* Brand */}
           <div>
             {/* Same A4 art-board as the navbar logo: a 141px-tall box for a 29px
@@ -111,7 +111,7 @@ export default function Footer() {
               <Link
                 key={l.titleKey}
                 href={l.href}
-                className="-my-2 py-2 min-h-[32px] text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
+                className="-my-1 inline-flex min-h-11 items-center py-2 text-sm text-on-surface-variant md:-my-2 md:min-h-[32px] hover-underline hover:text-on-surface transition-colors duration-300"
               >
                 {t(l.titleKey)}
               </Link>
@@ -127,20 +127,20 @@ export default function Footer() {
               <Link
                 key={p.slug}
                 href={`/projects/${p.slug}`}
-                className="-my-2 py-2 min-h-[32px] text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
+                className="-my-1 inline-flex min-h-11 items-center py-2 text-sm text-on-surface-variant md:-my-2 md:min-h-[32px] hover-underline hover:text-on-surface transition-colors duration-300"
               >
                 {p.title}
               </Link>
             ))}
             <Link
               href="/projekty"
-              className="-my-2 py-2 min-h-[32px] text-sm font-medium text-primary hover-underline transition-colors duration-300"
+              className="-my-1 inline-flex min-h-11 items-center py-2 text-sm font-medium text-primary md:-my-2 md:min-h-[32px] hover-underline transition-colors duration-300"
             >
               {t("footer.allProjects")}
             </Link>
             <Link
               href="/projekty#dema"
-              className="-my-2 min-h-[44px] py-2 text-sm font-medium text-primary hover-underline transition-colors duration-300"
+              className="-my-1 inline-flex min-h-11 items-center py-2 text-sm font-medium text-primary md:-my-2 md:min-h-[32px] hover-underline transition-colors duration-300"
             >
               {t("footer.demos")}
             </Link>
@@ -155,7 +155,7 @@ export default function Footer() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="-my-2 py-2 min-h-[32px] text-sm text-on-surface-variant hover-underline hover:text-on-surface transition-colors duration-300"
+                className="-my-1 inline-flex min-h-11 items-center py-2 text-sm text-on-surface-variant md:-my-2 md:min-h-[32px] hover-underline hover:text-on-surface transition-colors duration-300"
               >
                 {t(l.labelKey)}
               </Link>
@@ -172,13 +172,13 @@ export default function Footer() {
               lokalizacji. Nie przechodzi przez i18n, bo adres nie jest tekstem
               do tłumaczenia i nie ma się rozjechać z klauzulą RODO. */}
           <span>{COMPANY_ADDRESS_LINE}</span>
-          <a href="mailto:biuro@programo.pl" className="hover-underline hover:text-on-surface transition-colors">
+          <a href="mailto:biuro@programo.pl" className="-my-2 inline-flex min-h-11 items-center md:my-0 md:min-h-0 hover-underline hover:text-on-surface transition-colors">
             biuro@programo.pl
           </a>
-          <a href="tel:+48509123434" className="hover-underline hover:text-on-surface transition-colors">
+          <a href="tel:+48509123434" className="-my-2 inline-flex min-h-11 items-center md:my-0 md:min-h-0 hover-underline hover:text-on-surface transition-colors">
             +48 509 123 434
           </a>
-          <a href="tel:+48797222363" className="hover-underline hover:text-on-surface transition-colors">
+          <a href="tel:+48797222363" className="-my-2 inline-flex min-h-11 items-center md:my-0 md:min-h-0 hover-underline hover:text-on-surface transition-colors">
             +48 797 222 363
           </a>
         </div>
@@ -195,7 +195,7 @@ export default function Footer() {
             <button
               type="button"
               onClick={openSettings}
-              className="-my-2 min-h-[32px] py-2 text-[10px] font-medium text-on-surface-variant uppercase tracking-widest hover-underline hover:text-on-surface transition-colors cursor-pointer"
+              className="-my-2 min-h-11 py-2 text-[10px] font-medium text-on-surface-variant uppercase tracking-widest hover-underline hover:text-on-surface transition-colors cursor-pointer"
             >
               {t("footer.cookies")}
             </button>

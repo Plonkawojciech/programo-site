@@ -28,7 +28,7 @@ interface CaseStudy {
 const cases: CaseStudy[] = [
   {
     slug: "jedmar",
-    image: "/screenshots/jedmar-hero.webp",
+    image: "/screenshots/v2/jedmar-shop-desktop.webp",
     imgAltKey: "home.work.jedmar.imgAlt",
     categoryKey: "home.work.jedmar.category",
   },
@@ -36,13 +36,13 @@ const cases: CaseStudy[] = [
     // Key namespace is `wks` while the project slug is `wks-poznan`; the two are
     // deliberately not kept in sync — the dictionary keys are shorter by design.
     slug: "wks-poznan",
-    image: "/screenshots/wks-hero.webp",
+    image: "/screenshots/v2/wks-poznan-desktop.webp",
     imgAltKey: "home.work.wks.imgAlt",
     categoryKey: "home.work.wks.category",
   },
   {
     slug: "wsafefinanse",
-    image: "/screenshots/wsafefinanse-hero.webp",
+    image: "/screenshots/v2/wsafefinanse-desktop.webp",
     imgAltKey: "home.work.wsafefinanse.imgAlt",
     categoryKey: "home.work.wsafefinanse.category",
   },
@@ -152,7 +152,7 @@ export default function ClientWork() {
                   fill
                   sizes="(max-width: 768px) 88vw, (max-width: 1024px) 74vw, 1080px"
                   className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                  priority={i === 0}
+                  loading={i === 0 ? "eager" : "lazy"}
                 />
 
                 {/* Scrim. The caption sits inside the bottom band where this is

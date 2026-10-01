@@ -144,21 +144,21 @@ export default function CookieBanner() {
                 <button
                   type="button"
                   onClick={openSettings}
-                  className="shrink-0 px-1 py-2 text-[11px] font-medium text-on-surface-variant underline underline-offset-4 transition-colors hover:text-on-surface md:px-2 md:text-xs md:uppercase md:tracking-widest"
+                  className="min-h-11 shrink-0 px-1 py-2 text-[11px] font-medium text-on-surface-variant underline underline-offset-4 transition-colors hover:text-on-surface md:px-2 md:text-xs md:uppercase md:tracking-widest"
                 >
                   {t("cookie.customize")}
                 </button>
                 <button
                   type="button"
                   onClick={rejectAll}
-                  className="flex-1 whitespace-nowrap rounded-full border-2 border-outline-variant/60 bg-surface px-3 py-2 text-[11px] font-medium text-on-surface transition-all hover:border-outline-variant hover:bg-on-surface/5 md:flex-none md:px-5 md:py-2.5 md:text-xs md:uppercase md:tracking-widest"
+                  className="min-h-11 flex-1 whitespace-nowrap rounded-full border-2 border-outline-variant/60 bg-surface px-3 py-2 text-[11px] font-medium text-on-surface transition-all hover:border-outline-variant hover:bg-on-surface/5 md:flex-none md:px-5 md:py-2.5 md:text-xs md:uppercase md:tracking-widest"
                 >
                   {t("cookie.rejectAll")}
                 </button>
                 <button
                   type="button"
                   onClick={acceptAll}
-                  className="flex-1 whitespace-nowrap rounded-full bg-primary px-3 py-2 text-[11px] font-semibold text-on-primary shadow-lg shadow-primary/20 transition-all hover:bg-primary-hover hover:text-on-primary-container md:flex-none md:px-5 md:py-2.5 md:text-xs md:uppercase md:tracking-widest"
+                  className="min-h-11 flex-1 whitespace-nowrap rounded-full bg-primary px-3 py-2 text-[11px] font-semibold text-on-primary shadow-lg shadow-primary/20 transition-all hover:bg-primary-hover hover:text-on-primary-container md:flex-none md:px-5 md:py-2.5 md:text-xs md:uppercase md:tracking-widest"
                 >
                   {t("cookie.acceptAll")}
                 </button>

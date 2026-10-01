@@ -25,7 +25,7 @@ const PATH = "/wspolpraca";
 export const metadata: Metadata = {
   title: "Program poleceń - zarabiaj 10% na polecaniu Programo",
   description:
-    "Polecasz nam firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 10% wartości netto opłaconej faktury. Program dla firm. Dla przedsiębiorców, bez limitów, bez minimum.",
+    "Polecasz firmę, która potrzebuje strony, sklepu albo aplikacji, i dostajesz 10% wartości netto opłaconej faktury. Program dla przedsiębiorców, bez limitów.",
   alternates: { canonical: "https://programo.pl/wspolpraca" },
   openGraph: {
     images: [OG_IMAGE],

@@ -1,5 +1,14 @@
-// Screenshots of every demo for /dema: local Chrome via playwright-core → webp (sharp).
+// Screenshots of every demo shown on /projekty: local Chrome via playwright-core → webp (sharp).
 // Usage: node scripts/shoot-demos.mjs [slug ...]   (no args = all in scripts/demos.json)
+//
+// One standard for every capture, so the grid reads as one set:
+//   desktop 1440×900 → 1600 px wide, mobile 390×844 → 780 px wide, DPR 2, WebP q80.
+// Each demo is shot twice:
+//   <slug>-{desktop,mobile}.webp          as the visitor sees it (cookie bars and
+//                                          "demo version" strips removed)
+//   <slug>-concept-{desktop,mobile}.webp  header and navigation removed as well, so the
+//                                          company's logo and name are not in the frame.
+//                                          Used when a demo is shown as an unnamed concept.
 import { chromium } from "playwright-core";
 import { readFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
@@ -11,9 +20,34 @@ const demos = JSON.parse(readFileSync(new URL("./demos.json", import.meta.url), 
 const only = process.argv.slice(2);
 
 const SIZES = [
-  { name: "desktop", viewport: { width: 1440, height: 900 }, outW: 1200, mobile: false },
-  { name: "mobile", viewport: { width: 390, height: 844 }, outW: 390, mobile: true },
+  { name: "desktop", viewport: { width: 1440, height: 900 }, outW: 1600, mobile: false },
+  { name: "mobile", viewport: { width: 390, height: 844 }, outW: 780, mobile: true },
 ];
+
+// Runs in the page. Removes overlays that are about the demo, not the design.
+function clean(concept) {
+  const NOISE = /cookie|ciastecz|wersja demonstracyjna|wersja demo|przygotowan[ae] przez programo/i;
+  for (const el of document.querySelectorAll("body *")) {
+    const cs = getComputedStyle(el);
+    const pinned = cs.position === "fixed" || cs.position === "sticky";
+    const box = el.getBoundingClientRect();
+    const strip = box.height > 0 && box.height < 90 && box.width > innerWidth * 0.8;
+    if ((pinned || strip) && NOISE.test(el.textContent || "") && (el.textContent || "").length < 600) {
+      el.style.setProperty("display", "none", "important");
+    }
+  }
+  if (concept) {
+    for (const el of document.querySelectorAll("header, body > nav, [role=banner]")) {
+      el.style.setProperty("display", "none", "important");
+    }
+    for (const el of document.querySelectorAll("body *")) {
+      const cs = getComputedStyle(el);
+      if ((cs.position === "fixed" || cs.position === "sticky") && el.getBoundingClientRect().top < 120) {
+        el.style.setProperty("display", "none", "important");
+      }
+    }
+  }
+}
 
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 for (const { slug, url } of demos) {
@@ -30,15 +64,18 @@ for (const { slug, url } of demos) {
     const page = await ctx.newPage();
     try {
       await page.goto(url, { waitUntil: "networkidle", timeout: 45000 });
-      // Entry animations settle; fonts load.
-      await page.waitForTimeout(1500);
-      await page.evaluate(() => window.scrollTo(0, 0));
-      const png = await page.screenshot({ type: "png" });
-      await sharp(png)
-        .resize({ width: s.outW * 2 })
-        .webp({ quality: 82 })
-        .toFile(path.join(OUT, `${slug}-${s.name}.webp`));
-      console.log("ok", slug, s.name);
+      await page.evaluate(() => document.fonts.ready);
+      // Entry animations settle, hero videos paint a frame.
+      await page.waitForTimeout(2500);
+      for (const concept of [false, true]) {
+        await page.evaluate(clean, concept);
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForTimeout(300);
+        const png = await page.screenshot({ type: "png" });
+        const name = `${slug}${concept ? "-concept" : ""}-${s.name}.webp`;
+        await sharp(png).resize({ width: s.outW }).webp({ quality: 80, effort: 6 }).toFile(path.join(OUT, name));
+        console.log("ok", name);
+      }
     } catch (e) {
       console.error("FAIL", slug, s.name, String(e.message).split("\n")[0]);
     } finally {
