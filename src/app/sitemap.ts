@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { projects } from "@/lib/projects";
-import { getAllPosts } from "@/lib/blog";
+import { getAllClusters, getAllPosts, getPostsByCluster } from "@/lib/blog";
 import { STATIC_ROUTE_UPDATED_AT } from "@/lib/schema";
 
 // `priority` and `changeFrequency` are both no-ops for Google (it ignores
@@ -128,6 +128,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.3,
     },
+    // Blog clusters that have at least one post. Planned, still-empty clusters
+    // are noindex (see blog/klaster/[cluster]/page.tsx) and stay out. lastModified
+    // is the newest post's date, because that is when the listing last changed.
+    ...getAllClusters().map((cluster) => ({
+      url: `https://programo.pl/blog/klaster/${cluster}`,
+      lastModified: getPostsByCluster(cluster)
+        .map((post) => post.frontmatter.dateModified)
+        .sort()
+        .at(-1),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
     // All project / case-study pages, generated from the projects array
     // so the sitemap never drifts (incl. client work: Jedmar, WKS, Posnania…).
     ...projects.map((p) => ({
