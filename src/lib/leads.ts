@@ -35,6 +35,32 @@ export type Lead = {
   landing_page: string;
   referrer: string;
   first_seen: string;
+  // Where the submission came from and what the anti-spam layers made of it.
+  // Optional: leads stored before 2026-10-01 do not have them.
+  formId?: string;
+  pageUrl?: string;
+  /** "clean" | "suspicious" — dropped submissions go to the rejected list instead. */
+  verdict?: string;
+  verdictReasons?: string[];
+  signals?: string;
+};
+
+/** A submission the anti-spam layers refused. Kept so the filter can be audited. */
+export type RejectedSubmission = {
+  ts: string;
+  /** Which layer refused it: honeypot | behaviour | content | duplicate. */
+  stage: string;
+  reasons: string[];
+  formId: string;
+  pageUrl: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  signals: string;
+  /** Last octet removed: enough to see one network hammering, not enough to identify a person. */
+  ipPrefix: string;
+  userAgent: string;
 };
 
 /**
@@ -82,6 +108,59 @@ export async function storeLead(lead: Lead): Promise<boolean> {
   } catch (e) {
     // Best-effort — never let lead storage affect the request.
     console.error("[leads] storeLead failed:", e);
+    return false;
+  }
+}
+
+const REJECTED_KEY = "programo:leads:rejected";
+const MAX_REJECTED = 500;
+
+/** Store a refused submission. Best-effort, never throws, never blocks the response for long. */
+export async function storeRejected(entry: RejectedSubmission): Promise<void> {
+  const redis = getRedis();
+  if (!redis) return;
+  try {
+    await redis.lpush(REJECTED_KEY, JSON.stringify(entry));
+    await redis.ltrim(REJECTED_KEY, 0, MAX_REJECTED - 1);
+  } catch (e) {
+    console.error("[leads] storeRejected failed:", e);
+  }
+}
+
+/** Most recent refused submissions, newest first. */
+export async function getRejected(limit = 200): Promise<RejectedSubmission[]> {
+  const redis = getRedis();
+  if (!redis) return [];
+  try {
+    const rows = await redis.lrange<string | RejectedSubmission>(REJECTED_KEY, 0, limit - 1);
+    return rows.flatMap((row) => {
+      try {
+        const entry = typeof row === "string" ? (JSON.parse(row) as RejectedSubmission) : row;
+        return entry && typeof entry === "object" ? [entry] : [];
+      } catch {
+        return [];
+      }
+    });
+  } catch (e) {
+    console.error("[leads] getRejected failed:", e);
+    return [];
+  }
+}
+
+/**
+ * True when the same phone or e-mail was already submitted in the last 24 h.
+ * Marks the fingerprint as seen in the same call (SET NX), so two requests
+ * racing each other cannot both pass. Fails open without Redis.
+ */
+export async function isRepeatSubmission(fingerprint: string): Promise<boolean> {
+  if (!fingerprint) return false;
+  const redis = getRedis();
+  if (!redis) return false;
+  try {
+    const set = await redis.set(`programo:leads:seen:${fingerprint}`, "1", { nx: true, ex: 60 * 60 * 24 });
+    return set === null;
+  } catch (e) {
+    console.error("[leads] isRepeatSubmission failed:", e);
     return false;
   }
 }

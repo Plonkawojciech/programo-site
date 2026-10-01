@@ -228,3 +228,14 @@ duża zmiana, osobny etap z pomiarem Lighthouse przed i po).
   głównej, filary `/oferta`, sitemap (33 adresy), `llms.txt`.
 
 Do sprawdzenia za 4 tygodnie w Search Console: wyświetlenia i pozycje nowych adresów oraz `/cennik`.
+
+### 1.10.2026, wdrożenie 3 (dopisek: boty w formularzach)
+
+- filtr treści `lib/spam-rules.ts` (numery-wypełniacze i wzorce, numery spoza polskiej numeracji, linki,
+  HTML, inny alfabet, domeny tymczasowe), powtórka tego samego kontaktu w 24 h oznaczana zamiast liczona
+  drugi raz, lista odrzuconych zgłoszeń z powodem i podgląd pod `/crm/odrzucone`;
+- każdy zapisany lead ma teraz formularz, adres strony, werdykt i sygnały;
+- opis warstw, instrukcja kluczy Turnstile i zakres zakładki „Leady z formularzy" w CRM:
+  `docs/ochrona-formularzy-2026-10.md`;
+- lista ujęć na sesję 2.10: `docs/sesja-zdjeciowa-2026-10-02.md`. Warianty portretów do wyboru:
+  `~/Programo/marketing/portrety/2026-10-01-warianty/`. Na stronę trafia dopiero wybrany.

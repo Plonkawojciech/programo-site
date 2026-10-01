@@ -16,9 +16,12 @@ import { issueChallenge, leadingZeroBits, DIFFICULTY_BITS, MIN_AGE_MS } from "@/
 // convenience layered on top of it.
 
 const storeLead = vi.fn();
+const storeRejected = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@/lib/leads", () => ({
   storeLead: (...args: unknown[]) => storeLead(...args),
+  storeRejected: (...args: unknown[]) => storeRejected(...args),
+  isRepeatSubmission: async () => false,
   // No Redis in tests: the request guard falls back to its in-process counter.
   getRedis: () => null,
 }));
@@ -38,7 +41,8 @@ vi.mock("next/server", async (importOriginal) => {
 const validLead = {
   name: "Jan Kowalski",
   phone: "509 123 434",
-  email: "jan@example.com",
+  // Not example.com: lib/spam-rules.ts flags reserved test domains.
+  email: "jan@kowalski-budownictwo.pl",
   subject: "Wycena projektu",
   consent: true as const,
 };
@@ -139,6 +143,23 @@ describe("/api/contact — status follows persistence, not notification", () => 
     const res = await POST(post(validLead));
 
     expect(res.status).toBe(200);
+  });
+
+  it("answers 200 but stores nothing and pings nobody for a placeholder number", async () => {
+    storeLead.mockResolvedValue(true);
+    storeRejected.mockClear();
+    const fetchSpy = vi.fn().mockResolvedValue(new Response("{}", { status: 200 }));
+    globalThis.fetch = fetchSpy as unknown as typeof fetch;
+
+    const POST = await loadRoute();
+    const res = await POST(post({ ...validLead, phone: "+48 600 000 000" }));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ success: true, counted: false });
+    expect(storeLead).not.toHaveBeenCalled();
+    expect(fetchSpy, "no Telegram, no CRM").not.toHaveBeenCalled();
+    expect(storeRejected).toHaveBeenCalledOnce();
+    expect(storeRejected.mock.calls[0][0]).toMatchObject({ stage: "content" });
   });
 
   it("still rejects an invalid payload before touching any channel", async () => {

@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse, after } from "next/server";
-import { storeLead } from "@/lib/leads";
+import { isRepeatSubmission, storeLead, storeRejected } from "@/lib/leads";
 import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-schema";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { isHoneypotTripped, verifyChallenge } from "@/lib/form-challenge";
 import { isForeignOrigin, isOverAttemptLimit, isToolUserAgent } from "@/lib/request-guard";
 import { describeSignals, scoreBotSignals } from "@/lib/bot-score";
+import { contactFingerprint, mergeVerdicts, scoreContent } from "@/lib/spam-rules";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 import { buildLeadMessage } from "@/lib/telegram-message";
@@ -72,10 +73,29 @@ export async function POST(request: NextRequest) {
   // Anti-bot, keyless layers — see lib/form-challenge.ts. Honeypot first: a
   // filled decoy field gets the same 200 a real lead gets, and nothing else.
   // Telling a bot it failed only teaches it what to change.
-  if (isHoneypotTripped(body)) {
-    console.warn(`[contact] honeypot tripped from ${ip} (form ${result.data.form_id ?? "?"}) — dropped`);
+  // Every refusal below is stored (lib/leads.ts, rejected list) so the filter
+  // can be audited: which form, which rule, what was typed. Answered with the
+  // same 200 a real lead gets.
+  const reject = async (stage: string, reasons: string[]) => {
+    console.warn(`[contact] ${stage} from ${ip} (form ${result.data.form_id ?? "?"}): ${reasons.join("; ")}`);
+    await storeRejected({
+      ts: new Date().toISOString(),
+      stage,
+      reasons,
+      formId: result.data.form_id ?? "",
+      pageUrl: result.data.page_url ?? "",
+      name: result.data.name ?? "",
+      email: result.data.email ?? "",
+      phone: result.data.phone ?? "",
+      message: (result.data.message ?? "").slice(0, 500),
+      signals: describeSignals(result.data.sig),
+      ipPrefix: ip.replace(/[.:][0-9a-f]*$/i, ""),
+      userAgent: (ua ?? "").slice(0, 200),
+    });
     return NextResponse.json({ success: true, counted: false });
-  }
+  };
+
+  if (isHoneypotTripped(body)) return reject("honeypot", ["wypełnione ukryte pole"]);
   const challenge = verifyChallenge(result.data.challenge, result.data.pow);
   if (!challenge.ok) {
     console.warn(`[contact] challenge ${challenge.reason} from ${ip} (form ${result.data.form_id ?? "?"})`);
@@ -94,12 +114,20 @@ export async function POST(request: NextRequest) {
   // dropped; likely bots are delivered flagged, and neither kind is ever
   // counted as a conversion — a bot counted as a 500 zł lead teaches Google
   // Ads to buy more bots.
-  const bot = scoreBotSignals(result.data.sig);
+  const behaviour = scoreBotSignals(result.data.sig);
   const sigLine = describeSignals(result.data.sig);
-  if (bot.level === "drop") {
-    console.warn(`[contact] bot dropped from ${ip} (form ${result.data.form_id ?? "?"}): ${bot.reasons.join("; ")} | ${sigLine}`);
-    return NextResponse.json({ success: true, counted: false });
-  }
+  if (behaviour.level === "drop") return reject("behaviour", behaviour.reasons);
+  // What was typed (lib/spam-rules.ts): placeholder numbers, link spam.
+  const content = scoreContent(result.data);
+  if (content.level === "drop") return reject("content", content.reasons);
+  // The same phone or e-mail again within 24 h is delivered (the second form
+  // may carry the details the first one lacked) but flagged, so it is one
+  // conversion and nobody is called twice.
+  const repeat = await isRepeatSubmission(contactFingerprint(result.data));
+  const bot = mergeVerdicts(
+    mergeVerdicts(behaviour, content),
+    repeat ? { level: "suspicious", reasons: ["ten sam telefon lub e-mail już był w ciągu 24 h"] } : { level: "clean", reasons: [] },
+  );
   const suspicious = bot.level === "suspicious";
   if (suspicious) {
     console.warn(`[contact] suspicious lead from ${ip} (form ${result.data.form_id ?? "?"}): ${bot.reasons.join("; ")} | ${sigLine}`);
@@ -116,7 +144,6 @@ export async function POST(request: NextRequest) {
       { status: 403 },
     );
   }
-
   const { name, email, phone, subject, message, projectType, budget, consentTimestamp } = result.data;
   // A phone-only lead legitimately has no name, so the notifications need a
   // label instead of a dangling "od ". The CRM keeps the field genuinely empty.
@@ -184,6 +211,11 @@ export async function POST(request: NextRequest) {
       landing_page: landing_page || "",
       referrer: referrer || "",
       first_seen: result.data.first_seen || "",
+      formId: result.data.form_id || "",
+      pageUrl: result.data.page_url || "",
+      verdict: bot.level,
+      verdictReasons: bot.reasons,
+      signals: sigLine,
     });
   } catch (e) {
     console.error("[contact] storeLead threw unexpectedly:", e);
