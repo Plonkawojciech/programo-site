@@ -102,7 +102,15 @@ export async function forwardToCrm(payload: ReturnType<typeof buildCrmPayload>):
     console.log("[DEV] No CRM_WEBHOOK_SECRET - skipping CRM forward.");
     return false;
   }
-  const url = process.env.CRM_WEBHOOK_URL || CRM_INTAKE_DEFAULT_URL;
+  // CRM_INTAKE_URL, not the old CRM_WEBHOOK_URL. That one was set on Vercel in
+  // July, when the CRM lived on Contabo; no form submission has reached the CRM
+  // since the move to the new VM (last one 2026-09-05) and the forwards on
+  // 2026-10-03 timed out while crm.programo.pl answered other clients, so the
+  // variable most likely still points at the old host. The default is the live
+  // address; the error log names the host so this is visible next time.
+  const url = process.env.CRM_INTAKE_URL || CRM_INTAKE_DEFAULT_URL;
+  let host = "?";
+  try { host = new URL(url).host; } catch { /* reported by fetch below */ }
   try {
     const res = await fetch(url, {
       method: "POST",
@@ -110,10 +118,10 @@ export async function forwardToCrm(payload: ReturnType<typeof buildCrmPayload>):
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(5000),
     });
-    if (!res.ok) console.error(`[contact] CRM webhook failed: HTTP ${res.status} (verdict ${payload.verdict})`);
+    if (!res.ok) console.error(`[contact] CRM webhook failed: HTTP ${res.status} from ${host} (verdict ${payload.verdict})`);
     return res.ok;
   } catch (e) {
-    console.error("[contact] CRM webhook error:", e);
+    console.error(`[contact] CRM webhook error (${host}):`, e instanceof Error ? `${e.name}: ${e.message}` : e);
     return false;
   }
 }

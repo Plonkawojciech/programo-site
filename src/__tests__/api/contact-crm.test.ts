@@ -68,7 +68,7 @@ describe("/api/contact → CRM review inbox", () => {
   const originalFetch = globalThis.fetch;
   beforeEach(() => {
     process.env.CRM_WEBHOOK_SECRET = "test-crm-secret";
-    delete process.env.CRM_WEBHOOK_URL;
+    delete process.env.CRM_INTAKE_URL;
     delete process.env.TELEGRAM_BOT_TOKEN;
     fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 201 }));
     globalThis.fetch = fetchMock as unknown as typeof fetch;
@@ -125,11 +125,16 @@ describe("/api/contact → CRM review inbox", () => {
     expect(crmBody()).toMatchObject({ verdict: "rejected", signals: { stage: "challenge", challenge: "missing" } });
   });
 
-  it("uses CRM_WEBHOOK_URL when set and skips forwarding without a secret", async () => {
-    process.env.CRM_WEBHOOK_URL = "https://crm.test/api/forms/intake";
+  it("ignores the stale CRM_WEBHOOK_URL, honours CRM_INTAKE_URL, skips forwarding without a secret", async () => {
+    process.env.CRM_WEBHOOK_URL = "https://old-contabo.test/api/forms/programo";
+    await send(lead);
+    expect(crmCalls()).toHaveLength(1);
+    delete process.env.CRM_WEBHOOK_URL;
+    fetchMock.mockClear();
+    process.env.CRM_INTAKE_URL = "https://crm.test/api/forms/intake";
     await send(lead);
     expect(fetchMock.mock.calls.some(([url]) => String(url) === "https://crm.test/api/forms/intake")).toBe(true);
-    delete process.env.CRM_WEBHOOK_URL;
+    delete process.env.CRM_INTAKE_URL;
     fetchMock.mockClear();
     delete process.env.CRM_WEBHOOK_SECRET;
     process.env.FORM_CHALLENGE_SECRET = "challenge-only";
