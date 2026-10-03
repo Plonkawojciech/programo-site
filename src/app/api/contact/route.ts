@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse, after } from "next/server";
 import { isRepeatSubmission, storeLead, storeRejected } from "@/lib/leads";
 import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-schema";
-import { verifyTurnstile } from "@/lib/turnstile";
+import { isTurnstileEnforced, verifyTurnstile } from "@/lib/turnstile";
+import { buildCrmPayload, forwardToCrm, type CrmSignals, type CrmVerdict } from "@/lib/crm-forward";
 import { isHoneypotTripped, verifyChallenge } from "@/lib/form-challenge";
 import { isForeignOrigin, isOverAttemptLimit, isToolUserAgent } from "@/lib/request-guard";
 import { describeSignals, scoreBotSignals } from "@/lib/bot-score";
@@ -70,13 +71,19 @@ export async function POST(request: NextRequest) {
   // parses is a submission. Rejected attempts are typos, not traffic.
   recordSubmission(ip);
 
+  // Every outcome below is forwarded to the CRM review inbox (lib/crm-forward.ts),
+  // rejected ones included: the CRM applies its own rules on top, keeps spam
+  // hidden but recoverable, and pings a phone only for clean submissions.
+  const toCrm = (verdict: CrmVerdict, reasons: string[], signals: CrmSignals) =>
+    forwardToCrm(buildCrmPayload(result.data, { verdict, reasons, signals, ip, userAgent: ua ?? "" }));
+
   // Anti-bot, keyless layers — see lib/form-challenge.ts. Honeypot first: a
   // filled decoy field gets the same 200 a real lead gets, and nothing else.
   // Telling a bot it failed only teaches it what to change.
   // Every refusal below is stored (lib/leads.ts, rejected list) so the filter
   // can be audited: which form, which rule, what was typed. Answered with the
   // same 200 a real lead gets.
-  const reject = async (stage: string, reasons: string[]) => {
+  const reject = async (stage: string, reasons: string[], signals: CrmSignals) => {
     console.warn(`[contact] ${stage} from ${ip} (form ${result.data.form_id ?? "?"}): ${reasons.join("; ")}`);
     await storeRejected({
       ts: new Date().toISOString(),
@@ -92,13 +99,17 @@ export async function POST(request: NextRequest) {
       ipPrefix: ip.replace(/[.:][0-9a-f]*$/i, ""),
       userAgent: (ua ?? "").slice(0, 200),
     });
+    await toCrm("rejected", reasons, { stage, behaviour: describeSignals(result.data.sig), ...signals });
     return NextResponse.json({ success: true, counted: false });
   };
 
-  if (isHoneypotTripped(body)) return reject("honeypot", ["wypełnione ukryte pole"]);
+  if (isHoneypotTripped(body)) return reject("honeypot", ["wypełnione ukryte pole"], { honeypot: true });
   const challenge = verifyChallenge(result.data.challenge, result.data.pow);
   if (!challenge.ok) {
     console.warn(`[contact] challenge ${challenge.reason} from ${ip} (form ${result.data.form_id ?? "?"})`);
+    await toCrm("rejected", [`wyzwanie anty-bot niezaliczone (${challenge.reason})`], {
+      stage: "challenge", honeypot: false, challenge: challenge.reason, behaviour: describeSignals(result.data.sig),
+    });
     return NextResponse.json(
       {
         error:
@@ -116,10 +127,12 @@ export async function POST(request: NextRequest) {
   // Ads to buy more bots.
   const behaviour = scoreBotSignals(result.data.sig);
   const sigLine = describeSignals(result.data.sig);
-  if (behaviour.level === "drop") return reject("behaviour", behaviour.reasons);
+  if (behaviour.level === "drop") return reject("behaviour", behaviour.reasons, { honeypot: false, challenge: "ok", bot: behaviour.level });
   // What was typed (lib/spam-rules.ts): placeholder numbers, link spam.
   const content = scoreContent(result.data);
-  if (content.level === "drop") return reject("content", content.reasons);
+  if (content.level === "drop") {
+    return reject("content", content.reasons, { honeypot: false, challenge: "ok", bot: behaviour.level, content: content.level });
+  }
   // The same phone or e-mail again within 24 h is delivered (the second form
   // may carry the details the first one lacked) but flagged, so it is one
   // conversion and nobody is called twice.
@@ -138,7 +151,14 @@ export async function POST(request: NextRequest) {
   // limit exists for. No-op until both Turnstile env vars are set — see
   // src/lib/turnstile.ts for the fail-open/closed policy.
   const turnstile = await verifyTurnstile(result.data.turnstileToken, ip);
+  const baseSignals: CrmSignals = {
+    honeypot: false, challenge: "ok", repeat, bot: behaviour.level, content: content.level, behaviour: sigLine,
+  };
   if (!turnstile.ok) {
+    const missing = turnstile.reason === "missing";
+    await toCrm("rejected", [...bot.reasons, missing ? "Turnstile: brak tokenu" : "Turnstile: weryfikacja nieudana"], {
+      ...baseSignals, stage: "turnstile", turnstile: missing ? "missing" : "fail",
+    });
     return NextResponse.json(
       { error: "Nie udało się potwierdzić, że nie jesteś robotem. Odśwież stronę i spróbuj ponownie." },
       { status: 403 },
@@ -221,45 +241,13 @@ export async function POST(request: NextRequest) {
     console.error("[contact] storeLead threw unexpectedly:", e);
   }
 
-  // Forward the lead to the internal CRM (crm.programo.pl). Best-effort with a
-  // short timeout: a CRM outage can never affect the contact flow or response.
-  const crmSecret = process.env.CRM_WEBHOOK_SECRET;
-  const crmUrl =
-    process.env.CRM_WEBHOOK_URL || "https://crm.programo.pl/api/forms/programo";
-  if (crmSecret && !suspicious) {
-    try {
-      const utm: Record<string, string> = {};
-      for (const [k, v] of sources) utm[k] = v;
-      const res = await fetch(crmUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Webhook-Secret": crmSecret,
-        },
-        body: JSON.stringify({
-          name: name || "",
-          email: email || "",
-          phone: phone || "",
-          subject,
-          message: message || "",
-          projectType: projectType || "",
-          budget: budget || "",
-          source: "programo.pl",
-          utm,
-        }),
-        signal: AbortSignal.timeout(5000),
-      });
-      if (res.ok) {
-        persisted = true;
-      } else {
-        console.error(`[contact] CRM webhook failed: HTTP ${res.status}`);
-      }
-    } catch (e) {
-      console.error("[contact] CRM webhook error:", e);
-    }
-  } else {
-    console.log("[DEV] No CRM_WEBHOOK_SECRET - skipping CRM forward.");
-  }
+  // Forward to the CRM review inbox — clean AND suspicious (it used to skip
+  // suspicious ones, which then existed only on Telegram). The CRM decides
+  // who gets a push; see lib/crm-forward.ts.
+  const crmOk = await toCrm(bot.level === "suspicious" ? "suspicious" : "clean", bot.reasons, {
+    ...baseSignals, turnstile: isTurnstileEnforced() ? "ok" : "off",
+  });
+  if (crmOk) persisted = true;
 
   // Notification channels. Telegram is the live one; the CRM webhook and the
   // Redis store above already persist the lead independently, so a Telegram

@@ -38,13 +38,20 @@ Dwie hipotezy do sprawdzenia na danych (w tej kolejności):
 | 8 | **Powtórka**: ten sam telefon lub e-mail w ciągu 24 h dochodzi oznaczony, nie liczy się jako konwersja | `lib/leads.ts` | 1.10 |
 | 9 | Cloudflare Turnstile | `lib/turnstile.ts`, `ui/turnstile.tsx` | kod gotowy od 21.09, **czeka na klucze** |
 
-Co się dzieje ze zgłoszeniem:
+Co się dzieje ze zgłoszeniem (od 3.10 każde trafia do skrzynki CRM „Leady z formularzy”, `/formularze`,
+przez `POST /api/forms/intake`, `lib/crm-forward.ts`):
 
-- **odrzucone** (4, 6 lub 7 w wersji „na pewno"): nadawca dostaje zwykłe potwierdzenie, nie ma Telegrama, CRM
-  ani konwersji. Od 1.10 trafia na listę odrzuconych z powodem;
-- **podejrzane**: dochodzi na Telegram z etykietą PODEJRZANE i powodami, nie idzie do CRM, nie liczy się
-  jako konwersja. **Nie dzwonić bez sprawdzenia powodów**;
-- **czyste**: Telegram, CRM, konwersja.
+- **odrzucone** (4, 5, 6, 7 w wersji „na pewno” albo Turnstile): nadawca dostaje zwykłe potwierdzenie
+  (albo 403 przy wyzwaniu/Turnstile), nie ma Telegrama ani konwersji. Zostaje na liście odrzuconych w Redisie
+  i idzie do CRM z `verdict: "rejected"`, etapem (`signals.stage`) i powodami; CRM chowa je w „Spam”;
+- **podejrzane**: Telegram z etykietą PODEJRZANE, do CRM z `verdict: "suspicious"` (widoczne w skrzynce,
+  bez pusha), bez konwersji. **Nie dzwonić bez sprawdzenia powodów**;
+- **czyste**: Telegram, CRM (`clean`), konwersja. CRM ma własne reguły i bierze surowszy werdykt, więc push
+  na telefon dostaje tylko zgłoszenie czyste dla obu stron.
+
+Pola wysyłane do CRM: `source`, `formId`, `pageUrl`, dane kontaktowe i treść, `utm`, `verdict`,
+`verdictReasons`, `signals` (`stage`, `honeypot`, `challenge`, `turnstile` = `ok`/`missing`/`fail`/`off`,
+`repeat`, `bot`, `content`, `behaviour`), `ip`, `userAgent`. Kontrakt: `crm_programo/docs/forms-intake.md`.
 
 Podgląd odrzuconych: `programo.pl/crm/odrzucone` (to samo logowanie co `/crm`). Jeśli pojawi się tam
 prawdziwa osoba, reguła jest za ostra i trzeba ją poluzować.
