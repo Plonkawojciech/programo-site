@@ -16,6 +16,8 @@ const blocks: {
   labelKey: TranslationKey;
   linkKey: TranslationKey;
   href: string;
+  /** Rows copied from the /cennik table (src/components/pricing.tsx): name key, net range in PLN, term key. */
+  prices: { nameKey: TranslationKey; from: number; to: number; terminKey?: TranslationKey }[];
 }[] = [
   {
     situationKey: "home.svc.block1.situation",
@@ -23,6 +25,10 @@ const blocks: {
     labelKey: "home.svc.block1.label",
     linkKey: "home.svc.block1.link",
     href: "/strony-internetowe",
+    prices: [
+      { nameKey: "pricing.itemWebsite.name", from: 2000, to: 6000, terminKey: "pricing.itemWebsite.termin" },
+      { nameKey: "pricing.itemStoreWoo.name", from: 4000, to: 8000, terminKey: "pricing.itemStoreWoo.termin" },
+    ],
   },
   {
     situationKey: "home.svc.block2.situation",
@@ -30,6 +36,10 @@ const blocks: {
     labelKey: "home.svc.block2.label",
     linkKey: "home.svc.block2.link",
     href: "/aplikacje-webowe-dla-firm",
+    prices: [
+      { nameKey: "pricing.itemWebapp.name", from: 4000, to: 8000, terminKey: "pricing.itemWebapp.termin" },
+      { nameKey: "pricing.itemAutomation.name", from: 1500, to: 6000, terminKey: "pricing.itemAutomation.termin" },
+    ],
   },
   {
     situationKey: "home.svc.block3.situation",
@@ -37,8 +47,11 @@ const blocks: {
     labelKey: "home.svc.block3.label",
     linkKey: "home.svc.block3.link",
     href: "/oferta",
+    prices: [{ nameKey: "pricing.itemMobile.name", from: 4000, to: 8000, terminKey: "pricing.itemMobile.termin" }],
   },
 ];
+
+const fmt = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0");
 
 export default function ServicesOverview() {
   const { t } = useI18n();
@@ -70,6 +83,8 @@ export default function ServicesOverview() {
         >
           {t("home.svc.title")}
         </motion.h2>
+
+        <p className="mt-4 max-w-[60ch] text-base text-on-surface-variant">{t("home.svc.priceNote")}</p>
 
         {/* Service blocks — stacked, separated by hairlines */}
         <div className="mt-12 md:mt-16">
@@ -107,6 +122,22 @@ export default function ServicesOverview() {
                     <p className="max-w-[60ch] text-lead leading-relaxed text-on-surface-variant text-pretty">
                       {t(block.bodyKey)}
                     </p>
+                    {/* Net ranges from /cennik, so a visitor knows the order of
+                        magnitude before calling. Manual thousands separator:
+                        Intl output depends on the runtime's ICU data. */}
+                    <dl className="max-w-[60ch] border-t border-outline-variant/60">
+                      {block.prices.map((row) => (
+                        <div key={row.nameKey} className="flex items-baseline justify-between gap-4 border-b border-outline-variant/60 py-3">
+                          <dt className="text-base text-on-surface">
+                            {t(row.nameKey)}
+                            {row.terminKey && <span className="block text-sm text-on-surface-variant">{t(row.terminKey)}</span>}
+                          </dt>
+                          <dd className="shrink-0 font-headline text-base font-bold tabular-nums text-on-surface">
+                            {fmt(row.from)} – {fmt(row.to)} zł
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
                     <Link
                       href={block.href}
                       className="group inline-flex min-h-11 items-center gap-2 text-lead font-medium text-primary transition-colors hover:text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"

@@ -445,6 +445,14 @@ export const home = {
 
   /* --- Homepage redesign: situations we get called about --- */
   "home.svc.title": { pl: "Z czym przychodzą do nas firmy", en: "What companies come to us with" },
+  "home.svc.priceNote": {
+    pl: "Przy każdej sytuacji podajemy widełki netto z cennika. Stałą wycenę dostajesz przed startem.",
+    en: "Each situation comes with net price ranges from our price list. You get a fixed quote before we start.",
+  },
+  "home.people.lead": {
+    pl: "Od pierwszego telefonu po utrzymanie rozmawiasz z tymi samymi osobami, które projekt zaprojektują i napiszą.",
+    en: "From the first call to maintenance you talk to the same two people who design and build the project.",
+  },
   "home.svc.block1.situation": { pl: "Strona nie przynosi zapytań", en: "Your website brings no inquiries" },
   "home.svc.block1.body": {
     pl: "Masz stronę, ale telefon milczy. Ładuje się wolno i nigdzie nie prowadzi. Budujemy strony i sklepy, na których odwiedzający od razu wie, co ma zrobić, i zostawia numer.",

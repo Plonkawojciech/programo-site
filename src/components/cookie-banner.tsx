@@ -136,7 +136,14 @@ export default function CookieBanner() {
                 >
                   {t("cookie.privacyLink")}
                 </Link>
-                .
+                .{" "}
+                <button
+                  type="button"
+                  onClick={openSettings}
+                  className="font-medium text-on-surface underline decoration-on-surface-variant/60 underline-offset-2 md:hidden"
+                >
+                  {t("cookie.customize")}
+                </button>
               </p>
               {/* Mobile: normal case, tight tracking so all three actions fit one
                   row at 375–390px. Desktop restores uppercase + wide tracking. */}
@@ -144,7 +151,7 @@ export default function CookieBanner() {
                 <button
                   type="button"
                   onClick={openSettings}
-                  className="min-h-11 shrink-0 px-1 py-2 text-[11px] font-medium text-on-surface-variant underline underline-offset-4 transition-colors hover:text-on-surface md:px-2 md:text-xs md:uppercase md:tracking-widest"
+                  className="hidden min-h-11 shrink-0 px-1 py-2 text-[11px] md:inline-flex md:items-center font-medium text-on-surface-variant underline underline-offset-4 transition-colors hover:text-on-surface md:px-2 md:text-xs md:uppercase md:tracking-widest"
                 >
                   {t("cookie.customize")}
                 </button>
