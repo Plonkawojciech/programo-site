@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
-import { easeEntry, durationMedium } from "@/lib/motion";
+import Reveal from "@/components/ui/reveal";
 
 /**
  * Three service blocks, each anchored to a buyer situation.
@@ -42,20 +41,6 @@ const blocks: {
 
 export default function ServicesOverview() {
   const { t } = useI18n();
-  const prefersReduced = useReducedMotion();
-
-  // The server renders `initial` (opacity 0) into the HTML for everyone, because
-  // it cannot know the visitor's motion preference. So the reveal must always
-  // run on the client; with reduced motion it runs instantly and without the
-  // offset. Dropping the props instead (the previous version) left the section
-  // invisible for every visitor with "Reduce motion" switched on.
-  const reveal = (delay = 0) =>
-    ({
-      initial: { opacity: 0, y: prefersReduced ? 0 : 16 },
-      whileInView: { opacity: 1, y: 0 },
-      viewport: { once: true, margin: "-8% 0px" },
-      transition: prefersReduced ? { duration: 0 } : { duration: durationMedium, ease: easeEntry, delay },
-    }) as const;
 
   return (
     <section
@@ -64,21 +49,24 @@ export default function ServicesOverview() {
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         {/* Section heading */}
-        <motion.h2
-          {...reveal()}
+        <Reveal
+          as="h2"
+          y={16}
           className="font-headline text-h2 font-bold tracking-[-0.02em] text-on-surface text-balance [font-stretch:110%]"
         >
           {t("home.svc.title")}
-        </motion.h2>
+        </Reveal>
 
         {/* Service blocks — stacked, separated by hairlines */}
         <div className="mt-12 md:mt-16">
           {blocks.map((block, i) => {
             const isLast = i === blocks.length - 1;
             return (
-              <motion.article
+              <Reveal
+                as="article"
                 key={block.situationKey}
-                {...reveal(0.06)}
+                delay={0.06}
+                y={16}
                 className={`border-t border-outline-variant py-10 md:py-14 ${
                   isLast ? "border-b" : ""
                 }`}
@@ -121,7 +109,7 @@ export default function ServicesOverview() {
                     </Link>
                   </div>
                 </div>
-              </motion.article>
+              </Reveal>
             );
           })}
         </div>

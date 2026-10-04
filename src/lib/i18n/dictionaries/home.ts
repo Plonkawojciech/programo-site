@@ -95,12 +95,17 @@ export const home = {
     en: "Leave your number - we'll call back within 24 hours with specifics.",
   },
 
-  // 1.2 Trust bar — logos only. The three proof numbers (2 natywne aplikacje /
+  // 1.2 Trust bar — linked logos plus one concise scope line. The three proof
+  // numbers (2 natywne aplikacje /
   // 10+ realizacji / 24 h) were cut on 2026-08-06 at the owner's request. Two of
   // them said what the page already says better elsewhere: the deployments are
   // shown as actual work in ClientWork, and the 24 h promise still sits next to
   // the phone field where it affects a decision.
   "home.trust.eyebrow": { pl: "Zaufali nam", en: "Trusted by" },
+  "home.trust.scopeLine": {
+    pl: "Aplikacje mobilne, strony z panelem, kampanie Google Ads z pomiarem. Kliknij logo, żeby zobaczyć realizację.",
+    en: "Mobile apps, websites with admin panels, and measured Google Ads campaigns. Click a logo to see the case study.",
+  },
 
   // 1.3 Offer — 4 pillars
   "home.offer.eyebrow": { pl: "Co robimy", en: "What we do" },

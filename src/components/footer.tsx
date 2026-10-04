@@ -1,9 +1,7 @@
 "use client";
 
-import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { useConsent } from "@/lib/consent";
@@ -47,29 +45,15 @@ export default function Footer() {
   const { t } = useI18n();
   const { theme } = useTheme();
   const { openSettings } = useConsent();
-  const footerRef = useRef<HTMLElement>(null);
-  const shouldReduceMotion = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: footerRef,
-    offset: ["start end", "end end"],
-  });
-
-  // Reduced motion: static variant — no scroll-linked parallax.
-  const contentY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [60, 0]);
 
   // `mt-8` is the floor, not a preference: the top corners are rounded by
   // exactly 32px, so a smaller margin makes the curve bite into the section
   // above it.
   return (
     <footer
-      ref={footerRef}
       className="w-full rounded-t-[32px] mt-8 bg-surface-container-low overflow-hidden"
     >
-      <motion.div
-        style={{ y: contentY }}
-        className="flex flex-col gap-14 px-6 md:px-12 lg:px-24 py-12 md:py-16 2xl:py-24 w-full max-w-[1400px] mx-auto will-change-transform transform-gpu"
-      >
+      <div className="flex w-full max-w-[1400px] flex-col gap-14 px-6 py-12 md:px-12 md:py-16 lg:px-24 2xl:py-24 mx-auto">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1fr]">
           {/* Brand */}
           <div>
@@ -215,7 +199,7 @@ export default function Footer() {
             </div>
           )}
         </div>
-      </motion.div>
+      </div>
     </footer>
   );
 }

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useReducedMotion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { getProjectBySlug } from "@/lib/projects";
 import { trackPortfolioClick } from "@/lib/tracking";
@@ -52,7 +51,6 @@ const cases: CaseStudy[] = [
 
 export default function ClientWork() {
   const { t } = useI18n();
-  const reduced = useReducedMotion() ?? false;
   const railRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -92,7 +90,9 @@ export default function ClientWork() {
     if (!rail || !el) return;
     rail.scrollTo({
       left: el.offsetLeft - (rail.clientWidth - el.offsetWidth) / 2,
-      behavior: reduced ? "auto" : "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
     });
   };
 

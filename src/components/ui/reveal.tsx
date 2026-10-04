@@ -1,47 +1,37 @@
-"use client";
+import { type CSSProperties, type ReactNode } from "react";
 
-import { useEffect, useState, type ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+type RevealTag = "article" | "div" | "h2" | "li";
 
-// Shared scroll-entrance animation — fade + rise on view. Hardened so it NEVER
-// leaves content permanently invisible:
-//   - initial opacity is 0 (never negative), y-offset capped at 24px
-//   - viewport margin only trims 8% off the bottom, so short/above-the-fold
-//     sections still trigger
-//   - a 1.2 s mount fallback forces the visible state even if the
-//     IntersectionObserver never fires
-//   - prefers-reduced-motion renders content statically (no initial offset)
 export default function Reveal({
+  as: Component = "div",
   children,
   delay = 0,
   y = 24,
   className,
+  id,
 }: {
+  as?: RevealTag;
   children: ReactNode;
   delay?: number;
   y?: number;
   className?: string;
+  id?: string;
 }) {
-  const reduce = useReducedMotion();
+  const Element = Component;
   const offset = Math.min(Math.max(y, 0), 24);
-  const [shown, setShown] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShown(true), 1200);
-    return () => clearTimeout(timer);
-  }, []);
+  const style = {
+    "--reveal-delay": `${Math.max(delay, 0)}s`,
+    "--reveal-y": `${offset}px`,
+    "--reveal-start": `${Math.min(Math.max(delay, 0) * 20, 12)}%`,
+  } as CSSProperties;
 
   return (
-    <motion.div
-      initial={reduce ? false : { opacity: 0, y: offset }}
-      animate={shown ? { opacity: 1, y: 0 } : undefined}
-      whileInView={{ opacity: 1, y: 0 }}
-      onViewportEnter={() => setShown(true)}
-      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-      transition={{ delay, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className={className}
+    <Element
+      id={id}
+      className={`reveal${className ? ` ${className}` : ""}`}
+      style={style}
     >
       {children}
-    </motion.div>
+    </Element>
   );
 }

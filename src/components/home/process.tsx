@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
-import { easeEntry, durationMedium, staggerItem } from "@/lib/motion";
+import { staggerItem } from "@/lib/motion";
+import Reveal from "@/components/ui/reveal";
 
 const steps: { titleKey: TranslationKey; descKey: TranslationKey }[] = [
   { titleKey: "home.process.1.title", descKey: "home.process.1.desc.v2" },
@@ -22,17 +22,14 @@ export default function Process() {
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         {/* ---------- heading ---------- */}
-        <motion.h2
+        <Reveal
+          as="h2"
           id="process-heading"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
-          transition={{ duration: durationMedium, ease: easeEntry }}
-          style={{ willChange: "opacity, transform" }}
+          y={12}
           className="max-w-2xl font-headline text-h2 tracking-[-0.02em] text-on-surface text-balance"
         >
           {t("home.process.title.v2")}
-        </motion.h2>
+        </Reveal>
 
         {/* ---------- steps (ordered list — semantics match content) ---------- */}
         <ol
@@ -40,17 +37,11 @@ export default function Process() {
           role="list"
         >
           {steps.map((step, i) => (
-            <motion.li
+            <Reveal
+              as="li"
               key={step.titleKey}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-8% 0px" }}
-              transition={{
-                delay: i * staggerItem,
-                duration: durationMedium,
-                ease: easeEntry,
-              }}
-              style={{ willChange: "opacity, transform" }}
+              delay={i * staggerItem}
+              y={14}
               className="flex flex-col gap-3"
             >
               <h3 className="font-headline text-h4 tracking-[-0.01em] text-on-surface">
@@ -65,7 +56,7 @@ export default function Process() {
               <p className="max-w-[50ch] text-base leading-relaxed text-on-surface-variant text-pretty">
                 {t(step.descKey)}
               </p>
-            </motion.li>
+            </Reveal>
           ))}
         </ol>
       </div>

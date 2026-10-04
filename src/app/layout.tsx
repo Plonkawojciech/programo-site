@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
+import RevealObserver from "@/components/ui/reveal-observer";
 import { buildOrganization, buildWebsite, buildPeople, renderGraph } from "@/lib/schema";
 
 const GA_ID = "G-KT2R144BYG";
@@ -104,6 +105,12 @@ export default function RootLayout({
   return (
     <html lang="pl" suppressHydrationWarning className={`${archivo.variable} selection:bg-primary/20 selection:text-primary`}>
       <head>
+        {/* Reveal CSS may hide content only after this proves that JS runs. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.classList.add('js');`,
+          }}
+        />
         {/* Preconnect to third-party (analytics) origins for faster first contact */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.clarity.ms" crossOrigin="anonymous" />
@@ -141,6 +148,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-surface text-on-surface overflow-x-hidden">
+        <RevealObserver />
         <Providers>{children}</Providers>
       </body>
     </html>

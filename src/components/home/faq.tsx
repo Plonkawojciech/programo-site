@@ -2,10 +2,9 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
-import { easeEntry, durationMedium } from "@/lib/motion";
 import { track } from "@/lib/analytics/client";
+import Reveal from "@/components/ui/reveal";
 
 /**
  * 6 questions, ordered by buyer fear sequence:
@@ -37,19 +36,9 @@ const faqs: { q: TranslationKey; a: TranslationKey }[] = [
 
 export default function Faq() {
   const { t } = useI18n();
-  const prefersReduced = useReducedMotion();
   // Sequence, not just count: the first objection someone opens matters more
   // than the fifth.
   const faqOpenOrder = useRef(0);
-
-  // Always animate to visible: the server ships `initial` to everyone, so
-  // skipping the props under reduced motion would leave the heading hidden.
-  const reveal = {
-    initial: { opacity: 0, y: prefersReduced ? 0 : 14 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-10% 0px" },
-    transition: prefersReduced ? { duration: 0 } : { duration: durationMedium, ease: easeEntry },
-  } as const;
 
   // Asymmetric since Founders was removed (2026-08-05). Process above is also
   // `tight`, so a symmetric `py-section-tight` here would put a 104px seam
@@ -61,12 +50,13 @@ export default function Faq() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           {/* Left column: heading */}
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <motion.h2
-              {...reveal}
+            <Reveal
+              as="h2"
+              y={14}
               className="font-headline text-h2 font-bold tracking-[-0.02em] text-on-surface text-balance"
             >
               {t("home.faq.title")}
-            </motion.h2>
+            </Reveal>
           </div>
 
           {/* Right column: accordion with native <details> */}
