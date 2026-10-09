@@ -42,8 +42,8 @@ afterEach(() => {
   delete window.fbq;
   localStorage.removeItem("programo-consent-v1");
   vi.clearAllTimers();
-  vi.useRealTimers();
   vi.restoreAllMocks();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
 });
@@ -78,13 +78,20 @@ describe("preview analytics isolation", () => {
 
   it.each([false, true])("drops a previously queued batch for preview flush(useBeacon=%s)", async (useBeacon) => {
     const client = await import("@/lib/analytics/client");
+    // The fake clock can also contain fixture/import work. Capture only the
+    // collector's scheduling after import and require its exact handle cleared.
+    const schedule = vi.spyOn(globalThis, "setTimeout");
+    const cancel = vi.spyOn(globalThis, "clearTimeout");
     client.track("page_view_spa");
-    expect(vi.getTimerCount()).toBe(1);
+    expect(schedule).toHaveBeenCalledTimes(1);
+    expect(schedule).toHaveBeenCalledWith(expect.any(Function), 3000);
+    const batchTimer = schedule.mock.results[0].value;
     identity.getSession.mockClear();
     identity.getVisitorId.mockClear();
     vi.stubEnv("NEXT_PUBLIC_PROGRAMO_DEPLOYMENT_ENV", "preview");
     client.flush(useBeacon);
-    expect(vi.getTimerCount()).toBe(0);
+    expect(cancel).toHaveBeenCalledTimes(1);
+    expect(cancel).toHaveBeenCalledWith(batchTimer);
     await vi.advanceTimersByTimeAsync(3100);
     window.dispatchEvent(new Event("pagehide")); // Already-bound production listener.
     expect(fetchMock).not.toHaveBeenCalled();
