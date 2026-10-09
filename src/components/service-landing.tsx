@@ -82,8 +82,8 @@ export default function ServiceLanding({ data }: { data: ServiceLandingData }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: buildServiceLandingGraph(data) }} />
 
       {/* No <main> here — the root layout already wraps every page in one. */}
-      <div className="min-h-screen bg-surface text-on-surface">
-        <article className="mx-auto max-w-5xl px-6 pb-16 pt-28 md:px-10 md:pb-24 md:pt-36">
+      <div lang="pl" className="min-h-screen bg-surface text-on-surface">
+        <article lang="pl" className="mx-auto max-w-5xl px-6 pb-16 pt-28 md:px-10 md:pb-24 md:pt-36">
           <nav aria-label="breadcrumb" className="mb-8 text-xs uppercase tracking-widest text-on-surface-variant">
             <Link href="/" className="inline-flex min-h-11 items-center hover:underline">
               Programo

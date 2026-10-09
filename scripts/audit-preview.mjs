@@ -18,6 +18,7 @@ const routes = [...new Set([...((await sitemapResponse.text()).matchAll(/<loc>([
   .map((match) => new URL(match[1]).pathname))];
 if (!routes.length) throw new Error("The sitemap contains no routes");
 const report = { base, at: new Date().toISOString(), browser: {}, performance: [], metadata: [], analyticsRequests: [] };
+report.languages = process.env.AUDIT_ALL_LANGUAGES === "1" ? ["pl", "en"] : ["pl"];
 report.host = { availableParallelism: availableParallelism(), loadAverage: loadavg() };
 if (new URL(base).hostname === "v3.programo.pl") {
   const health = await (await fetch(base + "/api/health")).json();
@@ -27,12 +28,14 @@ if (new URL(base).hostname === "v3.programo.pl") {
 if (process.env.AUDIT_LH_ONLY !== "1") {
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 try {
+  for (const language of report.languages) {
   for (const theme of ["light", "dark"]) {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
-    await context.addInitScript((theme) => {
+    await context.addInitScript(({ theme, language }) => {
       localStorage.setItem("programo-theme", theme);
+      localStorage.setItem("programo-lang", language);
       localStorage.setItem("programo-consent-v1", JSON.stringify({ analytics: true, marketing: true, decided: true }));
-    }, theme);
+    }, { theme, language });
     const page = await context.newPage();
     page.on("request", (req) => {
       if (/googletagmanager|google-analytics|clarity\.ms|connect\.facebook/.test(req.url())) report.analyticsRequests.push(req.url());
@@ -49,19 +52,21 @@ try {
         title: document.title, description: document.querySelector('meta[name="description"]')?.content,
         canonical: document.querySelector('link[rel="canonical"]')?.href,
         robots: document.querySelector('meta[name="robots"]')?.content,
+        language: document.documentElement.lang,
       }));
       const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"]).analyze();
-      const key = `${route} ${theme}`;
-      report.browser[key] = { status: response.status(), ...info, errors,
+      const key = `${route} ${theme} ${language}`;
+      report.browser[key] = { status: response.status(), expectedLanguage: language, ...info, errors,
         violations: axe.violations.map((v) => ({ id: v.id, impact: v.impact, description: v.description,
           nodes: v.nodes.map((n) => ({ target: n.target, summary: n.failureSummary })) })) };
       if (["/", "/kontakt", "/projekty", "/cennik"].includes(route)) {
-        await page.screenshot({ path: path.join(out, `${route === "/" ? "home" : route.slice(1)}-${theme}.png`), fullPage: true });
+        await page.screenshot({ path: path.join(out, `${route === "/" ? "home" : route.slice(1)}-${theme}-${language}.png`), fullPage: true });
       }
       page.off("pageerror", onError);
       console.log("a11y", key, axe.violations.length, "overflow", info.scrollWidth > info.width);
     }
     await context.close();
+  }
   }
   // JS disabled: content and the contact form stay visible in the server HTML.
   const context = await browser.newContext({ javaScriptEnabled: false });
@@ -76,7 +81,7 @@ try {
 } finally { await browser.close(); }
 writeFileSync(path.join(out, "browser.json"), JSON.stringify(report, null, 2));
 if (report.analyticsRequests.length || Object.values(report.browser).some((view) =>
-  view.status !== 200 || view.violations.length || view.errors.length || view.scrollWidth > view.width)) {
+  view.status !== 200 || view.language !== view.expectedLanguage || view.violations.length || view.errors.length || view.scrollWidth > view.width)) {
   throw new Error("Preview browser checks failed; inspect browser.json");
 }
 }

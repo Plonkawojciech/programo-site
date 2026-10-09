@@ -38,9 +38,10 @@ const SECTION = "relative bg-surface pt-section pb-section-tight";
 // /strony-tracking-reklamy — website + conversion tracking + Google Ads as one
 // package. Content: content-deck-2026-07.md section 3.
 export default function MarketingTrackingLanding() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const caseItems: CaseStudyItem[] = caseSlugs.map((slug, i) => ({
+    angleLang: lang,
     slug,
     angle: t(caseAngleKeys[i]),
   }));

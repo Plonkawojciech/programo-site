@@ -80,13 +80,14 @@ function ProjectTile({ project }: { project: Project }) {
 }
 
 export default function ProjectsMarquee() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const items = getMarqueeProjects();
 
   if (items.length === 0) return null;
 
   return (
     <section
+      lang={lang}
       // No `id="realizacje"` here: every page that renders this component also
       // declares that anchor at the point it actually wants the jump to land.
       // Duplicating it made the document invalid and the target ambiguous.

@@ -159,7 +159,7 @@ export default function SoftwareHousePoznanPage() {
           in <main id="main-content">; a second <main> would be an invalid
           duplicate "main" landmark. */}
       <div className="min-h-screen bg-surface text-on-surface">
-        <article className="mx-auto max-w-5xl px-6 py-16 md:px-10 md:py-24">
+        <article lang="pl" className="mx-auto max-w-5xl px-6 py-16 md:px-10 md:py-24">
           <nav aria-label="breadcrumb" className="mb-8 text-xs uppercase tracking-widest opacity-60">
             <Link href="/" className="hover:underline">
               Programo

@@ -111,7 +111,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
-      <div className="min-h-screen bg-surface text-on-surface">
+      <div lang="pl" className="min-h-screen bg-surface text-on-surface">
         {/* Single outer container for hero + body, matching the site-wide
             max-w-[1400px] pattern (pricing.tsx, offer.tsx). Both sections
             below cap their own content at max-w-3xl WITHOUT their own

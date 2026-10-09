@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 import { track } from "@/lib/analytics/client";
 import { translations, type Lang, type TranslationKey } from "./dictionary";
+import { useClientValue } from "@/lib/use-client-value";
 
 // Re-exported so every existing `import { translations, type TranslationKey }
 // from "@/lib/i18n"` call site keeps working unchanged — the dictionary itself
@@ -19,31 +20,33 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>(() => {
-    if (typeof window !== "undefined") {
+  // Match the Polish server HTML during hydration, then restore the saved
+  // language using the same client-value hook as the theme provider.
+  const saved = useClientValue<Lang>(() => {
+    try {
       const saved = localStorage.getItem("programo-lang");
       if (saved === "en" || saved === "pl") return saved;
-    }
+    } catch { /* Storage can be unavailable in private browser contexts. */ }
     return "pl";
-  });
+  }, "pl");
+  const [override, setOverride] = useState<Lang | null>(null);
+  const lang = override ?? saved;
 
   useEffect(() => {
-    localStorage.setItem("programo-lang", lang);
     document.documentElement.lang = lang;
   }, [lang]);
 
   const toggle = useCallback(() => {
-    setLang((prev) => {
-      const next = prev === "pl" ? "en" : "pl";
-      // Measures whether anyone actually wants the English version. That is the
-      // open question behind the /en/ + hreflang decision: today the English
-      // copy exists only client-side, so it is invisible to search engines, and
-      // the honest choice is either to make it indexable or to drop it. This
-      // event is the evidence that call should be based on.
-      track("language_switch", { from_lang: prev, to_lang: next, page_path: window.location.pathname });
-      return next;
-    });
-  }, []);
+    const next = lang === "pl" ? "en" : "pl";
+    setOverride(next);
+    try { localStorage.setItem("programo-lang", next); } catch { /* Keep the UI usable without storage. */ }
+    // Measures whether anyone actually wants the English version. That is the
+    // open question behind the /en/ + hreflang decision: today the English
+    // copy exists only client-side, so it is invisible to search engines, and
+    // the honest choice is either to make it indexable or to drop it. This
+    // event is the evidence that call should be based on.
+    track("language_switch", { from_lang: lang, to_lang: next, page_path: window.location.pathname });
+  }, [lang]);
 
   const t = useCallback(
     (key: TranslationKey) => translations[key]?.[lang] ?? key,

@@ -140,7 +140,7 @@ export default function SklepyInternetowePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
 
-      <div className="bg-surface text-on-surface">
+      <div lang="pl" className="bg-surface text-on-surface">
         {/* HERO — static, 2-col: copy + lead form ABOVE THE FOLD */}
         <section className="relative pt-28 pb-section-tight md:pt-32">
           <div className={CONTAINER}>

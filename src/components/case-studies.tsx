@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getProjectBySlug, type Project } from "@/lib/projects";
 import Reveal from "@/components/ui/reveal";
+import type { Lang } from "@/lib/i18n";
 
 // A grounded case-studies section for the Polish Ads landings. All facts come
 // from `projects.ts` (the single source of truth) - title, subtitle,
@@ -9,13 +10,15 @@ import Reveal from "@/components/ui/reveal";
 // one-liner describing what the project demonstrates. No invented numbers.
 export interface CaseStudyItem {
   slug: string;
-  /** Honest one-line summary of what we did / what it proves. PL. */
+  /** Honest one-line summary of what we did / what it proves. */
   angle: string;
+  angleLang?: Lang;
 }
 
 interface Resolved {
   project: Project;
   angle: string;
+  angleLang: Lang;
 }
 
 export default function CaseStudies({
@@ -30,7 +33,7 @@ export default function CaseStudies({
   const resolved: Resolved[] = items
     .map((it) => {
       const project = getProjectBySlug(it.slug);
-      return project ? { project, angle: it.angle } : null;
+      return project ? { project, angle: it.angle, angleLang: it.angleLang ?? "pl" } : null;
     })
     .filter((x): x is Resolved => x !== null);
 
@@ -53,12 +56,12 @@ export default function CaseStudies({
         </Reveal>
 
         <div className={`grid gap-6 ${cols}`}>
-          {resolved.map(({ project, angle }, i) => {
+          {resolved.map(({ project, angle, angleLang }, i) => {
             const shot = project.screenshots?.[0];
             const isLive = project.status === "live" && Boolean(project.liveUrl);
             return (
               <Reveal key={project.slug} delay={i * 0.1}>
-                <article className="group flex h-full flex-col overflow-hidden rounded-3xl bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
+                <article lang="pl" className="group flex h-full flex-col overflow-hidden rounded-3xl bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
                   <div className="relative aspect-[16/10] overflow-hidden bg-surface-container">
                     {shot ? (
                       <Image
@@ -92,7 +95,7 @@ export default function CaseStudies({
                     <p className="mt-1 text-sm font-medium text-on-surface-variant">
                       {project.subtitle.pl}
                     </p>
-                    <p className="mt-3 text-sm font-light leading-relaxed text-on-surface/70">
+                    <p lang={angleLang} className="mt-3 text-sm font-light leading-relaxed text-on-surface/70">
                       {angle}
                     </p>
                     <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6">

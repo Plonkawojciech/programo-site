@@ -144,7 +144,7 @@ export default function StronyInternetowePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
 
-      <div className="bg-surface text-on-surface">
+      <div lang="pl" className="bg-surface text-on-surface">
         {/* HERO — static (best LCP), 2-column: copy + lead form ABOVE THE FOLD.
             Form in-hero because only ~29% of visitors scrolled past the old
             88vh hero, so the form was effectively invisible to paid traffic. */}

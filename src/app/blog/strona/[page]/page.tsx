@@ -57,7 +57,7 @@ export default async function BlogPage({ params }: { params: Promise<{ page: str
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: pageGraph }} />
-      <div className="min-h-screen bg-surface text-on-surface">
+      <div lang="pl" className="min-h-screen bg-surface text-on-surface">
         <div className="mx-auto w-full max-w-[1400px] px-6 py-16 md:px-12 md:py-24 lg:px-24">
           <h1 className="mb-8 font-headline text-4xl font-bold leading-[1.05] tracking-tighter md:text-6xl">
             Blog

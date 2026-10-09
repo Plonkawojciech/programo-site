@@ -68,10 +68,10 @@ function maskStyle(m: Mark): React.CSSProperties {
 // Bezargumentowy default export — używany też przez landingi (/strony-internetowe,
 // /sklepy-internetowe). Nie dodawać propsów.
 export default function TrustBar() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   return (
-    <section className="relative bg-surface border-t border-on-surface-variant/20">
+    <section lang={lang} className="relative bg-surface border-t border-on-surface-variant/20">
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24 py-section-tight">
         {/* Treated as above-the-fold like the hero: initial={false} instead of
             whileInView so it never renders as opacity:0 in SSR HTML

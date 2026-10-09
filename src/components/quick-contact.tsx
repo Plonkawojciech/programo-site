@@ -56,7 +56,7 @@ function Spinner({ className = "h-4 w-4" }: { className?: string }) {
 }
 
 export default function QuickContact({ formId = "quick-contact" }: { formId?: string } = {}) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [state, setState] = useState<FormState>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [consent, setConsent] = useState(false);
@@ -189,7 +189,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
   }
 
   return (
-    <section id="kontakt-main" className="relative bg-surface py-section-major border-t border-outline-variant/20 scroll-mt-24">
+    <section lang={lang} id="kontakt-main" className="relative bg-surface py-section-major border-t border-outline-variant/20 scroll-mt-24">
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
           {/* Left side: heading + direct contact channels */}

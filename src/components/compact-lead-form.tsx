@@ -66,7 +66,7 @@ export default function CompactLeadForm({
   heading?: string;
   sub?: string;
 }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [state, setState] = useState<FormState>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [consent, setConsent] = useState(false);
@@ -191,6 +191,7 @@ export default function CompactLeadForm({
 
   const success = (
     <div
+      lang={lang}
       role="status"
       aria-live="polite"
       className="flex items-start gap-4 rounded-2xl bg-card p-6 shadow-card"
@@ -212,7 +213,7 @@ export default function CompactLeadForm({
   );
 
   const form = (
-    <form ref={formRef} onSubmit={handleSubmit} noValidate className="relative flex flex-col gap-4">
+    <form lang={lang} ref={formRef} onSubmit={handleSubmit} noValidate className="relative flex flex-col gap-4">
       <Honeypot />
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
@@ -376,10 +377,10 @@ export default function CompactLeadForm({
   if (bare) {
     return (
       <div id={anchorId ?? formId} className="scroll-mt-28 rounded-3xl bg-card p-6 shadow-card md:p-8">
-        <h2 className="font-headline text-2xl font-bold tracking-tight text-on-surface">
+        <h2 lang={heading ? undefined : lang} className="font-headline text-2xl font-bold tracking-tight text-on-surface">
           {resolvedHeading}
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+        <p lang={lang} className="mt-2 text-sm leading-relaxed text-on-surface-variant">
           {t("compact.bareSub")}
         </p>
         <div className="mt-6">{state === "success" ? success : form}</div>
@@ -394,16 +395,16 @@ export default function CompactLeadForm({
         <div className="rounded-3xl bg-card p-7 shadow-card md:p-12">
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">
             <div>
-              <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
+              <h2 lang={heading ? undefined : lang} className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
                 {resolvedHeading}
               </h2>
-              <p className="mt-4 max-w-md text-lg font-light leading-relaxed text-on-surface/70">
+              <p lang={sub ? undefined : lang} className="mt-4 max-w-md text-lg font-light leading-relaxed text-on-surface/70">
                 {resolvedSub}
               </p>
               {/* The rule belongs to this line, so a cleared string would leave
                   a border floating above nothing. */}
               {t("compact.directContact").trim() && (
-                <p className="mt-6 border-t border-outline-variant/30 pt-5 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
+                <p lang={lang} className="mt-6 border-t border-outline-variant/30 pt-5 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
                   {t("compact.directContact")}
                 </p>
               )}

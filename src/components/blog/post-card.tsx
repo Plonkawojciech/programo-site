@@ -8,7 +8,7 @@ export default function PostCard({ post }: { post: ParsedPost }) {
   const { slug, title, answer, datePublished, cluster, cover, coverAlt } = post.frontmatter;
   const minutes = readingTimeMinutes(countWords(post.body) + countWords(answer));
   return (
-    <div className="group overflow-hidden rounded-2xl bg-card shadow-card transition hover:shadow-card-hover">
+    <div lang="pl" className="group overflow-hidden rounded-2xl bg-card shadow-card transition hover:shadow-card-hover">
       {/* Two separate links, not nested — an anchor inside an anchor is
           invalid HTML and (in a server component) an onClick to stop the
           inner click from bubbling isn't available anyway. */}

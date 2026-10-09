@@ -13,6 +13,7 @@ export default function FeaturedPost({ post }: { post: ParsedPost }) {
 
   return (
     <Link
+      lang="pl"
       href={`/blog/${slug}`}
       className="group mb-14 grid gap-6 overflow-hidden rounded-3xl bg-card shadow-card transition hover:shadow-card-hover md:grid-cols-2 md:gap-0"
     >
