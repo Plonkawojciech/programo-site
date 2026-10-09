@@ -5,6 +5,7 @@ import lighthouse from "lighthouse";
 import { launch } from "chrome-launcher";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { loadavg, availableParallelism } from "node:os";
 
 const [baseArg = "https://v3.programo.pl", outArg = ".vercel/v3-audit"] = process.argv.slice(2);
 const base = new URL(baseArg).origin;
@@ -17,11 +18,13 @@ const routes = [...new Set([...((await sitemapResponse.text()).matchAll(/<loc>([
   .map((match) => new URL(match[1]).pathname))];
 if (!routes.length) throw new Error("The sitemap contains no routes");
 const report = { base, at: new Date().toISOString(), browser: {}, performance: [], metadata: [], analyticsRequests: [] };
+report.host = { availableParallelism: availableParallelism(), loadAverage: loadavg() };
 if (new URL(base).hostname === "v3.programo.pl") {
   const health = await (await fetch(base + "/api/health")).json();
   if (health.environment !== "preview" || !health.ok) throw new Error("This is not the functional preview");
   report.commit = health.commit;
 }
+if (process.env.AUDIT_LH_ONLY !== "1") {
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 try {
   for (const theme of ["light", "dark"]) {
@@ -72,6 +75,7 @@ try {
   await context.close();
 } finally { await browser.close(); }
 writeFileSync(path.join(out, "browser.json"), JSON.stringify(report, null, 2));
+}
 
 if (process.env.AUDIT_AXE_ONLY === "1") {
   writeFileSync(path.join(out, "summary.json"), JSON.stringify(report, null, 2));
@@ -81,21 +85,27 @@ if (process.env.AUDIT_AXE_ONLY === "1") {
 
 const chrome = await launch({ chromeFlags: ["--headless=new", "--no-sandbox", "--disable-dev-shm-usage"] });
 try {
-  for (const [route, count] of [["/", 3], ["/kontakt", 3], ["/projekty", 3], ["/cennik", 3]]) {
+  const performanceRoutes = process.env.AUDIT_LH_HOME_ONLY === "1" ? [["/", 3]] : [["/", 3], ["/kontakt", 3], ["/projekty", 3], ["/cennik", 3]];
+  for (const [route, count] of performanceRoutes) {
     for (let run = 1; run <= count; run++) {
-      const { lhr } = await lighthouse(base + route, {
+      const { lhr, artifacts } = await lighthouse(base + route, {
         port: chrome.port, onlyCategories: ["performance", "accessibility", "seo"],
-        formFactor: "mobile", throttlingMethod: "simulate", logLevel: "error",
+        formFactor: "mobile", throttlingMethod: process.env.AUDIT_THROTTLING === "devtools" ? "devtools" : "simulate", logLevel: "error",
       });
       const result = { route, run, lighthouseVersion: lhr.lighthouseVersion,
         performance: lhr.categories.performance.score, accessibility: lhr.categories.accessibility.score,
         seo: lhr.categories.seo.score, lcpMs: lhr.audits["largest-contentful-paint"].numericValue,
         cls: lhr.audits["cumulative-layout-shift"].numericValue,
         tbtMs: lhr.audits["total-blocking-time"].numericValue,
+        observedLcpMs: lhr.audits.metrics.details.items[0].observedLargestContentfulPaint,
+        throttlingMethod: lhr.configSettings.throttlingMethod,
+        hostLoadAverage: loadavg(),
         lcpElement: lhr.audits["largest-contentful-paint-element"]?.details,
         diagnostics: Object.entries(lhr.audits).filter(([, a]) => a.score !== null && a.score < 0.9).map(([id, a]) => ({ id, title: a.title, displayValue: a.displayValue })) };
       report.performance.push(result);
       writeFileSync(path.join(out, `lighthouse-${route === "/" ? "home" : route.slice(1)}-${run}.json`), JSON.stringify(lhr));
+      writeFileSync(path.join(out, `trace-${route === "/" ? "home" : route.slice(1)}-${run}.json`), JSON.stringify(artifacts.Trace));
+      writeFileSync(path.join(out, `network-${route === "/" ? "home" : route.slice(1)}-${run}.json`), JSON.stringify(artifacts.DevtoolsLog));
       console.log("mobile", route, run, "LCP", Math.round(result.lcpMs), "score", result.performance);
       writeFileSync(path.join(out, "summary.json"), JSON.stringify(report, null, 2));
     }
@@ -103,5 +113,9 @@ try {
 } finally { await chrome.kill(); }
 const home = report.performance.filter((r) => r.route === "/").map((r) => r.lcpMs).sort((a, b) => a - b);
 report.homeMedianLcpMs = home[Math.floor(home.length / 2)];
+if (report.commit) {
+  const health = await (await fetch(base + "/api/health")).json();
+  if (health.commit !== report.commit) throw new Error("The preview changed during verification; repeat on one commit");
+}
 writeFileSync(path.join(out, "summary.json"), JSON.stringify(report, null, 2));
 console.log("home median LCP", Math.round(report.homeMedianLcpMs), "analyticsRequests", report.analyticsRequests.length);

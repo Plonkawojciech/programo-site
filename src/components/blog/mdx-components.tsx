@@ -78,7 +78,7 @@ export const mdxComponents: MDXComponents = {
     );
   },
   table: (props) => (
-    <div className="mb-6 overflow-x-auto rounded-2xl border border-current/15">
+    <div role="region" aria-label="Tabela w artykule" tabIndex={0} className="mb-6 overflow-x-auto rounded-2xl border border-current/15">
       <table className="w-full text-left text-sm md:text-base" {...props} />
     </div>
   ),

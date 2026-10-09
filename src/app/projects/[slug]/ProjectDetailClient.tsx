@@ -353,13 +353,10 @@ function ProjectContent({ slug }: { slug: string }) {
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6">
               {project.metrics.map((m) => (
                 <Reveal key={m.label[lang]}>
-                  {/* In dark variants the metric strip takes the project accent. */}
-                  <div style={darkHero ? { color: project.accentColor } : undefined}>
+                  <div>
                     <CountUp
                       value={m.value}
-                      className={`font-headline text-4xl font-bold tracking-tight md:text-5xl ${
-                        darkHero ? "" : "text-primary"
-                      }`}
+                      className="font-headline text-4xl font-bold tracking-tight text-primary md:text-5xl"
                     />
                     <p className="mt-2 text-xs font-medium uppercase tracking-wide leading-snug text-on-surface-variant md:text-sm">
                       {m.label[lang]}

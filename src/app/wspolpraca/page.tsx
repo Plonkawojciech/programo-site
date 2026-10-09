@@ -285,9 +285,9 @@ export default function WspolpracaPage() {
                 </Reveal>
                 <ul className="flex flex-col gap-5">
                   {audience.map((a, i) => (
-                    <Reveal key={a} delay={i * 0.06} className="border-t border-outline-variant/30 pt-4">
-                      <li className="text-base font-light leading-relaxed text-on-surface/70 md:text-lg">{a}</li>
-                    </Reveal>
+                    <li key={a} className="border-t border-outline-variant/30 pt-4 text-base font-light leading-relaxed text-on-surface/70 md:text-lg">
+                      <Reveal delay={i * 0.06}>{a}</Reveal>
+                    </li>
                   ))}
                 </ul>
                 {/* Art. 100 KP: nie zachęcamy nikogo do dorabiania kosztem
@@ -333,11 +333,9 @@ export default function WspolpracaPage() {
             </Reveal>
             <ul className="max-w-3xl">
               {rules.map((r, i) => (
-                <Reveal key={r} delay={Math.min(i, 4) * 0.05}>
-                  <li className="border-t border-outline-variant/30 py-5 text-base font-light leading-relaxed text-on-surface/70 md:text-lg">
-                    {r}
-                  </li>
-                </Reveal>
+                <li key={r} className="border-t border-outline-variant/30 py-5 text-base font-light leading-relaxed text-on-surface/70 md:text-lg">
+                  <Reveal delay={Math.min(i, 4) * 0.05}>{r}</Reveal>
+                </li>
               ))}
             </ul>
             <Reveal delay={0.2} className="mt-8 max-w-3xl">

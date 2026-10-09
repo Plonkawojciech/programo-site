@@ -20,7 +20,7 @@ export default function SourcesList({ sources }: { sources: PostSource[] }) {
             >
               {s.label}
             </a>
-            <span className="tabular-nums opacity-50">({s.date})</span>
+            <span className="tabular-nums text-on-surface-variant">({s.date})</span>
           </li>
         ))}
       </ul>
