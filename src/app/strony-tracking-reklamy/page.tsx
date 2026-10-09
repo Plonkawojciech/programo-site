@@ -50,7 +50,7 @@ const faqs = [
   },
   {
     q: "Czy tracking jest zgodny z RODO?",
-    a: "Tak. Wdrażamy Consent Mode v2 z banerem zgód, w którym „Odrzuć” działa naprawdę: bez zgody użytkownika żaden piksel reklamowy się nie uruchamia. Pomiar konwersji opieramy na rozwiązaniach Google zaprojektowanych do pracy w tym modelu.",
+    a: "Wdrażamy Consent Mode v2 z banerem zgód. Po odmowie zgody tag Google może nadal wysyłać pingi bez cookies do modelowania konwersji. Meta Pixel uruchamia się dopiero po zgodzie marketingowej.",
   },
   {
     q: "Jaki budżet reklamowy ma sens na start?",

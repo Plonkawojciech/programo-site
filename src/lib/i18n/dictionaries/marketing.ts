@@ -76,8 +76,8 @@ export const marketing = {
   },
   "mkt.faq.q2": { pl: "Czy tracking jest zgodny z RODO?", en: "Is the tracking GDPR-compliant?" },
   "mkt.faq.a2": {
-    pl: "Wdrażamy Consent Mode v2 z banerem zgód, w którym „Odrzuć” działa naprawdę: bez zgody użytkownika żaden piksel reklamowy się nie uruchamia. Pomiar konwersji opieramy na rozwiązaniach Google zaprojektowanych do pracy w tym modelu.",
-    en: "We implement Consent Mode v2 with a consent banner where \"Decline\" actually works: without the user's consent, no advertising pixel fires. Conversion measurement relies on Google's mechanisms designed for exactly this model.",
+    pl: "Wdrażamy Consent Mode v2 z banerem zgód. Po odmowie zgody tag Google może nadal wysyłać pingi bez cookies do modelowania konwersji. Meta Pixel uruchamia się dopiero po zgodzie marketingowej.",
+    en: "We implement Consent Mode v2 with a consent banner. After consent is declined, the Google tag may still send cookieless pings for conversion modelling. Meta Pixel starts only after marketing consent.",
   },
   "mkt.faq.q3": { pl: "Jaki budżet reklamowy ma sens na start?", en: "What ad budget makes sense to start?" },
   "mkt.faq.a3": {
