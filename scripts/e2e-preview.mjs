@@ -40,7 +40,9 @@ try {
       }));
       const rejectCookies = page.getByRole("button", { name: "Tylko niezbędne", exact: true });
       if (await rejectCookies.isVisible()) await rejectCookies.click();
-      await form.locator('input[name="name"]').fill(`${marker} ${test.id}`);
+      // The phone-only hero intentionally hides its optional name on mobile.
+      const name = form.locator('input[name="name"]');
+      if (await name.isVisible()) await name.fill(`${marker} ${test.id}`);
       await form.locator('input[name="phone"],input[name="contact"]').fill("600000000");
       await form.locator('input[name="consent"]').check();
       if (test.id === "kontakt-full") await form.locator('textarea[name="message"]').fill("TEST: referencje https://example.com/one i https://example.com/two. Podgląd, bez kontaktu handlowego.");

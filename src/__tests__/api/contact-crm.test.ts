@@ -66,7 +66,7 @@ describe("/api/contact → CRM review inbox", () => {
     process.env.CRM_WEBHOOK_SECRET = "test-crm-secret";
     delete process.env.CRM_INTAKE_URL;
     delete process.env.TELEGRAM_BOT_TOKEN;
-    fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 201 }));
+    fetchMock = vi.fn().mockImplementation(async () => Response.json({ ok: true, formSubmissionId: "saved-form-id" }, { status: 201 }));
     globalThis.fetch = fetchMock as unknown as typeof fetch;
   });
   afterEach(() => {
@@ -78,6 +78,7 @@ describe("/api/contact → CRM review inbox", () => {
     const res = await send(lead);
     expect(res.status).toBe(200);
     expect(crmCalls()).toHaveLength(1);
+    expect(crmCalls()[0][1].redirect).toBe("error");
     expect(crmCalls()[0][1].headers).toMatchObject({ "X-Webhook-Secret": "test-crm-secret" });
     expect(crmBody()).toMatchObject({
       source: "programo.pl",
@@ -137,5 +138,36 @@ describe("/api/contact → CRM review inbox", () => {
     await send(lead);
     delete process.env.FORM_CHALLENGE_SECRET;
     expect(crmCalls()).toHaveLength(0);
+  });
+});
+
+
+describe("CRM durable acknowledgement contract", () => {
+  beforeEach(() => { vi.stubEnv("CRM_WEBHOOK_SECRET", "test-only"); vi.stubEnv("NEXT_PUBLIC_TURNSTILE_TEST_MODE", "false"); });
+  afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
+  async function forward(response: Response) {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response));
+    const { forwardToCrm, buildCrmPayload } = await import("@/lib/crm-forward");
+    return forwardToCrm(buildCrmPayload(lead, { verdict: "clean", reasons: [], signals: {}, ip: "unknown", userAgent: UA }));
+  }
+  it.each<[number, string, string]>([
+    [200, "text/html", "<html>Login</html>"],
+    [202, "application/json", JSON.stringify({ ok: true, formSubmissionId: "queued" })],
+    [201, "application/json", JSON.stringify({ ok: true })],
+    [201, "application/json", JSON.stringify({ ok: false, formSubmissionId: "saved" })],
+    [201, "application/json", JSON.stringify({ ok: true, formSubmissionId: " " })],
+    [201, "application/json", JSON.stringify({ ok: true, id: "preview-only-id" })],
+    [201, "text/html", JSON.stringify({ ok: true, formSubmissionId: "saved" })],
+    [201, "application/json", "invalid json"],
+  ])("never treats status %i / %s / %s as durable storage", async (status, type, body) => {
+    expect(await forward(new Response(body, { status, headers: { "Content-Type": type } }))).toBe(false);
+  });
+  it("accepts only the committed real CRM record acknowledgement", async () => {
+    expect(await forward(Response.json({ ok: true, formSubmissionId: "committed-id" }, { status: 201 }))).toBe(true);
+  });
+  it("requires the fixture's fsynced record id in explicit test mode", async () => {
+    vi.stubEnv("NEXT_PUBLIC_TURNSTILE_TEST_MODE", "true");
+    expect(await forward(Response.json({ ok: true, id: "fixture-id" }, { status: 201 }))).toBe(true);
+    expect(await forward(Response.json({ ok: true, formSubmissionId: "real-id" }, { status: 201 }))).toBe(false);
   });
 });

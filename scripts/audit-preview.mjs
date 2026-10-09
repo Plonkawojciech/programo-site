@@ -11,10 +11,17 @@ const base = new URL(baseArg).origin;
 if (!["v3.programo.pl", "localhost", "127.0.0.1"].includes(new URL(base).hostname)) throw new Error("Only preview/local URLs are allowed");
 const out = path.resolve(outArg);
 mkdirSync(out, { recursive: true });
-const routes = ["/", "/oferta", "/cennik", "/projekty", "/kontakt", "/o-nas",
-  "/strony-internetowe", "/sklepy-internetowe", "/aplikacje-webowe-dla-firm", "/aplikacje-mobilne-dla-firm",
-  "/projects/innochem", "/projects/terapia-dens", "/projects/jedmar"];
+const sitemapResponse = await fetch(base + "/sitemap.xml");
+if (!sitemapResponse.ok) throw new Error("The preview sitemap is unavailable");
+const routes = [...new Set([...((await sitemapResponse.text()).matchAll(/<loc>([^<]+)<\/loc>/g))]
+  .map((match) => new URL(match[1]).pathname))];
+if (!routes.length) throw new Error("The sitemap contains no routes");
 const report = { base, at: new Date().toISOString(), browser: {}, performance: [], metadata: [], analyticsRequests: [] };
+if (new URL(base).hostname === "v3.programo.pl") {
+  const health = await (await fetch(base + "/api/health")).json();
+  if (health.environment !== "preview" || !health.ok) throw new Error("This is not the functional preview");
+  report.commit = health.commit;
+}
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 try {
   for (const theme of ["light", "dark"]) {
@@ -27,7 +34,7 @@ try {
     page.on("request", (req) => {
       if (/googletagmanager|google-analytics|clarity\.ms|connect\.facebook/.test(req.url())) report.analyticsRequests.push(req.url());
     });
-    for (const route of theme === "light" ? routes : ["/", "/kontakt", "/cennik"]) {
+    for (const route of routes) {
       const errors = [];
       const onError = (e) => errors.push(e.message);
       page.on("pageerror", onError);
@@ -66,9 +73,15 @@ try {
 } finally { await browser.close(); }
 writeFileSync(path.join(out, "browser.json"), JSON.stringify(report, null, 2));
 
+if (process.env.AUDIT_AXE_ONLY === "1") {
+  writeFileSync(path.join(out, "summary.json"), JSON.stringify(report, null, 2));
+  console.log("a11y routes", routes.length, "both themes", "analyticsRequests", report.analyticsRequests.length);
+  process.exit(0);
+}
+
 const chrome = await launch({ chromeFlags: ["--headless=new", "--no-sandbox", "--disable-dev-shm-usage"] });
 try {
-  for (const [route, count] of [["/", 3], ["/kontakt", 1], ["/projekty", 1], ["/cennik", 1]]) {
+  for (const [route, count] of [["/", 3], ["/kontakt", 3], ["/projekty", 3], ["/cennik", 3]]) {
     for (let run = 1; run <= count; run++) {
       const { lhr } = await lighthouse(base + route, {
         port: chrome.port, onlyCategories: ["performance", "accessibility", "seo"],

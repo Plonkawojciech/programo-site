@@ -93,6 +93,7 @@ describe("/api/contact — status follows persistence, not notification", () => 
     globalThis.fetch = originalFetch;
     delete process.env.TELEGRAM_BOT_TOKEN;
     delete process.env.TELEGRAM_CHAT_ID;
+    delete process.env.CRM_WEBHOOK_SECRET;
   });
 
   it("returns 200 when the lead is stored even though Telegram fails", async () => {
@@ -148,6 +149,28 @@ describe("/api/contact — status follows persistence, not notification", () => 
     expect(storeLead).toHaveBeenCalledOnce();
     expect(storeLead.mock.calls[0][0].verdict).toBe("suspicious");
     expect(storeRejected).not.toHaveBeenCalled();
+  });
+
+  it.each<[number, string, string]>([
+    [200, "text/html", "<html>Login</html>"],
+    [202, "application/json", JSON.stringify({ ok: true, formSubmissionId: "queued" })],
+    [201, "application/json", JSON.stringify({ ok: true })],
+  ])("returns 500 when CRM status %i cannot prove a saved record", async (status, type, body) => {
+    storeLead.mockResolvedValue(false);
+    process.env.CRM_WEBHOOK_SECRET = "test-crm-only";
+    delete process.env.TELEGRAM_BOT_TOKEN;
+    globalThis.fetch = vi.fn().mockImplementation(async () => new Response(body, { status, headers: { "Content-Type": type } }));
+    const POST = await loadRoute();
+    expect((await POST(post(validLead))).status).toBe(500);
+  });
+
+  it("accepts a committed CRM acknowledgement even with Redis unavailable", async () => {
+    storeLead.mockResolvedValue(false);
+    process.env.CRM_WEBHOOK_SECRET = "test-crm-only";
+    delete process.env.TELEGRAM_BOT_TOKEN;
+    globalThis.fetch = vi.fn().mockImplementation(async () => Response.json({ ok: true, formSubmissionId: "committed-id" }, { status: 201 }));
+    const POST = await loadRoute();
+    expect((await POST(post(validLead))).status).toBe(200);
   });
 
   it("still rejects an invalid payload before touching any channel", async () => {

@@ -79,13 +79,15 @@ export default function MarketingTrackingLanding() {
               )}
             </div>
 
-            <CompactLeadForm
-              bare
-              formId="marketing-hero"
-              anchorId="szybki-kontakt"
-              projectType="Strona + reklamy"
-              heading={t("mkt.hero.form.heading")}
-            />
+            <div id="marketing-hero" className="scroll-mt-28">
+              <CompactLeadForm
+                bare
+                formId="marketing-hero"
+                anchorId="szybki-kontakt"
+                projectType="Strona + reklamy"
+                heading={t("mkt.hero.form.heading")}
+              />
+            </div>
           </div>
         </div>
       </section>

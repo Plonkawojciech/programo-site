@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicPageRobots } from "@/lib/page-robots";
 import Link from "next/link";
 import CtaButton from "@/components/ui/cta-button";
 import Reveal from "@/components/ui/reveal";
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     locale: "pl_PL",
     type: "website",
   },
-  robots: { index: true, follow: true },
+  robots: publicPageRobots,
   keywords: [
     "program poleceń",
     "prowizja za polecenie klienta",

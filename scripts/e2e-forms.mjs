@@ -3,6 +3,7 @@
  */
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
+import { randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { mkdtemp, open, readFile, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -28,10 +29,11 @@ const fixture = createServer(async (request, response) => {
   const chunks = [];
   for await (const chunk of request) chunks.push(chunk);
   const data = JSON.parse(Buffer.concat(chunks).toString());
+  const id = randomUUID();
   const file = await open(records, 'a', 0o600);
-  await file.writeFile(JSON.stringify({ receivedAt: new Date().toISOString(), ...data }) + '\n');
+  await file.writeFile(JSON.stringify({ id, receivedAt: new Date().toISOString(), ...data }) + '\n');
   await file.sync(); await file.close();
-  response.writeHead(201, { 'Content-Type': 'application/json' }).end(JSON.stringify({ ok: true }));
+  response.writeHead(201, { 'Content-Type': 'application/json' }).end(JSON.stringify({ ok: true, id }));
 });
 await new Promise(resolve => fixture.listen(fixturePort, '127.0.0.1', resolve));
 const safeEnvironment = {

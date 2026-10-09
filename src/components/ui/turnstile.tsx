@@ -139,8 +139,8 @@ export default function Turnstile({
   return (
     <div className={className}>
       <div ref={containerRef} />
-      {(!SITE_KEY || failed) && <p role="status" className="text-sm text-red-600 dark:text-red-300">{t("forms.turnstileUnavailable")}</p>}
-      {process.env.NEXT_PUBLIC_TURNSTILE_TEST_MODE === "true" && <p className="text-xs text-[var(--muted)]">{t("forms.turnstileTestMode")}</p>}
+      {(!SITE_KEY || failed) && <p role="status" className="text-sm text-error">{t("forms.turnstileUnavailable")}</p>}
+      {process.env.NEXT_PUBLIC_TURNSTILE_TEST_MODE === "true" && <p className="text-xs text-on-surface-variant">{t("forms.turnstileTestMode")}</p>}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicPageRobots } from "@/lib/page-robots";
 import PrivacyPageClient from "./PrivacyPageClient";
 
 export const metadata: Metadata = {
@@ -8,10 +9,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://programo.pl/polityka-prywatnosci",
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: publicPageRobots,
 };
 
 export default function Page() {

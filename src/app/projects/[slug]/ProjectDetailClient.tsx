@@ -66,7 +66,7 @@ function Fact({
     <div className="min-w-0">
       <dt
         className={`text-[10px] font-bold uppercase tracking-[0.25em] ${
-          dark ? "text-white/50" : "text-on-surface-variant/70"
+          dark ? "text-white/50" : "text-on-surface-variant"
         }`}
       >
         {label}
@@ -92,7 +92,7 @@ function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
     // in a self-contained horizontal scroll-snap track — the document itself
     // never gains a horizontal scrollbar. From md up they fit and center.
     return (
-      <div className="-mx-6 overflow-x-auto px-6 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:overflow-x-visible md:px-0 [&::-webkit-scrollbar]:hidden">
+      <div role="region" tabIndex={0} aria-label={`${project.title}: ${lang === "pl" ? "ekrany aplikacji" : "app screens"}`} className="-mx-6 overflow-x-auto px-6 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:overflow-x-visible md:px-0 [&::-webkit-scrollbar]:hidden">
         <div className="flex snap-x snap-mandatory items-end gap-4 py-2 sm:gap-6 md:justify-center md:gap-8">
           {list.map((src, i) => (
             <div
@@ -381,7 +381,7 @@ function ProjectContent({ slug }: { slug: string }) {
                 {lang === "pl" ? "Historia projektu" : "The story"}
               </h2>
               <div className="mt-8">
-                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-on-surface-variant/70">
+                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-on-surface-variant">
                   {t("project.techStack")}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -472,7 +472,7 @@ function ProjectContent({ slug }: { slug: string }) {
               href={`/projects/${prev.slug}`}
               className="group flex flex-col gap-2 border-b border-outline-variant/30 px-6 py-10 transition-colors hover:bg-surface-container-low sm:border-b-0 sm:border-r sm:px-10 md:px-12 md:py-14"
             >
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-on-surface-variant/70">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-on-surface-variant">
                 {t("project.prevProject")}
               </span>
               <span className="font-headline text-2xl font-bold tracking-tight text-on-surface transition-colors group-hover:text-primary md:text-3xl">
@@ -487,7 +487,7 @@ function ProjectContent({ slug }: { slug: string }) {
               href={`/projects/${next.slug}`}
               className="group flex flex-col items-start gap-2 px-6 py-10 transition-colors hover:bg-surface-container-low sm:items-end sm:px-10 sm:text-right md:px-12 md:py-14"
             >
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-on-surface-variant/70">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-on-surface-variant">
                 {t("project.nextProject")}
               </span>
               <span className="font-headline text-2xl font-bold tracking-tight text-on-surface transition-colors group-hover:text-primary md:text-3xl">

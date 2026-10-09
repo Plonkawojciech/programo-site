@@ -94,7 +94,7 @@ export function buildCrmPayload(
 
 /**
  * POSTs one submission to the CRM. Never throws; returns whether the CRM
- * accepted it (2xx). Short timeout: a CRM outage must not hold up the form.
+ * confirmed durable storage (201 + JSON acknowledgement and record id).
  */
 export async function forwardToCrm(payload: ReturnType<typeof buildCrmPayload>): Promise<boolean> {
   const secret = process.env.CRM_WEBHOOK_SECRET;
@@ -114,12 +114,24 @@ export async function forwardToCrm(payload: ReturnType<typeof buildCrmPayload>):
   try {
     const res = await fetch(url, {
       method: "POST",
+      redirect: "error",
       headers: { "Content-Type": "application/json", "X-Webhook-Secret": secret },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(5000),
     });
-    if (!res.ok) console.error(`[contact] CRM webhook failed: HTTP ${res.status} from ${host} (verdict ${payload.verdict})`);
-    return res.ok;
+    // A login page, async 202 or generic health response is not a durable save.
+    // Real CRM acknowledges its committed transaction with formSubmissionId;
+    // the isolated preview fixture acknowledges its fsynced record with id.
+    const isJson = /^application\/json(?:\s*;|$)/i.test(res.headers.get("content-type") ?? "");
+    if (res.status !== 201 || res.redirected || !isJson) {
+      console.error(`[contact] CRM acknowledgement invalid: HTTP ${res.status} from ${host}`);
+      return false;
+    }
+    const acknowledgement: unknown = await res.json();
+    if (!acknowledgement || typeof acknowledgement !== "object") return false;
+    const ack = acknowledgement as Record<string, unknown>;
+    const id = process.env.NEXT_PUBLIC_TURNSTILE_TEST_MODE === "true" ? ack.id : ack.formSubmissionId;
+    return ack.ok === true && typeof id === "string" && id.trim().length > 0;
   } catch (e) {
     console.error(`[contact] CRM webhook error (${host}):`, e instanceof Error ? `${e.name}: ${e.message}` : e);
     return false;

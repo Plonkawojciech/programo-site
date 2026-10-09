@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicPageRobots } from "@/lib/page-robots";
 import Link from "next/link";
 import QuickContact from "@/components/quick-contact";
 import ProjectsMarquee from "@/components/projects-marquee";
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
     locale: "pl_PL",
     type: "website",
   },
-  robots: { index: true, follow: true },
+  robots: publicPageRobots,
   keywords: [
     "tworzenie stron internetowych",
     "strona internetowa dla firmy",

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicPageRobots } from "@/lib/page-robots";
 import MarketingTrackingLanding from "@/components/marketing-tracking";
 import { OG_IMAGE } from "@/lib/og-image";
 import {
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
     locale: "pl_PL",
     type: "website",
   },
-  robots: { index: true, follow: true },
+  robots: publicPageRobots,
   keywords: [
     "tracking konwersji strona internetowa",
     "kampania google ads dla firm",

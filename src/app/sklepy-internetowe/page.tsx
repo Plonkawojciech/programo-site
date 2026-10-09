@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicPageRobots } from "@/lib/page-robots";
 import Link from "next/link";
 import Image from "next/image";
 import QuickContact from "@/components/quick-contact";
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     locale: "pl_PL",
     type: "website",
   },
-  robots: { index: true, follow: true },
+  robots: publicPageRobots,
   keywords: [
     "sklep internetowy na zamówienie",
     "aplikacja mobilna do sklepu internetowego",
@@ -191,7 +192,7 @@ export default function SklepyInternetowePage() {
                       </p>
                     </div>
                   </div>
-                  <p className="text-xs text-on-surface-variant/70">
+                  <p className="text-xs text-on-surface-variant">
                     Inne wdrożenia webowe: WKS Poznań · W. Safe Finance
                   </p>
                 </div>
