@@ -12,9 +12,6 @@ import ScrollProgress from "@/components/scroll-progress";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import CookieBanner from "@/components/cookie-banner";
-import AnalyticsTracker from "@/components/analytics-tracker";
-import WebVitals from "@/components/web-vitals";
-import MetaPixel from "@/components/meta-pixel";
 import StickyCta from "@/components/sticky-cta";
 
 // Localhost source editor. The ternary is evaluated at module scope against a
@@ -27,7 +24,7 @@ const DevEditor =
     ? dynamic(() => import("@/components/dev/dev-editor"), { ssr: false })
     : () => null;
 
-export default function Providers({ children, footerProjects }: { children: ReactNode; footerProjects: PortfolioLink[] }) {
+export default function Providers({ children, footerProjects, analytics }: { children: ReactNode; footerProjects: PortfolioLink[]; analytics: ReactNode }) {
   const pathname = usePathname();
   // /crm is a standalone internal panel — strip all marketing chrome
   // (navbar, footer, preloader, sticky CTA, cookie banner, analytics) so it
@@ -56,9 +53,7 @@ export default function Providers({ children, footerProjects }: { children: Reac
               </PageTransition>
               <StickyCta />
               <CookieBanner />
-              <AnalyticsTracker />
-              <WebVitals />
-              <MetaPixel />
+              {analytics}
               <DevEditor />
             </>
           )}

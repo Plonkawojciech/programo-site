@@ -50,7 +50,7 @@ try {
         canonical: document.querySelector('link[rel="canonical"]')?.href,
         robots: document.querySelector('meta[name="robots"]')?.content,
       }));
-      const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
+      const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"]).analyze();
       const key = `${route} ${theme}`;
       report.browser[key] = { status: response.status(), ...info, errors,
         violations: axe.violations.map((v) => ({ id: v.id, impact: v.impact, description: v.description,
@@ -94,6 +94,9 @@ if (process.env.AUDIT_AXE_ONLY === "1") {
 const chrome = await launch({ chromeFlags: ["--headless=new", "--no-sandbox", "--disable-dev-shm-usage"] });
 try {
   const performanceRoutes = process.env.AUDIT_LH_HOME_ONLY === "1" ? [["/", 3]] : [["/", 3], ["/kontakt", 3], ["/projekty", 3], ["/cennik", 3]];
+  if (process.env.AUDIT_LH_EXTENDED === "1" && process.env.AUDIT_LH_HOME_ONLY !== "1") {
+    performanceRoutes.push(["/projects/jedmar", 3], ["/blog/ile-kosztuje-strona-internetowa-mala-firma-2026", 3], ["/strony-internetowe", 3]);
+  }
   for (const [route, count] of performanceRoutes) {
     for (let run = 1; run <= count; run++) {
       const { lhr, artifacts } = await lighthouse(base + route, {
@@ -111,9 +114,10 @@ try {
         lcpElement: lhr.audits["largest-contentful-paint-element"]?.details,
         diagnostics: Object.entries(lhr.audits).filter(([, a]) => a.score !== null && a.score < 0.9).map(([id, a]) => ({ id, title: a.title, displayValue: a.displayValue })) };
       report.performance.push(result);
-      writeFileSync(path.join(out, `lighthouse-${route === "/" ? "home" : route.slice(1)}-${run}.json`), JSON.stringify(lhr));
-      writeFileSync(path.join(out, `trace-${route === "/" ? "home" : route.slice(1)}-${run}.json`), JSON.stringify(artifacts.Trace));
-      writeFileSync(path.join(out, `network-${route === "/" ? "home" : route.slice(1)}-${run}.json`), JSON.stringify(artifacts.DevtoolsLog));
+      const fileTag = route === "/" ? "home" : route.slice(1).replaceAll("/", "-");
+      writeFileSync(path.join(out, `lighthouse-${fileTag}-${run}.json`), JSON.stringify(lhr));
+      writeFileSync(path.join(out, `trace-${fileTag}-${run}.json`), JSON.stringify(artifacts.Trace));
+      writeFileSync(path.join(out, `network-${fileTag}-${run}.json`), JSON.stringify(artifacts.DevtoolsLog));
       console.log("mobile", route, run, "LCP", Math.round(result.lcpMs), "score", result.performance);
       writeFileSync(path.join(out, "summary.json"), JSON.stringify(report, null, 2));
     }

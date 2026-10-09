@@ -104,11 +104,17 @@ export const metadata: Metadata = {
 // of repeating them. See src/lib/schema/.
 const siteGraph = renderGraph([buildOrganization(), buildWebsite(), ...buildPeople()]);
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Keep the production components in their existing provider context and
+  // mount order. The public build flag removes their unused preview bundle;
+  // the runtime flag also protects a deployment configured after the build.
+  const analytics = process.env.NEXT_PUBLIC_PROGRAMO_DEPLOYMENT_ENV === "preview" || isPreview
+    ? null
+    : (await import("@/components/site-analytics")).default();
   return (
     <html lang="pl" suppressHydrationWarning className={`${archivo.variable} selection:bg-primary/20 selection:text-primary`}>
       <head>
@@ -153,7 +159,12 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-surface text-on-surface overflow-x-hidden">
-        <Providers footerProjects={footerProjectLinks}>{children}</Providers>
+        <Providers
+          footerProjects={footerProjectLinks}
+          analytics={analytics}
+        >
+          {children}
+        </Providers>
       </body>
     </html>
   );
