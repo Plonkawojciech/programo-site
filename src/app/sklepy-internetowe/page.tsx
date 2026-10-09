@@ -27,7 +27,7 @@ const PATH = "/sklepy-internetowe";
 export const metadata: Metadata = {
   title: "Sklepy internetowe i aplikacje mobilne do sklepów | Programo",
   description:
-    "Sklepy internetowe na WooCommerce, PrestaShop i headless oraz aplikacje mobilne do sklepów, które już działają. Płatności, InPost, migracja bez utraty SEO.",
+    "Sklepy internetowe na WooCommerce, PrestaShop i headless oraz aplikacje mobilne do sklepów, które już działają. Płatności, InPost, migracja z przekierowaniami i przeniesieniem SEO.",
   alternates: { canonical: "https://programo.pl/sklepy-internetowe" },
   openGraph: {
     images: [OG_IMAGE],
@@ -72,7 +72,7 @@ const service = buildService({
     { "@type": "City", name: "Poznań" },
   ],
   description:
-    "Sklepy od zera (WooCommerce, PrestaShop, headless Next.js) i natywne aplikacje mobilne do istniejących sklepów. Integracje płatności, InPost, Allegro/BaseLinker, migracje bez utraty SEO.",
+    "Sklepy od zera (WooCommerce, PrestaShop, headless Next.js) i natywne aplikacje mobilne do istniejących sklepów. Integracje płatności, InPost, Allegro/BaseLinker, migracje z przekierowaniami i przeniesieniem SEO.",
 });
 
 const pageGraph = renderGraph([
@@ -80,7 +80,7 @@ const pageGraph = renderGraph([
     path: PATH,
     name: "Sklepy internetowe i aplikacje mobilne do sklepów | Programo",
     description:
-      "Sklepy internetowe na WooCommerce, PrestaShop i headless oraz aplikacje mobilne do sklepów, które już działają. Płatności, InPost, migracja bez utraty SEO.",
+      "Sklepy internetowe na WooCommerce, PrestaShop i headless oraz aplikacje mobilne do sklepów, które już działają. Płatności, InPost, migracja z przekierowaniami i przeniesieniem SEO.",
     dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
     mainEntity: ref(service),
   }),
@@ -108,8 +108,8 @@ const services = [
     desc: "Płatności (PayU, PayPo, iMoje, InPost Pay i inne), wybór Paczkomatu na mapie, Allegro i BaseLinker, synchronizacja stanów magazynowych. Piszemy je z obsługą błędów i automatycznym ponawianiem, żeby nikt nie musiał ich pilnować ręcznie.",
   },
   {
-    title: "Migracje bez utraty SEO",
-    desc: "Przy przenoszeniu sklepu pilnujemy mapy przekierowań, struktury adresów i danych strukturalnych, żeby pozycje wypracowane w Google przetrwały przeprowadzkę. Plan migracji dostajesz na piśmie, zanim ruszymy cokolwiek na produkcji.",
+    title: "Migracje z ochroną adresów i treści SEO",
+    desc: "Przy przenoszeniu sklepu pilnujemy mapy przekierowań, struktury adresów i danych strukturalnych, żeby ograniczyć ryzyko spadków po zmianie sklepu. Plan migracji dostajesz na piśmie, zanim ruszymy cokolwiek na produkcji.",
   },
 ];
 

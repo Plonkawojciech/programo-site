@@ -9,8 +9,8 @@ export const marketing = {
     en: "Website, measurement, and Google Ads run by a single team",
   },
   "mkt.hero.desc": {
-    pl: "Budujemy stronę, wpinamy śledzenie konwersji zgodne z RODO i prowadzimy kampanię Google Ads. Wiesz, ile kosztuje pozyskanie klienta, bo każde zapytanie jest policzone.",
-    en: "We build the website, wire in GDPR-compliant conversion tracking, and run your Google Ads campaign. You know what a customer costs to acquire, because every inquiry gets counted.",
+    pl: "Budujemy stronę, wpinamy śledzenie konwersji z Consent Mode v2 i banerem zgód i prowadzimy kampanię Google Ads. Konfigurujemy pomiar kliknięć w numer i wysłanych formularzy, żeby porównać koszt pozyskania zapytania z różnych kampanii.",
+    en: "We build the website, wire in conversion tracking with Consent Mode v2 and a consent banner, and run your Google Ads campaign. We configure phone-tap and form tracking so you can compare the cost of an inquiry across campaigns.",
   },
   "mkt.hero.ctaCall": { pl: "Zadzwoń: 509 123 434", en: "Call us: +48 509 123 434" },
   "mkt.hero.ctaConsult": { pl: "Bezpłatna konsultacja", en: "Free consultation" },
@@ -27,8 +27,8 @@ export const marketing = {
   },
   "mkt.solution.title": { pl: "U nas wszystkie trzy elementy są w jednych rękach", en: "With us, all three pieces are in the same hands" },
   "mkt.solution.body": {
-    pl: "Stronę projektujemy pod konkretne działanie użytkownika, pomiar zlicza każde takie działanie, a kampania kieruje ruch tam, gdzie treść strony odpowiada obietnicy z reklamy. Kiedy coś nie dowozi, sprawdzamy dane i poprawiamy, zamiast szukać winnego.",
-    en: "We design the page around one specific user action, the tracking counts every such action, and the campaign sends traffic where the page matches the promise in the ad. When something underperforms, we check the data and fix it instead of looking for someone to blame.",
+    pl: "Stronę projektujemy pod konkretne działanie użytkownika, pomiar obejmuje uzgodnione zdarzenia z uwzględnieniem zgód użytkownika, a kampania kieruje ruch tam, gdzie treść strony odpowiada obietnicy z reklamy. Kiedy coś nie dowozi, sprawdzamy dane i poprawiamy, zamiast szukać winnego.",
+    en: "We design the page around one specific user action, tracking covers the agreed events and respects user consent, and the campaign sends traffic where the page matches the promise in the ad. When something underperforms, we check the data and fix it instead of looking for someone to blame.",
   },
 
   "mkt.elements.eyebrow": { pl: "Co dostajesz", en: "What you get" },
@@ -40,8 +40,8 @@ export const marketing = {
   },
   "mkt.elements.2.title": { pl: "Tracking: GA4, konwersje, Consent Mode", en: "Tracking: GA4, conversions, Consent Mode" },
   "mkt.elements.2.desc": {
-    pl: "Wpinamy Google Analytics 4, śledzenie konwersji Google Ads z enhanced conversions i Consent Mode v2, więc pomiar jest zgodny z RODO: przed zgodą Google działa w trybie bez cookies, a Meta Pixel i pozostałe narzędzia startują dopiero po zgodzie użytkownika. Każde kliknięcie w telefon i każdy formularz jest policzony i przypisany do źródła.",
-    en: "We wire in Google Analytics 4, Google Ads conversion tracking with enhanced conversions, and Consent Mode v2, so measurement is GDPR-compliant: before consent Google runs in cookieless mode, and Meta Pixel and the other tools start only after the user agrees. Every phone tap and every form submission is counted and attributed to its source.",
+    pl: "Wpinamy Google Analytics 4, śledzenie konwersji Google Ads z enhanced conversions i Consent Mode v2: przed zgodą Google działa w trybie bez cookies, a Meta Pixel i pozostałe narzędzia startują dopiero po zgodzie użytkownika. Konfigurujemy zdarzenia kliknięcia w telefon i wysłania formularza. Powiązanie ze źródłem wizyty zależy od zgód użytkownika i dostępnych danych.",
+    en: "We wire in Google Analytics 4, Google Ads conversion tracking with enhanced conversions, and Consent Mode v2: before consent Google runs in cookieless mode, and Meta Pixel and the other tools start only after the user agrees. We configure phone-tap and form-submission events. Source attribution depends on user consent and the available data.",
   },
   "mkt.elements.3.title": { pl: "Kampanie Google Ads + SEO techniczne", en: "Google Ads campaigns + technical SEO" },
   "mkt.elements.3.desc": {
@@ -76,8 +76,8 @@ export const marketing = {
   },
   "mkt.faq.q2": { pl: "Czy tracking jest zgodny z RODO?", en: "Is the tracking GDPR-compliant?" },
   "mkt.faq.a2": {
-    pl: "Tak. Wdrażamy Consent Mode v2 z banerem zgód, w którym „Odrzuć” działa naprawdę: bez zgody użytkownika żaden piksel reklamowy się nie uruchamia. Pomiar konwersji opieramy na rozwiązaniach Google zaprojektowanych do pracy w tym modelu.",
-    en: "Yes. We implement Consent Mode v2 with a consent banner where \"Decline\" actually works: without the user's consent, no advertising pixel fires. Conversion measurement relies on Google's mechanisms designed for exactly this model.",
+    pl: "Wdrażamy Consent Mode v2 z banerem zgód, w którym „Odrzuć” działa naprawdę: bez zgody użytkownika żaden piksel reklamowy się nie uruchamia. Pomiar konwersji opieramy na rozwiązaniach Google zaprojektowanych do pracy w tym modelu.",
+    en: "We implement Consent Mode v2 with a consent banner where \"Decline\" actually works: without the user's consent, no advertising pixel fires. Conversion measurement relies on Google's mechanisms designed for exactly this model.",
   },
   "mkt.faq.q3": { pl: "Jaki budżet reklamowy ma sens na start?", en: "What ad budget makes sense to start?" },
   "mkt.faq.a3": {

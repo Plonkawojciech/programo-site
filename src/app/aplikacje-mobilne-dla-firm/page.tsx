@@ -46,7 +46,7 @@ const data: ServiceLandingData = {
       { title: "Integracja z tym, co masz", desc: "Aplikacja korzysta z danych istniejącego sklepu lub systemu. W Jedmarze spięliśmy ją z działającym sklepem PrestaShop, bez przebudowy samego sklepu." },
       { title: "Płatności i dostawa", desc: "Płatności online, wybór punktu odbioru i statusy zamówień w zakresie, który obsługuje Twój sklep." },
       { title: "Publikacja w sklepach", desc: "Konta deweloperskie, opisy, zrzuty ekranu i przejście przez weryfikację Apple oraz Google." },
-      { title: "Aktualizacje", desc: "Nowe wersje systemów wychodzą co roku. Po wdrożeniu pilnujemy zgodności i wydajemy poprawki w ramach opieki." },
+      { title: "Aktualizacje", desc: "Nowe wersje systemów wychodzą co roku. Po wdrożeniu pilnujemy zgodności i wydajemy poprawki w ramach opieki uzgodnionej w umowie." },
     ],
   },
   process: {
@@ -55,7 +55,7 @@ const data: ServiceLandingData = {
       { title: "Rozmowa i zakres", desc: "Ustalamy, co aplikacja ma robić w pierwszej wersji, a co może poczekać. Sprawdzamy, jakie dane udostępnia Twój sklep lub system." },
       { title: "Projekt ekranów", desc: "Zanim powstanie kod, widzisz wszystkie ekrany i przechodzisz przez główne ścieżki: logowanie, zakup, zamówienia." },
       { title: "Budowa i testy na urządzeniach", desc: "Wersje testowe dostajesz na własny telefon przez TestFlight i testy wewnętrzne Google Play." },
-      { title: "Publikacja i opieka", desc: "Wysyłamy aplikacje do weryfikacji, odpowiadamy na uwagi recenzentów i zostajemy przy projekcie po starcie." },
+      { title: "Publikacja i opieka", desc: "Wysyłamy aplikacje do weryfikacji, odpowiadamy na uwagi recenzentów a opiekę po starcie ustalamy w umowie." },
     ],
   },
   price: {
@@ -64,7 +64,7 @@ const data: ServiceLandingData = {
       { name: "Aplikacja mobilna iOS + Android", range: "4 000 – 8 000 zł", term: "6 tygodni" },
       { name: "Opieka nad sklepem lub systemem", range: "800 – 1 500 zł / mies." },
     ],
-    note: "Ceny netto, do każdej doliczamy 23% VAT. Dolna kwota to standardowy zakres, górna wersja rozszerzona. Rozbudowane projekty wyceniamy osobno po rozmowie.",
+    note: "Ceny netto, do każdej doliczamy 23% VAT. Dolna kwota to standardowy zakres, górna wersja rozszerzona. Zakres i limit godzin opieki ustalamy w umowie. Opłaty za hosting, domenę i inne usługi zewnętrzne rozliczasz osobno. Zmianę zakresu wyceniamy przed rozpoczęciem dodatkowych prac. Rozbudowane projekty wyceniamy osobno po rozmowie.",
   },
   work: {
     heading: "Aplikacje, które zbudowaliśmy",

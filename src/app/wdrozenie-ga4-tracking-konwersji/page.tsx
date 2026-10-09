@@ -26,7 +26,7 @@ const data: ServiceLandingData = {
   path: PATH,
   breadcrumb: "Wdrożenie GA4 i konwersji",
   h1: "Wdrożenie GA4 i śledzenia konwersji",
-  lead: "Wpinamy pomiar na stronie, którą już masz: Google Analytics 4, konwersje Google Ads, Meta Pixel i zgody cookies. Po wdrożeniu każdy telefon i każdy wysłany formularz ma przypisane źródło.",
+  lead: "Wpinamy pomiar na stronie, którą już masz: Google Analytics 4, konwersje Google Ads, Meta Pixel i zgody cookies. Konfigurujemy zdarzenia kliknięcia w numer i wysłania formularza; zakres danych zależy od zgód użytkownika i dostępnej informacji o źródle wizyty.",
   serviceType: "Wdrożenie analityki internetowej",
   schemaDescription:
     "Konfiguracja Google Analytics 4, śledzenia konwersji Google Ads z enhanced conversions, Meta Pixel i Consent Mode v2 na istniejących stronach i w sklepach internetowych.",
@@ -61,7 +61,7 @@ const data: ServiceLandingData = {
   price: {
     heading: "Ile kosztuje wdrożenie pomiaru",
     rows: [{ name: "SEO, Google Ads, GA4 + GTM", range: "150 – 300 zł / mies." }],
-    note: "Cena netto, doliczamy 23% VAT. To stawka miesięcznej współpracy obejmującej SEO, Google Ads oraz GA4 z GTM. Jednorazową konfigurację na istniejącej stronie wyceniamy po przeglądzie.",
+    note: "Cena netto, doliczamy 23% VAT. To stawka miesięcznej współpracy obejmującej SEO, Google Ads oraz GA4 z GTM. Zakres i limit godzin ustalamy w umowie. Budżet reklam i opłaty usług zewnętrznych rozliczasz osobno. Przy budżecie Google Ads powyżej 10 000 zł miesięcznie stawka wynosi 10% wydatku zamiast kwoty z tabeli. Jednorazową konfigurację na istniejącej stronie wyceniamy po przeglądzie.",
   },
   work: {
     heading: "Gdzie to działa",
@@ -72,7 +72,7 @@ const data: ServiceLandingData = {
   },
   faqs: [
     { q: "Czy trzeba przebudować stronę, żeby wpiąć pomiar?", a: "Nie. Pracujemy na istniejącej stronie, także na WordPressie i w gotowych sklepach. W Domkach Poznaniak wpięliśmy pomiar na stronie, której nie budowaliśmy." },
-    { q: "Czy kliknięcie w numer telefonu da się policzyć?", a: "Tak. Kliknięcie w numer na telefonie komórkowym rejestrujemy jako zdarzenie i przypisujemy do źródła wizyty. Rozmowy wybranej ręcznie z ekranu komputera w ten sposób nie widać." },
+    { q: "Czy kliknięcie w numer telefonu da się policzyć?", a: "Tak. Konfigurujemy zdarzenie kliknięcia w numer na telefonie komórkowym. Powiązanie ze źródłem wizyty zależy od zgód użytkownika i dostępnych danych. Rozmowy wybranej ręcznie z ekranu komputera w ten sposób nie widać." },
     { q: "Co z osobami, które nie zgodzą się na cookies?", a: "Przy braku zgody Google działa w trybie bez plików cookies i modeluje część konwersji. Meta Pixel i narzędzia nagrywające sesje nie uruchamiają się wcale." },
     { q: "Czy prowadzicie też kampanie?", a: "Tak, budujemy i prowadzimy kampanie Google Ads. Budżet reklamowy zawsze zatwierdza klient." },
     { q: "Na kogo są zakładane konta?", a: "Na Twoją firmę. Jesteś właścicielem usługi GA4, konta Google Ads i danych, a nam nadajesz dostęp." },

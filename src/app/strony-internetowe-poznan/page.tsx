@@ -43,11 +43,11 @@ const data: ServiceLandingData = {
       },
       {
         title: "Firma rusza i potrzebuje strony na start",
-        desc: "Wizytówkę z ofertą, kontaktem i mapą dojazdu oddajemy w 5 dni roboczych, większą stronę firmową w ciągu 2 tygodni.",
+        desc: "Wizytówkę z ofertą, kontaktem i mapą dojazdu oddajemy w terminie od 5 dni do 2 tygodni, zależnie od zakresu.",
       },
       {
         title: "Reklamy kosztują, a nie wiadomo, co dają",
-        desc: "Stronę oddajemy z policzonymi telefonami i formularzami w Google Analytics 4, więc widać, która reklama przyniosła zapytanie.",
+        desc: "Konfigurujemy w Google Analytics 4 pomiar kliknięć w numer i wysłania formularza. Powiązanie ze źródłem wizyty zależy od zgód użytkownika i dostępnych danych.",
       },
     ],
   },
@@ -78,7 +78,7 @@ const data: ServiceLandingData = {
       { name: "Sklep na WooCommerce lub Shopify", range: "4 000 – 8 000 zł", term: "3 tygodnie" },
       { name: "Opieka nad stroną", range: "300 – 600 zł / mies." },
     ],
-    note: "Ceny netto, do każdej doliczamy 23% VAT. Dolna kwota to standardowy zakres, górna wersja rozszerzona.",
+    note: "Ceny netto, do każdej doliczamy 23% VAT. Dolna kwota to standardowy zakres, górna wersja rozszerzona. Zakres i limit godzin opieki ustalamy w umowie. Opłaty za hosting, domenę i inne usługi zewnętrzne rozliczasz osobno. Zmianę zakresu wyceniamy przed rozpoczęciem dodatkowych prac.",
   },
   work: {
     heading: "Strony i serwisy, które zrobiliśmy",
@@ -92,7 +92,7 @@ const data: ServiceLandingData = {
   faqs: [
     { q: "Czy muszę być z Poznania?", a: "Nie. Siedzibę mamy w Poznaniu przy ul. Podkomorskiej 14/1 i tutaj najłatwiej się spotkać, ale większość projektów prowadzimy zdalnie, dla firm z całej Polski." },
     { q: "Ile kosztuje strona internetowa dla firmy?", a: "Wizytówka lub strona firmowa kosztuje od 2 000 do 6 000 zł netto, zależnie od liczby podstron, panelu do treści i integracji. Stałą cenę dostajesz przed rozpoczęciem prac." },
-    { q: "Jak długo trwa zrobienie strony?", a: "Od 5 dni roboczych do 2 tygodni dla strony firmowej. Najczęściej czekamy na teksty i zdjęcia, dlatego pomagamy je przygotować." },
+    { q: "Jak długo trwa zrobienie strony?", a: "Od 5 dni do 2 tygodni dla strony firmowej. Najczęściej czekamy na teksty i zdjęcia, dlatego pomagamy je przygotować." },
     { q: "Czy zobaczę projekt, zanim zapłacę?", a: "Firmom, z którymi rozmawiamy, przygotowujemy bezpłatne demo strony głównej z ich treściami. Decyzję podejmujesz po obejrzeniu." },
     { q: "Kto będzie właścicielem strony?", a: "Ty. Po wdrożeniu przekazujemy kod i wszystkie dostępy: domenę, hosting oraz konta analityczne założone na Twoją firmę." },
   ],

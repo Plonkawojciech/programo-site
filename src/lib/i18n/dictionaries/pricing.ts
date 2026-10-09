@@ -64,7 +64,7 @@ export const pricing = {
   "pricing.cta": { pl: "Zadzwoń: 509 123 434", en: "Call +48 509 123 434" },
 
   // Price table — 3 categories, one active at a time (tabs). Numbers copied
-  // 1:1 from ~/Programo/marketing/FIRMA/sprzedaz/cennik.md (28.07.2026), the
+  // 1:1 from ~/Programo/marketing/FIRMA/sprzedaz/cennik.md (verified 2026-10-09), the
   // only source of truth. Only the Standard-Rozszerzony range is public — the
   // owner's rule (cennik.md "Zasady"): "Klient słyszy kolumnę Standard, Start
   // tylko za case study, opinię albo polecenie." "Start" never appears here.
@@ -75,8 +75,8 @@ export const pricing = {
   },
   "pricing.unitMonth": { pl: "/ mies.", en: "/ mo" },
   "pricing.disclaimer": {
-    pl: "Ceny netto, doliczamy 23% VAT. Dolna kwota dotyczy standardowego zakresu, górna wersji rozszerzonej. Zakres i limit godzin opieki ustalamy w umowie. Zmianę zakresu wyceniamy przed rozpoczęciem dodatkowych prac. Budżet reklam i opłaty zewnętrznych usług rozliczasz osobno. Google Ads powyżej 10 000 zł budżetu miesięcznego: 10% wydatku zamiast stawki z tabeli.",
-    en: "Prices exclude 23% VAT. The lower amount covers standard scope; the upper amount covers an extended version. Care scope and included hours are agreed in the contract. We quote scope changes before starting extra work. Ad spend and external service fees are paid separately. Google Ads above a 10,000 PLN monthly budget: 10% of spend instead of the table rate.",
+    pl: "Ceny netto, doliczamy 23% VAT. Dolna kwota dotyczy standardowego zakresu, górna wersji rozszerzonej. Zakres i limit godzin każdego abonamentu ustalamy w umowie. Zmianę zakresu wyceniamy przed rozpoczęciem dodatkowych prac. Budżet reklam i opłaty zewnętrznych usług rozliczasz osobno. Google Ads powyżej 10 000 zł budżetu miesięcznego: 10% wydatku zamiast stawki z tabeli.",
+    en: "Prices exclude 23% VAT. The lower amount covers standard scope; the upper amount covers an extended version. The scope and included hours of every retainer are agreed in the contract. We quote scope changes before starting extra work. Ad spend and external service fees are paid separately. Google Ads above a 10,000 PLN monthly budget: 10% of spend instead of the table rate.",
   },
 
   "pricing.catProjects": { pl: "Projekty", en: "Projects" },

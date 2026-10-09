@@ -50,7 +50,7 @@ export const offer = {
   "offer.pillar2.b2": { pl: "Integrację z Twoim istniejącym systemem lub sklepem", en: "Integration with your existing system or store" },
   "offer.pillar2.b3": { pl: "Publikację w App Store i Google Play przeprowadzoną przez nas", en: "App Store and Google Play publication handled by us" },
   "offer.pillar2.b4": { pl: "Powiadomienia push, biometrię, pracę offline", en: "Push notifications, biometrics, offline support" },
-  "offer.pillar2.b5": { pl: "Testy automatyczne i aktualizacje po premierze", en: "Automated tests and post-launch updates" },
+  "offer.pillar2.b5": { pl: "Testy automatyczne; po premierze aktualizacje w ramach uzgodnionej opieki", en: "Automated tests; post-launch updates under an agreed support contract" },
 
   // Pillar 3 — Online stores
   "offer.pillar3.title": { pl: "Sklepy internetowe", en: "Online stores" },
@@ -68,7 +68,7 @@ export const offer = {
   "offer.pillar3.b2": { pl: "Integracje płatności (PayU, przelewy, raty) i dostaw (InPost)", en: "Payment (PayU, transfers, installments) and delivery (InPost) integrations" },
   "offer.pillar3.b3": { pl: "Aplikację mobilną do sklepu, jeśli Twoi klienci kupują z telefonu", en: "A mobile app for the store if your customers buy from their phones" },
   "offer.pillar3.b4": { pl: "Integracje z Allegro i BaseLinkerem", en: "Allegro and BaseLinker integrations" },
-  "offer.pillar3.b5": { pl: "Migrację bez utraty pozycji w Google", en: "Migration without losing Google rankings" },
+  "offer.pillar3.b5": { pl: "Migrację z mapą przekierowań i przeniesieniem danych SEO", en: "Migration with a redirect map and transferred SEO data" },
 
   // Pillar 4 — Websites, tracking & Google Ads
   // Was `""` on both sides, which rendered pillar "04" with a number and no
@@ -104,11 +104,11 @@ export const offer = {
   },
   "offer.pillar5.b1": { pl: "Audyt procesu - znajdujemy, co faktycznie warto zautomatyzować", en: "Process audit - we find what's actually worth automating" },
   "offer.pillar5.b2": { pl: "Automatyzację procesu: od dokumentu do systemu, bez ręcznego przepisywania", en: "Process automation: from document to system, no manual retyping" },
-  "offer.pillar5.b3": { pl: "Asystenta AI na bazie wiedzy Twojej firmy, z barierą przeciw halucynacjom", en: "An AI assistant on your company's own knowledge base, fenced against hallucination" },
+  "offer.pillar5.b3": { pl: "Asystenta AI korzystającego z wiedzy Twojej firmy; zakres i ograniczenia ustalamy przed wdrożeniem", en: "An AI assistant using your company's knowledge base; we agree its scope and limitations before deployment" },
   "offer.pillar5.b4": { pl: "Szkolenie zespołu z korzystania z nowych narzędzi", en: "Team training on using the new tools" },
-  "offer.pillar5.b5": { pl: "Opiekę po wdrożeniu - dopracowujemy system na realnych danych", en: "Post-launch support - we refine the system on real data" },
+  "offer.pillar5.b5": { pl: "Opiekę po wdrożeniu w uzgodnionym zakresie i limicie godzin", en: "Post-launch support with an agreed scope and included hours" },
 
-  "offer.getBullets": { pl: "Co dostajesz", en: "What you get" },
+  "offer.getBullets": { pl: "Przykładowy zakres", en: "Example scope" },
   "offer.seeExample": { pl: "Zobacz realizację", en: "See the example" },
   "offer.learnMore": { pl: "Dowiedz się więcej", en: "Learn more" },
 } as const satisfies Record<string, { pl: string; en: string }>;

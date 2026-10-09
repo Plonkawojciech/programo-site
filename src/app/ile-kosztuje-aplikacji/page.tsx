@@ -51,8 +51,8 @@ const projectRows = [
     note: "Oferta, formularz kontaktowy i lokalne SEO.",
   },
   {
-    type: "Rozbudowana strona / e-commerce / portal",
-    timeline: "4–6 tygodni",
+    type: "Sklep internetowy",
+    timeline: "Woo / Shopify: 3 tygodnie; własny silnik: 6 tygodni",
     note: "Panel treści (CMS), płatności, konto klienta, integracje, czasem druga wersja językowa.",
   },
   {
@@ -100,7 +100,7 @@ const faqs = [
   },
   {
     q: "Co to jest MVP i ile kosztuje?",
-    a: "MVP to pierwsza działająca wersja produktu, zawężona do najważniejszych funkcji. Służy do tego, żeby sprawdzić pomysł na użytkownikach, zanim wyda się na niego cały budżet. U nas MVP powstaje zwykle w 4–8 tygodni, a koszt zależy od tego, ile funkcji trafi do tej pierwszej wersji.",
+    a: "MVP to pierwsza działająca wersja produktu, zawężona do najważniejszych funkcji. Służy do tego, żeby sprawdzić pomysł na użytkownikach, zanim wyda się na niego cały budżet. Termin i koszt MVP ustalamy po określeniu, ile funkcji trafi do tej pierwszej wersji.",
   },
   {
     q: "Czy dostanę dokładną wycenę z góry?",
@@ -235,8 +235,7 @@ export default function IleKosztujeAplikacjiPage() {
               MVP to wersja produktu ograniczona do{" "}
               <strong>najważniejszych funkcji</strong>. Budujesz mniej, wypuszczasz
               wcześniej i szybciej dowiadujesz się od pierwszych użytkowników, czego im
-              brakuje. U nas taka wersja powstaje zwykle w{" "}
-              <strong>4–8 tygodni</strong>, a jej koszt zależy od tego, ile z tych
+              brakuje. Termin i koszt ustalamy po określeniu, ile z tych
               funkcji trafi do pierwszego wydania.
             </p>
           </section>

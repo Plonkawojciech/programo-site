@@ -56,7 +56,7 @@ const faqs = [
   },
   {
     q: "Ile trwa wykonanie strony?",
-    a: "Standardowa strona firmowa zwykle od 5 dni do 2 tygodni. Na rozbudowany serwis z CMS-em, integracjami i migracją treści potrzebujemy 4–6 tygodni, zależnie od zakresu i gotowości materiałów.",
+    a: "Standardowa strona firmowa zwykle od 5 dni do 2 tygodni. Termin rozbudowanego serwisu z CMS-em, integracjami i migracją treści ustalamy po określeniu zakresu i gotowości materiałów.",
   },
   {
     q: "Czy zadbacie o szybkość i SEO?",

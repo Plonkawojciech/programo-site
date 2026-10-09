@@ -5,7 +5,7 @@ import { OG_IMAGE } from "@/lib/og-image";
 const PATH = "/aplikacje-webowe-dla-firm";
 const TITLE = "Aplikacje webowe i systemy dla firm | Programo";
 const DESCRIPTION =
-  "Systemy i aplikacje webowe szyte pod proces firmy: panele, CRM, rezerwacje, automatyzacje zamiast Excela. Od 4 000 zł netto, pierwsza wersja w około 4 tygodnie.";
+  "Systemy i aplikacje webowe szyte pod proces firmy: panele, CRM, rezerwacje, automatyzacje zamiast Excela. Od 4 000 zł netto, termin od 4 tygodni, zależnie od zakresu.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -55,7 +55,7 @@ const data: ServiceLandingData = {
       { title: "Rozpisanie procesu", desc: "Przechodzimy z Tobą przez to, jak praca wygląda dziś: kto co wpisuje, gdzie giną informacje, co da się oddać systemowi." },
       { title: "Zakres pierwszej wersji i wycena", desc: "Ustalamy, co musi być na start, a co w kolejnych etapach. Dostajesz stałą cenę za pierwszą wersję." },
       { title: "Budowa w krótkich etapach", desc: "Co tydzień albo dwa widzisz działający fragment na adresie testowym i możesz zmienić priorytety." },
-      { title: "Wdrożenie i rozwój", desc: "Przenosimy dane, szkolimy zespół i zostajemy przy systemie: poprawki, aktualizacje, kolejne funkcje." },
+      { title: "Wdrożenie i rozwój", desc: "Zakres przeniesienia danych i szkolenia ustalamy przed startem. Poprawki, aktualizacje i kolejne funkcje po wdrożeniu obejmujemy osobno uzgodnioną opieką." },
     ],
   },
   price: {
@@ -66,7 +66,7 @@ const data: ServiceLandingData = {
       { name: "Audyt procesów", range: "1 500 – 6 000 zł", term: "1 tydzień" },
       { name: "Opieka nad sklepem lub systemem", range: "800 – 1 500 zł / mies." },
     ],
-    note: "Ceny netto, do każdej doliczamy 23% VAT. Dolna kwota to standardowy zakres, górna wersja rozszerzona. Większe systemy wyceniamy etapami.",
+    note: "Ceny netto, do każdej doliczamy 23% VAT. Dolna kwota to standardowy zakres, górna wersja rozszerzona. Zakres i limit godzin opieki ustalamy w umowie. Opłaty za hosting, domenę i inne usługi zewnętrzne rozliczasz osobno. Zmianę zakresu wyceniamy przed rozpoczęciem dodatkowych prac. Większe systemy wyceniamy etapami.",
   },
   work: {
     heading: "Systemy, które zbudowaliśmy",
@@ -79,7 +79,7 @@ const data: ServiceLandingData = {
   },
   faqs: [
     { q: "Ile kosztuje aplikacja webowa dla firmy?", a: "System w standardowym zakresie kosztuje od 4 000 do 8 000 zł netto. O cenie decyduje liczba ról użytkowników, integracji i ekranów. Większe projekty dzielimy na etapy z osobną wyceną." },
-    { q: "Jak długo trwa budowa?", a: "Pierwsza działająca wersja powstaje w około 4 tygodnie. Rozbudowane systemy rozwijamy etapami, a każdy etap kończy się czymś, czego da się używać." },
+    { q: "Jak długo trwa budowa?", a: "Termin zaczyna się od 4 tygodni i zależy od uzgodnionego zakresu. Rozbudowane systemy rozwijamy etapami, a każdy etap kończy się czymś, czego da się używać." },
     { q: "Czy system da się połączyć z programem, którego już używamy?", a: "Zwykle tak, jeśli program udostępnia API albo eksport danych. Sprawdzamy to przed wyceną, żeby nie obiecywać integracji, której nie da się zrobić." },
     { q: "Kto jest właścicielem kodu i danych?", a: "Ty. Po wdrożeniu przekazujemy kod źródłowy i wszystkie dostępy. Dane od początku należą do Twojej firmy." },
     { q: "Co, jeśli po wdrożeniu coś trzeba zmienić?", a: "Po starcie zostajemy przy systemie: robimy poprawki, wsparcie techniczne i dalszy rozwój. Nowe funkcje wyceniamy osobno albo realizujemy w ramach miesięcznej opieki." },
