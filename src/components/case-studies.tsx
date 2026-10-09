@@ -95,6 +95,11 @@ export default function CaseStudies({
                     <p className="mt-1 text-sm font-medium text-on-surface-variant">
                       {project.subtitle.pl}
                     </p>
+                    {project.statusLabel && (
+                      <p className="mt-3 text-sm font-medium text-on-surface-variant">
+                        {project.statusLabel.pl}
+                      </p>
+                    )}
                     <p lang={angleLang} className="mt-3 text-sm font-light leading-relaxed text-on-surface/70">
                       {angle}
                     </p>

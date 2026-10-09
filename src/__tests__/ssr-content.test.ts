@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { getAllPosts } from "@/lib/blog";
+import { getProjectBySlug } from "@/lib/projects";
 
 // Guard against the one regression that would quietly destroy AI visibility.
 //
@@ -65,6 +66,21 @@ const BLOG_POST_PAGES: { file: string; label: string; min: number }[] = getAllPo
 const built = existsSync(APP_DIR);
 
 describe.skipIf(!built)("server-rendered content (AI crawlers do not run JS)", () => {
+  for (const slug of ["jedmar", "innochem", "terapia-dens", "underwater"]) {
+    it(`${slug} ships its case study and status in visible server HTML`, () => {
+      const project = getProjectBySlug(slug)!;
+      const html = readFileSync(join(APP_DIR, `projects/${slug}.html`), "utf8");
+      const text = visibleText(html);
+      expect(text).toContain(project.title);
+      expect(text).toContain(project.statusLabel!.pl);
+      for (const paragraph of project.longDescription.pl.split("\n\n")) {
+        expect(text).toContain(paragraph);
+      }
+      expect(html).toContain('rel="canonical"');
+      expect(html).toContain('"@type":"BreadcrumbList"');
+    });
+  }
+
   for (const page of [...PAGES, ...BLOG_POST_PAGES]) {
     it(`${page.label} ships real text in the HTML`, () => {
       const path = join(APP_DIR, page.file);

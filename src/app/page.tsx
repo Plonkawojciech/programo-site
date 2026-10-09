@@ -12,7 +12,7 @@ import ContactBookend from "@/components/home/contact-bookend";
 import { getPortfolioSummaries } from "@/lib/portfolio-summaries";
 
 const homeProjects = getPortfolioSummaries([
-  "jedmar", "innochem", "terapia-dens", "estalo", "rejestr-pro", "solvio", "pooltimer", "eportal-prawny",
+  "jedmar", "innochem", "terapia-dens", "underwater", "estalo", "rejestr-pro", "solvio", "pooltimer", "eportal-prawny",
 ]);
 
 /**
@@ -35,7 +35,7 @@ const homeProjects = getPortfolioSummaries([
  *      104px seam is the tightest boundary on the page and has to stay that
  *      way; ClientWork carries an asymmetric `pb-section-tight` to hold it.
  *      Since 2026-08-07 the pair also reads as one showcase: a wide rail of
- *      three client projects, then a quiet row of five small product tiles.
+ *      client projects, then a quiet row of five small product tiles.
  *      Both are horizontal snap rails, so the seam has to stay tight or the
  *      second row stops looking like the footnote to the first.
  *   3. TrustBar sits directly under the hero because logos and numbers are the

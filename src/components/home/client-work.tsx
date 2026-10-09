@@ -10,7 +10,7 @@ import { trackPortfolioClick } from "@/lib/tracking";
 interface CaseStudy {
   slug: string;
   image: string;
-  mobileImage: string;
+  mobileImage?: string;
   imgAltKey: TranslationKey;
   categoryKey: TranslationKey;
 }
@@ -21,9 +21,8 @@ interface CaseStudy {
 // lives in the dictionary and still gets read, on the case study page the button
 // leads to. Here the name and the category do the work.
 
-// Order is the pitch order, not chronology: Jedmar leads because it is the one
-// piece of client work that shipped to the App Store and Google Play. The
-// next two cards are real client previews and say so in their captions.
+// Jedmar leads with published apps. The other entries are client previews;
+// their captions make that status visible before opening the case study.
 const cases: CaseStudy[] = [
   {
     slug: "jedmar",
@@ -45,6 +44,12 @@ const cases: CaseStudy[] = [
     mobileImage: "/screenshots/v2/terapia-dens-mobile.webp",
     imgAltKey: "home.work.terapiaDens.imgAlt",
     categoryKey: "home.work.terapiaDens.category",
+  },
+  {
+    slug: "underwater",
+    image: "/screenshots/v2/underwater-desktop.webp",
+    imgAltKey: "home.work.underwater.imgAlt",
+    categoryKey: "home.work.underwater.category",
   },
 ];
 
@@ -134,7 +139,9 @@ export default function ClientWork({ projectNames }: { projectNames: Record<stri
         className="scrollbar-none mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[max(1.5rem,calc((100%-var(--slide))/2))] pb-2 [--slide:88vw] md:mt-14 md:gap-6 md:[--slide:74vw] lg:[--slide:min(62vw,1080px)]"
       >
         {cases.map((c, i) => {
-          const mobile = getImageProps({ src: c.mobileImage, alt: t(c.imgAltKey), width: 390, height: 844, sizes: "88vw" }).props;
+          const mobile = c.mobileImage
+            ? getImageProps({ src: c.mobileImage, alt: t(c.imgAltKey), width: 390, height: 844, sizes: "88vw" }).props
+            : undefined;
           return (
             <article
               key={c.slug}
@@ -147,7 +154,7 @@ export default function ClientWork({ projectNames }: { projectNames: Record<stri
                 className="group relative block aspect-[4/3] overflow-hidden rounded-2xl shadow-card transition-shadow duration-300 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 sm:aspect-[16/10] lg:aspect-[16/9]"
               >
                 <picture>
-                  <source media="(max-width: 639px)" srcSet={mobile.srcSet} sizes={mobile.sizes} />
+                  {mobile && <source media="(max-width: 639px)" srcSet={mobile.srcSet} sizes={mobile.sizes} />}
                 <Image
                   src={c.image}
                   alt={t(c.imgAltKey)}

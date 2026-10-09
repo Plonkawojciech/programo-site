@@ -1,8 +1,13 @@
 import { describe, it, expect } from "vitest";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { projects, getProjectBySlug, getAdjacentProjects } from "@/lib/projects";
 
 const EXPECTED_SLUGS = [
   "jedmar",
+  "innochem",
+  "terapia-dens",
+  "underwater",
   "estalo",
   "eportal-prawny",
   "wks-poznan",
@@ -106,6 +111,29 @@ describe("projects data", () => {
     for (const p of projects) {
       if (p.status === "live") {
         expect(p.liveUrl, `${p.slug} is live but has no liveUrl`).toBeTruthy();
+      }
+    }
+  });
+
+  it("client previews remain distinct from launched projects", () => {
+    for (const slug of ["innochem", "terapia-dens", "underwater"]) {
+      const project = getProjectBySlug(slug)!;
+      expect(project.category).toBe("dla-klientow");
+      expect(project.status).toBe("development");
+      expect(project.statusLabel?.pl).toMatch(/podgląd/i);
+      expect(project.statusLabel?.en).toMatch(/preview/i);
+    }
+    // A private project is reviewable through its public case study, without
+    // directing visitors to an authenticated preview or the old client site.
+    expect(getProjectBySlug("underwater")?.liveUrl).toBeUndefined();
+  });
+
+  it("client case studies reference available screenshots", () => {
+    for (const slug of ["jedmar", "innochem", "terapia-dens", "underwater"]) {
+      const screenshots = getProjectBySlug(slug)?.screenshots;
+      expect(screenshots?.length, `${slug} needs a real source screenshot`).toBeGreaterThan(0);
+      for (const screenshot of screenshots!) {
+        expect(existsSync(join(process.cwd(), "public", screenshot)), screenshot).toBe(true);
       }
     }
   });

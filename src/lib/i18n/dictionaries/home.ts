@@ -162,35 +162,24 @@ export const home = {
   // 1.5 Featured case — Jedmar
   "home.jedmar.eyebrow": { pl: "Studium przypadku", en: "Case study" },
   "home.jedmar.title": {
-    pl: "Jedmar: sklep narzędziowy w kieszeni i części zamienne, które sprzedają się same",
-    en: "Jedmar: a tool store in your pocket, and spare parts that sell themselves",
+    pl: "Jedmar: aplikacje zakupowe i schematy części zamiennych",
+    en: "Jedmar: shopping apps and spare-parts diagrams",
   },
   "home.jedmar.challengeLabel": { pl: "Wyzwanie", en: "Challenge" },
   "home.jedmar.challenge": {
-    pl: "Centrum Narzędziowe Jedmar prowadzi sklep z ponad 1400 produktami na PrestaShop. Zakupy z telefonu były uciążliwe, a dobranie części zamiennej do gwoździarki wymagało telefonu do obsługi i wertowania PDF-ów producenta.",
-    en: "The Jedmar Tool Center runs a store with over 1,400 products on PrestaShop. Shopping from a phone was clumsy, and matching a spare part to a nail gun meant calling the shop and digging through manufacturer PDFs.",
+    pl: "Jedmar ma istniejący sklep na PrestaShop. Projekt rozszerza go o natywne zakupy mobilne i wyszukiwanie części na rysunkach narzędzi.",
+    en: "Jedmar has an existing PrestaShop store. The project extends it with native mobile shopping and parts lookup on tool drawings.",
   },
   "home.jedmar.solutionLabel": { pl: "Rozwiązanie", en: "Solution" },
   "home.jedmar.solution": {
-    pl: "Zbudowaliśmy dwie w pełni natywne aplikacje (Swift i Kotlin) spięte z istniejącym sklepem: katalog, koszyk, sześć metod płatności, Paczkomaty InPost i skaner kodów EAN. Do tego interaktywny moduł schematów: rysunki złożeniowe 73 narzędzi, na których każda część jest klikalna i trafia prosto do koszyka. Sklepu nie ruszaliśmy - dołożyliśmy do niego to, czego brakowało.",
-    en: "We built two fully native apps (Swift and Kotlin) wired into the existing store: catalog, cart, six payment methods, InPost parcel lockers, and an EAN barcode scanner. Plus an interactive diagram module: assembly drawings of 73 tools where every part is clickable and goes straight to the cart. We didn't touch the store - we added what it was missing.",
+    pl: "Zbudowaliśmy aplikacje iOS w SwiftUI i Android w Kotlinie z katalogiem, koszykiem, zamówieniami i skanerem kodów. Moduł schematów łączy rysunek z listą części; po powiązaniu części z produktem można dodać ją do koszyka.",
+    en: "We built an iOS app in SwiftUI and an Android app in Kotlin with a catalog, cart, ordering and barcode scanning. The diagram module links each drawing to a parts list; parts linked to products can be added to the cart.",
   },
   "home.jedmar.resultLabel": { pl: "Efekt", en: "Result" },
   "home.jedmar.result": {
-    pl: "Obie aplikacje są opublikowane i działają w App Store oraz Google Play, a schematy części działają publicznie na jedmar.pl i natywnie w obu aplikacjach. Katalog synchronizuje się automatycznie co kilka minut, bez pracy po stronie sklepu.",
-    en: "Both apps are published and live on the App Store and Google Play, and the parts diagrams run publicly on jedmar.pl and natively inside both apps. The catalog syncs automatically every few minutes, with no work on the store's side.",
+    pl: "Obie aplikacje mają publiczne karty w App Store i Google Play. Schematy są dostępne na jedmar.pl, a dane istniejącego sklepu pozostają źródłem katalogu aplikacji.",
+    en: "Both apps have public listings on the App Store and Google Play. The diagrams are available on jedmar.pl, and the existing store remains the source of the app catalog.",
   },
-  "home.jedmar.m1.value": { pl: "1400+", en: "1400+" },
-  "home.jedmar.m1.label": { pl: "produktów w katalogu", en: "products in the catalog" },
-  "home.jedmar.m2.value": { pl: "73", en: "73" },
-  "home.jedmar.m2.label": {
-    pl: "narzędzia w interaktywnych schematach",
-    en: "tools in interactive diagrams",
-  },
-  "home.jedmar.m3.value": { pl: "~7500", en: "~7500" },
-  "home.jedmar.m3.label": { pl: "klikalnych markerów części", en: "clickable part markers" },
-  "home.jedmar.m4.value": { pl: "6", en: "6" },
-  "home.jedmar.m4.label": { pl: "integracji płatności", en: "payment integrations" },
   "home.jedmar.cta": { pl: "Zobacz cały projekt", en: "See the full project" },
 
   // 1.6 People
@@ -349,10 +338,10 @@ export const home = {
   },
 
   /* --- Homepage redesign: selected client work --- */
-  "home.work.title.v2": { pl: "Wybrane wdrożenia", en: "Selected work" },
+  "home.work.title.v2": { pl: "Wybrane realizacje", en: "Selected work" },
   "home.work.subtitle.v2": {
-    pl: "Trzy projekty, które działają na produkcji i możesz je dziś otworzyć.",
-    en: "Three projects running in production that you can open today.",
+    pl: "Aplikacje Jedmara są opublikowane. Innochem, Terapia Dens i Underwater pokazujemy na etapie podglądu; opis każdego projektu wyjaśnia zakres i status prac.",
+    en: "Jedmar's apps are published. Innochem, Terapia Dens and Underwater are shown at the preview stage; each case study explains the scope and status of the work.",
   },
   "home.work.problem": { pl: "Problem", en: "Problem" },
   "home.work.solution": { pl: "Co zbudowaliśmy", en: "What we built" },
@@ -376,29 +365,29 @@ export const home = {
     pl: "Każdy lead trafia dwoma kanałami naraz, więc właściciel reaguje w kilka minut, bez zaglądania do skrzynki.",
     en: "Every lead arrives through two channels at once, so the owner reacts within minutes without opening an inbox.",
   },
-  // Kategoria mówi "aplikacje", nie "sklep internetowy". Sklep jedmar.pl istniał
-  // przed nami i nie jest naszym dziełem - patrz `scope` w projects.ts, gdzie
-  // jest to napisane wprost. Trzy klucze niżej mówiły co innego.
+  // The captions distinguish published work from client previews.
   "home.work.innochem.category": { pl: "Sklep internetowy · Podgląd wdrożenia", en: "Online store · Deployment preview" },
   "home.work.innochem.imgAlt": { pl: "Podgląd nowego sklepu INNOCHEM", en: "Preview of the new INNOCHEM store" },
   "home.work.terapiaDens.category": { pl: "Strona placówek · Podgląd przed odbiorem", en: "Clinic website · Preview before acceptance" },
   "home.work.terapiaDens.imgAlt": { pl: "Podgląd strony Terapia Dens", en: "Preview of the Terapia Dens website" },
+  "home.work.underwater.category": { pl: "Sklep i kursy · Prywatny podgląd", en: "Store and courses · Private preview" },
+  "home.work.underwater.imgAlt": { pl: "Podgląd nowej strony i sklepu Underwater.pl", en: "Preview of the new Underwater.pl website and store" },
   "home.work.jedmar.category": { pl: "Aplikacje mobilne · Narzędzia B2B", en: "Mobile apps · B2B tools" },
   "home.work.jedmar.imgAlt": {
     pl: "Jedmar: interaktywny moduł schematów części",
     en: "Jedmar: interactive parts diagram module",
   },
   "home.work.jedmar.problem": {
-    pl: "Centrum narzędziowe z katalogiem ponad 1400 pozycji potrzebowało wygodnych zakupów z telefonu i sensownej sprzedaży części zamiennych.",
-    en: "A tool center with a catalog of over 1,400 items needed comfortable phone shopping and a sane way to sell spare parts.",
+    pl: "Projekt łączy istniejący sklep PrestaShop z zakupami mobilnymi i wyszukiwaniem części na schematach narzędzi.",
+    en: "The project connects an existing PrestaShop store with mobile shopping and parts lookup on tool diagrams.",
   },
   "home.work.jedmar.solution": {
-    pl: "Dwie natywne aplikacje - iOS w Swift, Android w Kotlinie - spięte z istniejącym PrestaShopem: katalog, koszyk, sześć metod płatności, Paczkomaty i skaner kodów EAN. Do tego moduł schematów, w którym każda część z rysunku trafia prosto do koszyka.",
-    en: "Two native apps - iOS in Swift, Android in Kotlin - wired into the existing PrestaShop: catalog, cart, six payment methods, parcel lockers and an EAN scanner. Plus a diagram module where every part on a drawing goes straight into the cart.",
+    pl: "Aplikacje iOS i Android korzystają ze wspólnego API. Schematy mają powiększanie, listę części i dodawanie do koszyka pozycji powiązanych z katalogiem.",
+    en: "The iOS and Android apps use a shared API. Diagrams provide zoom, a parts list and add-to-cart for parts linked to the catalog.",
   },
   "home.work.jedmar.effect": {
-    pl: "Obie aplikacje są opublikowane w App Store i Google Play, a schematy 73 narzędzi działają publicznie na jedmar.pl. Katalog synchronizuje się sam, sklepu nie trzeba było migrować.",
-    en: "Both apps are published on the App Store and Google Play, and diagrams of 73 tools run publicly on jedmar.pl. The catalog syncs itself, and the store needed no migration.",
+    pl: "Aplikacje mają publiczne karty w App Store i Google Play, a moduł schematów jest dostępny na jedmar.pl. Istniejący sklep pozostał źródłem danych.",
+    en: "The apps have public listings on the App Store and Google Play, and the diagram module is available on jedmar.pl. The existing store remains the data source.",
   },
   "home.work.wks.category": { pl: "Strona sportowa · Klub", en: "Sports site · Club" },
   "home.work.wks.imgAlt": {

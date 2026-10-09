@@ -61,11 +61,8 @@ export interface Project {
   updatedAt?: string;
 }
 
-// All 10 entries currently share one `updatedAt`: the last commit to touch
-// this file (7110f17, 2026-08-03) rewrote the copy in every project block
-// the same day — verified per-block with `git log -1 --format=%cI -L <range>`,
-// not assumed from the whole-file date. They will drift apart individually
-// as projects get updated one at a time going forward.
+// Client case-study sources and verification boundaries are recorded in
+// docs/orchestration/2026-10-09-programo_portfolio.md.
 export const projects: Project[] = [
   {
     slug: "jedmar",
@@ -75,12 +72,12 @@ export const projects: Project[] = [
       en: "Native iOS and Android store apps with interactive parts diagrams",
     },
     description: {
-      pl: "Dwie natywne aplikacje zakupowe dla poznańskiego Centrum Narzędziowego Jedmar, spięte z istniejącym sklepem PrestaShop: katalog ponad 1400 produktów, 6 integracji płatności, Paczkomaty InPost i skaner kodów EAN. Do tego interaktywny moduł schematów części zamiennych, który działa na stronie sklepu i w obu aplikacjach.",
-      en: "Two native shopping apps for the Jedmar Tool Center in Poznan, wired into the store's existing PrestaShop backend: a catalog of over 1,400 products, 6 payment integrations, InPost parcel lockers, and an EAN barcode scanner. Plus an interactive spare-parts diagram module that runs on the store website and inside both apps.",
+      pl: "Aplikacje zakupowe iOS i Android dla Jedmara oraz interaktywne schematy części. Katalog, koszyk i zamówienia korzystają z istniejącego sklepu PrestaShop.",
+      en: "iOS and Android shopping apps for Jedmar, plus interactive parts diagrams. The catalog, cart and orders use the existing PrestaShop store.",
     },
     longDescription: {
-      pl: "Jedmar prowadzi w Poznaniu sklep narzędziowy z ponad 1400 produktami na PrestaShop. Sklep działał, ale zakupy z telefonu były uciążliwe, a znalezienie właściwej części zamiennej do gwoździarki wymagało telefonu do obsługi i wertowania PDF-ów producenta. Zakres prac obejmował dwie rzeczy: wygodne zakupy mobilne i sensowną sprzedaż części. Samego sklepu nie ruszaliśmy.\n\nZbudowaliśmy dwie w pełni natywne aplikacje: iOS w Swift i SwiftUI oraz Android w Kotlinie z Jetpack Compose. Obie obsługują pełny cykl zakupowy: katalog z ok. 190 kategoriami, wyszukiwarkę z filtrami, koszyk, checkout z wyborem Paczkomatu InPost na mapie i sześcioma metodami płatności (PayU, PayPo, iMoje, Comfino, Caraty, InPost Pay), konto klienta z historią zamówień, skaner kodów EAN, powiadomienia push i logowanie Face ID. Osobno powstał moduł schematów części: interaktywne rysunki złożeniowe 73 narzędzi z ok. 7500 klikalnych markerów, z których każdy prowadzi do konkretnej części i przycisku dodania do koszyka.\n\nŹródłem prawdy pozostał istniejący PrestaShop. Aplikacje rozmawiają z nim przez warstwę API na Next.js, a katalog synchronizuje się automatycznie co kilka minut, więc cena zmieniona w sklepie pojawia się w aplikacjach bez niczyjej pracy. Moduł schematów ma jedno źródło danych i trzy miejsca działania: stronę sklepu, aplikację iOS i aplikację Android. Na natywne aplikacje zdecydowaliśmy się ze względu na użytkownika, który obsługuje telefon jedną ręką na budowie i skanuje kod z opakowania zamiast wpisywać nazwę.\n\nObie aplikacje są opublikowane i działają w App Store oraz Google Play, a schematy części są dostępne publicznie na jedmar.pl. Wersję iOS pokrywa 96 testów automatycznych, a każde wydanie przechodzi przez TestFlight i review sklepów.",
-      en: "Jedmar runs a tool store in Poznan with over 1,400 products on PrestaShop. The store worked fine, but shopping from a phone was clumsy, and finding the right spare part for a nail gun meant calling the shop and digging through manufacturer PDFs. The scope covered two things: comfortable mobile shopping and a sane way to sell spare parts. We did not touch the store itself.\n\nWe built two fully native apps: iOS in Swift and SwiftUI, Android in Kotlin with Jetpack Compose. Both cover the complete purchase cycle: a catalog with around 190 categories, search with filters, cart, checkout with InPost parcel-locker selection on a map and six payment methods (PayU, PayPo, iMoje, Comfino, Caraty, InPost Pay), a customer account with order history, an EAN barcode scanner, push notifications, and Face ID sign-in. Separately, we built the parts diagram module: interactive assembly drawings of 73 tools with roughly 7,500 clickable markers, each leading to a specific part and an add-to-cart button.\n\nThe existing PrestaShop remained the source of truth. The apps talk to it through a Next.js API layer, and the catalog syncs automatically every few minutes, so a price changed in the store shows up in the apps with no manual work. The diagram module has one data source and three surfaces: the store website, the iOS app, and the Android app. We chose native apps for the user who operates a phone one-handed on a job site and scans a barcode instead of typing a product name.\n\nBoth apps are published and live on the App Store and Google Play, and the parts diagrams are publicly available on jedmar.pl. The iOS version is covered by 96 automated tests, and every release goes through TestFlight and store review.",
+      pl: "Jedmar ma własny sklep narzędziowy na PrestaShop. Nasz zakres obejmował aplikacje mobilne oraz moduł schematów części zamiennych; istniejąca witryna i katalog pozostały podstawą sprzedaży.\n\nZbudowaliśmy osobne aplikacje: iOS w Swift i SwiftUI oraz Android w Kotlinie i Jetpack Compose. Zawierają katalog z wyszukiwaniem i filtrami, wybór wariantu produktu, koszyk, składanie zamówienia, konto z historią zakupów oraz skaner kodów kreskowych. Wybór dostawy obejmuje Paczkomaty InPost. Warstwa API łączy aplikacje z danymi sklepu.\n\nSchematy pozwalają powiększyć rysunek narzędzia, wskazać część i sprawdzić jej oznaczenie na liście. Część powiązaną z produktem można dodać do koszyka. Aplikacje korzystają z danych modułu na jedmar.pl, a API uzupełnia powiązania według kodów producenta.\n\nObie aplikacje mają publiczne karty w App Store i Google Play. Na jedmar.pl dostępny jest też moduł schematów.",
+      en: "Jedmar has an existing tool store built on PrestaShop. Our work covered mobile apps and a spare-parts diagram module; the existing website and catalog remained the basis for sales.\n\nWe built separate apps: iOS in Swift and SwiftUI, and Android in Kotlin and Jetpack Compose. They include catalog search and filters, product variant selection, a cart, ordering, accounts with order history and a barcode scanner. Delivery selection includes InPost parcel lockers. An API layer connects the apps to the store's data.\n\nThe diagrams let customers zoom into a tool drawing, select a part and find its code in the parts list. Parts linked to catalog products can be added to the cart. The apps use data from the module on jedmar.pl, while the API adds product links using manufacturer codes.\n\nBoth apps have public listings on the App Store and Google Play. The diagram module is also available on jedmar.pl.",
     },
     status: "live",
     statusLabel: {
@@ -91,8 +88,8 @@ export const projects: Project[] = [
     presentation: "phones",
     category: "dla-klientow",
     client: {
-      pl: "Centrum Narzędziowe Jedmar, Poznań",
-      en: "Jedmar Tool Center, Poznan",
+      pl: "Centrum Narzędziowe Jedmar",
+      en: "Jedmar Tool Center",
     },
     scope: {
       pl: "Aplikacje mobilne i moduł schematów części - sklep internetowy jedmar.pl istniał wcześniej i nie jest naszym dziełem",
@@ -100,43 +97,36 @@ export const projects: Project[] = [
     },
     liveUrl: "https://jedmar.pl/pl/schematy-narzedzi",
     metric: {
-      pl: "1400+ produktów · 73 schematy narzędzi",
-      en: "1,400+ products · 73 tool diagrams",
+      pl: "iOS i Android · schematy części",
+      en: "iOS and Android · parts diagrams",
     },
     metrics: [
       { value: "2", label: { pl: "natywne aplikacje w sklepach", en: "native apps in the stores" } },
-      { value: "1400+", label: { pl: "produktów w katalogu", en: "products in the catalog" } },
-      { value: "73", label: { pl: "narzędzia w module schematów", en: "tools in the diagram module" } },
-      { value: "~7500", label: { pl: "klikalnych markerów części", en: "clickable part markers" } },
     ],
-    tech: ["Swift", "SwiftUI", "Kotlin", "Jetpack Compose", "Next.js", "PrestaShop API", "InPost", "APNs / FCM"],
+    tech: ["Swift", "SwiftUI", "Kotlin", "Jetpack Compose", "Next.js", "PrestaShop API"],
     features: {
       pl: [
-        "Pełny cykl zakupowy w aplikacji: katalog, koszyk, checkout, konto, historia zamówień",
-        "6 integracji płatności: PayU, PayPo, iMoje, Comfino, Caraty, InPost Pay",
-        "Checkout z wyborem Paczkomatu InPost na mapie",
-        "Skaner kodów kreskowych EAN - od kodu na opakowaniu do karty produktu",
-        "Interaktywne schematy części: 73 narzędzia, ok. 7500 markerów, dodanie części do koszyka",
-        "Jedno źródło danych schematów dla strony sklepu i obu aplikacji",
-        "Automatyczna synchronizacja katalogu z PrestaShop co kilka minut",
-        "96 testów automatycznych po stronie iOS, wydania przez TestFlight i review sklepów",
+        "Katalog z wyszukiwaniem, filtrami i wyborem wariantów produktu",
+        "Koszyk, składanie zamówienia i historia zakupów",
+        "Wybór Paczkomatu InPost i skaner kodów kreskowych",
+        "Schematy z powiększaniem rysunku i wyszukiwaniem części",
+        "Dodawanie do koszyka części powiązanych z produktem w katalogu",
+        "API łączące obie aplikacje z istniejącym PrestaShop",
       ],
       en: [
-        "Full purchase cycle in the app: catalog, cart, checkout, account, order history",
-        "6 payment integrations: PayU, PayPo, iMoje, Comfino, Caraty, InPost Pay",
-        "Checkout with InPost parcel-locker selection on a map",
-        "EAN barcode scanner - from the code on the box to the product page",
-        "Interactive parts diagrams: 73 tools, ~7,500 markers, add-to-cart per part",
-        "One diagram data source serving the store website and both apps",
-        "Automatic catalog sync with PrestaShop every few minutes",
-        "96 automated tests on iOS, releases through TestFlight and store review",
+        "Catalog search, filters and product variant selection",
+        "Cart, ordering and purchase history",
+        "InPost parcel-locker selection and barcode scanner",
+        "Diagrams with zoom and parts search",
+        "Add-to-cart for parts linked to catalog products",
+        "API connecting both apps to the existing PrestaShop store",
       ],
     },
     tags: ["Mobile", "iOS", "Android", "E-commerce"],
     accentColor: "#ffd333",
     bgColor: "#1a1a0a",
     year: "2026",
-    updatedAt: "2026-08-03T16:23:25+02:00",
+    updatedAt: "2026-10-09T20:22:59+02:00",
     role: {
       pl: "Programo - projekt i budowa aplikacji oraz modułu schematów",
       en: "Programo - design and build of the apps and the diagram module",
@@ -173,8 +163,8 @@ export const projects: Project[] = [
           en: "Assembly technical drawings with parts one click away from the cart",
         },
         description: {
-          pl: "Interaktywny wizualizator schematów 73 narzędzi pięciu marek: klikalne markery części, zoom i pinch na mobile, lista części z wyszukiwarką i przycisk dodania do koszyka. Wdrożony na produkcyjnej stronie jedmar.pl i natywnie w obu aplikacjach.",
-          en: "An interactive diagram viewer for 73 tools across five brands: clickable part markers, zoom and pinch on mobile, a searchable parts list, and an add-to-cart button. Deployed on the production jedmar.pl website and natively inside both apps.",
+          pl: "Rysunki narzędzi z klikalnymi markerami, powiększaniem i wyszukiwaniem na liście części. Po powiązaniu części z produktem można dodać ją do koszyka. Moduł jest dostępny na jedmar.pl, a jego dane wykorzystują także aplikacje iOS i Android.",
+          en: "Tool drawings with clickable markers, zoom and a searchable parts list. Parts linked to products can be added to the cart. The module is available on jedmar.pl, and its data also serves the iOS and Android apps.",
         },
         screenshots: ["/screenshots/v2/jedmar-schemat-tool-desktop.webp"],
         liveUrl: "https://jedmar.pl/pl/schematy-narzedzi",
@@ -192,8 +182,8 @@ export const projects: Project[] = [
       en: "A new INNOCHEM store with a catalog, cart and order management panel. Deployed to preview; switching the client's domain remains a separate stage.",
     },
     longDescription: {
-      pl: "Przygotowaliśmy następcę dotychczasowej strony WordPress i sklepu PrestaShop: katalog, karty produktów, koszyk, zamówienie bez konta i konto klienta. Panel pozwala obsługiwać zamówienia i treści sklepu. W zakresie są też przekierowania starych adresów oraz dokumenty prawne do zatwierdzenia przez klientkę. Pokazujemy podgląd wdrożenia. Uruchomienie płatności online, wysyłki i przełączenie innochem.pl wymagają osobnej konfiguracji i odbioru.",
-      en: "We built a successor to the existing WordPress site and PrestaShop store: catalog, product pages, cart, guest checkout and customer accounts. The admin panel manages orders and store content. The scope also includes redirects from old URLs and legal drafts for the client to approve. This is a deployed preview. Online payments, shipping and switching innochem.pl require separate configuration and acceptance.",
+      pl: "Punktem wyjścia była strona INNOCHEM na WordPressie i osobny sklep na PrestaShop. Przygotowaliśmy ich następcę: jedną stronę z katalogiem olejów, kartami produktów, dokumentami do pobrania i koszykiem.\n\nKlient może wybrać produkt, przejść do zamówienia bez konta albo skorzystać z konta z historią zakupów. Panel sklepu obejmuje edycję katalogu i treści, ustawienia dostawy oraz obsługę zamówień. Pracownik może oznaczyć płatność i wysyłkę oraz podać numer przesyłki.\n\nPrzygotowanie migracji obejmuje produkty, zdjęcia i dokumenty ze starej strony, a także przekierowania historycznych adresów. Do obsługi sklepu powstała instrukcja panelu. Dokumenty prawne oraz warunki dostawy wymagają zatwierdzenia przez klienta.\n\nNowy sklep działa na podglądzie. Uruchomienie sprzedaży na innochem.pl obejmuje jeszcze uzgodnienie aktualnych danych, konfigurację dostawy i wiadomości oraz test zamówienia po przełączeniu domeny. Płatności online pozostają osobnym etapem konfiguracji.",
+      en: "The project started with separate INNOCHEM websites: WordPress for company information and PrestaShop for the store. We prepared their successor: one website with an oil catalog, product pages, downloadable documents and a cart.\n\nCustomers can select a product, place an order without an account or use an account with purchase history. The admin panel covers catalog and content editing, delivery settings and order management. Staff can mark payment and shipment and enter a tracking number.\n\nMigration preparation covers products, images and documents from the old website, together with redirects for historical URLs. We also prepared a guide to the admin panel. Legal documents and delivery terms require client approval.\n\nThe new store is deployed to preview. Launching sales on innochem.pl still requires reconciling current data, configuring delivery and messages, and testing an order after the domain switch. Online payments remain a separate configuration stage.",
     },
     status: "development",
     statusLabel: { pl: "Wdrożony na podglądzie; przed przełączeniem domeny klienta", en: "Deployed to preview; awaiting the client domain switch" },
@@ -203,8 +193,8 @@ export const projects: Project[] = [
     liveUrl: "https://sklep-innochem.programo.pl",
     tech: ["Next.js", "TypeScript", "PostgreSQL"],
     features: {
-      pl: ["Katalog i karty produktów", "Koszyk i zamówienie bez konta", "Konto klienta i panel obsługi zamówień", "Przekierowania starych adresów i przygotowanie migracji"],
-      en: ["Catalog and product pages", "Cart and guest checkout", "Customer accounts and order management panel", "Legacy URL redirects and migration preparation"],
+      pl: ["Katalog z kartami produktów i dokumentami do pobrania", "Koszyk, zamówienie bez konta i konto klienta", "Panel edycji treści oraz obsługi zamówień i wysyłki", "Przekierowania starych adresów i przygotowanie migracji"],
+      en: ["Catalog with product pages and downloadable documents", "Cart, guest checkout and customer accounts", "Content editing and order and shipment management panel", "Legacy URL redirects and migration preparation"],
     },
     tags: ["E-commerce", "Web"],
     presentation: "light",
@@ -212,7 +202,7 @@ export const projects: Project[] = [
     bgColor: "#FFFFFF",
     year: "2026",
     role: { pl: "Programo: projekt i budowa sklepu oraz panelu", en: "Programo: store and admin panel design and development" },
-    updatedAt: "2026-09-29T11:31:22+02:00",
+    updatedAt: "2026-10-09T20:22:59+02:00",
     screenshots: ["/screenshots/v2/innochem-desktop.webp", "/screenshots/v2/innochem-mobile.webp"],
   },
   {
@@ -225,8 +215,8 @@ export const projects: Project[] = [
       en: "A Terapia Dens website with clinic information, services and a searchable price list. Deployed to preview and awaiting client acceptance.",
     },
     longDescription: {
-      pl: "Przygotowaliśmy stronę dla placówek Terapia Dens w Poznaniu i Lednogórze, korzystając z treści starej strony oraz materiałów przekazanych przez klienta. Cennik pozwala wyszukiwać zabiegi i filtrować je według placówki. Strona zawiera usługi, kontakt i informacje o świadczeniach NFZ. Podgląd pokazuje dwie wersje wizualne. Wybór wersji, zatwierdzenie cennika i materiałów oraz przełączenie domeny pozostają do odbioru z klientem.",
-      en: "We prepared a website for Terapia Dens clinics in Poznan and Lednogora using content from the old site and materials supplied by the client. The price list supports treatment search and clinic filtering. The site includes services, contact details and public healthcare information. The preview presents two visual versions. Choosing a version, approving prices and content, and switching the domain remain subject to client acceptance.",
+      pl: "Terapia Dens prowadzi placówki w Poznaniu i Lednogórze. Przygotowaliśmy wspólną stronę z usługami, zespołem, danymi kontaktowymi i informacjami o świadczeniach NFZ. Treści o placówce poznańskiej pochodzą ze starej witryny; dane Lednogóry z materiałów przekazanych przez klienta.\n\nCennik przenieśliśmy z arkusza do listy zabiegów z kategoriami, wyszukiwaniem i filtrem placówki. Użytkownik może wpisać nazwę usługi bez polskich znaków i zawęzić wyniki do wybranego miejsca. Przypisanie cen do placówek pozostaje do potwierdzenia przez przychodnię.\n\nPodgląd zawiera dwa kierunki wizualne, każdy z kompletem podstron. Kontakt prowadzi do numerów telefonu i adresów placówek; rejestracja na wizyty odbywa się telefonicznie lub osobiście.\n\nStronę wdrożyliśmy na podglądzie. Klient wybiera wersję i zatwierdza ceny, treści oraz materiały przed przełączeniem terapiadens.pl.",
+      en: "Terapia Dens operates clinics in Poznan and Lednogora. We prepared a shared website covering services, staff, contact details and public healthcare information. Content about the Poznan clinic comes from the old website; Lednogora details come from materials supplied by the client.\n\nWe converted the spreadsheet price list into treatment categories with search and a clinic filter. Visitors can search without Polish diacritics and narrow results to a location. The clinic still needs to confirm the assignment of prices to locations.\n\nThe preview contains two visual directions, each with a full set of pages. Contact links lead to clinic phone numbers and addresses; appointment registration takes place by phone or in person.\n\nWe deployed the website to preview. The client chooses a version and approves prices, content and materials before switching terapiadens.pl.",
     },
     status: "development",
     statusLabel: { pl: "Wdrożona na podglądzie; czeka na odbiór i domenę klienta", en: "Deployed to preview; awaiting acceptance and the client domain" },
@@ -245,8 +235,40 @@ export const projects: Project[] = [
     bgColor: "#FFFFFF",
     year: "2026",
     role: { pl: "Programo: projekt i budowa strony oraz cennika", en: "Programo: website and price list design and development" },
-    updatedAt: "2026-09-29T21:39:59+02:00",
+    updatedAt: "2026-10-09T20:22:59+02:00",
     screenshots: ["/screenshots/v2/terapia-dens-desktop.webp", "/screenshots/v2/terapia-dens-mobile.webp"],
+  },
+  {
+    // Source: underwater-demo/docs/implementation/rano-dla-wojtka.md and client-cms-guide.md.
+    slug: "underwater",
+    title: "Underwater.pl",
+    subtitle: { pl: "Sklep nurkowy, kursy i panel zarządzania treścią", en: "Diving store, courses and content management panel" },
+    description: {
+      pl: "Nowa strona i sklep dla Underwater.pl z katalogiem sprzętu, kursami nurkowania i panelem treści. Realizacja działa na prywatnym podglądzie przed migracją klienta.",
+      en: "A new Underwater.pl website and store with an equipment catalog, diving courses and a content panel. The implementation runs in private preview before client migration.",
+    },
+    longDescription: {
+      pl: "Underwater.pl łączy sklep ze sprzętem nurkowym, szkolenia i materiały centrum nurkowego. Przygotowujemy następcę strony na Joomli, zachowując historyczne adresy produktów, kursów i treści tam, gdzie potwierdzają je materiały źródłowe.\n\nKatalog obejmuje karty produktów, warianty i koszyk. Kursy mają własne strony oraz terminy; kalendarz korzysta z tych samych danych. Zapisy na szkolenia i zamówienia sprawdzamy na danych testowych, a niepotwierdzona dostępność prowadzi do zapytania.\n\nPanel pozwala edytować produkty, kursy, terminy, aktualności i zdjęcia. Uprawnienia rozdzielają redakcję, obsługę i administrację. Import przenosi dostępne materiały starej witryny do własnej kopii, zachowując nierozstrzygnięte warianty i braki do uzgodnienia.\n\nRealizacja działa na prywatnym podglądzie Programo. Zakończenie migracji wymaga bieżącego eksportu bazy oraz zatwierdzonych stanów, miejsc kursów, dostawy i dokumentów. Płatności korzystają z adaptera testowego; integracja z wybranym operatorem i uruchomienie na domenie klienta pozostają kolejnym etapem.",
+      en: "Underwater.pl combines a diving equipment store, training and diving-center content. We are preparing a successor to the Joomla website, preserving historical product, course and content URLs where source materials confirm them.\n\nThe catalog includes product pages, variants and a cart. Courses have their own pages and dates, while the calendar uses the same data. We test training registrations and orders with test data; unconfirmed availability leads to an inquiry.\n\nThe admin panel supports products, courses, dates, news and images. Roles separate editing, operations and administration. The importer transfers available material from the old website into our own copy and preserves unresolved variants and missing data for reconciliation.\n\nThe implementation runs in Programo's private preview. Completing migration requires a current database export and approved stock, course capacity, delivery terms and documents. Payments use a test adapter; connecting a selected payment provider and launching on the client's domain remain the next stage.",
+    },
+    status: "development",
+    statusLabel: { pl: "Prywatny podgląd; przed migracją i uruchomieniem klienta", en: "Private preview; before client migration and launch" },
+    category: "dla-klientow",
+    client: { pl: "Underwater.pl", en: "Underwater.pl" },
+    scope: { pl: "Strona, katalog, kursy i CMS; import do własnej kopii i przepływy testowe", en: "Website, catalog, courses and CMS; import into our own copy and test flows" },
+    tech: ["Next.js", "TypeScript", "Payload CMS", "SQLite"],
+    features: {
+      pl: ["Katalog sprzętu, warianty produktów i koszyk", "Kursy, terminy, kalendarz i testowe zapisy na szkolenia", "Panel edycji produktów, kursów, aktualności i zdjęć z rolami", "Import materiałów oraz obsługa historycznych adresów"],
+      en: ["Equipment catalog, product variants and cart", "Courses, dates, calendar and test training registrations", "Role-based editing of products, courses, news and images", "Material import and historical URL handling"],
+    },
+    tags: ["E-commerce", "CMS", "Web"],
+    presentation: "light",
+    accentColor: "#B68A4B",
+    bgColor: "#0B171D",
+    year: "2026",
+    updatedAt: "2026-10-09T20:22:59+02:00",
+    role: { pl: "Programo: projekt i budowa strony, sklepu i panelu", en: "Programo: website, store and admin panel design and development" },
+    screenshots: ["/screenshots/v2/underwater-desktop.webp"],
   },
 
   {
