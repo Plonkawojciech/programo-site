@@ -283,7 +283,7 @@ export default function Navbar() {
           </button>
           <button
             onClick={toggle}
-            aria-label={t("a11y.langToggle")}
+            aria-label={`${lang === "pl" ? "EN" : "PL"} — ${t("a11y.langToggle")}`}
             className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] text-[13px] uppercase font-medium text-on-surface-variant cursor-pointer hover:text-on-surface transition-colors"
           >
             {lang === "pl" ? "EN" : "PL"}
@@ -372,7 +372,7 @@ export default function Navbar() {
           </button>
           <button
             onClick={toggle}
-            aria-label={t("a11y.langToggle")}
+            aria-label={`${lang === "pl" ? "EN" : "PL"} — ${t("a11y.langToggle")}`}
             className="flex min-h-[44px] min-w-[44px] items-center justify-center text-[13px] uppercase text-[var(--theme-nav-text)] font-medium cursor-pointer"
           >
             {lang === "pl" ? "EN" : "PL"}

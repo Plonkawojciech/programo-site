@@ -71,10 +71,13 @@ describe("Navbar component", () => {
 
   it("PL/EN toggle changes button text", () => {
     renderWithI18n();
-    const toggleBtn = screen.getAllByText("EN")[0];
+    const toggles = screen.getAllByRole("button", { name: /^EN — / });
+    expect(toggles).toHaveLength(2);
+    const toggleBtn = toggles[0];
     fireEvent.click(toggleBtn);
     // After toggle, it should show "PL"
     expect(screen.getAllByText("PL").length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("button", { name: /^PL — / })).toHaveLength(2);
   });
 
   it("mobile hamburger button exists", () => {

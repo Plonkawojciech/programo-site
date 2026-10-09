@@ -32,6 +32,25 @@ describe("FeaturedWork component", () => {
     expect(screen.getByText("ePortal Prawny")).toBeInTheDocument();
   });
 
+  it("uses level-two card headings below the page heading", () => {
+    renderWithI18n();
+    expect(screen.getByRole("heading", { level: 1, name: "Wybrane realizacje" })).toBeInTheDocument();
+    for (const project of projects) {
+      expect(screen.getByRole("heading", { level: 2, name: project.title })).toBeInTheDocument();
+    }
+  });
+
+  it("includes every card's visible status and title in its accessible link name", () => {
+    renderWithI18n();
+    const projectLinks = screen.getAllByRole("link").filter((link) => link.getAttribute("href")?.startsWith("/projects/"));
+    for (const link of projectLinks) {
+      const status = link.querySelector(".rounded-full.border")?.textContent;
+      expect(status).toBeTruthy();
+      expect(link).toHaveAccessibleName(new RegExp(status!));
+      expect(link).toHaveAccessibleName(new RegExp(link.querySelector("h2")!.textContent!));
+    }
+  });
+
   it("renders the four category filters", () => {
     renderWithI18n();
     expect(screen.getByRole("button", { name: "Wszystkie" })).toBeInTheDocument();

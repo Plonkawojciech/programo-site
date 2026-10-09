@@ -130,7 +130,6 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
       <Link
         href={`/projects/${project.slug}`}
         onClick={() => trackPortfolioClick(project.slug, `/projects/${project.slug}`)}
-        aria-label={`${project.title} - ${project.subtitle[lang]}`}
         className="flex h-full flex-col overflow-hidden rounded-2xl bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
       >
         {/* Accent line */}
@@ -155,9 +154,9 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
             </span>
           </div>
 
-          <h3 className="mt-3 font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
+          <h2 className="mt-3 font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">
             {project.title}
-          </h3>
+          </h2>
           <p className="mt-2 text-sm font-light leading-snug text-on-surface/70">
             {project.subtitle[lang]}
           </p>

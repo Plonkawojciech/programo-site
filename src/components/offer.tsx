@@ -153,7 +153,6 @@ function PillarExample({ pillar, t }: { pillar: Pillar; t: ReturnType<typeof use
     <Link
       href={`/projects/${project.slug}`}
       onClick={() => trackPortfolioClick(project.slug, `/projects/${project.slug}`)}
-      aria-label={`${t("offer.seeExample")}: ${project.title}`}
       className="group flex h-full flex-col overflow-hidden rounded-3xl bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
     >
       <PillarVisualFrame pillar={pillar} />
