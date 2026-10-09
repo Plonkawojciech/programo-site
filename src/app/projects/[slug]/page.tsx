@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { projects, type Project } from "@/lib/projects";
-import ProjectDetailClient from "./ProjectDetailClient";
+import { projects, getAdjacentProjects, type Project } from "@/lib/projects";
+import ProjectDetailClient, { type ProjectDetail } from "./ProjectDetailClient";
 import {
   buildBreadcrumbs,
   buildSoftwareApplication,
@@ -126,6 +126,19 @@ export default async function ProjectPage({
   // shell (client returned null) and Google indexed it as a soft 404.
   if (!project) notFound();
   const pageGraph = buildProjectGraph(project, slug);
+  const { prev, next } = getAdjacentProjects(slug);
+  // Only the selected page's rendered fields cross the client boundary. The
+  // full portfolio, schema fields and unused sub-products stay on the server.
+  const {
+    title, subtitle, longDescription, status, statusLabel, kind, presentation,
+    client, scope, partner, liveUrl, metrics, tech, features, accentColor,
+    bgColor, role, screenshots,
+  } = project;
+  const detail: ProjectDetail = {
+    slug, title, subtitle, longDescription, status, statusLabel, kind, presentation,
+    client, scope, partner, liveUrl, metrics, tech, features, accentColor,
+    bgColor, role, screenshots,
+  };
 
   return (
     <>
@@ -133,7 +146,11 @@ export default async function ProjectPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: pageGraph }}
       />
-      <ProjectDetailClient slug={slug} />
+      <ProjectDetailClient
+        project={detail}
+        prev={prev ? { slug: prev.slug, title: prev.title } : null}
+        next={next ? { slug: next.slug, title: next.title } : null}
+      />
     </>
   );
 }

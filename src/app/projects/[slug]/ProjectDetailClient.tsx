@@ -3,13 +3,25 @@
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import type { Lang } from "@/lib/i18n";
-import { getProjectBySlug, getAdjacentProjects, type Project } from "@/lib/projects";
+import type { Project } from "@/lib/projects";
 import BrowserFrame from "@/components/ui/browser-frame";
 import PhoneFrame from "@/components/ui/phone-frame";
 import DeviceDuo from "@/components/ui/device-duo";
 import CountUp from "@/components/ui/count-up";
 import Reveal from "@/components/ui/reveal";
 import { trackPortfolioClick } from "@/lib/tracking";
+
+export type ProjectDetail = Pick<Project,
+  | "slug" | "title" | "subtitle" | "longDescription" | "status" | "statusLabel"
+  | "kind" | "presentation" | "client" | "scope" | "partner" | "liveUrl"
+  | "metrics" | "tech" | "features" | "accentColor" | "bgColor" | "role" | "screenshots"
+>;
+
+type ProjectDetailProps = {
+  project: ProjectDetail;
+  prev: Pick<Project, "slug" | "title"> | null;
+  next: Pick<Project, "slug" | "title"> | null;
+};
 
 const isDesktopShot = (s: string) => /desktop/.test(s);
 // App screens use either an "-app-<name>" or "-app<n>" filename convention.
@@ -20,13 +32,13 @@ const isPhoneShot = (s: string) => /mobile/.test(s) || isAppShot(s);
 const isDarkShot = (s: string) => /cockpit|enterprise|wsafe/.test(s);
 
 // Effective hero variant: falls back to "phones" for mobile-app projects, else "light".
-function presentation(project: Project): NonNullable<Project["presentation"]> {
+function presentation(project: ProjectDetail): NonNullable<ProjectDetail["presentation"]> {
   return project.presentation ?? (project.kind === "mobile-app" ? "phones" : "light");
 }
 
 // The screenshots consumed by the hero — kept in sync between HeroDevices and the
 // Gallery so the gallery never repeats what the hero already shows.
-function heroShots(project: Project): string[] {
+function heroShots(project: ProjectDetail): string[] {
   const shots = project.screenshots ?? [];
   switch (presentation(project)) {
     case "phones": {
@@ -80,7 +92,7 @@ function Fact({
   );
 }
 
-function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
+function HeroDevices({ project, lang }: { project: ProjectDetail; lang: Lang }) {
   const url = host(project.liveUrl, project.slug);
   const desktopAlt = `${project.title} - ${lang === "pl" ? "widok desktop" : "desktop view"}`;
   const pres = presentation(project);
@@ -176,7 +188,7 @@ function HeroDevices({ project, lang }: { project: Project; lang: Lang }) {
   return null;
 }
 
-function Gallery({ project, lang }: { project: Project; lang: Lang }) {
+function Gallery({ project, lang }: { project: ProjectDetail; lang: Lang }) {
   const shots = project.screenshots ?? [];
   // Screenshots already shown in the hero — never repeat them here.
   const used = new Set(heroShots(project));
@@ -213,12 +225,8 @@ function Gallery({ project, lang }: { project: Project; lang: Lang }) {
   );
 }
 
-function ProjectContent({ slug }: { slug: string }) {
+function ProjectContent({ project, prev, next }: ProjectDetailProps) {
   const { t, lang } = useI18n();
-  const project = getProjectBySlug(slug);
-  const { prev, next } = getAdjacentProjects(slug);
-
-  if (!project) return null;
 
   const paragraphs = project.longDescription[lang]
     .split("\n")
@@ -498,6 +506,6 @@ function ProjectContent({ slug }: { slug: string }) {
   );
 }
 
-export default function ProjectDetailClient({ slug }: { slug: string }) {
-  return <ProjectContent slug={slug} />;
+export default function ProjectDetailClient(props: ProjectDetailProps) {
+  return <ProjectContent {...props} />;
 }
