@@ -14,7 +14,8 @@ import { useConsent } from "@/lib/consent";
 //
 // The dataset id is public by design (it ships in the page), so NEXT_PUBLIC_ is
 // correct here. The CAPI access token is NOT — that stays server-side.
-const DATASET_ID = process.env.NEXT_PUBLIC_META_DATASET_ID;
+const DATASET_ID = process.env.NEXT_PUBLIC_PROGRAMO_DEPLOYMENT_ENV === "preview"
+  ? undefined : process.env.NEXT_PUBLIC_META_DATASET_ID;
 
 export default function MetaPixel() {
   const { consent } = useConsent();

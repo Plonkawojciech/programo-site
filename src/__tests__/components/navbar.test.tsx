@@ -79,7 +79,7 @@ describe("Navbar component", () => {
 
   it("mobile hamburger button exists", () => {
     renderWithI18n();
-    const hamburger = screen.getByLabelText("Toggle menu");
+    const hamburger = screen.getByRole("button", { name: /Otwórz lub zamknij menu|Open or close menu/ });
     expect(hamburger).toBeInTheDocument();
   });
 
@@ -107,7 +107,7 @@ describe("Navbar component", () => {
 
   it("mobile menu shows a phone link at the top when opened", () => {
     renderWithI18n();
-    const hamburger = screen.getByLabelText("Toggle menu");
+    const hamburger = screen.getByRole("button", { name: /Otwórz lub zamknij menu|Open or close menu/ });
     fireEvent.click(hamburger);
     const telLinks = screen.getAllByRole("link").filter(
       (l) => l.getAttribute("href") === "tel:+48509123434"

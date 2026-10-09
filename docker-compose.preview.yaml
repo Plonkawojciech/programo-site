@@ -1,0 +1,49 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROGRAMO_DEPLOYMENT_ENV: preview
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+        NEXT_PUBLIC_TURNSTILE_TEST_MODE: "true"
+    environment:
+      PROGRAMO_DEPLOYMENT_ENV: preview
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+      NEXT_PUBLIC_TURNSTILE_TEST_MODE: "true"
+      TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+      CRM_INTAKE_URL: http://preview-intake:4100/api/form-intake
+      CRM_WEBHOOK_SECRET: ${CRM_WEBHOOK_SECRET:?Dedicated preview secret is required}
+      SOURCE_COMMIT: ${SOURCE_COMMIT:-unknown}
+    depends_on:
+      preview-intake:
+        condition: service_healthy
+    expose:
+      - "3000"
+    # The old static snapshot remains a rollback fallback until cutover. This
+    # explicit priority selects only v3; none of demo-host's other domains change.
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coolify
+      - traefik.http.routers.programo-v3-preview.rule=Host(`v3.programo.pl`)
+      - traefik.http.routers.programo-v3-preview.entrypoints=https
+      - traefik.http.routers.programo-v3-preview.priority=1000
+      - traefik.http.routers.programo-v3-preview.tls=true
+      - traefik.http.routers.programo-v3-preview.tls.certresolver=letsencrypt
+      - traefik.http.routers.programo-v3-preview.service=programo-v3-preview
+      - traefik.http.services.programo-v3-preview.loadbalancer.server.port=3000
+    restart: unless-stopped
+  preview-intake:
+    build:
+      context: .
+      dockerfile: Dockerfile.preview-intake
+    environment:
+      PROGRAMO_DEPLOYMENT_ENV: preview
+      CRM_WEBHOOK_SECRET: ${CRM_WEBHOOK_SECRET:?Dedicated preview secret is required}
+    volumes:
+      - preview-submissions:/data
+    labels:
+      - traefik.enable=false
+    restart: unless-stopped
+volumes:
+  preview-submissions:

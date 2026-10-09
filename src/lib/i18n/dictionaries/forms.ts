@@ -72,6 +72,19 @@ export const forms = {
     en: "Wait a moment for the anti-bot check to finish, then send again.",
   },
 
+  "forms.turnstileUnavailable": {
+    pl: "Ochrona formularza jest chwilowo niedostępna. Spróbuj ponownie później lub zadzwoń: +48 509 123 434.",
+    en: "Form protection is temporarily unavailable. Try again later or call: +48 509 123 434.",
+  },
+  "forms.testSuccessBody": {
+    pl: "Test zapisany w osobnej skrzynce podglądu. Zespół Programo nie otrzymał zgłoszenia i nie oddzwoni.",
+    en: "Test saved in the separate preview inbox. The Programo team did not receive this submission and will not call back.",
+  },
+  "forms.turnstileTestMode": {
+    pl: "Podgląd: testowa ochrona formularza. Zgłoszenia nie trafiają do zespołu Programo.",
+    en: "Preview: test form protection. Submissions do not reach the Programo team.",
+  },
+
   // --- QuickContact (imię, e-mail LUB telefon, chipy, wiadomość opcjonalna) ----
   "quick.title": { pl: "Opowiedz nam, co chcesz zbudować", en: "Tell us what you want to build" },
   "quick.subtitle": {

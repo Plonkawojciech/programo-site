@@ -66,6 +66,7 @@ declare global {
 }
 
 function loadClarity() {
+  if (process.env.NEXT_PUBLIC_PROGRAMO_DEPLOYMENT_ENV === "preview") return;
   if (typeof window === "undefined" || typeof document === "undefined") return;
   if (window.clarity) return; // already loaded
   // Microsoft Clarity loader (mirrors official snippet)
@@ -125,6 +126,7 @@ function writeConsentCookie(categories: ConsentCategories) {
 function pushConsent(categories: ConsentCategories) {
   if (typeof window === "undefined") return;
   writeConsentCookie(categories);
+  if (process.env.NEXT_PUBLIC_PROGRAMO_DEPLOYMENT_ENV === "preview") return;
   window.dataLayer = window.dataLayer || [];
   const gtag: GtagFn =
     window.gtag ||

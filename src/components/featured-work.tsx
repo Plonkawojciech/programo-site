@@ -121,7 +121,7 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
   return (
     <motion.article
       layout
-      initial={{ opacity: 0, y: 24 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 24 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
@@ -145,7 +145,7 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
         <div className="flex flex-1 flex-col p-5 md:p-6">
           <div className="flex items-center gap-3">
             <span
-              className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest ${
+              className={`rounded-full border px-2.5 py-1 text-xs font-medium ${
                 project.status === "live"
                   ? "border-primary/40 text-primary"
                   : "border-outline-variant/60 text-on-surface-variant"
@@ -161,6 +161,10 @@ function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
           <p className="mt-2 text-sm font-light leading-snug text-on-surface/70">
             {project.subtitle[lang]}
           </p>
+
+          {project.statusLabel && project.status === "development" && (
+            <p className="mt-3 text-sm font-medium text-on-surface-variant">{project.statusLabel[lang]}</p>
+          )}
 
           {primaryMetric && (
             <p className="mt-4 flex items-baseline gap-2">
@@ -243,7 +247,7 @@ export default function FeaturedWork({ demoCount, hideCta = false }: { demoCount
                 key={key ?? "all"}
                 type="button"
                 onClick={() => setFilter(key)}
-                className={`min-h-[40px] cursor-pointer rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-widest transition-colors ${
+                className={`min-h-[44px] cursor-pointer rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-widest transition-colors ${
                   filter === key
                     ? "bg-primary text-on-primary"
                     : "border border-outline-variant/40 text-on-surface-variant hover:border-primary hover:text-on-surface"

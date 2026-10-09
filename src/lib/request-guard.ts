@@ -1,22 +1,10 @@
 import { getRedis } from "@/lib/leads";
 
-/**
- * Cheap request-level filters for the form endpoints (/api/contact and
- * /api/contact/challenge). All three are invisible to a person in a browser:
- * a browser always sends a real User-Agent and an Origin header on a fetch
- * POST, and no visitor submits a form ten times in ten minutes.
- *
- * Deliberately NOT applied to page views. Blocking pages by User-Agent would
- * also hit search engines and the AI crawlers proxy.ts exists to count, and
- * it buys nothing: a bot reading a page costs us nothing. The damage is only
- * ever done by the POST.
- */
-
-// Scripting tools and HTTP libraries. A real browser never identifies as any
-// of these. Headless browsers are included: nobody fills in a contact form
-// from HeadlessChrome except automation.
+/** Cheap request/origin/rate filters; Turnstile supplies the mandatory human check. */
+// A headless browser is allowed to exercise the same fixture flow as a real
+// browser. Automation telemetry may flag review but must not reject assistive input.
 const TOOL_UA =
-  /\b(curl|wget|python-requests|python-urllib|python-httpx|aiohttp|httpx|scrapy|go-http-client|java\/|okhttp|apache-httpclient|libwww-perl|lwp::|php\/|guzzlehttp|node-fetch|undici|axios|postmanruntime|insomnia|httpie|powershell|headlesschrome|phantomjs|puppeteer|playwright|selenium|zgrab|masscan|nikto|sqlmap)\b/i;
+  /\b(curl|wget|python-requests|python-urllib|python-httpx|aiohttp|httpx|scrapy|go-http-client|java\/|okhttp|apache-httpclient|libwww-perl|lwp::|php\/|guzzlehttp|node-fetch|undici|axios|postmanruntime|insomnia|httpie|powershell|phantomjs|zgrab|masscan|nikto|sqlmap)\b/i;
 
 export function isToolUserAgent(ua: string | null): boolean {
   // An empty UA is not a browser either.
@@ -24,17 +12,31 @@ export function isToolUserAgent(ua: string | null): boolean {
   return TOOL_UA.test(ua);
 }
 
-const ALLOWED_ORIGIN_HOSTS = [/^(www\.)?programo\.pl$/, /^localhost(:\d+)?$/, /^127\.0\.0\.1(:\d+)?$/, /\.vercel\.app$/];
+const ALLOWED_ORIGIN_HOSTS = [/^(www\.)?programo\.pl$/, /^localhost(:\d+)?$/, /^127\.0\.0\.1(:\d+)?$/, /^v3\.programo\.pl$/];
+
+/** Standalone Next may build nextUrl from 0.0.0.0. Public Host must be allowlisted. */
+export function publicRequestHostname(headers: Headers, fallback: string): string | null {
+  const host = headers.get("host") ?? fallback;
+  if (!/^[a-z0-9.-]+(?::\d{1,5})?$/i.test(host)) return null;
+  try {
+    const hostname = new URL(`http://${host}`).hostname.toLowerCase();
+    return ["programo.pl", "www.programo.pl", "v3.programo.pl", "localhost", "127.0.0.1"].includes(hostname)
+      ? hostname : null;
+  } catch { return null; }
+}
 
 /**
  * A browser's fetch POST always carries Origin. Missing or foreign Origin =
  * the request did not come from our page (a script posting straight at the
  * endpoint, or another site's form).
  */
-export function isForeignOrigin(origin: string | null): boolean {
+export function isForeignOrigin(origin: string | null, expectedOrigin?: string): boolean {
   if (!origin) return true;
   try {
-    const host = new URL(origin).host;
+    const parsed = new URL(origin);
+    if (!["http:", "https:"].includes(parsed.protocol)) return true;
+    if (expectedOrigin && parsed.origin === expectedOrigin) return false;
+    const host = parsed.host;
     return !ALLOWED_ORIGIN_HOSTS.some((re) => re.test(host));
   } catch {
     return true;

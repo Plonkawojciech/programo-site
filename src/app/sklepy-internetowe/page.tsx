@@ -168,8 +168,8 @@ export default function SklepyInternetowePage() {
                   </a>
                 </div>
 
-                {/* Trust strip: Jedmar is the flagship store realization, shown
-                    with its app thumbnail. WKS Poznań and W. Safe Finance are
+                {/* Trust strip: Jedmar shows our parts module,
+                    integrated with an existing store. WKS Poznań and W. Safe Finance are
                     real projects but not stores, so they're labeled and kept
                     in a smaller, separate line instead of implying they're
                     e-commerce work. */}
@@ -177,8 +177,8 @@ export default function SklepyInternetowePage() {
                   <div className="flex items-center gap-4">
                     <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-card shadow-card">
                       <Image
-                        src="/screenshots/v2/jedmar-shop-desktop.webp"
-                        alt="Sklep internetowy Jedmar - strona główna z kategoriami narzędzi"
+                        src="/screenshots/v2/jedmar-schemat-tool-desktop.webp"
+                        alt="Jedmar: wykonany przez Programo moduł schematów części"
                         fill
                         sizes="96px"
                         className="object-cover"

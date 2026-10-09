@@ -8,6 +8,7 @@ const GA_ID = "G-KT2R144BYG";
 // Google Ads conversion tracking (gated by marketing consent via Consent Mode v2 above)
 const ADS_ID = "AW-18196600478";
 const CLARITY_ID = "wxezq44wx0";
+const isPreview = process.env.PROGRAMO_DEPLOYMENT_ENV === "preview";
 
 
 /**
@@ -25,6 +26,7 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
+  ...(isPreview ? { robots: { index: false, follow: false } } : {}),
   title: "Programo - Studio Software z Poznania",
   description:
     "Strony, sklepy internetowe, aplikacje i automatyzacje dla firm. Od rozmowy do wdrożenia projekt prowadzą Wojciech Płonka i Bartosz Kolaj z Poznania.",
@@ -105,15 +107,18 @@ export default function RootLayout({
     <html lang="pl" suppressHydrationWarning className={`${archivo.variable} selection:bg-primary/20 selection:text-primary`}>
       <head>
         {/* Preconnect to third-party (analytics) origins for faster first contact */}
+        {!isPreview && <>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.clarity.ms" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        </>}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('programo-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else{document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`,
           }}
         />
         {/* Google Consent Mode v2 — defaults set BEFORE gtag.js loads */}
+        {!isPreview && <>
         <script
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted',wait_for_update:500});gtag('set','url_passthrough',true);gtag('set','ads_data_redaction',true);var s=null;try{s=localStorage.getItem('programo-consent-v1');}catch(e){}if(s){try{var c=JSON.parse(s);gtag('consent','update',{ad_storage:c.marketing?'granted':'denied',ad_user_data:c.marketing?'granted':'denied',ad_personalization:c.marketing?'granted':'denied',analytics_storage:c.analytics?'granted':'denied'});}catch(e){}}`,
@@ -135,6 +140,7 @@ export default function RootLayout({
             __html: `(function(){try{var s=localStorage.getItem('programo-consent-v1');if(!s)return;var c=JSON.parse(s);if(!c||!c.analytics)return;(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "${CLARITY_ID}");}catch(e){}})();`,
           }}
         />
+        </>}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: siteGraph }}

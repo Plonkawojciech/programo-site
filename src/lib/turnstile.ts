@@ -1,81 +1,69 @@
-/**
- * Cloudflare Turnstile — server-side half. The browser half lives in
- * src/components/ui/turnstile.tsx; both are no-ops until BOTH env vars are set:
- *
- *   NEXT_PUBLIC_TURNSTILE_SITE_KEY  — public, ships in the page, renders the widget
- *   TURNSTILE_SECRET_KEY            — server only, used here to verify tokens
- *
- * Enforcement is gated on the pair, not on the secret alone: a secret without
- * a site key would make the server demand a token the page never renders, and
- * every form on the site would 403 at once. Setting one var by mistake must
- * not be able to take the lead pipeline down.
- *
- * Added 2026-09-21 because the forms were collecting junk submissions faster
- * than real leads. Turnstile was chosen over reCAPTCHA because it needs no
- * cookie consent tie-in (no tracking, no ad-profile side channel) and the
- * managed mode almost never shows a puzzle to a real visitor.
- */
-
+/** Server verification is mandatory. Missing configuration and provider outages fail closed. */
+export const TURNSTILE_TEST_SITE_KEY = "1x00000000000000000000AA";
+export const TURNSTILE_TEST_SECRET_KEY = "1x0000000000000000000000000000000AA";
 const SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
-/** Keep in sync with the timeout the forms tolerate on /api/contact. */
-const SITEVERIFY_TIMEOUT_MS = 5_000;
-
-export function isTurnstileEnforced(): boolean {
-  return Boolean(
-    process.env.TURNSTILE_SECRET_KEY && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-  );
+export function isTurnstileEnforced(): boolean { return true; }
+export function isTurnstileTestMode(): boolean {
+  return process.env.NEXT_PUBLIC_TURNSTILE_TEST_MODE === "true";
 }
 
 export type TurnstileVerdict =
   | { ok: true }
-  | { ok: false; reason: "missing" | "rejected" };
+  | { ok: false; reason: "missing" | "rejected" | "unavailable" | "configuration" };
 
-/**
- * Verifies a token the browser widget produced. Tokens are single-use and
- * expire after 300 s, so the client resets its widget after every submit.
- *
- * Fails OPEN on transport errors (Cloudflare unreachable, 5xx, timeout) and
- * CLOSED on an explicit `success: false`. A visitor cannot trigger the
- * transport path from outside, so it is not a bypass — while a Cloudflare
- * outage that silently dropped every real lead for an hour would cost more
- * than the spam it let through. Flip `TRANSPORT_FAILURE_VERDICT` to fail
- * closed if that trade-off ever changes.
- */
-const TRANSPORT_FAILURE_VERDICT: TurnstileVerdict = { ok: true };
+function configuration(hostname: string): { secret: string; test: boolean } | null {
+  const site = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  const test = isTurnstileTestMode();
+  // NODE_ENV=production is also used by preview builds. Deployment identity
+  // must therefore be explicit, and public production hostnames never qualify.
+  if (test) {
+    const environment = process.env.PROGRAMO_DEPLOYMENT_ENV;
+    if (!["preview", "development", "test"].includes(environment ?? "") ||
+        /^(www\.)?programo\.pl$/i.test(hostname) ||
+        site !== TURNSTILE_TEST_SITE_KEY || secret !== TURNSTILE_TEST_SECRET_KEY) return null;
+  } else if (!site || !secret || /^[123]x0{10,}/.test(site) || /^[123]x0{10,}/.test(secret)) {
+    return null;
+  }
+  return { secret: secret!, test };
+}
 
-export async function verifyTurnstile(
-  token: string | undefined,
-  ip: string,
-): Promise<TurnstileVerdict> {
-  if (!isTurnstileEnforced()) return { ok: true };
+/** Dummy challenges may only reach the dedicated local/private fixture, never live channels. */
+export function isTestDeliveryIsolated(): boolean {
+  if (!isTurnstileTestMode()) return true;
+  const liveVars = ["KV_REST_API_URL", "UPSTASH_REDIS_REST_URL", "TELEGRAM_BOT_TOKEN", "MS_GRAPH_CLIENT_SECRET"];
+  if (liveVars.some((key) => Boolean(process.env[key]))) return false;
+  try {
+    const url = new URL(process.env.CRM_INTAKE_URL ?? "");
+    return ["localhost", "127.0.0.1", "[::1]", "preview-intake"].includes(url.hostname) &&
+      url.protocol === "http:" && Boolean(process.env.CRM_WEBHOOK_SECRET);
+  } catch { return false; }
+}
+
+/** Tokens expire after 300 seconds and are single-use; the widget resets after every attempt. */
+export async function verifyTurnstile(token: string | undefined, ip: string, hostname = "programo.pl"): Promise<TurnstileVerdict> {
+  const config = configuration(hostname);
+  if (!config) return { ok: false, reason: "configuration" };
   if (!token) return { ok: false, reason: "missing" };
-
-  const body: Record<string, string> = {
-    secret: process.env.TURNSTILE_SECRET_KEY as string,
-    response: token,
-  };
-  // The IP is optional and only tightens the check; "unknown" would be sent
-  // as a literal string and rejected as malformed.
+  if (config.test && token !== "XXXX.DUMMY.TOKEN.XXXX") return { ok: false, reason: "rejected" };
+  const body: Record<string, string> = { secret: config.secret, response: token };
   if (ip && ip !== "unknown") body.remoteip = ip;
-
   try {
     const res = await fetch(SITEVERIFY_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(SITEVERIFY_TIMEOUT_MS),
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body), signal: AbortSignal.timeout(5_000),
     });
-    if (!res.ok) {
-      console.error(`[turnstile] siteverify HTTP ${res.status} — failing open`);
-      return TRANSPORT_FAILURE_VERDICT;
+    if (!res.ok) return { ok: false, reason: "unavailable" };
+    const data = await res.json() as { success?: boolean; hostname?: string; action?: string };
+    if (data.success !== true) return { ok: false, reason: "rejected" };
+    // Dummy keys have fixed metadata. Live keys must belong to this host/form action.
+    if (!config.test && (data.hostname !== hostname || data.action !== "contact")) {
+      return { ok: false, reason: "rejected" };
     }
-    const data = (await res.json()) as { success?: boolean; "error-codes"?: string[] };
-    if (data.success === true) return { ok: true };
-    console.warn("[turnstile] rejected:", data["error-codes"] ?? []);
-    return { ok: false, reason: "rejected" };
-  } catch (e) {
-    console.error("[turnstile] siteverify unreachable — failing open:", e);
-    return TRANSPORT_FAILURE_VERDICT;
+    return { ok: true };
+  } catch {
+    console.error("[turnstile] verification unavailable");
+    return { ok: false, reason: "unavailable" };
   }
 }

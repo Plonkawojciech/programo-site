@@ -14,7 +14,7 @@ export const common = {
   // celowe: pigułka nawigacji ma teraz osiem pozycji i mierzy się na 1280 px.
   "nav.referral": { pl: "Współpraca", en: "Partners" },
   "nav.blog": { pl: "Blog", en: "Blog" },
-  "nav.cta": { pl: "Umów rozmowę", en: "Book a call" },
+  "nav.cta": { pl: "Napisz do nas", en: "Contact us" },
   "nav.phone": { pl: "Zadzwoń", en: "Call" },
 
   // Footer
@@ -62,6 +62,11 @@ export const common = {
   // Accessibility
   "a11y.skipToContent": { pl: "Przejdź do treści", en: "Skip to content" },
   "a11y.langToggle": { pl: "Zmień język", en: "Change language" },
+  "a11y.menuToggle": { pl: "Otwórz lub zamknij menu", en: "Open or close menu" },
+  "a11y.menuClose": { pl: "Zamknij menu", en: "Close menu" },
+  "a11y.themeToggle": { pl: "Zmień motyw", en: "Change theme" },
+  "a11y.lightTheme": { pl: "Włącz jasny motyw", en: "Switch to light mode" },
+  "a11y.darkTheme": { pl: "Włącz ciemny motyw", en: "Switch to dark mode" },
   "a11y.mainNav": { pl: "Nawigacja główna", en: "Main navigation" },
 
   // Privacy policy page

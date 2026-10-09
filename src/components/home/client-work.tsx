@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
@@ -11,6 +11,7 @@ import { trackPortfolioClick } from "@/lib/tracking";
 interface CaseStudy {
   slug: string;
   image: string;
+  mobileImage: string;
   imgAltKey: TranslationKey;
   categoryKey: TranslationKey;
 }
@@ -22,36 +23,36 @@ interface CaseStudy {
 // leads to. Here the name and the category do the work.
 
 // Order is the pitch order, not chronology: Jedmar leads because it is the one
-// piece of client work that shipped to the App Store and Google Play, so it
-// carries the most weight with someone comparing vendors. W. Safe Finance
-// closes the section.
+// piece of client work that shipped to the App Store and Google Play. The
+// next two cards are real client previews and say so in their captions.
 const cases: CaseStudy[] = [
   {
     slug: "jedmar",
-    image: "/screenshots/v2/jedmar-shop-desktop.webp",
+    image: "/screenshots/v2/jedmar-schemat-tool-desktop.webp",
+    mobileImage: "/screenshots/v2/jedmar-schematy-mobile.webp",
     imgAltKey: "home.work.jedmar.imgAlt",
     categoryKey: "home.work.jedmar.category",
   },
   {
-    // Key namespace is `wks` while the project slug is `wks-poznan`; the two are
-    // deliberately not kept in sync — the dictionary keys are shorter by design.
-    slug: "wks-poznan",
-    image: "/screenshots/v2/wks-poznan-desktop.webp",
-    imgAltKey: "home.work.wks.imgAlt",
-    categoryKey: "home.work.wks.category",
+    slug: "innochem",
+    image: "/screenshots/v2/innochem-desktop.webp",
+    mobileImage: "/screenshots/v2/innochem-mobile.webp",
+    imgAltKey: "home.work.innochem.imgAlt",
+    categoryKey: "home.work.innochem.category",
   },
   {
-    slug: "wsafefinanse",
-    image: "/screenshots/v2/wsafefinanse-desktop.webp",
-    imgAltKey: "home.work.wsafefinanse.imgAlt",
-    categoryKey: "home.work.wsafefinanse.category",
+    slug: "terapia-dens",
+    image: "/screenshots/v2/terapia-dens-desktop.webp",
+    mobileImage: "/screenshots/v2/terapia-dens-mobile.webp",
+    imgAltKey: "home.work.terapiaDens.imgAlt",
+    categoryKey: "home.work.terapiaDens.category",
   },
 ];
 
 /* ── Main section ────────────────────────────────────────────────────── */
 
 export default function ClientWork() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const reduced = useReducedMotion() ?? false;
   const railRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -129,31 +130,35 @@ export default function ClientWork() {
         ref={railRef}
         onScroll={syncActive}
         role="group"
-        aria-roledescription="karuzela"
+        aria-roledescription={lang === "pl" ? "karuzela" : "carousel"}
         aria-label={t("home.work.title.v2")}
         className="scrollbar-none mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[max(1.5rem,calc((100%-var(--slide))/2))] pb-2 [--slide:88vw] md:mt-14 md:gap-6 md:[--slide:74vw] lg:[--slide:min(62vw,1080px)]"
       >
         {cases.map((c, i) => {
           const project = getProjectBySlug(c.slug);
+          const mobile = getImageProps({ src: c.mobileImage, alt: t(c.imgAltKey), width: 390, height: 844, sizes: "88vw" }).props;
           return (
             <article
               key={c.slug}
               className="w-[var(--slide)] shrink-0 snap-center"
-              aria-label={`${i + 1} z ${cases.length}`}
+              aria-label={`${i + 1} ${lang === "pl" ? "z" : "of"} ${cases.length}`}
             >
               <Link
                 href={`/projects/${c.slug}`}
                 onClick={() => trackPortfolioClick(c.slug, `/projects/${c.slug}`)}
                 className="group relative block aspect-[4/3] overflow-hidden rounded-2xl shadow-card transition-shadow duration-300 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 sm:aspect-[16/10] lg:aspect-[16/9]"
               >
+                <picture>
+                  <source media="(max-width: 639px)" srcSet={mobile.srcSet} sizes={mobile.sizes} />
                 <Image
                   src={c.image}
                   alt={t(c.imgAltKey)}
                   fill
                   sizes="(max-width: 768px) 88vw, (max-width: 1024px) 74vw, 1080px"
                   className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                  loading={i === 0 ? "eager" : "lazy"}
+                  loading="lazy"
                 />
+                </picture>
 
                 {/* Scrim. The caption sits inside the bottom band where this is
                     at least 75% black, so white text clears 4.5:1 against ANY
@@ -175,7 +180,7 @@ export default function ClientWork() {
                     <span className="font-semibold">
                       {project?.title ?? c.slug}
                     </span>
-                    <span className="text-white/70"> · {t(c.categoryKey)}</span>
+                    <span className="text-white"> · {t(c.categoryKey)}</span>
                   </p>
                 </div>
               </Link>
@@ -196,7 +201,7 @@ export default function ClientWork() {
             onClick={() => goTo(i)}
             aria-label={`${getProjectBySlug(c.slug)?.title ?? c.slug}`}
             aria-current={i === active}
-            className="group flex h-6 items-center px-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+            className="group flex h-11 min-w-11 items-center justify-center px-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
             <span
               aria-hidden="true"

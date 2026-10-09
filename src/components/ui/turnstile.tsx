@@ -1,25 +1,11 @@
 "use client";
 
-import { useEffect, useImperativeHandle, useRef, type Ref } from "react";
+import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 import { useTheme } from "@/lib/theme";
 import { useI18n } from "@/lib/i18n";
 
-/**
- * Cloudflare Turnstile widget — the browser half of the anti-bot gate on every
- * lead form. Server half + the env-var contract: src/lib/turnstile.ts.
- *
- * Renders NOTHING when NEXT_PUBLIC_TURNSTILE_SITE_KEY is unset, so a deploy
- * without the keys leaves the forms exactly as they were. Read at module load:
- * the value is inlined at build time, never at runtime.
- *
- * Hand-rolled on the explicit-render API rather than a wrapper package: the
- * whole contract is render / reset / remove, and the forms need exactly one
- * behaviour from it — a token before submit and a fresh widget after, because
- * a Turnstile token is single-use.
- */
-
 const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-export const TURNSTILE_ENABLED = Boolean(SITE_KEY);
+export const TURNSTILE_ENABLED = true;
 
 const SCRIPT_SRC =
   "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=__programoTurnstileReady";
@@ -43,12 +29,20 @@ let scriptReady: Promise<TurnstileApi> | null = null;
 function loadTurnstile(): Promise<TurnstileApi> {
   if (window.turnstile) return Promise.resolve(window.turnstile);
   if (scriptReady) return scriptReady;
-  scriptReady = new Promise<TurnstileApi>((resolve) => {
-    window.__programoTurnstileReady = () => resolve(window.turnstile as TurnstileApi);
+  scriptReady = new Promise<TurnstileApi>((resolve, reject) => {
+    const timeout = window.setTimeout(() => {
+      scriptReady = null;
+      reject(new Error("Turnstile loading timed out"));
+    }, 15_000);
+    window.__programoTurnstileReady = () => {
+      window.clearTimeout(timeout);
+      resolve(window.turnstile as TurnstileApi);
+    };
     const s = document.createElement("script");
     s.src = SCRIPT_SRC;
     s.async = true;
     s.defer = true;
+    s.onerror = () => { window.clearTimeout(timeout); scriptReady = null; reject(new Error("Turnstile script unavailable")); };
     document.head.appendChild(s);
   });
   return scriptReady;
@@ -70,7 +64,8 @@ export default function Turnstile({
   className?: string;
 }) {
   const { theme } = useTheme();
-  const { lang } = useI18n();
+  const { lang, t } = useI18n();
+  const [failed, setFailed] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   // Latest callback without re-rendering the widget when the parent re-renders.
@@ -92,25 +87,41 @@ export default function Turnstile({
   useEffect(() => {
     if (!SITE_KEY || !containerRef.current) return;
     let cancelled = false;
+    let resizeObserver: ResizeObserver | null = null;
     const el = containerRef.current;
 
     loadTurnstile().then((api) => {
       if (cancelled) return;
-      widgetIdRef.current = api.render(el, {
+      // Flexible widgets have a 300px minimum. Padded mobile form columns can
+      // be narrower; use the official compact widget rather than clip its UI.
+      const sizeForColumn = () => el.clientWidth < 300 ? "compact" : "flexible";
+      let size = sizeForColumn();
+      const render = () => {
+        if (widgetIdRef.current) api.remove(widgetIdRef.current);
+        onTokenRef.current(null);
+        widgetIdRef.current = api.render(el, {
         sitekey: SITE_KEY,
+        action: "contact",
         theme,
         language: lang,
-        // Fills the form column instead of a fixed 300px box.
-        size: "flexible",
-        callback: (token: string) => onTokenRef.current(token),
+        size,
+        callback: (token: string) => { setFailed(false); onTokenRef.current(token); },
         "expired-callback": () => onTokenRef.current(null),
-        "error-callback": () => onTokenRef.current(null),
+        "error-callback": () => { setFailed(true); onTokenRef.current(null); },
         "timeout-callback": () => onTokenRef.current(null),
+        });
+      };
+      render();
+      resizeObserver = new ResizeObserver(() => {
+        const nextSize = sizeForColumn();
+        if (!cancelled && nextSize !== size) { size = nextSize; render(); }
       });
-    });
+      resizeObserver.observe(el);
+    }).catch(() => { if (!cancelled) { setFailed(true); onTokenRef.current(null); } });
 
     return () => {
       cancelled = true;
+      resizeObserver?.disconnect();
       const id = widgetIdRef.current;
       if (id && window.turnstile) {
         try {
@@ -125,6 +136,11 @@ export default function Turnstile({
     // Theme / language switch re-renders the widget in the new skin.
   }, [theme, lang]);
 
-  if (!SITE_KEY) return null;
-  return <div ref={containerRef} className={className} />;
+  return (
+    <div className={className}>
+      <div ref={containerRef} />
+      {(!SITE_KEY || failed) && <p role="status" className="text-sm text-red-600 dark:text-red-300">{t("forms.turnstileUnavailable")}</p>}
+      {process.env.NEXT_PUBLIC_TURNSTILE_TEST_MODE === "true" && <p className="text-xs text-[var(--muted)]">{t("forms.turnstileTestMode")}</p>}
+    </div>
+  );
 }

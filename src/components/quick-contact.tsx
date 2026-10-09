@@ -9,7 +9,6 @@ import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import { track } from "@/lib/analytics/client";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 import Honeypot from "@/components/ui/honeypot";
-import { useFormChallenge } from "@/lib/form-challenge-client";
 import { collectBotSignals } from "@/lib/bot-signals";
 import { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN } from "@/lib/form-challenge-shared";
 
@@ -36,7 +35,7 @@ const labelClass =
 const chipBase =
   "min-h-[48px] rounded-full border px-4 py-2 text-sm font-medium transition-colors cursor-pointer";
 const inputClass =
-  "min-h-[48px] w-full bg-transparent border-b border-outline-variant/40 py-3 text-lg text-on-surface placeholder:text-on-surface/70 outline-none focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 transition-colors";
+  "min-h-[48px] w-full bg-transparent border-b border-outline py-3 text-lg text-on-surface placeholder:text-on-surface/70 outline-none focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 transition-colors";
 
 // Loose but useful phone sanity check: at least 9 digits, only phone-ish chars.
 function isLikelyPhone(v: string): boolean {
@@ -66,14 +65,12 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
   // rapid double-submit (before the button's disabled state applies) or any re-render race.
   const submittingRef = useRef(false);
   // Funnel instrumentation: viewed → started → per-field → error → submitted.
-  const fa = useFormAnalytics(formId);
+  const { ref: formRef, ...fa } = useFormAnalytics(formId);
   const successRef = useRef<HTMLHeadingElement>(null);
   // Anti-bot token from the Turnstile widget; null until solved and again
   // after every submit, because a token is spent the moment it is verified.
   const turnstileRef = useRef<TurnstileHandle>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  // Keyless anti-bot: pre-solved on mount, handed over at submit.
-  const challenge = useFormChallenge();
 
   // Move focus to the success message so keyboard/screen-reader users are told
   // the submission worked, since the form disappears (pattern from compact-lead-form.tsx).
@@ -136,10 +133,9 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
         consentTimestamp: new Date().toISOString(),
         form_id: formId,
         turnstileToken: turnstileToken ?? undefined,
-        ...(await challenge.take() ?? {}),
         [HONEYPOT_FIELD]: honeypot,
-          [HONEYPOT_FIELD_HIDDEN]: honeypotHidden,
-          sig: collectBotSignals(),
+        [HONEYPOT_FIELD_HIDDEN]: honeypotHidden,
+        sig: collectBotSignals(),
         ...getAttribution(),
         ...conversion,
       };
@@ -166,9 +162,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
 
       // Success branch only (API returned ok) — fire the primary Google Ads "Lead"
       // conversion exactly once per successful submit.
-      // The server answers 200 to a bot it dropped or flagged (telling it would
-      // only teach it what to change) and sets counted: false. Show success,
-      // but never count it as an Ads/Meta conversion.
+      // Preview tests and submissions flagged for review never count as paid conversions.
       const okData = (await res.json().catch(() => ({}))) as { counted?: boolean };
       setState("success");
       fa.markSubmitted();
@@ -191,7 +185,6 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
       submittingRef.current = false;
       // Spent either way — the server consumed it whether it said yes or no.
       turnstileRef.current?.reset();
-      challenge.refresh();
     }
   }
 
@@ -296,7 +289,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                   {t("quick.successTitle")}
                 </h3>
                 <p className="text-base md:text-lg font-light leading-relaxed text-on-surface/70 max-w-lg">
-                  {t("quick.successBody")}
+                  {t(process.env.NEXT_PUBLIC_TURNSTILE_TEST_MODE === "true" ? "forms.testSuccessBody" : "quick.successBody")}
                 </p>
                 <button
                   type="button"
@@ -308,10 +301,10 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
               </motion.div>
             ) : (
               <motion.form
-                ref={fa.ref}
+                ref={formRef}
                 onSubmit={handleSubmit}
                 noValidate
-                initial={{ opacity: 0, y: 20 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
@@ -333,7 +326,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                           className={`${chipBase} ${
                             active
                               ? "border-primary bg-primary text-on-primary"
-                              : "border-outline-variant/40 text-on-surface-variant hover:border-primary hover:text-on-surface"
+                              : "border-outline text-on-surface-variant hover:border-primary hover:text-on-surface"
                           }`}
                         >
                           {t(opt.tKey)}
@@ -358,7 +351,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         type="text"
                         name="name"
                         required
-                        autoComplete="name"
+                        autoComplete="given-name"
                         aria-invalid={errors.name ? true : undefined}
                         aria-describedby={errors.name ? "quick-name-error" : undefined}
                         className={inputClass}
@@ -386,7 +379,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                         type="text"
                         name="contact"
                         required
-                        autoComplete="off"
+                        autoComplete="tel"
                         inputMode="text"
                         aria-invalid={errors.contact ? true : undefined}
                         aria-describedby={errors.contact ? "quick-contact-error" : undefined}
@@ -406,7 +399,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
                       )}
                     </div>
 
-                    <label className="flex min-h-[48px] items-start gap-3.5 cursor-pointer group rounded-2xl border border-outline-variant/60 bg-surface/70 p-4">
+                    <label className="flex min-h-[48px] items-start gap-3.5 cursor-pointer group rounded-2xl border border-outline bg-surface/70 p-4">
                       <span className="relative shrink-0 mt-0.5">
                         <input
                           type="checkbox"

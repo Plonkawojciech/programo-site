@@ -8,7 +8,6 @@ import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import { track } from "@/lib/analytics/client";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 import Honeypot from "@/components/ui/honeypot";
-import { useFormChallenge } from "@/lib/form-challenge-client";
 import { collectBotSignals } from "@/lib/bot-signals";
 import { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN } from "@/lib/form-challenge-shared";
 
@@ -22,7 +21,7 @@ type FieldErrors = {
 type FormState = "idle" | "submitting" | "success";
 
 const inputClass =
-  "min-h-[48px] w-full rounded-xl border border-outline-variant/60 bg-surface px-4 py-3 text-base text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
+  "min-h-[48px] w-full rounded-xl border border-outline bg-surface px-4 py-3 text-base text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2";
 
 const labelClass = "text-sm font-medium text-on-surface";
 
@@ -77,11 +76,9 @@ export default function CompactLeadForm({
   // after every submit, because a token is spent the moment it is verified.
   const turnstileRef = useRef<TurnstileHandle>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  // Keyless anti-bot: pre-solved on mount, handed over at submit.
-  const challenge = useFormChallenge();
   // Turns this form from a single "submitted / didn't" bit into a funnel:
   // viewed → started → per-field completion → error → submit / abandoned.
-  const fa = useFormAnalytics(formId);
+  const { ref: formRef, ...fa } = useFormAnalytics(formId);
 
   const resolvedHeading = heading ?? t("compact.heading");
   const resolvedSub = sub ?? t("compact.sub");
@@ -129,7 +126,6 @@ export default function CompactLeadForm({
       // the server-side conversion twin carries the same event_id as the browser
       // pixel and Meta collapses the pair instead of counting it twice.
       const conversion = await prepareLeadConversion();
-      const proof = await challenge.take();
 
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -143,7 +139,6 @@ export default function CompactLeadForm({
           consentTimestamp: new Date().toISOString(),
           form_id: formId,
           turnstileToken: turnstileToken ?? undefined,
-          ...(proof ?? {}),
           [HONEYPOT_FIELD]: honeypot,
           [HONEYPOT_FIELD_HIDDEN]: honeypotHidden,
           sig: collectBotSignals(),
@@ -167,9 +162,7 @@ export default function CompactLeadForm({
         setState("idle");
         return;
       }
-      // The server answers 200 to a bot it dropped or flagged (telling it would
-      // only teach it what to change) and sets counted: false. Show success,
-      // but never count it as an Ads/Meta conversion.
+      // Preview tests and submissions flagged for review never count as paid conversions.
       const okData = (await res.json().catch(() => ({}))) as { counted?: boolean };
       setState("success");
       fa.markSubmitted();
@@ -189,7 +182,6 @@ export default function CompactLeadForm({
       submittingRef.current = false;
       // Spent either way — the server consumed it whether it said yes or no.
       turnstileRef.current?.reset();
-      challenge.refresh();
     }
   }
 
@@ -213,14 +205,14 @@ export default function CompactLeadForm({
           {t("compact.success")}
         </h3>
         <p className="mt-1 text-sm leading-relaxed text-on-surface-variant">
-          {t("compact.successBody")}
+          {t(process.env.NEXT_PUBLIC_TURNSTILE_TEST_MODE === "true" ? "forms.testSuccessBody" : "compact.successBody")}
         </p>
       </div>
     </div>
   );
 
   const form = (
-    <form ref={fa.ref} onSubmit={handleSubmit} noValidate className="relative flex flex-col gap-4">
+    <form ref={formRef} onSubmit={handleSubmit} noValidate className="relative flex flex-col gap-4">
       <Honeypot />
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
@@ -232,7 +224,7 @@ export default function CompactLeadForm({
             type="text"
             name="name"
             required
-            autoComplete="name"
+            autoComplete="given-name"
             placeholder={t("compact.namePlaceholder")}
             aria-invalid={errors.name ? true : undefined}
             aria-describedby={errors.name ? `${formId}-name-error` : undefined}
@@ -292,7 +284,7 @@ export default function CompactLeadForm({
         </div>
       </div>
 
-      <label className="flex min-h-[48px] items-start gap-3 rounded-2xl border border-outline-variant/60 bg-surface/70 p-3.5">
+      <label className="flex min-h-[48px] items-start gap-3 rounded-2xl border border-outline bg-surface/70 p-3.5">
         <span className="relative mt-0.5 shrink-0">
           <input
             type="checkbox"

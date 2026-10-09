@@ -16,11 +16,12 @@ describe("request guard", () => {
   it("lets real browsers through", () => {
     expect(isToolUserAgent(CHROME)).toBe(false);
     expect(isToolUserAgent(SAFARI_IOS)).toBe(false);
+    expect(isToolUserAgent("Mozilla/5.0 HeadlessChrome/120.0")).toBe(false);
   });
 
-  it("blocks scripting tools, HTTP libraries and headless browsers", () => {
+  it("blocks scripting tools, HTTP libraries", () => {
     for (const ua of ["curl/8.4.0", "Wget/1.21", "python-requests/2.31", "Python-urllib/3.11", "Go-http-client/1.1",
-      "Mozilla/5.0 HeadlessChrome/120.0", "axios/1.6.0", "Scrapy/2.11 (+https://scrapy.org)", "", null]) {
+       "axios/1.6.0", "Scrapy/2.11 (+https://scrapy.org)", "", null]) {
       expect(isToolUserAgent(ua), String(ua)).toBe(true);
     }
   });
@@ -28,6 +29,8 @@ describe("request guard", () => {
   it("accepts our own origins only", () => {
     expect(isForeignOrigin("https://programo.pl")).toBe(false);
     expect(isForeignOrigin("https://www.programo.pl")).toBe(false);
+    expect(isForeignOrigin("https://v3.programo.pl")).toBe(false);
+    expect(isForeignOrigin("https://evil.vercel.app")).toBe(true);
     expect(isForeignOrigin("http://localhost:3000")).toBe(false);
     expect(isForeignOrigin(null)).toBe(true);
     expect(isForeignOrigin("https://spam.example")).toBe(true);

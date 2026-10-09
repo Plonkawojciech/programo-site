@@ -23,6 +23,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useClientValue } from "@/lib/use-client-value";
 import { createPortal } from "react-dom";
 import { translations } from "@/lib/i18n";
 import { SECTION_TARGETS, type SectionTarget } from "@/lib/dev-edit/targets";
@@ -190,12 +191,20 @@ function toStoredShape(hex: string, previous: string): string {
 /* ── Component ────────────────────────────────────────────────────────── */
 
 export default function DevEditor() {
-  const [mounted, setMounted] = useState(false);
-  const [mode, setMode] = useState<Mode>("off");
-  const [lang, setLang] = useState<Lang>("pl");
-  const [theme, setTheme] = useState<Theme>("dark");
+  const mounted = useClientValue(() => true, false);
+  const [mode, setModeState] = useState<Mode>("off");
+  const initialLang = useClientValue<Lang>(() => document.documentElement.lang === "en" ? "en" : "pl", "pl");
+  const initialTheme = useClientValue<Theme>(() => document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light", "light");
+  const [langOverride, setLang] = useState<Lang | null>(null);
+  const [themeOverride, setTheme] = useState<Theme | null>(null);
+  const lang = langOverride ?? initialLang;
+  const theme = themeOverride ?? initialTheme;
 
   const [hover, setHover] = useState<DOMRect | null>(null);
+  const setMode = useCallback((next: Mode | ((previous: Mode) => Mode)) => {
+    setModeState(next);
+    setHover(null);
+  }, []);
   // `key` is nullable because not every selectable thing is translated copy:
   // client wordmarks live in a plain array in trust-bar.tsx and project titles
   // come from projects.ts. Those have nothing to edit here but are still worth
@@ -217,11 +226,7 @@ export default function DevEditor() {
   const resolveColor = useRef<((v: string) => string) | null>(null);
 
   useEffect(() => {
-    setMounted(true);
     resolveColor.current = makeColorResolver();
-    const attr = document.documentElement.getAttribute("data-theme");
-    setTheme(attr === "light" ? "light" : "dark");
-    setLang(document.documentElement.lang === "en" ? "en" : "pl");
   }, []);
 
   const post = useCallback(async (body: Record<string, unknown>) => {
@@ -247,10 +252,7 @@ export default function DevEditor() {
 
   /* Picking mode: highlight on hover, open the editor on click. */
   useEffect(() => {
-    if (mode !== "pick") {
-      setHover(null);
-      return;
-    }
+    if (mode !== "pick") return;
     const onMove = (e: MouseEvent) => {
       const hit = findText(document.elementFromPoint(e.clientX, e.clientY), index);
       setHover(hit ? hit.el.getBoundingClientRect() : null);
@@ -332,7 +334,7 @@ export default function DevEditor() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [mode, sel]);
+  }, [mode, sel, setMode]);
 
   if (!mounted) return null;
 

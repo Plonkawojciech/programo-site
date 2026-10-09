@@ -228,13 +228,13 @@ export const home = {
   "home.faq.title": { pl: "Zanim zadzwonisz", en: "Before you call" },
   "home.faq.q1": { pl: "Ile kosztuje projekt?", en: "How much does a project cost?" },
   "home.faq.a1": {
-    pl: "Wyceniamy po krótkiej rozmowie o zakresie. Orientacyjne widełki dostajesz, zanim zaczniemy cokolwiek robić.",
-    en: "We price after a short call about scope. You get a ballpark range before we start building anything.",
+    pl: "Strona firmowa: 2 000–6 000 zł netto. Sklep WooCommerce lub Shopify: 4 000–8 000 zł netto, sklep na własnym silniku: 6 000–10 000 zł netto. System webowy lub aplikacja mobilna: 4 000–8 000 zł netto. Zakres ustalamy w rozmowie, a stałą wycenę dostajesz przed startem.",
+    en: "Company website: PLN 2,000–6,000 excluding VAT. WooCommerce or Shopify store: PLN 4,000–8,000; custom-built store: PLN 6,000–10,000. Web system or mobile app: PLN 4,000–8,000. We agree the scope during a call and provide a fixed quote before work begins.",
   },
   "home.faq.q2": { pl: "Ile trwa realizacja?", en: "How long does it take?" },
   "home.faq.a2": {
-    pl: "Zależy od zakresu. Prosta strona to kilka tygodni, rozbudowany system znacznie dłużej. Konkretny harmonogram ustalamy przy planie.",
-    en: "It depends on scope. A simple site takes a few weeks, a larger system much longer. We set the actual timeline at the planning stage.",
+    pl: "Strona firmowa: 5 dni do 2 tygodni. Sklep WooCommerce lub Shopify: około 3 tygodni, sklep na własnym silniku: około 6 tygodni. System webowy: od 4 tygodni, aplikacja mobilna: około 6 tygodni. Termin zależy od zakresu i gotowości materiałów; wpisujemy go do umowy.",
+    en: "Company website: 5 days to 2 weeks. WooCommerce or Shopify store: around 3 weeks; custom-built store: around 6 weeks. Web system: from 4 weeks; mobile app: around 6 weeks. Timing depends on scope and available content; it is agreed in the contract.",
   },
   "home.faq.q3": { pl: "Co, jeśli mam tylko pomysł, bez specyfikacji?", en: "What if I only have an idea, no spec?" },
   "home.faq.a3": {
@@ -379,10 +379,14 @@ export const home = {
   // Kategoria mówi "aplikacje", nie "sklep internetowy". Sklep jedmar.pl istniał
   // przed nami i nie jest naszym dziełem - patrz `scope` w projects.ts, gdzie
   // jest to napisane wprost. Trzy klucze niżej mówiły co innego.
+  "home.work.innochem.category": { pl: "Sklep internetowy · Podgląd wdrożenia", en: "Online store · Deployment preview" },
+  "home.work.innochem.imgAlt": { pl: "Podgląd nowego sklepu INNOCHEM", en: "Preview of the new INNOCHEM store" },
+  "home.work.terapiaDens.category": { pl: "Strona placówek · Podgląd przed odbiorem", en: "Clinic website · Preview before acceptance" },
+  "home.work.terapiaDens.imgAlt": { pl: "Podgląd strony Terapia Dens", en: "Preview of the Terapia Dens website" },
   "home.work.jedmar.category": { pl: "Aplikacje mobilne · Narzędzia B2B", en: "Mobile apps · B2B tools" },
   "home.work.jedmar.imgAlt": {
-    pl: "Sklep Jedmar - widok strony głównej",
-    en: "Jedmar store - homepage view",
+    pl: "Jedmar: interaktywny moduł schematów części",
+    en: "Jedmar: interactive parts diagram module",
   },
   "home.work.jedmar.problem": {
     pl: "Centrum narzędziowe z katalogiem ponad 1400 pozycji potrzebowało wygodnych zakupów z telefonu i sensownej sprzedaży części zamiennych.",
@@ -417,8 +421,8 @@ export const home = {
   /* --- Homepage redesign: our own products --- */
   "home.products.title.v2": { pl: "Budujemy też dla siebie", en: "We build for ourselves too" },
   "home.products.subtitle.v2": {
-    pl: "Własne systemy, które zaprojektowaliśmy od zera i utrzymujemy do dziś. Na nich testujemy to, co potem trafia do projektów klientów.",
-    en: "Our own systems, designed from scratch and still maintained by us. We test here what later goes into client projects.",
+    pl: "Własne systemy: część działa publicznie, pozostałe rozwijamy i pokazujemy na podglądzie. Status podajemy przy każdym projekcie.",
+    en: "Our own systems: some are publicly available, others are in development and shown as previews. Each project has its own status.",
   },
   "home.products.viewAll": { pl: "Zobacz wszystkie projekty", en: "See all projects" },
   "home.products.estalo.desc": {
@@ -473,7 +477,7 @@ export const home = {
     en: "You want to launch an app and need someone to design and build the first working version, without burning the budget on a full system. We start with an MVP that goes straight to real users.",
   },
   "home.svc.block3.label": { pl: "Aplikacje webowe, mobilne, MVP", en: "Web apps, mobile apps, MVP" },
-  "home.svc.block3.link": { pl: "Dowiedz się więcej o MVP", en: "Learn more about MVP" },
+  "home.svc.block3.link": { pl: "Więcej o aplikacjach mobilnych", en: "More about mobile apps" },
 
   /* --- Homepage redesign: process --- */
   "home.process.title.v2": { pl: "Co się stanie, jak zadzwonisz", en: "What happens when you call" },

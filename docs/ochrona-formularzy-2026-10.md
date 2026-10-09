@@ -1,108 +1,109 @@
-# Ochrona formularzy przed botami (stan na 1.10.2026)
+# Ochrona formularzy v3 (9.10.2026)
 
-## Skąd przychodzą fałszywe zgłoszenia: co wiadomo, a czego nie
+Każdy formularz prowadzi do `POST /api/contact`: hero, `CompactLeadForm`, pełny
+`QuickContact` i formularz demo na `/projekty`. Identyfikatory formularzy i zgoda
+na analitykę pozostają w istniejącym kontrakcie.
 
-Jedyny publiczny punkt wejścia to `POST /api/contact` na programo.pl. Piszą do niego cztery formularze:
-hero na stronie głównej, `CompactLeadForm` na stronach ofertowych, pełny `QuickContact` i formularz
-„Chcę demo" na `/projekty`. Każdy wysyła własny `form_id`. CRM (`crm.programo.pl/api/forms/programo`)
-przyjmuje zgłoszenia tylko od programo.pl, z nagłówkiem z sekretem. Dema na `*.programo.pl` mają formularze
-wyłączone i nic do nas nie wysyłają.
+## Przyjęcie zgłoszenia
 
-Czego nie udało się ustalić 1.10: jak wyglądały dotychczasowe fałszywe zgłoszenia. Logi Vercela sięgają
-około godziny wstecz, a odczyt panelu `/crm` z leadami został w sesji zablokowany jako dane osobowe.
-Zgłoszenia sprzed 1.10 nie mają zapisanego formularza, werdyktu ani sygnałów, więc wzorców nie da się z nich
-odtworzyć. Od wdrożenia z 1.10 każde zgłoszenie to zapisuje.
+Serwer wymaga tokenu Cloudflare Turnstile i sprawdza go w Siteverify. Brak obu
+kluczy, niepełna konfiguracja, błąd sieci lub odpowiedź HTTP Cloudflare z błędem
+kończy się 503; odrzucony lub brakujący token daje 403. Dla prawdziwych kluczy
+weryfikujemy również hostname oraz `action=contact`. Nie ma przepuszczania po awarii.
+Widget resetuje token po każdej próbie, ponieważ tokeny wygasają po 300 sekundach
+i działają jednokrotnie. [Weryfikacja serwerowa Cloudflare](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/).
 
-Dwie hipotezy do sprawdzenia na danych (w tej kolejności):
+Usunęliśmy własne proof-of-work i obowiązkowe trzy sekundy czekania z flow v3.
+Pola starego wyzwania pozostają zgodne ze schematem dla starszych kart. Telemetria
+klawiatury, wskaźnika i `webdriver` może oznaczyć zgłoszenie do sprawdzenia, ale
+nie odrzuca go; czytnik ekranu, dyktowanie lub autouzupełnienie mogą nie wygenerować
+tych sygnałów. Po poprawnym Turnstile filtr treści oznacza nietypowe dane do
+ręcznego sprawdzenia zamiast odrzucać brief z kilkoma linkami lub HTML. Honeypot
+zapisuje odrzucenie do audytu i zwraca uczciwy błąd 422.
 
-1. **Przeglądarki sterowane automatycznie**, w tym nasi własni agenci AI testujący formularz na produkcji.
-   Komentarz w `lib/bot-signals.ts` z września mówi, że śmieciowe zgłoszenia szły z prawdziwej,
-   zautomatyzowanej przeglądarki, która wykonuje JavaScript. Agent, który „sprawdza formularz w realnym
-   flow", wpisuje zmyślony numer w rodzaju 600 100 200. Taki numer należy do kogoś i to on odbiera
-   telefon. To tłumaczyłoby, dlaczego ludzie się denerwują. Zasada do rozważenia w `CLAUDE.md` repo:
-   formularzy na produkcji nie wysyłamy, test idzie lokalnie z podstawioną odpowiedzią API.
-2. **Ruch z reklam**: boty klikające w Google Ads i wypełniające formularz. Rozpoznamy po `gclid`
-   w odrzuconych zgłoszeniach i po strefie czasowej spoza Europy.
+**200 oznacza trwały zapis do Redisa lub przyjęcie przez CRM.** Sam Telegram lub
+mail nie wystarcza; bez zapisu serwer odpowiada 500. Dostępne powiadomienia nadal
+wysyłają zgłoszenie. Awaria powiadomienia po zapisie nie zmienia sukcesu w błąd.
+Odrzucone zgłoszenia po poprawnej weryfikacji Turnstile trafiają do audytu;
+nieuwierzytelnione tokenem próby nie trafiają do CRM. Powtórki i zgłoszenia
+podejrzane pozostają do ręcznego sprawdzenia, bez konwersji reklamowej.
 
-## Warstwy ochrony
+## Klucze docelowe: instrukcja dla Wojtka
 
-| # | Warstwa | Gdzie | Od kiedy |
-|---|---|---|---|
-| 1 | Blokada narzędzi po User-Agent i obcego Origin | `lib/request-guard.ts` | 28.09 |
-| 2 | Limit 10 prób / 10 min z jednego IP (Redis), 3 przyjęte / 15 min | `request-guard.ts`, `contact-schema.ts` | 28.09 |
-| 3 | Walidacja serwerowa pól (zod), zgoda wymagana | `lib/contact-schema.ts` | wcześniej |
-| 4 | Honeypot: dwa ukryte pola | `lib/form-challenge.ts` | 21.09 |
-| 5 | Podpisane wyzwanie + proof of work + minimum 3 s od załadowania | `lib/form-challenge.ts` | 21.09 |
-| 6 | Ocena zachowania: klawisze, ruch, dotyk, czas, `navigator.webdriver` | `lib/bot-score.ts` | 30.09 |
-| 7 | **Filtr treści**: numery-wypełniacze i wzorce, numery spoza polskiej numeracji, linki, HTML, inny alfabet, domeny tymczasowe | `lib/spam-rules.ts` | 1.10 |
-| 8 | **Powtórka**: ten sam telefon lub e-mail w ciągu 24 h dochodzi oznaczony, nie liczy się jako konwersja | `lib/leads.ts` | 1.10 |
-| 9 | Cloudflare Turnstile | `lib/turnstile.ts`, `ui/turnstile.tsx` | kod gotowy od 21.09, **czeka na klucze** |
+1. W [panelu Cloudflare](https://dash.cloudflare.com/) wybierz **Turnstile → Add widget**.
+   Konto wystarczy; domena nie musi korzystać z DNS Cloudflare.
+2. Nazwij widget `Programo formularze`. W Hostname Management dodaj `programo.pl`,
+   `www.programo.pl` i `v3.programo.pl` (tylko jeśli ten podgląd ma przyjmować realne zgłoszenia).
+   Klucze produkcyjne nie potrzebują localhost; do testów są osobne dummy keys.
+3. Wybierz **Managed**, bez pre-clearance, i utwórz widget.
+4. W aplikacji **Coolify na VM** ustaw publiczny `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+   jako zmienną build i runtime, a `TURNSTILE_SECRET_KEY` jako sekret runtime.
+   Ustaw `NEXT_PUBLIC_TURNSTILE_TEST_MODE=false` oraz właściwy `PROGRAMO_DEPLOYMENT_ENV`.
+5. Wykonaj build/deploy podglądu, bo `NEXT_PUBLIC_*` Next.js wstawia podczas builda.
+   Sprawdź prawdziwe zgłoszenie oraz trwały zapis na dedykowanym kanale podglądu.
+   Dopiero Wojtek decyduje o przełączeniu produkcji i DNS.
 
-Co się dzieje ze zgłoszeniem (od 3.10 każde trafia do skrzynki CRM „Leady z formularzy”, `/formularze`,
-przez `POST /api/forms/intake`, `lib/crm-forward.ts`):
+Nigdy nie kopiujemy kluczy ani treści `.env*` do raportów, Git lub logów.
 
-- **odrzucone** (4, 5, 6, 7 w wersji „na pewno” albo Turnstile): nadawca dostaje zwykłe potwierdzenie
-  (albo 403 przy wyzwaniu/Turnstile), nie ma Telegrama ani konwersji. Zostaje na liście odrzuconych w Redisie
-  i idzie do CRM z `verdict: "rejected"`, etapem (`signals.stage`) i powodami; CRM chowa je w „Spam”;
-- **podejrzane**: Telegram z etykietą PODEJRZANE, do CRM z `verdict: "suspicious"` (widoczne w skrzynce,
-  bez pusha), bez konwersji. **Nie dzwonić bez sprawdzenia powodów**;
-- **czyste**: Telegram, CRM (`clean`), konwersja. CRM ma własne reguły i bierze surowszy werdykt, więc push
-  na telefon dostaje tylko zgłoszenie czyste dla obu stron.
+## Tryb testowy podglądu
 
-Pola wysyłane do CRM: `source`, `formId`, `pageUrl`, dane kontaktowe i treść, `utm`, `verdict`,
-`verdictReasons`, `signals` (`stage`, `honeypot`, `challenge`, `turnstile` = `ok`/`missing`/`fail`/`off`,
-`repeat`, `bot`, `content`, `behaviour`), `ip`, `userAgent`. Kontrakt: `crm_programo/docs/forms-intake.md`.
+Oficjalne klucze Cloudflare:
 
-Podgląd odrzuconych: `programo.pl/crm/odrzucone` (to samo logowanie co `/crm`). Jeśli pojawi się tam
-prawdziwa osoba, reguła jest za ostra i trzeba ją poluzować.
+```text
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+NEXT_PUBLIC_TURNSTILE_TEST_MODE=true
+PROGRAMO_DEPLOYMENT_ENV=preview
+```
 
-## Co ma zrobić Wojtek: klucze Turnstile (ok. 5 minut)
+To publiczne wartości testowe, nie sekrety konta. Cloudflare przeznacza je do
+przewidywalnych testów automatycznych; **nie zapewniają ochrony antyspamowej**.
+[Opis dummy keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/).
 
-1. Wejdź na `dash.cloudflare.com`, zaloguj się (konto darmowe wystarczy; domena nie musi być w Cloudflare).
-2. Menu po lewej: **Turnstile** → **Add widget**.
-3. Widget name: `programo.pl formularze`.
-4. Hostname Management → **Add Hostnames**: wpisz `programo.pl`. Dodaj też `localhost` do testów lokalnych.
-5. Widget Mode: **Managed** (zalecane: zagadka pokazuje się tylko podejrzanym).
-6. Pre-clearance: **No**. Kliknij **Create**.
-7. Skopiuj **Site Key** i **Secret Key**.
-8. Vercel → projekt `programo-site` → Settings → Environment Variables → Production (i Preview):
-   - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` = Site Key
-   - `TURNSTILE_SECRET_KEY` = Secret Key (zaznacz Sensitive)
-9. Deployments → ostatni → **Redeploy** (zmienna `NEXT_PUBLIC_*` wchodzi dopiero przy buildzie).
+Serwer pozwala na te wartości wyłącznie dla jawnego `preview`, `development` albo
+`test`; hosty `programo.pl` i `www.programo.pl` zawsze je odrzucają. Samo ustawienie
+dummy keys bez flagi testu kończy się 503. Widoczny tekst pod każdym widgetem
+informuje, że zgłoszenie testowe nie trafia do zespołu Programo.
 
-Muszą być ustawione **obie** zmienne. Sama jedna nic nie włącza (celowo, żeby pomyłka nie zablokowała
-wszystkich formularzy). Po wdrożeniu pod polami formularza pojawi się mały widget Cloudflare; wyślij jedno
-prawdziwe zgłoszenie z telefonu i sprawdź, że doszło na Telegram.
+Test nie może korzystać z realnego Redisa, Telegrama ani maila Graph. Dozwolony
+odbiorca to wyłącznie HTTP pod `localhost`, `127.0.0.1`, `[::1]` lub prywatny
+serwis Compose `preview-intake`, z osobnym `CRM_WEBHOOK_SECRET` i `CRM_INTAKE_URL`.
+Nie ustawiaj w tym trybie `KV_REST_API_URL`, `UPSTASH_REDIS_REST_URL`,
+`TELEGRAM_BOT_TOKEN` ani `MS_GRAPH_CLIENT_SECRET`. Rekord ma źródło
+`programo.pl-preview-test`, a `counted=false` wyłącza konwersje po obu stronach.
 
-Gdy Cloudflare ma awarię, formularz przepuszcza zgłoszenia (pozostałe warstwy działają dalej). To świadomy
-wybór opisany w `lib/turnstile.ts`.
+Sidecar odpowiada 201 `{ "ok": true }` dopiero po trwałym zapisie i fsync w wolumenie.
+Weryfikuje nagłówek `X-Webhook-Secret`; nie przekazuje testów do prawdziwego CRM.
+Taki zapis dowodzi działania kanału podglądu, a nie odbioru w produkcyjnym CRM lub skrzynce.
 
-## Zakładka „Leady z formularzy" w CRM Programo: zakres
+## Powtarzalny E2E lokalny
 
-Repo `crm_programo`, osobny worktree od `origin/main`, osobna sesja (w repo pracuje równolegle sesja CRM
-i LeadHunter). Wdrożenie przez CI → Coolify.
+Uruchom `node scripts/e2e-forms.mjs`. Test tworzy własny serwer Next na porcie 3219,
+izolowany odbiornik CRM na 4219 i tymczasowy plik JSONL. Otwiera świeży headless Chrome,
+wypełnia prawdziwe formularze i czeka na token prawdziwego widgetu Cloudflare z dummy key.
+Nie przechwytuje requestów formularza, nie wstrzykuje tokenu i nie odczytuje sekretów.
 
-Dziś webhook `/api/forms/programo` od razu tworzy rekord `Lead` z właścicielem z rotacji. Zgłoszenie
-z formularza i lead sprzedażowy to ten sam byt, więc spam ląduje w kolejce dzwonienia.
+Sprawdza hero, formularz kompaktowy, pełny i demo: przeglądarka → HTTP Next →
+Siteverify → CRM fixture → zapis z fsync. Odczytuje plik i potwierdza `formId`,
+źródło testowe i nazwę rekordu. Sprawdza także brak zapisu po złym tokenie oraz
+błąd 500 po awarii trwałego odbiornika. Kończy własne procesy i zamyka przeglądarkę;
+plik dowodowy pozostaje pod ścieżką z raportu testu. `FORM_E2E_PORT`,
+`FORM_E2E_FIXTURE_PORT` i `FORM_E2E_CHROME` pozwalają zmienić porty lub plik wykonywalny.
 
-Proponowany zakres:
+Test wymaga dostępu do Cloudflare. Przejście z dummy keys potwierdza integrację
+widgetu i Siteverify, nie zdolność odróżniania realnego człowieka od bota.
 
-1. **Model `FormSubmission`** (nowa tabela, migracja addytywna): `source` (domena), `formId`, `pageUrl`,
-   dane kontaktowe, treść, `utm` (JSON), `verdict` (clean / suspicious / rejected), `verdictStage`,
-   `verdictReasons` (tekst), `signals`, `status` (NEW / SPAM / REAL / CONVERTED), `leadId?`, `clientId?`,
-   `createdAt`. Indeksy po `status`, `createdAt`, `source`.
-2. **Webhook `/api/forms/intake`** (ten sam sekret): przyjmuje każde zgłoszenie razem z werdyktem i zapisuje
-   `FormSubmission`. `Lead` powstaje automatycznie tylko dla `clean`; `suspicious` i `rejected` czekają na
-   ręczną decyzję. Stary `/api/forms/programo` zostaje do czasu przełączenia strony.
-3. **Strona `/formularze`** w nawigacji: lista z filtrami źródło / formularz / status, domyślnie bez
-   spamu, przełącznik „pokaż spam". W wierszu: kiedy, skąd, dane, werdykt z powodami. Akcje: „prawdziwy"
-   (tworzy lub podpina lead), „spam", „przekształć w klienta".
-4. **Strona programo.pl**: po wdrożeniu CRM `route.ts` wysyła do `/api/forms/intake` wszystkie zgłoszenia,
-   także odrzucone, z polami `formId`, `pageUrl`, `verdict`, `reasons`, `signals`. Lista w Redisie zostaje
-   jako zapas.
-5. **Inne strony**: klientom, którym prowadzimy stronę z formularzem, ten sam webhook z własnym `source`.
-   Wymaga decyzji, czy leady klientów mają trafiać do naszego CRM (RODO: jesteśmy wtedy procesorem).
-6. Poza zakresem pierwszej wersji: automatyczne uczenie filtra, powiadomienia, widok na iOS.
+## Wynik lokalny z 9.10.2026
 
-Kolejność: migracja i webhook → strona listy → przełączenie programo.pl → sprawdzenie na jednym prawdziwym
-zgłoszeniu. Migracja tylko addytywna, uruchamiana przez deploy (nie ręcznie na produkcji).
+E2E zakończył się sukcesem dla `hero-phone`, `kontakt-compact`, `kontakt-full`
+i `dema`: cztery odpowiedzi 200 oraz cztery trwałe rekordy w fixture. Pełny
+formularz zawierał dwa linki referencyjne; rekord pozostał w ręcznym przeglądzie,
+bez konwersji. Niepoprawny token testowy dał 403 bez zapisu, a wyłączony trwały
+odbiornik dał 500. Testy używały oznaczenia `TEST preview` i publicznego numeru
+Programo; nic nie wysłały do rzeczywistego CRM, Telegrama ani skrzynki.
+
+Osobno przeszły 83 testy API/i18n oraz pięć testów obowiązkowej bramki
+(z dodatkową regresją briefu zawierającego dwa linki). Typecheck przeszedł
+po zatrzymaniu serwera dev; równoległy odczyt generowanych plików `.next/dev`
+podczas kompilacji nie był miarodajny. Pełny build i zestaw testów po scaleniu
+wykonuje prowadzący agent na końcowym branchu.

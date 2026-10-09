@@ -9,7 +9,6 @@ import { track } from "@/lib/analytics/client";
 import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/ui/turnstile";
 import Honeypot from "@/components/ui/honeypot";
-import { useFormChallenge } from "@/lib/form-challenge-client";
 import { collectBotSignals } from "@/lib/bot-signals";
 import { HONEYPOT_FIELD, HONEYPOT_FIELD_HIDDEN } from "@/lib/form-challenge-shared";
 
@@ -54,7 +53,7 @@ export default function HomeHero() {
   const { t } = useI18n();
   // Puts the hero into the same viewed → started → error → submit funnel as the
   // other forms; until now the most prominent form on the site was invisible to it.
-  const fa = useFormAnalytics("hero-phone");
+  const { ref: formRef, ...fa } = useFormAnalytics("hero-phone");
 
   // --- Phone form state ---
   const [formState, setFormState] = useState<PhoneFormState>("idle");
@@ -67,8 +66,6 @@ export default function HomeHero() {
   // after every submit, because a token is spent the moment it is verified.
   const turnstileRef = useRef<TurnstileHandle>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  // Keyless anti-bot: pre-solved on mount, handed over at submit.
-  const challenge = useFormChallenge();
 
   // Accessible IDs
   const nameInputId = useId();
@@ -166,7 +163,6 @@ export default function HomeHero() {
           ...payload,
           form_id: "hero-phone",
           turnstileToken: turnstileToken ?? undefined,
-          ...(await challenge.take() ?? {}),
           [HONEYPOT_FIELD]: honeypot,
           [HONEYPOT_FIELD_HIDDEN]: honeypotHidden,
           sig: collectBotSignals(),
@@ -175,7 +171,8 @@ export default function HomeHero() {
       });
 
       if (!res.ok) {
-        setErrorMsg(t("home.hero.phoneErrorNetwork"));
+        const response = await res.json().catch(() => ({}));
+        setErrorMsg(response.error || t("home.hero.phoneErrorNetwork"));
         setFormState("error");
         fa.reportErrors({ server: String(res.status) }, "server");
         track("form_submit_failed", {
@@ -186,9 +183,7 @@ export default function HomeHero() {
         return;
       }
 
-      // The server answers 200 to a bot it dropped or flagged (telling it would
-      // only teach it what to change) and sets counted: false. Show success,
-      // but never count it as an Ads/Meta conversion.
+      // Preview tests and submissions flagged for review never count as paid conversions.
       const okData = (await res.json().catch(() => ({}))) as { counted?: boolean };
       setFormState("success");
       fa.markSubmitted();
@@ -207,7 +202,6 @@ export default function HomeHero() {
     } finally {
       // Spent either way — the server consumed it whether it said yes or no.
       turnstileRef.current?.reset();
-      challenge.refresh();
     }
   }
 
@@ -322,16 +316,13 @@ export default function HomeHero() {
                     {t("home.hero.phoneSuccess")}
                   </h3>
                   <p className="mt-1 text-sm leading-relaxed text-on-surface-variant">
-                    {t("home.hero.phoneSuccessBody")}
+                    {t(process.env.NEXT_PUBLIC_TURNSTILE_TEST_MODE === "true" ? "forms.testSuccessBody" : "home.hero.phoneSuccessBody")}
                   </p>
                 </div>
               </div>
             ) : (
               <form
-                // Passing the RefObject itself (as quick-contact does); the rule
-                // misreads it as a `.current` read during render.
-                // eslint-disable-next-line react-hooks/refs
-                ref={fa.ref}
+                ref={formRef}
                 onSubmit={handleSubmit}
                 noValidate
                 className="relative flex flex-col gap-3 sm:gap-4"
@@ -366,7 +357,7 @@ export default function HomeHero() {
                       placeholder={t("home.hero.namePlaceholder")}
                       aria-describedby={errorField === "name" ? errorId : undefined}
                       aria-invalid={errorField === "name" ? "true" : undefined}
-                      className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary"
+                      className="w-full rounded-xl border border-outline bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary"
                     />
                   </div>
                   <div className="flex flex-1 flex-col gap-1.5">
@@ -396,7 +387,7 @@ export default function HomeHero() {
                       placeholder={t("home.hero.phonePlaceholder")}
                       aria-describedby={errorField === "phone" ? errorId : undefined}
                       aria-invalid={errorField === "phone" ? "true" : undefined}
-                      className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary sm:min-w-[220px]"
+                      className="w-full rounded-xl border border-outline bg-surface-container-low px-4 py-3.5 text-on-surface placeholder:text-on-surface-variant outline-none transition-colors focus:border-primary sm:min-w-[220px]"
                     />
                   </div>
                 </div>

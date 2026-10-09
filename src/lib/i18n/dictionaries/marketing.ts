@@ -109,6 +109,7 @@ export const marketing = {
   "cookie.rejectAll": { pl: "Tylko niezbędne", en: "Essential only" },
   "cookie.customize": { pl: "Dostosuj", en: "Customize" },
   "cookie.savePrefs": { pl: "Zapisz wybór", en: "Save preferences" },
+  "cookie.closeSettings": { pl: "Zamknij ustawienia cookies", en: "Close cookie settings" },
   "cookie.settingsTitle": { pl: "Preferencje cookies", en: "Cookie preferences" },
   "cookie.settingsDesc": {
     pl: "Wybierz, które kategorie chcesz włączyć. Niezbędne pliki cookies są zawsze aktywne, ponieważ strona bez nich nie działa.",

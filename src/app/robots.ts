@@ -41,6 +41,9 @@ const ANSWER_ENGINES = [
 const PRIVATE_PATHS = ["/crm", "/api/"];
 
 export default function robots(): MetadataRoute.Robots {
+  if (process.env.PROGRAMO_DEPLOYMENT_ENV === "preview") {
+    return { rules: { userAgent: "*", disallow: "/" } };
+  }
   return {
     rules: [
       // The catch-all group. `/crm` is a token-gated internal lead panel and has

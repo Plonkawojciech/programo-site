@@ -46,7 +46,7 @@ const blocks: {
     bodyKey: "home.svc.block3.body",
     labelKey: "home.svc.block3.label",
     linkKey: "home.svc.block3.link",
-    href: "/oferta",
+    href: "/aplikacje-mobilne-dla-firm",
     prices: [{ nameKey: "pricing.itemMobile.name", from: 4000, to: 8000, terminKey: "pricing.itemMobile.termin" }],
   },
 ];
@@ -57,14 +57,10 @@ export default function ServicesOverview() {
   const { t } = useI18n();
   const prefersReduced = useReducedMotion();
 
-  // The server renders `initial` (opacity 0) into the HTML for everyone, because
-  // it cannot know the visitor's motion preference. So the reveal must always
-  // run on the client; with reduced motion it runs instantly and without the
-  // offset. Dropping the props instead (the previous version) left the section
-  // invisible for every visitor with "Reduce motion" switched on.
+  // Keep text visible before hydration, including with reduced motion.
   const reveal = (delay = 0) =>
     ({
-      initial: { opacity: 0, y: prefersReduced ? 0 : 16 },
+      initial: false,
       whileInView: { opacity: 1, y: 0 },
       viewport: { once: true, margin: "-8% 0px" },
       transition: prefersReduced ? { duration: 0 } : { duration: durationMedium, ease: easeEntry, delay },

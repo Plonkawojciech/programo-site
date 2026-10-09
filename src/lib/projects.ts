@@ -183,6 +183,73 @@ export const projects: Project[] = [
     ],
   },
   {
+    // Source: innochem-demo/docs/start-2026-10-09.md (preview before cutover).
+    slug: "innochem",
+    title: "INNOCHEM",
+    subtitle: { pl: "Sklep z olejami i panel obsługi zamówień", en: "Oil store and order management panel" },
+    description: {
+      pl: "Nowy sklep dla INNOCHEM z katalogiem, koszykiem i panelem obsługi zamówień. Wdrożony na podglądzie; przełączenie domeny klienta pozostaje osobnym etapem.",
+      en: "A new INNOCHEM store with a catalog, cart and order management panel. Deployed to preview; switching the client's domain remains a separate stage.",
+    },
+    longDescription: {
+      pl: "Przygotowaliśmy następcę dotychczasowej strony WordPress i sklepu PrestaShop: katalog, karty produktów, koszyk, zamówienie bez konta i konto klienta. Panel pozwala obsługiwać zamówienia i treści sklepu. W zakresie są też przekierowania starych adresów oraz dokumenty prawne do zatwierdzenia przez klientkę. Pokazujemy podgląd wdrożenia. Uruchomienie płatności online, wysyłki i przełączenie innochem.pl wymagają osobnej konfiguracji i odbioru.",
+      en: "We built a successor to the existing WordPress site and PrestaShop store: catalog, product pages, cart, guest checkout and customer accounts. The admin panel manages orders and store content. The scope also includes redirects from old URLs and legal drafts for the client to approve. This is a deployed preview. Online payments, shipping and switching innochem.pl require separate configuration and acceptance.",
+    },
+    status: "development",
+    statusLabel: { pl: "Wdrożony na podglądzie; przed przełączeniem domeny klienta", en: "Deployed to preview; awaiting the client domain switch" },
+    category: "dla-klientow",
+    client: { pl: "INNOCHEM", en: "INNOCHEM" },
+    scope: { pl: "Budowa sklepu i panelu oraz przygotowanie migracji; podgląd przed uruchomieniem", en: "Store and admin panel development with migration preparation; preview before launch" },
+    liveUrl: "https://sklep-innochem.programo.pl",
+    tech: ["Next.js", "TypeScript", "PostgreSQL"],
+    features: {
+      pl: ["Katalog i karty produktów", "Koszyk i zamówienie bez konta", "Konto klienta i panel obsługi zamówień", "Przekierowania starych adresów i przygotowanie migracji"],
+      en: ["Catalog and product pages", "Cart and guest checkout", "Customer accounts and order management panel", "Legacy URL redirects and migration preparation"],
+    },
+    tags: ["E-commerce", "Web"],
+    presentation: "light",
+    accentColor: "#592C82",
+    bgColor: "#FFFFFF",
+    year: "2026",
+    role: { pl: "Programo: projekt i budowa sklepu oraz panelu", en: "Programo: store and admin panel design and development" },
+    updatedAt: "2026-09-29T11:31:22+02:00",
+    screenshots: ["/screenshots/v2/innochem-desktop.webp", "/screenshots/v2/innochem-mobile.webp"],
+  },
+  {
+    // Source: terapiadens-demo/docs/evidence/2026-09-29-wersja-koncowa.md.
+    slug: "terapia-dens",
+    title: "Terapia Dens",
+    subtitle: { pl: "Strona dwóch placówek stomatologicznych", en: "Website for two dental clinics" },
+    description: {
+      pl: "Strona Terapia Dens z informacjami o placówkach, usługach i cennikiem z wyszukiwaniem. Wdrożenie jest na podglądzie i czeka na odbiór klienta.",
+      en: "A Terapia Dens website with clinic information, services and a searchable price list. Deployed to preview and awaiting client acceptance.",
+    },
+    longDescription: {
+      pl: "Przygotowaliśmy stronę dla placówek Terapia Dens w Poznaniu i Lednogórze, korzystając z treści starej strony oraz materiałów przekazanych przez klienta. Cennik pozwala wyszukiwać zabiegi i filtrować je według placówki. Strona zawiera usługi, kontakt i informacje o świadczeniach NFZ. Podgląd pokazuje dwie wersje wizualne. Wybór wersji, zatwierdzenie cennika i materiałów oraz przełączenie domeny pozostają do odbioru z klientem.",
+      en: "We prepared a website for Terapia Dens clinics in Poznan and Lednogora using content from the old site and materials supplied by the client. The price list supports treatment search and clinic filtering. The site includes services, contact details and public healthcare information. The preview presents two visual versions. Choosing a version, approving prices and content, and switching the domain remain subject to client acceptance.",
+    },
+    status: "development",
+    statusLabel: { pl: "Wdrożona na podglądzie; czeka na odbiór i domenę klienta", en: "Deployed to preview; awaiting acceptance and the client domain" },
+    category: "dla-klientow",
+    client: { pl: "NZOZ Terapia Dens", en: "NZOZ Terapia Dens" },
+    scope: { pl: "Strona placówek i przeszukiwalny cennik; podgląd przed odbiorem", en: "Clinic website and searchable price list; preview before acceptance" },
+    liveUrl: "https://terapiadens.programo.pl",
+    tech: ["HTML", "CSS", "JavaScript", "Python", "Nginx"],
+    features: {
+      pl: ["Informacje o placówkach i usługach", "Cennik z wyszukiwaniem i filtrem placówki", "Kontakt i informacje o świadczeniach NFZ", "Dwie wersje wizualne do wyboru przez klienta"],
+      en: ["Clinic and service information", "Searchable price list with clinic filtering", "Contact details and public healthcare information", "Two visual versions for the client to choose"],
+    },
+    tags: ["Web", "Healthcare"],
+    presentation: "light",
+    accentColor: "#356E70",
+    bgColor: "#FFFFFF",
+    year: "2026",
+    role: { pl: "Programo: projekt i budowa strony oraz cennika", en: "Programo: website and price list design and development" },
+    updatedAt: "2026-09-29T21:39:59+02:00",
+    screenshots: ["/screenshots/v2/terapia-dens-desktop.webp", "/screenshots/v2/terapia-dens-mobile.webp"],
+  },
+
+  {
     slug: "estalo",
     title: "Estalo",
     subtitle: {

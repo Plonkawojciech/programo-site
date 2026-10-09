@@ -5,8 +5,8 @@ export const pricing = {
   "pricing.label": { pl: "Przejrzyste zasady wyceny", en: "Transparent pricing rules" },
   "pricing.title": { pl: "Ile kosztuje strona, sklep lub aplikacja?", en: "What does a website, shop or app cost?" },
   "pricing.lead": {
-    pl: "Strony wizytówkowej i platformy SaaS nie da się wycenić z jednego cennika, bo skala pracy różni się o rząd wielkości. Dlatego wyceniamy każdy projekt osobno, a zanim zapłacisz pierwszą złotówkę, wiesz, co dostaniesz i za ile.",
-    en: "You can't price a simple website and a SaaS platform off the same list, because the scale of work differs by an order of magnitude. So we quote every project separately, and before you pay anything you know what you'll get and for how much.",
+    pl: "Widełki pokazują koszt standardowego i rozszerzonego zakresu. Po rozmowie dopasowujemy zakres do Twojego projektu; przed rozpoczęciem prac dostajesz stałą wycenę.",
+    en: "The ranges show the cost of standard and extended scope. After a call we match the scope to your project; you receive a fixed quote before work begins.",
   },
 
   "pricing.processLabel": { pl: "Jak wygląda proces", en: "How the process works" },
@@ -18,8 +18,8 @@ export const pricing = {
   },
   "pricing.step2.title": { pl: "Widełki w 24 h", en: "A range within 24 hours" },
   "pricing.step2.desc": {
-    pl: "Następnego dnia roboczego masz w skrzynce widełki cenowe i proponowany zakres. Jeśli budżet się nie spina, mówimy to wprost i proponujemy mniejszy pierwszy etap zamiast naciągania oferty.",
-    en: "By the next business day you have a price range and a proposed scope in your inbox. If the budget doesn't add up, we say so plainly and propose a smaller first stage instead of stretching the offer.",
+    pl: "Odpowiadamy w 24 h z widełkami cenowymi i proponowanym zakresem. Jeśli budżet się nie spina, mówimy to wprost i proponujemy mniejszy pierwszy etap zamiast naciągania oferty.",
+    en: "We reply within 24 hours with a price range and a proposed scope. If the budget doesn't add up, we say so plainly and propose a smaller first stage instead of stretching the offer.",
   },
   "pricing.step3.title": { pl: "Stała wycena", en: "A fixed quote" },
   "pricing.step3.desc": {
@@ -60,6 +60,7 @@ export const pricing = {
     pl: "Widełki dostaniesz w 24 h.",
     en: "You'll get a range within 24 hours.",
   },
+  "pricing.ctaWrite": { pl: "Napisz do nas", en: "Contact us" },
   "pricing.cta": { pl: "Zadzwoń: 509 123 434", en: "Call +48 509 123 434" },
 
   // Price table — 3 categories, one active at a time (tabs). Numbers copied
@@ -74,8 +75,8 @@ export const pricing = {
   },
   "pricing.unitMonth": { pl: "/ mies.", en: "/ mo" },
   "pricing.disclaimer": {
-    pl: "Ceny netto, doliczamy 23% VAT. Wycena jest stała od podpisania - żadnych aneksów w trakcie projektu. Google Ads powyżej 10 000 zł budżetu miesięcznego: 10% wydatku zamiast stawki z tabeli.",
-    en: "Prices are net, we add 23% VAT. The quote is fixed once signed - no add-ons mid-project. Google Ads above a 10,000 PLN monthly budget: 10% of spend instead of the table rate.",
+    pl: "Ceny netto, doliczamy 23% VAT. Dolna kwota dotyczy standardowego zakresu, górna wersji rozszerzonej. Zakres i limit godzin opieki ustalamy w umowie. Zmianę zakresu wyceniamy przed rozpoczęciem dodatkowych prac. Budżet reklam i opłaty zewnętrznych usług rozliczasz osobno. Google Ads powyżej 10 000 zł budżetu miesięcznego: 10% wydatku zamiast stawki z tabeli.",
+    en: "Prices exclude 23% VAT. The lower amount covers standard scope; the upper amount covers an extended version. Care scope and included hours are agreed in the contract. We quote scope changes before starting extra work. Ad spend and external service fees are paid separately. Google Ads above a 10,000 PLN monthly budget: 10% of spend instead of the table rate.",
   },
 
   "pricing.catProjects": { pl: "Projekty", en: "Projects" },
@@ -99,7 +100,7 @@ export const pricing = {
   "pricing.itemCareShop.name": { pl: "Opieka nad sklepem / systemem", en: "Store / system care" },
   // SEO, Google Ads i GA4+GTM scalone 2026-08-12 (Wojtek: ta sama cena) -
   // jedna pozycja zamiast trzech. Reguła "powyżej 10 000 zł budżetu Ads: 10%
-  // wydatku" z cennik.md nadal obowiązuje wewnętrznie, tylko nie na stronie.
+  // wydatku" z cennik.md jest opisana przy tabeli.
   "pricing.itemMarketing.name": { pl: "SEO, Google Ads, GA4 + GTM", en: "SEO, Google Ads, GA4 + GTM" },
 
   "pricing.itemAudit.name": { pl: "Audyt procesów", en: "Process audit" },

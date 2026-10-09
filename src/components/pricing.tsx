@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useI18n } from "@/lib/i18n";
 import type { Lang } from "@/lib/i18n";
 import Reveal from "@/components/ui/reveal";
@@ -111,6 +111,22 @@ export default function Pricing() {
   const { t, lang } = useI18n();
   const [activeCategory, setActiveCategory] = useState(0);
 
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  function handleTabKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    const last = priceCategories.length - 1;
+    let next: number;
+    switch (event.key) {
+      case "ArrowRight": next = index === last ? 0 : index + 1; break;
+      case "ArrowLeft": next = index === 0 ? last : index - 1; break;
+      case "Home": next = 0; break;
+      case "End": next = last; break;
+      default: return;
+    }
+    event.preventDefault();
+    setActiveCategory(next);
+    tabRefs.current[next]?.focus();
+  }
+
   // Someone reading the pricing is the strongest pre-lead signal a B2B services
   // site has — stronger than any scroll depth. Fires once, after a real dwell,
   // and mirrors to Meta as ViewContent so it can seed a remarketing audience.
@@ -193,10 +209,13 @@ export default function Pricing() {
                   id={`pricing-tab-${cat.key}`}
                   type="button"
                   role="tab"
+                  ref={(element) => { tabRefs.current[i] = element; }}
+                  tabIndex={activeCategory === i ? 0 : -1}
+                  onKeyDown={(event) => handleTabKeyDown(event, i)}
                   aria-selected={activeCategory === i}
                   aria-controls={`pricing-panel-${cat.key}`}
                   onClick={() => setActiveCategory(i)}
-                  className={`min-h-[40px] cursor-pointer rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-widest transition-colors ${
+                  className={`min-h-[44px] cursor-pointer rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-widest transition-colors ${
                     activeCategory === i
                       ? "bg-primary text-on-primary"
                       : "border border-outline-variant/40 text-on-surface-variant hover:border-primary hover:text-on-surface"
@@ -218,6 +237,7 @@ export default function Pricing() {
                 key={cat.key}
                 id={`pricing-panel-${cat.key}`}
                 role="tabpanel"
+                tabIndex={0}
                 aria-labelledby={`pricing-tab-${cat.key}`}
                 hidden={activeCategory !== i}
                 aria-hidden={activeCategory !== i}
@@ -281,7 +301,8 @@ export default function Pricing() {
             {t("pricing.ctaDesc")}
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <CtaButton href="tel:+48509123434">{t("pricing.cta")}</CtaButton>
+            <CtaButton href="/kontakt#kontakt-main">{t("pricing.ctaWrite")}</CtaButton>
+            <CtaButton href="tel:+48509123434" variant="secondary">{t("pricing.cta")}</CtaButton>
           </div>
         </Reveal>
       </div>

@@ -1,7 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { NextRequest } from "next/server";
-import { createHash } from "node:crypto";
-import { issueChallenge, leadingZeroBits, DIFFICULTY_BITS, MIN_AGE_MS } from "@/lib/form-challenge";
 
 // The bug this pins: /api/contact returned 500 for a lead that was already
 // durably stored, whenever the last notification channel failed.
@@ -17,6 +15,12 @@ import { issueChallenge, leadingZeroBits, DIFFICULTY_BITS, MIN_AGE_MS } from "@/
 
 const storeLead = vi.fn();
 const storeRejected = vi.fn().mockResolvedValue(undefined);
+
+vi.mock("@/lib/turnstile", () => ({
+  verifyTurnstile: async () => ({ ok: true }),
+  isTurnstileTestMode: () => false,
+  isTestDeliveryIsolated: () => true,
+}));
 
 vi.mock("@/lib/leads", () => ({
   storeLead: (...args: unknown[]) => storeLead(...args),
@@ -47,27 +51,12 @@ const validLead = {
   consent: true as const,
 };
 
-/**
- * A solved anti-bot challenge (lib/form-challenge.ts), issued far enough in
- * the past to clear the minimum age. The signing key derives from the env
- * this file sets, so a token minted here verifies inside the freshly
- * re-imported route module too.
- */
-function solvedChallenge() {
-  const { token } = issueChallenge(Date.now() - MIN_AGE_MS - 1_000);
-  for (let pow = 0; ; pow++) {
-    const d = createHash("sha256").update(`${token}:${pow}`).digest();
-    if (leadingZeroBits(d) >= DIFFICULTY_BITS) return { challenge: token, pow };
-  }
-}
-
 /** NextRequest, not Request — the route reads request.cookies. */
 function post(body: unknown): NextRequest {
   const withChallenge =
     body && typeof body === "object"
       ? {
           ...(body as object),
-          ...solvedChallenge(),
           // A person: typed, moved the mouse, clicked, spent 40 s on the page.
           sig: { wd: false, kd: 22, pm: 140, pd: 3, ts: 0, sc: 4, paste: 0, ms: 40_000, tz: "Europe/Warsaw", lang: "pl-PL", sw: 1440, sh: 900 },
         }
@@ -133,7 +122,7 @@ describe("/api/contact — status follows persistence, not notification", () => 
     expect(res.status).toBe(500);
   });
 
-  it("returns 200 when Telegram delivers even if the store is unavailable", async () => {
+  it("returns 500 when only Telegram delivers and durable persistence is unavailable", async () => {
     storeLead.mockResolvedValue(false);
     globalThis.fetch = vi.fn().mockResolvedValue(
       new Response(JSON.stringify({ ok: true }), { status: 200 }),
@@ -142,10 +131,10 @@ describe("/api/contact — status follows persistence, not notification", () => 
     const POST = await loadRoute();
     const res = await POST(post(validLead));
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(500);
   });
 
-  it("answers 200 but stores nothing and pings nobody for a placeholder number", async () => {
+  it("accepts a pattern-looking number for durable manual review, without paid conversion", async () => {
     storeLead.mockResolvedValue(true);
     storeRejected.mockClear();
     const fetchSpy = vi.fn().mockResolvedValue(new Response("{}", { status: 200 }));
@@ -156,10 +145,9 @@ describe("/api/contact — status follows persistence, not notification", () => 
 
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ success: true, counted: false });
-    expect(storeLead).not.toHaveBeenCalled();
-    expect(fetchSpy, "no Telegram, no CRM").not.toHaveBeenCalled();
-    expect(storeRejected).toHaveBeenCalledOnce();
-    expect(storeRejected.mock.calls[0][0]).toMatchObject({ stage: "content" });
+    expect(storeLead).toHaveBeenCalledOnce();
+    expect(storeLead.mock.calls[0][0].verdict).toBe("suspicious");
+    expect(storeRejected).not.toHaveBeenCalled();
   });
 
   it("still rejects an invalid payload before touching any channel", async () => {

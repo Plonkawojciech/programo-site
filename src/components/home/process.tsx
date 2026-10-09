@@ -24,12 +24,12 @@ export default function Process() {
         {/* ---------- heading ---------- */}
         <motion.h2
           id="process-heading"
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10% 0px" }}
           transition={{ duration: durationMedium, ease: easeEntry }}
           style={{ willChange: "opacity, transform" }}
-          className="max-w-2xl font-headline text-h2 tracking-[-0.02em] text-on-surface text-balance"
+          className="max-w-2xl font-headline text-h2 font-semibold tracking-[-0.02em] text-on-surface text-balance"
         >
           {t("home.process.title.v2")}
         </motion.h2>
@@ -42,7 +42,7 @@ export default function Process() {
           {steps.map((step, i) => (
             <motion.li
               key={step.titleKey}
-              initial={{ opacity: 0, y: 14 }}
+              initial={false}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-8% 0px" }}
               transition={{
@@ -53,7 +53,7 @@ export default function Process() {
               style={{ willChange: "opacity, transform" }}
               className="flex flex-col gap-3"
             >
-              <h3 className="font-headline text-h4 tracking-[-0.01em] text-on-surface">
+              <h3 className="font-headline text-h4 font-semibold tracking-[-0.01em] text-on-surface">
                 <span
                   className="mr-2 text-on-surface-variant"
                   aria-hidden="true"

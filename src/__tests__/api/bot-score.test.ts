@@ -11,12 +11,12 @@ describe("bot score", () => {
     expect(scoreBotSignals(phone).level).toBe("clean");
   });
 
-  it("drops a browser that declares automation", () => {
-    expect(scoreBotSignals({ ...human, wd: true }).level).toBe("drop");
+  it("flags a browser that declares automation", () => {
+    expect(scoreBotSignals({ ...human, wd: true }).level).toBe("suspicious");
   });
 
-  it("drops a submission with no keys and no pointer/touch at all", () => {
-    expect(scoreBotSignals({ ...human, kd: 0, pm: 0, pd: 0, ts: 0 }).level).toBe("drop");
+  it("flags a submission with no keys and no pointer/touch at all", () => {
+    expect(scoreBotSignals({ ...human, kd: 0, pm: 0, pd: 0, ts: 0 }).level).toBe("suspicious");
   });
 
   it("flags, never drops, what a person could plausibly do", () => {

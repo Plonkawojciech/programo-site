@@ -20,6 +20,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  ...(process.env.BUILD_STANDALONE === "1" ? { output: "standalone" as const } : {}),
   // Pins the build root to the project being built. This repo is routinely
   // checked out as git worktrees nested under the main repo
   // (.claude/worktrees/<name>/), each with its own package-lock.json. Turbopack
@@ -50,10 +51,18 @@ const nextConfig: NextConfig = {
   // work grid on the same page. Permanent, so old links and the indexed URL
   // hand their weight over.
   async redirects() {
-    return [{ source: "/dema", destination: "/projekty#dema", permanent: true }];
+    return [
+      { source: "/:path*", has: [{ type: "host", value: "www.programo.pl" }], destination: "https://programo.pl/:path*", permanent: true },
+      { source: "/dema", destination: "/projekty#dema", permanent: true },
+    ];
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [{ source: "/:path*", headers: [
+      ...securityHeaders,
+      ...(process.env.PROGRAMO_DEPLOYMENT_ENV === "preview"
+        ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]
+        : []),
+    ] }];
   },
 };
 

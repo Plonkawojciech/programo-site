@@ -1,20 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import { useTheme } from "@/lib/theme";
 import { useI18n } from "@/lib/i18n";
 import Reveal from "@/components/ui/reveal";
 
 // Kafle z portretami założycieli. Używane na /kontakt i /o-nas — jedno miejsce,
 // bo dwa niezależne warianty rozjechałyby się przy pierwszej zmianie zdjęcia.
 //
-// Zdjęcia są w dwóch wersjach, bo strona ma dwa motywy: białe tło do jasnego,
-// zielona ściana do ciemnego. Podmiana leci CSS-em (.photo-light/.photo-dark
-// w globals.css), a nie przez useTheme() — inaczej po hydracji mignęłoby złe
-// zdjęcie, zanim provider zdąży odczytać localStorage.
-//
-// `unoptimized`: optymalizator obrazów Vercela oddaje na tych plikach HTTP 402
-// (wyczerpany limit transformacji). Pliki są przygotowane pod docelowy rozmiar
-// (1120x1400 WebP), więc /_next/image nic tu nie wnosił poza ryzykiem.
+// Load the selected theme portrait lazily; below-the-fold photos must not
+// compete with the hero for network priority. Next serves responsive sizes.
 const FOUNDERS = [
   {
     name: "Wojciech Płonka",
@@ -36,6 +31,7 @@ const FOUNDERS = [
 
 export default function FounderCards() {
   const { t } = useI18n();
+  const { theme } = useTheme();
 
   return (
     <div className="grid gap-8 sm:grid-cols-2 md:gap-12">
@@ -44,22 +40,12 @@ export default function FounderCards() {
           <figure className="group flex flex-col gap-5">
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-card shadow-card ring-1 ring-outline-variant/20 transition duration-500 focus-within:ring-primary/40 group-hover:shadow-card-hover group-hover:ring-primary/40">
               <Image
-                src={`/team/${f.slug}-light.webp`}
+                src={`/team/${f.slug}-${theme}.webp`}
                 alt={`${f.name} - ${t(f.roleKey)}, Programo`}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1400px) 45vw, 620px"
-                className="photo-light object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
-                unoptimized
-                priority={i === 0}
-              />
-              <Image
-                src={`/team/${f.slug}-dark.webp`}
-                alt=""
-                aria-hidden="true"
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1400px) 45vw, 620px"
-                className="photo-dark object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
-                unoptimized
+                className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                loading="lazy"
               />
               {/* Przyciemnienie tylko pod treścią, żeby twarz nie ciemniała. */}
               <div
@@ -88,7 +74,7 @@ export default function FounderCards() {
               </div>
             </div>
             <figcaption className="flex flex-col gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-on-surface-variant">
+              <span className="text-xs font-medium text-on-surface-variant">
                 {t(f.roleKey)}
               </span>
               <span className="font-headline text-2xl font-bold tracking-tight text-on-surface md:text-3xl">

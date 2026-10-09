@@ -1,12 +1,17 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { NextRequest } from "next/server";
-import { createHash } from "node:crypto";
 
 // Contract with the CRM review inbox (crm_programo/docs/forms-intake.md),
 // 2026-10-03: every submission is forwarded to /api/forms/intake with its
 // verdict, reasons, signals, IP and user agent — rejected ones included, so a
 // filter that is too strict shows up as a real person in the CRM spam instead
 // of disappearing.
+
+vi.mock("@/lib/turnstile", () => ({
+  verifyTurnstile: async () => ({ ok: true }),
+  isTurnstileTestMode: () => false,
+  isTestDeliveryIsolated: () => true,
+}));
 
 vi.mock("@/lib/leads", () => ({
   storeLead: vi.fn().mockResolvedValue(true),
@@ -39,19 +44,10 @@ const lead = {
   gclid: "abc123",
 };
 
-async function solved() {
-  const { issueChallenge, leadingZeroBits, DIFFICULTY_BITS, MIN_AGE_MS } = await import("@/lib/form-challenge");
-  const { token } = issueChallenge(Date.now() - MIN_AGE_MS - 1_000);
-  for (let pow = 0; ; pow++) {
-    const d = createHash("sha256").update(`${token}:${pow}`).digest();
-    if (leadingZeroBits(d) >= DIFFICULTY_BITS) return { challenge: token, pow };
-  }
-}
-
-async function send(body: Record<string, unknown>, opts: { challenge?: boolean } = {}) {
+async function send(body: Record<string, unknown>) {
   vi.resetModules();
   const { POST } = await import("@/app/api/contact/route");
-  const payload = { sig: HUMAN, ...body, ...(opts.challenge === false ? {} : await solved()) };
+  const payload = { sig: HUMAN, ...body };
   const req = new NextRequest("https://programo.pl/api/contact", {
     method: "POST",
     headers: { "Content-Type": "application/json", "user-agent": UA, origin: "https://programo.pl", "x-forwarded-for": "203.0.113.9" },
@@ -91,7 +87,7 @@ describe("/api/contact → CRM review inbox", () => {
       phone: "509 123 434",
       verdict: "clean",
       verdictReasons: [],
-      signals: { honeypot: false, challenge: "ok", turnstile: "off", repeat: false, bot: "clean", content: "clean" },
+      signals: { honeypot: false, turnstile: "ok", repeat: false, bot: "clean", content: "clean" },
       utm: { utm_source: "google", gclid: "abc123" },
       ip: "203.0.113.9",
       userAgent: UA,
@@ -104,12 +100,12 @@ describe("/api/contact → CRM review inbox", () => {
     expect(crmBody()).toMatchObject({ verdict: "suspicious", verdictReasons: ["link w treści"] });
   });
 
-  it("forwards a content rejection as rejected with the stage", async () => {
+  it("keeps pattern-looking contact content in manual review", async () => {
     const res = await send({ ...lead, phone: "+48 600 100 200" });
-    expect(await res.json()).toEqual({ success: true, counted: false });
+    expect(res.status).toBe(200);
     expect(crmBody()).toMatchObject({
-      verdict: "rejected",
-      signals: { stage: "content", content: "drop", challenge: "ok", honeypot: false },
+      verdict: "suspicious",
+      signals: { content: "drop", turnstile: "ok", honeypot: false },
     });
     expect(crmBody().verdictReasons[0]).toMatch(/numer przykładowy/);
   });
@@ -119,10 +115,10 @@ describe("/api/contact → CRM review inbox", () => {
     expect(crmBody()).toMatchObject({ verdict: "rejected", verdictReasons: ["wypełnione ukryte pole"], signals: { stage: "honeypot", honeypot: true } });
   });
 
-  it("forwards a failed challenge as rejected and still answers 403", async () => {
-    const res = await send(lead, { challenge: false });
-    expect(res.status).toBe(403);
-    expect(crmBody()).toMatchObject({ verdict: "rejected", signals: { stage: "challenge", challenge: "missing" } });
+  it("accepts a current form without legacy proof of work", async () => {
+    const res = await send(lead);
+    expect(res.status).toBe(200);
+    expect(crmBody()).toMatchObject({ verdict: "clean", signals: { turnstile: "ok" } });
   });
 
   it("ignores the stale CRM_WEBHOOK_URL, honours CRM_INTAKE_URL, skips forwarding without a secret", async () => {

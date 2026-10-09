@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse, after } from "next/server";
 import { isRepeatSubmission, storeLead, storeRejected } from "@/lib/leads";
 import { contactSchema, isOverRateLimit, recordSubmission } from "@/lib/contact-schema";
-import { isTurnstileEnforced, verifyTurnstile } from "@/lib/turnstile";
+import { isTurnstileTestMode, isTestDeliveryIsolated, verifyTurnstile } from "@/lib/turnstile";
 import { buildCrmPayload, forwardToCrm, type CrmSignals, type CrmVerdict } from "@/lib/crm-forward";
-import { isHoneypotTripped, verifyChallenge } from "@/lib/form-challenge";
-import { isForeignOrigin, isOverAttemptLimit, isToolUserAgent } from "@/lib/request-guard";
+import { isHoneypotTripped } from "@/lib/form-challenge";
+import { isForeignOrigin, isOverAttemptLimit, isToolUserAgent, publicRequestHostname } from "@/lib/request-guard";
 import { describeSignals, scoreBotSignals } from "@/lib/bot-score";
 import { contactFingerprint, mergeVerdicts, scoreContent } from "@/lib/spam-rules";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
@@ -30,7 +30,8 @@ export async function POST(request: NextRequest) {
   // anyone hammering the endpoint. A person in a browser never trips these.
   const ua = request.headers.get("user-agent");
   const origin = request.headers.get("origin");
-  if (isToolUserAgent(ua) || isForeignOrigin(origin)) {
+  const hostname = publicRequestHostname(request.headers, request.nextUrl.hostname);
+  if (!hostname || isToolUserAgent(ua) || isForeignOrigin(origin)) {
     console.warn(`[contact] blocked request from ${ip} (ua: ${(ua ?? "").slice(0, 80)}, origin: ${origin ?? "none"})`);
     return NextResponse.json({ error: "Nieprawidłowe zgłoszenie." }, { status: 403 });
   }
@@ -67,9 +68,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: firstError }, { status: 400 });
   }
 
-  // Charged here, not at the top of the handler: only a payload that actually
-  // parses is a submission. Rejected attempts are typos, not traffic.
-  recordSubmission(ip);
+  const turnstile = await verifyTurnstile(result.data.turnstileToken, ip, hostname);
+  if (!turnstile.ok || !isTestDeliveryIsolated()) {
+    const unavailable = !turnstile.ok && ["configuration", "unavailable"].includes(turnstile.reason);
+    const isolated = isTestDeliveryIsolated();
+    return NextResponse.json({ error: unavailable || !isolated
+      ? "Ochrona formularza jest chwilowo niedostępna. Spróbuj ponownie później lub zadzwoń: +48 509 123 434."
+      : "Nie udało się potwierdzić, że nie jesteś robotem. Odśwież stronę i spróbuj ponownie." },
+      { status: unavailable || !isolated ? 503 : 403 });
+  }
 
   // Every outcome below is forwarded to the CRM review inbox (lib/crm-forward.ts),
   // rejected ones included: the CRM applies its own rules on top, keeps spam
@@ -77,12 +84,7 @@ export async function POST(request: NextRequest) {
   const toCrm = (verdict: CrmVerdict, reasons: string[], signals: CrmSignals) =>
     forwardToCrm(buildCrmPayload(result.data, { verdict, reasons, signals, ip, userAgent: ua ?? "" }));
 
-  // Anti-bot, keyless layers — see lib/form-challenge.ts. Honeypot first: a
-  // filled decoy field gets the same 200 a real lead gets, and nothing else.
-  // Telling a bot it failed only teaches it what to change.
-  // Every refusal below is stored (lib/leads.ts, rejected list) so the filter
-  // can be audited: which form, which rule, what was typed. Answered with the
-  // same 200 a real lead gets.
+  // A refusal is retained for review, but the visitor never gets a false success.
   const reject = async (stage: string, reasons: string[], signals: CrmSignals) => {
     console.warn(`[contact] ${stage} from ${ip} (form ${result.data.form_id ?? "?"}): ${reasons.join("; ")}`);
     await storeRejected({
@@ -100,45 +102,26 @@ export async function POST(request: NextRequest) {
       userAgent: (ua ?? "").slice(0, 200),
     });
     await toCrm("rejected", reasons, { stage, behaviour: describeSignals(result.data.sig), ...signals });
-    return NextResponse.json({ success: true, counted: false });
+    return NextResponse.json({ error: "Sprawdź dane kontaktowe i treść zgłoszenia. Jeśli problem się powtarza, zadzwoń: +48 509 123 434." }, { status: 422 });
   };
 
   if (isHoneypotTripped(body)) return reject("honeypot", ["wypełnione ukryte pole"], { honeypot: true });
-  const challenge = verifyChallenge(result.data.challenge, result.data.pow);
-  if (!challenge.ok) {
-    console.warn(`[contact] challenge ${challenge.reason} from ${ip} (form ${result.data.form_id ?? "?"})`);
-    await toCrm("rejected", [`wyzwanie anty-bot niezaliczone (${challenge.reason})`], {
-      stage: "challenge", honeypot: false, challenge: challenge.reason, behaviour: describeSignals(result.data.sig),
-    });
-    return NextResponse.json(
-      {
-        error:
-          challenge.reason === "too_fast"
-            ? "Za szybko. Odczekaj chwilę i wyślij ponownie."
-            : "Nie udało się potwierdzić, że nie jesteś robotem. Odśwież stronę i spróbuj ponownie.",
-      },
-      { status: 403 },
-    );
-  }
-
-  // Behaviour verdict (lib/bot-score.ts). Certain bots are answered 200 and
-  // dropped; likely bots are delivered flagged, and neither kind is ever
-  // counted as a conversion — a bot counted as a 500 zł lead teaches Google
-  // Ads to buy more bots.
+  // Input telemetry only flags review; screen readers and autofill may produce no pointer events.
   const behaviour = scoreBotSignals(result.data.sig);
   const sigLine = describeSignals(result.data.sig);
-  if (behaviour.level === "drop") return reject("behaviour", behaviour.reasons, { honeypot: false, challenge: "ok", bot: behaviour.level });
   // What was typed (lib/spam-rules.ts): placeholder numbers, link spam.
   const content = scoreContent(result.data);
-  if (content.level === "drop") {
-    return reject("content", content.reasons, { honeypot: false, challenge: "ok", bot: behaviour.level, content: content.level });
-  }
+  // After a valid human check, ambiguous content belongs in review. Real
+  // project briefs may contain HTML, several reference links or an unusual phone.
+  const reviewedContent = content.level === "drop"
+    ? { ...content, level: "suspicious" as const }
+    : content;
   // The same phone or e-mail again within 24 h is delivered (the second form
   // may carry the details the first one lacked) but flagged, so it is one
   // conversion and nobody is called twice.
   const repeat = await isRepeatSubmission(contactFingerprint(result.data));
   const bot = mergeVerdicts(
-    mergeVerdicts(behaviour, content),
+    mergeVerdicts(behaviour, reviewedContent),
     repeat ? { level: "suspicious", reasons: ["ten sam telefon lub e-mail już był w ciągu 24 h"] } : { level: "clean", reasons: [] },
   );
   const suspicious = bot.level === "suspicious";
@@ -146,24 +129,9 @@ export async function POST(request: NextRequest) {
     console.warn(`[contact] suspicious lead from ${ip} (form ${result.data.form_id ?? "?"}): ${bot.reasons.join("; ")} | ${sigLine}`);
   }
 
-  // Optional extra layer, Cloudflare Turnstile. Sits AFTER recordSubmission on purpose: a flood of
-  // well-formed payloads with bad tokens is exactly the traffic the rate
-  // limit exists for. No-op until both Turnstile env vars are set — see
-  // src/lib/turnstile.ts for the fail-open/closed policy.
-  const turnstile = await verifyTurnstile(result.data.turnstileToken, ip);
   const baseSignals: CrmSignals = {
-    honeypot: false, challenge: "ok", repeat, bot: behaviour.level, content: content.level, behaviour: sigLine,
+    honeypot: false, turnstile: "ok", repeat, bot: behaviour.level, content: content.level, behaviour: sigLine,
   };
-  if (!turnstile.ok) {
-    const missing = turnstile.reason === "missing";
-    await toCrm("rejected", [...bot.reasons, missing ? "Turnstile: brak tokenu" : "Turnstile: weryfikacja nieudana"], {
-      ...baseSignals, stage: "turnstile", turnstile: missing ? "missing" : "fail",
-    });
-    return NextResponse.json(
-      { error: "Nie udało się potwierdzić, że nie jesteś robotem. Odśwież stronę i spróbuj ponownie." },
-      { status: 403 },
-    );
-  }
   const { name, email, phone, subject, message, projectType, budget, consentTimestamp } = result.data;
   // A phone-only lead legitimately has no name, so the notifications need a
   // label instead of a dangling "od ". The CRM keeps the field genuinely empty.
@@ -245,7 +213,7 @@ export async function POST(request: NextRequest) {
   // suspicious ones, which then existed only on Telegram). The CRM decides
   // who gets a push; see lib/crm-forward.ts.
   const crmOk = await toCrm(bot.level === "suspicious" ? "suspicious" : "clean", bot.reasons, {
-    ...baseSignals, turnstile: isTurnstileEnforced() ? "ok" : "off",
+    ...baseSignals,
   });
   if (crmOk) persisted = true;
 
@@ -283,6 +251,7 @@ export async function POST(request: NextRequest) {
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
+              signal: AbortSignal.timeout(5_000),
               body: JSON.stringify({
                 chat_id: tgChatId,
                 text,
@@ -301,7 +270,7 @@ export async function POST(request: NextRequest) {
         }
       })()
     );
-  } else {
+  } else if (!isTurnstileTestMode()) {
     // Deliberately console.error and deliberately not tagged [DEV]. This line
     // used to read "[DEV] No TELEGRAM_BOT_TOKEN/CHAT_ID - skipping Telegram."
     // at log level `log`, which is exactly what a missing production env var
@@ -335,7 +304,7 @@ export async function POST(request: NextRequest) {
         return { channel: "mail", ok: r.ok, error: r.error };
       })(),
     );
-  } else {
+  } else if (!isTurnstileTestMode()) {
     // Same reasoning as the Telegram branch below-left: an unconfigured
     // delivery channel must be loud, because from the outside it looks exactly
     // like a quiet week.
@@ -351,21 +320,8 @@ export async function POST(request: NextRequest) {
     .filter((r) => !r.ok)
     .forEach((r) => console.error(`[contact] ${r.channel} failed:`, r.error));
 
-  // The status follows PERSISTENCE, not notification. Previously a Telegram
-  // outage returned 500 for a lead already sitting in Redis and in the CRM: the
-  // visitor was told their message failed, and the client returns before
-  // trackLead(), so the Google Ads and Meta conversions never fired either. One
-  // dead channel cost the lead twice — once in the inbox, once in the bidding
-  // signal — while the lead itself was safe the whole time.
-  //
-  // This check used to be UNREACHABLE whenever no channel was configured at
-  // all: an early `if (tasks.length === 0) return { success: true }` sat above
-  // it and answered before persistence was ever consulted. So a deployment with
-  // neither Telegram nor Redis nor the CRM webhook told every visitor "dziękuję,
-  // odezwiemy się" and dropped the lead on the floor — the one failure mode a
-  // lead pipeline must never have, and the one that is hardest to notice,
-  // because from the outside it looks exactly like working.
-  if (!persisted && !anyNotified) {
+  // Success requires durable storage. A notification alone does not create a recoverable record.
+  if (!persisted) {
     console.error(
       `[contact] lead ${leadId} LOST — nothing persisted it and no channel took it. ` +
         "Check KV_REST_API_URL/KV_REST_API_TOKEN, CRM_WEBHOOK_SECRET and TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID.",
@@ -378,9 +334,11 @@ export async function POST(request: NextRequest) {
 
   // Consent is verified inside, from the cookie — never from the request body,
   // which is only a claim by the client. Scheduled only now, once the lead was
-  // actually accepted (persisted or delivered): a submission that ended in the
+  // actually accepted (persisted): a submission that ended in the
   // 500 above must not become a paid conversion in Ads, Meta or GA4.
-  if (!suspicious) after(async () => {
+  recordSubmission(ip);
+  const counted = !suspicious && !isTurnstileTestMode();
+  if (counted) after(async () => {
     await dispatchLeadConversions({
       consentCookie: request.cookies.get(CONSENT_COOKIE)?.value,
       eventId: result.data.event_id,
@@ -405,11 +363,11 @@ export async function POST(request: NextRequest) {
     });
   });
 
-  if (!anyNotified) {
+  if (!anyNotified && !isTurnstileTestMode()) {
     console.error(
       `[contact] lead ${leadId} stored but NO notification channel delivered — check Telegram`,
     );
   }
 
-  return NextResponse.json({ success: true, counted: !suspicious });
+  return NextResponse.json({ success: true, counted });
 }

@@ -33,7 +33,8 @@ function findKey() {
 
 // Only production deploys. VERCEL_ENV is set by Vercel; locally it is undefined,
 // so a developer running `npm run build` never pings the search engines.
-const isProd = process.env.VERCEL_ENV === "production";
+const isProd = process.env.PROGRAMO_DEPLOYMENT_ENV === "production" ||
+  (process.env.PROGRAMO_DEPLOYMENT_ENV !== "preview" && process.env.VERCEL_ENV === "production");
 const key = findKey();
 
 if (!isProd) {

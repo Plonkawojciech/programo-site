@@ -38,7 +38,7 @@ export default function Providers({ children }: { children: ReactNode }) {
       <I18nProvider>
         <ConsentProvider>
           {isBare ? (
-            <main id="main-content">{children}</main>
+            <main id="main-content" tabIndex={-1}>{children}</main>
           ) : (
             <>
               <a
@@ -50,7 +50,7 @@ export default function Providers({ children }: { children: ReactNode }) {
               <ScrollProgress />
               <PageTransition>
                 <Navbar />
-                <main id="main-content">{children}</main>
+                <main id="main-content" tabIndex={-1}>{children}</main>
                 <Footer />
               </PageTransition>
               <StickyCta />

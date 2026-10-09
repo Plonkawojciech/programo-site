@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 import { useClientValue } from "@/lib/use-client-value";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -206,8 +206,8 @@ export default function CookieBanner() {
                 <button
                   type="button"
                   onClick={closeSettings}
-                  aria-label="Close"
-                  className="text-on-surface hover:bg-on-surface/10 transition-colors rounded-full p-2 -mt-1 -mr-1"
+                  aria-label={t("cookie.closeSettings")}
+                  className="min-h-11 min-w-11 text-on-surface hover:bg-on-surface/10 transition-colors rounded-full p-2 -mt-1 -mr-1"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 6L6 18M6 6l12 12" />
@@ -278,17 +278,21 @@ function ConsentRow({
   disabled?: boolean;
   onChange: (v: boolean) => void;
 }) {
+  const labelId = useId();
+  const descriptionId = useId();
   return (
     <div className="flex items-start justify-between gap-4 py-4 border-b border-outline-variant/40 last:border-0">
       <div className="flex-1 min-w-0">
-        <h3 className="text-sm font-semibold text-on-surface">{title}</h3>
-        <p className="mt-1.5 text-xs leading-relaxed text-on-surface-variant">
+        <h3 id={labelId} className="text-sm font-semibold text-on-surface">{title}</h3>
+        <p id={descriptionId} className="mt-1.5 text-xs leading-relaxed text-on-surface-variant">
           {desc}
         </p>
       </div>
       <button
         type="button"
         role="switch"
+        aria-labelledby={labelId}
+        aria-describedby={descriptionId}
         aria-checked={checked}
         disabled={disabled}
         onClick={() => onChange(!checked)}

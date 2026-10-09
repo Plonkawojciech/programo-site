@@ -73,7 +73,7 @@ export function buildCrmPayload(
   const utm: Record<string, string> = {};
   for (const key of UTM_KEYS) if (data[key]) utm[key] = String(data[key]);
   return {
-    source: "programo.pl",
+    source: process.env.NEXT_PUBLIC_TURNSTILE_TEST_MODE === "true" ? "programo.pl-preview-test" : "programo.pl",
     formId: cut(data.form_id, 200),
     pageUrl: cut(data.page_url, 2000),
     name: cut(data.name, 200),

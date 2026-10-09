@@ -1,3 +1,4 @@
+import { buildWebPage, ORGANIZATION_ID, renderGraph, STATIC_ROUTE_UPDATED_AT } from "@/lib/schema";
 import HomeHero from "@/components/home/hero";
 import TrustBar from "@/components/trust-bar";
 import ClientWork from "@/components/home/client-work";
@@ -45,9 +46,18 @@ import ContactBookend from "@/components/home/contact-bookend";
  * between") moved into that aside; nothing linked to its `#o-nas` anchor —
  * navbar and footer both point at the `/o-nas` route.
  */
+const homepageGraph = renderGraph([buildWebPage({
+  path: "/",
+  name: "Programo - Studio Software z Poznania",
+  description: "Strony, sklepy internetowe, aplikacje i automatyzacje dla firm. Projekt prowadzą Wojciech Płonka i Bartosz Kolaj.",
+  dateModified: STATIC_ROUTE_UPDATED_AT["/"],
+  about: { "@id": ORGANIZATION_ID },
+})]);
+
 export default function Home() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: homepageGraph }} />
       <HomeHero />
       <TrustBar />
       <ClientWork />

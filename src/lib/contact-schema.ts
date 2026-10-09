@@ -73,12 +73,10 @@ export const contactSchema = z
     page_url: z.string().max(1000).optional(),
     form_id: z.string().max(80).optional(),
     // Cloudflare Turnstile response. Optional at the schema level — whether it
-    // is REQUIRED is decided by /api/contact via isTurnstileEnforced(), so a
-    // deploy without the keys keeps accepting the old payload unchanged.
+    // is REQUIRED is decided by /api/contact. Missing keys fail closed.
     turnstileToken: z.string().max(2048).optional(),
     // Keyless anti-bot (lib/form-challenge.ts): signed challenge + proof of
-    // work + honeypot. Optional here; /api/contact enforces the first two and
-    // silently drops on the third.
+    // work fields remain schema-compatible with old tabs; v3 uses Turnstile.
     challenge: z.string().max(512).optional(),
     pow: z.number().int().min(0).optional(),
     company_website: z.string().max(500).optional(),

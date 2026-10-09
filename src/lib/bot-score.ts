@@ -1,21 +1,6 @@
 import { z } from "zod/v4";
 
-/**
- * Server half of lib/bot-signals.ts: turns the behaviour counts a form sends
- * into a verdict for /api/contact.
- *
- *   drop       - certain: a browser that declares itself automated, or a
- *                submission with no human input at all. A person must press
- *                a key or touch/click something to submit a form. Answered
- *                200 and discarded, no notification.
- *   suspicious - likely a bot, but a real person could look like this (full
- *                autofill, very fast). Delivered to Telegram labelled
- *                PODEJRZANE with the reasons, never counted as a conversion.
- *   clean      - normal lead.
- *
- * Tuned for false negatives over false positives: nothing that a real visitor
- * could plausibly produce is dropped, only flagged.
- */
+/** Behaviour telemetry only flags review; assistive input and autofill must never be discarded. */
 
 export const botSignalsSchema = z
   .object({
@@ -46,12 +31,12 @@ export function scoreBotSignals(sig: BotSignalsPayload | undefined): BotVerdict 
     // outside the page (or a tab opened before the deploy).
     return { level: "suspicious", reasons: ["brak sygnałów z przeglądarki"] };
   }
-  if (sig.wd === true) return { level: "drop", reasons: ["przeglądarka sterowana automatycznie (webdriver)"] };
+  if (sig.wd === true) return { level: "suspicious", reasons: ["przeglądarka sterowana automatycznie (webdriver)"] };
 
   const pointer = (sig.pm ?? 0) + (sig.pd ?? 0) + (sig.ts ?? 0);
   const keys = sig.kd ?? 0;
   if (keys === 0 && pointer === 0) {
-    return { level: "drop", reasons: ["zero klawiszy i zero kliknięć/dotyku"] };
+    return { level: "suspicious", reasons: ["zero klawiszy i zero kliknięć/dotyku"] };
   }
 
   const reasons: string[] = [];

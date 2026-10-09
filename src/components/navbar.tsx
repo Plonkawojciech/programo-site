@@ -151,7 +151,7 @@ export default function Navbar() {
           Grid cols 1fr/auto/1fr keeps the pill perfectly centered and structurally
           prevents the zones from ever overlapping. */}
       <motion.div
-        initial={shouldReduceMotion ? false : { y: -30, opacity: 0 }}
+        initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{
           duration: shouldReduceMotion ? 0 : durationFast,
@@ -266,8 +266,8 @@ export default function Navbar() {
           </a>
           <button
             onClick={toggleTheme}
-            aria-label="Toggle theme"
-            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={t("a11y.themeToggle")}
+            title={t(theme === "dark" ? "a11y.lightTheme" : "a11y.darkTheme")}
             className="flex items-center justify-center w-11 h-11 text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
           >
             {theme === "dark" ? (
@@ -298,7 +298,7 @@ export default function Navbar() {
       <motion.nav
         role="navigation"
         aria-label={t("a11y.mainNav")}
-        initial={shouldReduceMotion ? false : { y: -20, opacity: 0 }}
+        initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{
           duration: shouldReduceMotion ? 0 : durationFast,
@@ -314,7 +314,7 @@ export default function Navbar() {
             ref={menuButtonRef}
             onClick={() => setMobileOpen(!mobileOpen)}
             className="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1.5"
-            aria-label="Toggle menu"
+            aria-label={t("a11y.menuToggle")}
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu-overlay"
           >
@@ -356,7 +356,7 @@ export default function Navbar() {
 
           <button
             onClick={toggleTheme}
-            aria-label="Toggle theme"
+            aria-label={t("a11y.themeToggle")}
             className="flex min-h-[44px] min-w-[44px] items-center justify-center text-[var(--theme-nav-text)] cursor-pointer"
           >
             {theme === "dark" ? (
@@ -402,6 +402,9 @@ export default function Navbar() {
           <motion.div
             id="mobile-menu-overlay"
             ref={menuOverlayRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("a11y.mainNav")}
             // Reveal originates from the hamburger, which is on the LEFT of the
             // pill. The old circle grew from 90% 5% — the opposite corner, so
             // the menu appeared to come from nowhere the user had touched.
@@ -414,8 +417,12 @@ export default function Navbar() {
             }}
             className="fixed inset-x-0 top-0 z-[var(--z-nav-scrim)] grid h-[100dvh] grid-rows-[auto_1fr_auto] bg-surface/98 backdrop-blur-2xl xl:hidden"
           >
-            {/* Pill clearance. 16px margin + 48px pill + 24px breathing room. */}
-            <div aria-hidden="true" className="h-[88px]" />
+            {/* Keep the dialog close control below the fixed navigation pill. */}
+            <div className="flex h-[132px] items-end justify-end px-6 pb-4">
+              <button type="button" onClick={() => setMobileOpen(false)} className="min-h-11 min-w-11 px-3 text-sm font-medium text-on-surface">
+                {t("a11y.menuClose")}
+              </button>
+            </div>
 
             {/* Not a <nav>: the pill above is already the mobile navigation
                 landmark and is labelled as such. A second landmark with the

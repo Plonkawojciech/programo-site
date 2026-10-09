@@ -335,6 +335,8 @@
 html {
   scroll-behavior: smooth;
   text-size-adjust: 100%;
+  /* Fixed navigation must not cover keyboard-focused controls or anchors. */
+  scroll-padding-block: 6rem;
 }
 
 body {
