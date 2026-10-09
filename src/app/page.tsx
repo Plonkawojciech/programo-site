@@ -9,6 +9,11 @@ import People from "@/components/home/people";
 import Faq from "@/components/home/faq";
 import FaqSchema from "@/components/home/faq-schema";
 import ContactBookend from "@/components/home/contact-bookend";
+import { getPortfolioSummaries } from "@/lib/portfolio-summaries";
+
+const homeProjects = getPortfolioSummaries([
+  "jedmar", "innochem", "terapia-dens", "estalo", "rejestr-pro", "solvio", "pooltimer", "eportal-prawny",
+]);
 
 /**
  * Eight sections, read top to bottom as one argument:
@@ -60,8 +65,8 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: homepageGraph }} />
       <HomeHero />
       <TrustBar />
-      <ClientWork />
-      <OwnProducts />
+      <ClientWork projectNames={Object.fromEntries(homeProjects.map(({ slug, title }) => [slug, title]))} />
+      <OwnProducts projects={homeProjects} />
       <ServicesOverview />
       <Process />
       <People />

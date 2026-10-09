@@ -3,11 +3,12 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import Footer from "@/components/footer";
 import { I18nProvider, useI18n, translations } from "@/lib/i18n";
 import { COMPANY, COMPANY_ADDRESS_LINE, COMPANY_IDS_LINE } from "@/lib/company";
+import { footerProjectLinks } from "@/lib/portfolio-summaries";
 
 function renderWithI18n() {
   return render(
     <I18nProvider>
-      <Footer />
+      <Footer projectLinks={footerProjectLinks} />
     </I18nProvider>
   );
 }
@@ -21,7 +22,7 @@ function renderWithToggle() {
   return render(
     <I18nProvider>
       <ToggleButton />
-      <Footer />
+      <Footer projectLinks={footerProjectLinks} />
     </I18nProvider>
   );
 }

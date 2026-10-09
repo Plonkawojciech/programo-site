@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 const projectRows = [
   {
     type: "Landing / prosta strona firmowa",
-    timeline: "2–3 tygodnie",
+    timeline: "5 dni – 2 tygodnie",
     note: "Oferta, formularz kontaktowy i lokalne SEO.",
   },
   {
@@ -57,8 +57,8 @@ const projectRows = [
   },
   {
     type: "Aplikacja webowa / mobilna / system SaaS",
-    timeline: "od 6–8 tygodni",
-    note: "Role użytkowników, płatności, integracje, AI i utrzymanie po wdrożeniu. Zakres ustalamy wspólnie.",
+    timeline: "Web: od 4 tygodni; mobile: około 6 tygodni",
+    note: "Role użytkowników, płatności, integracje, AI i utrzymanie po wdrożeniu. Termin zależy od zakresu, który ustalamy wspólnie.",
   },
 ];
 

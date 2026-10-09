@@ -39,8 +39,12 @@ podejrzane pozostają do ręcznego sprawdzenia, bez konwersji reklamowej.
 4. W aplikacji **Coolify na VM** ustaw publiczny `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
    jako zmienną build i runtime, a `TURNSTILE_SECRET_KEY` jako sekret runtime.
    Ustaw `NEXT_PUBLIC_TURNSTILE_TEST_MODE=false` oraz właściwy `PROGRAMO_DEPLOYMENT_ENV`.
-5. Wykonaj build/deploy podglądu, bo `NEXT_PUBLIC_*` Next.js wstawia podczas builda.
-   Sprawdź prawdziwe zgłoszenie oraz trwały zapis na dedykowanym kanale podglądu.
+5. Sprawdź prawdziwe klucze na osobnej aplikacji przygotowywanej do produkcji,
+   z docelowym CRM lub świadomie skonfigurowanym odrębnym odbiornikiem.
+   `NEXT_PUBLIC_*` wymaga ponownego buildu. Obecny `v3.programo.pl` pozostaw
+   w trybie dummy + sidecar: jego odbiornik wymaga źródła testowego i nie przyjmie
+   zgłoszenia po samym wyłączeniu test mode. Przed DNS przeglądarka musi trafić
+   na nową VM, z prawidłowym TLS i hostname obsługiwanym przez widget.
    Dopiero Wojtek decyduje o przełączeniu produkcji i DNS.
 
 Nigdy nie kopiujemy kluczy ani treści `.env*` do raportów, Git lub logów.
@@ -72,7 +76,9 @@ Nie ustawiaj w tym trybie `KV_REST_API_URL`, `UPSTASH_REDIS_REST_URL`,
 `TELEGRAM_BOT_TOKEN` ani `MS_GRAPH_CLIENT_SECRET`. Rekord ma źródło
 `programo.pl-preview-test`, a `counted=false` wyłącza konwersje po obu stronach.
 
-Sidecar odpowiada 201 `{ "ok": true }` dopiero po trwałym zapisie i fsync w wolumenie.
+Sidecar odpowiada 201 `{ "ok": true, "id": "…" }` dopiero po trwałym zapisie
+i fsync w wolumenie. Docelowy CRM musi potwierdzić 201 JSON z `ok: true` oraz
+niepustym `formSubmissionId`; sam 200, 202 lub `{ "ok": true }` nie wystarczy.
 Weryfikuje nagłówek `X-Webhook-Secret`; nie przekazuje testów do prawdziwego CRM.
 Taki zapis dowodzi działania kanału podglądu, a nie odbioru w produkcyjnym CRM lub skrzynce.
 

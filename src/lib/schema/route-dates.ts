@@ -27,9 +27,9 @@ export const STATIC_ROUTE_UPDATED_AT: Record<string, string> = {
   "/polityka-prywatnosci": "2026-08-03T20:48:06+02:00",
   "/software-house-poznan": "2026-08-03T16:23:25+02:00",
   "/sklepy-internetowe": "2026-10-09T11:54:36+02:00",
-  "/strony-internetowe": "2026-08-03T16:23:25+02:00",
+  "/strony-internetowe": "2026-10-09T12:41:45+02:00",
   "/strony-tracking-reklamy": "2026-08-03T20:20:31+02:00",
-  "/ile-kosztuje-aplikacji": "2026-08-03T16:23:25+02:00",
+  "/ile-kosztuje-aplikacji": "2026-10-09T12:41:45+02:00",
   // Service pages added 2026-10-01 (docs/plans/odswiezenie-portfolio-seo-konwersja-2026-10.md).
   "/strony-internetowe-poznan": "2026-10-01T11:22:20+02:00",
   "/aplikacje-mobilne-dla-firm": "2026-10-01T11:22:20+02:00",

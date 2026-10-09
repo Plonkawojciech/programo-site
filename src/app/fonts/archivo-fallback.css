@@ -1,0 +1,9 @@
+/* Preserve the original next/font/google Archivo fallback metrics. */
+@font-face {
+  font-family: "Archivo Fallback";
+  src: local("Arial");
+  ascent-override: 88.96%;
+  descent-override: 21.28%;
+  line-gap-override: 0%;
+  size-adjust: 98.7%;
+}

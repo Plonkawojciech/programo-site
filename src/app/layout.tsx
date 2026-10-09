@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { Archivo } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import "./fonts/archivo-fallback.css";
 import Providers from "@/components/providers";
+import { footerProjectLinks } from "@/lib/portfolio-summaries";
 import { buildOrganization, buildWebsite, buildPeople, renderGraph } from "@/lib/schema";
 
 const GA_ID = "G-KT2R144BYG";
@@ -17,12 +19,16 @@ const isPreview = process.env.PROGRAMO_DEPLOYMENT_ENV === "preview";
  * The `wdth` axis is the contrast mechanism against the system sans: headlines
  * sit at a semi-expanded width that no system UI font resembles.
  */
-const archivo = Archivo({
+const archivo = localFont({
+  src: "./fonts/Archivo-PLEN-VF.woff2",
   variable: "--font-archivo",
-  subsets: ["latin", "latin-ext"],
+  weight: "100 900",
+  style: "normal",
   display: "swap",
   preload: true,
-  axes: ["wdth"],
+  adjustFontFallback: false,
+  fallback: ["Archivo Fallback"],
+  declarations: [{ prop: "font-stretch", value: "62% 125%" }],
 });
 
 export const metadata: Metadata = {
@@ -147,7 +153,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-surface text-on-surface overflow-x-hidden">
-        <Providers>{children}</Providers>
+        <Providers footerProjects={footerProjectLinks}>{children}</Providers>
       </body>
     </html>
   );

@@ -75,9 +75,17 @@ try {
   await context.close();
 } finally { await browser.close(); }
 writeFileSync(path.join(out, "browser.json"), JSON.stringify(report, null, 2));
+if (report.analyticsRequests.length || Object.values(report.browser).some((view) =>
+  view.status !== 200 || view.violations.length || view.errors.length || view.scrollWidth > view.width)) {
+  throw new Error("Preview browser checks failed; inspect browser.json");
+}
 }
 
 if (process.env.AUDIT_AXE_ONLY === "1") {
+  if (report.commit) {
+    const health = await (await fetch(base + "/api/health")).json();
+    if (health.commit !== report.commit) throw new Error("The preview changed during verification; repeat on one commit");
+  }
   writeFileSync(path.join(out, "summary.json"), JSON.stringify(report, null, 2));
   console.log("a11y routes", routes.length, "both themes", "analyticsRequests", report.analyticsRequests.length);
   process.exit(0);

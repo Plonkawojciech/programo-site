@@ -56,7 +56,7 @@ const faqs = [
   },
   {
     q: "Ile trwa wykonanie strony?",
-    a: "Prosta strona firmowa zwykle 2–3 tygodnie. Na rozbudowany serwis z CMS-em, integracjami i migracją treści potrzebujemy 4–6 tygodni, zależnie od zakresu.",
+    a: "Standardowa strona firmowa zwykle od 5 dni do 2 tygodni. Na rozbudowany serwis z CMS-em, integracjami i migracją treści potrzebujemy 4–6 tygodni, zależnie od zakresu i gotowości materiałów.",
   },
   {
     q: "Czy zadbacie o szybkość i SEO?",
@@ -165,7 +165,8 @@ export default function StronyInternetowePage() {
                 <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-on-surface/70 md:text-xl">
                   Jesteśmy dwuosobowym studiem z Poznania, więc rozmawiasz z ludźmi,
                   którzy piszą Twoją stronę. Prostą stronę w Next.js oddajemy zwykle
-                  w 2–3 tygodnie. Na wiadomości odpowiadamy w ciągu 24 h.
+                  w terminie od 5 dni do 2 tygodni, zależnie od zakresu i gotowości
+                  materiałów. Na wiadomości odpowiadamy w ciągu 24 h.
                 </p>
 
                 <div className="mt-8 flex flex-wrap items-center gap-4">

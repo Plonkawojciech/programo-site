@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { useConsent } from "@/lib/consent";
-import { projects } from "@/lib/projects";
+import type { PortfolioLink } from "@/lib/portfolio-summaries";
 import { COMPANY_ADDRESS_LINE, COMPANY_IDS_LINE } from "@/lib/company";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
@@ -23,12 +23,6 @@ const offerLinks: { titleKey: TKey; href: string }[] = [
   { titleKey: "footer.allOffer", href: "/oferta" },
 ];
 
-// Projects column — top 6 (content-deck / brief section 5.4 portfolio picks).
-const featuredSlugs = ["jedmar", "estalo", "wks-poznan", "skup-nieruchomosci", "eportal-prawny", "rejestr-pro"];
-const projectLinks = featuredSlugs
-  .map((slug) => projects.find((p) => p.slug === slug))
-  .filter((p): p is NonNullable<typeof p> => Boolean(p));
-
 const companyLinks: { labelKey: TKey; href: string }[] = [
   { labelKey: "nav.about", href: "/o-nas" },
   { labelKey: "footer.softwareHousePoznan", href: "/software-house-poznan" },
@@ -41,7 +35,7 @@ const companyLinks: { labelKey: TKey; href: string }[] = [
   { labelKey: "footer.privacy", href: "/polityka-prywatnosci" },
 ];
 
-export default function Footer() {
+export default function Footer({ projectLinks }: { projectLinks: PortfolioLink[] }) {
   const { t } = useI18n();
   const { theme } = useTheme();
   const { openSettings } = useConsent();

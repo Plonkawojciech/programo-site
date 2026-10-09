@@ -5,7 +5,6 @@ import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
-import { getProjectBySlug } from "@/lib/projects";
 import { trackPortfolioClick } from "@/lib/tracking";
 
 interface CaseStudy {
@@ -51,7 +50,7 @@ const cases: CaseStudy[] = [
 
 /* ── Main section ────────────────────────────────────────────────────── */
 
-export default function ClientWork() {
+export default function ClientWork({ projectNames }: { projectNames: Record<string, string> }) {
   const { t, lang } = useI18n();
   const reduced = useReducedMotion() ?? false;
   const railRef = useRef<HTMLDivElement>(null);
@@ -135,7 +134,6 @@ export default function ClientWork() {
         className="scrollbar-none mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[max(1.5rem,calc((100%-var(--slide))/2))] pb-2 [--slide:88vw] md:mt-14 md:gap-6 md:[--slide:74vw] lg:[--slide:min(62vw,1080px)]"
       >
         {cases.map((c, i) => {
-          const project = getProjectBySlug(c.slug);
           const mobile = getImageProps({ src: c.mobileImage, alt: t(c.imgAltKey), width: 390, height: 844, sizes: "88vw" }).props;
           return (
             <article
@@ -178,7 +176,7 @@ export default function ClientWork() {
                   </span>
                   <p className="text-sm leading-snug text-white text-pretty md:text-base">
                     <span className="font-semibold">
-                      {project?.title ?? c.slug}
+                      {projectNames[c.slug] ?? c.slug}
                     </span>
                     <span className="text-white"> · {t(c.categoryKey)}</span>
                   </p>
@@ -199,7 +197,7 @@ export default function ClientWork() {
             key={c.slug}
             type="button"
             onClick={() => goTo(i)}
-            aria-label={`${getProjectBySlug(c.slug)?.title ?? c.slug}`}
+            aria-label={projectNames[c.slug] ?? c.slug}
             aria-current={i === active}
             className="group flex h-11 min-w-11 items-center justify-center px-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import type { PortfolioLink } from "@/lib/portfolio-summaries";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { I18nProvider } from "@/lib/i18n";
@@ -26,7 +27,7 @@ const DevEditor =
     ? dynamic(() => import("@/components/dev/dev-editor"), { ssr: false })
     : () => null;
 
-export default function Providers({ children }: { children: ReactNode }) {
+export default function Providers({ children, footerProjects }: { children: ReactNode; footerProjects: PortfolioLink[] }) {
   const pathname = usePathname();
   // /crm is a standalone internal panel — strip all marketing chrome
   // (navbar, footer, preloader, sticky CTA, cookie banner, analytics) so it
@@ -51,7 +52,7 @@ export default function Providers({ children }: { children: ReactNode }) {
               <PageTransition>
                 <Navbar />
                 <main id="main-content" tabIndex={-1}>{children}</main>
-                <Footer />
+                <Footer projectLinks={footerProjects} />
               </PageTransition>
               <StickyCta />
               <CookieBanner />

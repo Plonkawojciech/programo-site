@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
-import { projects, type ProjectStatus } from "@/lib/projects";
+import type { ProjectStatus } from "@/lib/projects";
+import type { PortfolioSummary } from "@/lib/portfolio-summaries";
 
 interface ProductEntry {
   slug: string;
@@ -41,7 +42,7 @@ const statusDot: Record<ProjectStatus, string> = {
   planned: "bg-outline",
 };
 
-export default function OwnProducts() {
+export default function OwnProducts({ projects }: { projects: PortfolioSummary[] }) {
   const { t } = useI18n();
 
   // Status and screenshot are read from projects.ts so this listing can never
@@ -51,7 +52,7 @@ export default function OwnProducts() {
   const entries = ORDER.flatMap((entry) => {
     const project = projects.find((p) => p.slug === entry.slug);
     if (!project) return [];
-    return [{ ...entry, status: project.status, shot: project.screenshots?.[0] }];
+    return [{ ...entry, name: project.title, status: project.status, shot: project.shot }];
   });
 
   return (

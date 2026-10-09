@@ -2,6 +2,10 @@
 import assert from "node:assert/strict";
 import { chromium } from "playwright-core";
 const base = "https://v3.programo.pl";
+const health = await (await fetch(base + "/api/health")).json();
+assert.equal(health.environment, "preview");
+assert.equal(health.ok, true);
+assert.match(health.commit, /^[a-f0-9]{40}$/);
 const marker = `TEST-V3-${Date.now()}`;
 const cases = [
   { route: "/", index: 0, id: "hero-phone" },
@@ -9,7 +13,7 @@ const cases = [
   { route: "/kontakt", index: 1, id: "kontakt-full" },
 ];
 const browser = await chromium.launch({ channel: "chrome", headless: true });
-const report = { base, marker, at: new Date().toISOString(), forms: [], analyticsRequests: [], errors: [] };
+const report = { base, marker, commit: health.commit, at: new Date().toISOString(), forms: [], analyticsRequests: [], errors: [] };
 try {
   // Check the rejection before successful requests fill the normal 3/15min
   // submission limit. The demo uses the same compact component tested locally.
@@ -58,5 +62,8 @@ try {
   }
   assert.equal(report.analyticsRequests.length, 0);
   assert.equal(report.errors.length, 0);
+  assert.ok(report.forms.every((form) => !form.overflow), "A submitted form overflows the mobile viewport");
+  const finalHealth = await (await fetch(base + "/api/health")).json();
+  assert.equal(finalHealth.commit, report.commit, "The preview changed during E2E verification");
   console.log(JSON.stringify(report, null, 2));
 } finally { await browser.close(); }
