@@ -39,6 +39,10 @@ let queue: QueuedEvent[] = [];
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
 let listenersBound = false;
 
+function isPreview(): boolean {
+  return process.env.NEXT_PUBLIC_PROGRAMO_DEPLOYMENT_ENV === "preview";
+}
+
 function consent(): { analytics: boolean; marketing: boolean } {
   if (typeof window === "undefined") return { analytics: false, marketing: false };
   try {
@@ -89,6 +93,14 @@ function scheduleFlush(): void {
 
 /** Sends the queued batch. Uses sendBeacon on page hide so nothing is lost. */
 export function flush(useBeacon = false): void {
+  // Preview has no analytics transport, including a batch queued before this
+  // gate was checked or an explicit/page-hide flush after consent acceptance.
+  if (isPreview()) {
+    queue = [];
+    if (flushTimer !== null) clearTimeout(flushTimer);
+    flushTimer = null;
+    return;
+  }
   if (typeof window === "undefined" || queue.length === 0) return;
   const batch = queue;
   queue = [];
@@ -224,7 +236,7 @@ function updateStats(name: string, params: EventParams): void {
 }
 
 function emitSessionSummary(): void {
-  if (stats.emitted || typeof window === "undefined") return;
+  if (isPreview() || stats.emitted || typeof window === "undefined") return;
   // A session with no measured activity says nothing worth a row.
   if (stats.pages === 0 && stats.maxScroll === 0) return;
   stats.emitted = true;
@@ -268,7 +280,9 @@ export function track(key: EventKey, params: EventParams = {}): string {
   // to a fixed tuple, which makes .includes() reject sibling destinations.
   const def: EventDef = EVENTS[key];
   const eventId = typeof params.event_id === "string" ? params.event_id : newEventId();
-  if (typeof window === "undefined") return eventId;
+  // Keep the event-id contract, but do not bind listeners, create persisted
+  // identity, invoke provider tags or enqueue first-party data in preview.
+  if (isPreview() || typeof window === "undefined") return eventId;
 
   bindLifecycleListeners();
   const { analytics, marketing } = consent();
@@ -331,7 +345,7 @@ export function track(key: EventKey, params: EventParams = {}): string {
  */
 let lastGa4Path = "";
 export function trackPageView(path: string, title?: string): void {
-  if (typeof window === "undefined") return;
+  if (isPreview() || typeof window === "undefined") return;
   bumpSessionViews();
 
   // Skip the very first call: gtag('config') already sent a page_view for the
@@ -353,7 +367,7 @@ export function trackPageView(path: string, title?: string): void {
  * is derivable from a single event so later events stay small.
  */
 export function trackSessionContext(): void {
-  if (typeof window === "undefined") return;
+  if (isPreview() || typeof window === "undefined") return;
   const s = getSession();
   if (s.views > 1) return; // already emitted this session
   const attr = attributionSummary();

@@ -36,6 +36,10 @@ export async function POST(request: NextRequest) {
   // to retry, which is the last thing we want on a visitor's connection.
   const ok = () => new NextResponse(null, { status: 204 });
 
+  // Defense in depth: stale clients or direct requests must not touch Redis
+  // (including its rate-limit keys) on a preview configured at runtime.
+  if (process.env.PROGRAMO_DEPLOYMENT_ENV === "preview") return ok();
+
   const ua = request.headers.get("user-agent") || "";
   if (isLikelyBot(ua)) return ok();
   if (await isRateLimited(clientIp(request))) return ok();
