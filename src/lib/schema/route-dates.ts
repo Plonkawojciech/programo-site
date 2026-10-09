@@ -17,16 +17,16 @@
  * hand-edit these to "today".
  */
 export const STATIC_ROUTE_UPDATED_AT: Record<string, string> = {
-  "/": "2026-10-09T11:37:47+02:00",
+  "/": "2026-10-09T11:54:36+02:00",
   "/oferta": "2026-08-03T20:20:31+02:00",
-  "/cennik": "2026-10-09T11:37:47+02:00",
-  "/projekty": "2026-10-09T11:37:47+02:00",
+  "/cennik": "2026-10-09T11:54:36+02:00",
+  "/projekty": "2026-10-09T11:54:36+02:00",
   "/o-nas": "2026-10-01T12:13:58+02:00",
   "/stack": "2026-08-03T16:23:25+02:00",
-  "/kontakt": "2026-10-01T12:13:58+02:00",
+  "/kontakt": "2026-10-09T11:54:36+02:00",
   "/polityka-prywatnosci": "2026-08-03T20:48:06+02:00",
   "/software-house-poznan": "2026-08-03T16:23:25+02:00",
-  "/sklepy-internetowe": "2026-10-09T11:37:47+02:00",
+  "/sklepy-internetowe": "2026-10-09T11:54:36+02:00",
   "/strony-internetowe": "2026-08-03T16:23:25+02:00",
   "/strony-tracking-reklamy": "2026-08-03T20:20:31+02:00",
   "/ile-kosztuje-aplikacji": "2026-08-03T16:23:25+02:00",
