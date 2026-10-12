@@ -8,20 +8,22 @@ interface TechItem {
   description: string;
 }
 
+// Brand colours; the three "white" brands get a neutral slate so the letter
+// tile stays visible on the light card as well as the dark one.
 const techColors: Record<string, string> = {
-  "Next.js": "#ffffff",
+  "Next.js": "#64748B",
   "React": "#61DAFB",
   "TypeScript": "#3178C6",
   "Tailwind CSS": "#06B6D4",
   "Supabase": "#3FCF8E",
   "Neon": "#00E699",
   "Drizzle": "#C5F74F",
-  "Vercel": "#ffffff",
+  "Vercel": "#64748B",
   "Capacitor": "#53B9FF",
   "Azure AI": "#0078D4",
   "Anthropic": "#D4A574",
   "Stripe": "#635BFF",
-  "Resend": "#ffffff",
+  "Resend": "#64748B",
   "Three.js": "#049EF4",
   "Konva.js": "#0D83CD",
 };
@@ -31,7 +33,7 @@ function TechCard({ item, index }: { item: TechItem; index: number }) {
 
   return (
     <div
-      className="tech-card-line card-hover group relative flex min-w-[280px] flex-col gap-4 rounded-[2rem] bg-card p-8 shadow-card md:min-w-[320px] overflow-hidden"
+      className="tech-card-line card-hover group relative flex flex-col gap-4 overflow-hidden rounded-[2rem] bg-card p-7 shadow-card md:p-8"
       style={{
         animationDelay: `${index * 0.1}s`,
         // @ts-expect-error CSS custom property for tech-card-line hover color
@@ -104,42 +106,32 @@ export default function TechStack() {
   ];
 
   return (
-    <section id="stack" className="relative overflow-hidden py-section bg-gradient-to-b from-[var(--theme-bg-1)] via-[var(--theme-bg-3)] to-[var(--theme-bg-1)]">
-      <div className="mx-auto max-w-[2560px] px-6 md:px-24 2xl:px-40">
-        <Reveal className="mb-12 md:mb-16 2xl:mb-24 flex flex-col items-end text-right">
+    <section id="stack" className="relative bg-surface py-section">
+      <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
+        <Reveal className="mb-10 max-w-2xl md:mb-14">
           {/* h1, not h2: this component is only ever mounted by /stack, where it
-              is the page title. As an h2 the route shipped with no h1 at all.
-              Solid fill, not the previous bg-clip-text gradient: `text-transparent`
-              means the glyphs exist only as a mask over a background image, so in
-              forced-colors mode — where UA styles drop background images — the
-              page's only h1 rendered invisible. The gradient ran text-1 → text-2
-              → text-1, a shimmer nobody reads as meaning. */}
-          <h1 className="font-headline text-4xl font-bold tracking-tighter text-on-surface md:text-8xl 2xl:text-[8vw]">
+              is the page title. Solid fill, not bg-clip-text: forced-colors mode
+              drops background images and the page's only h1 would vanish. */}
+          <h1 className="font-headline text-4xl font-bold tracking-tighter text-on-surface text-balance md:text-7xl">
             {t("stack.title")}
           </h1>
-          <div className="mt-6 h-[2px] w-32 md:w-48 bg-gradient-to-r from-transparent via-primary to-transparent origin-right" />
+          <p className="mt-4 text-lead leading-relaxed text-on-surface-variant text-pretty">
+            {t("stack.desc")}
+          </p>
         </Reveal>
 
-        {/* Marquee Rows */}
-        <div className="flex flex-col gap-8 md:gap-12">
-          {/* Row 1 */}
-          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-left w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
-              {[...technologies, ...technologies].map((tech, i) => (
-                <TechCard key={`r1-${i}`} item={tech} index={i} />
-              ))}
-            </div>
-          </div>
-
-          {/* Row 2 (Reverse) */}
-          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-            <div className="flex gap-8 md:gap-12 pr-8 md:pr-12 animate-slide-right w-max max-w-max hover:[animation-play-state:paused] will-change-transform transform-gpu">
-              {[...technologies, ...technologies].reverse().map((tech, i) => (
-                <TechCard key={`r2-${i}`} item={tech} index={i} />
-              ))}
-            </div>
-          </div>
-        </div>
+        {/* A plain grid. The previous two auto-scrolling marquee rows clipped
+            the first and last card on every viewport and showed only six of
+            fifteen tools on a phone without a way to reach the rest. */}
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-6">
+          {technologies.map((tech, i) => (
+            <li key={tech.name}>
+              <Reveal delay={Math.min(i, 8) * 0.05}>
+                <TechCard item={tech} index={i} />
+              </Reveal>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

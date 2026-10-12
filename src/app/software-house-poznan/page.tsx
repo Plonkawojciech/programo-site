@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { publicPageRobots } from "@/lib/page-robots";
 import Link from "next/link";
+import CompactLeadForm from "@/components/compact-lead-form";
 import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
@@ -319,7 +320,8 @@ export default function SoftwareHousePoznanPage() {
             <p className="mb-6 opacity-80">
               Poznań · Wielkopolska · cała Polska. Odpowiadamy w 24 h.
             </p>
-            <div className="flex flex-col gap-3 text-sm md:flex-row md:gap-6">
+            <CompactLeadForm formOnly formId="software-house" projectType="Software house Poznań" />
+            <div className="mt-8 flex flex-col gap-3 border-t border-outline-variant/30 pt-6 text-sm md:flex-row md:gap-6">
               <a href="mailto:biuro@programo.pl" className="hover:underline">
                 biuro@programo.pl
               </a>

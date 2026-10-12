@@ -48,14 +48,27 @@ export default function StickyCta() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Hide while the main contact section OR any lead form is on screen: a bar
+  // that says "Napisz" on top of the form the visitor is already filling in
+  // is noise, and on a phone it covers the submit button.
   useEffect(() => {
-    const el = document.getElementById("kontakt-main");
-    if (!el) return; // contactVisible already starts as false
+    const targets = [
+      document.getElementById("kontakt-main"),
+      ...Array.from(document.querySelectorAll("form")),
+    ].filter((el): el is HTMLElement => el instanceof HTMLElement);
+    if (targets.length === 0) return; // contactVisible already starts as false
+    const visible = new Set<Element>();
     const observer = new IntersectionObserver(
-      ([entry]) => setContactVisible(entry.isIntersecting),
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
+        }
+        setContactVisible(visible.size > 0);
+      },
       { rootMargin: "0px 0px -20% 0px" }
     );
-    observer.observe(el);
+    targets.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
@@ -75,7 +88,9 @@ export default function StickyCta() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 90, opacity: 0 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="md:hidden fixed inset-x-0 bottom-0 z-[var(--z-sticky)] grid grid-cols-2 gap-3 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-4 bg-gradient-to-t from-surface via-surface/95 to-transparent backdrop-blur-sm"
+          // Lifted above the cookie bar while that is open (see CookieBanner).
+          style={{ bottom: "var(--consent-bar-h, 0px)" }}
+          className="md:hidden fixed inset-x-0 z-[var(--z-sticky)] grid grid-cols-2 gap-3 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-4 bg-gradient-to-t from-surface via-surface/95 to-transparent backdrop-blur-sm"
         >
           <a
             href={PHONE_HREF}

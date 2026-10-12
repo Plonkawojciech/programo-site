@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useI18n } from "@/lib/i18n";
 import type { Lang } from "@/lib/i18n";
 import Reveal from "@/components/ui/reveal";
-import CtaButton from "@/components/ui/cta-button";
+import CompactLeadForm from "@/components/compact-lead-form";
 import { track } from "@/lib/analytics/client";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
@@ -292,17 +292,22 @@ export default function Pricing() {
           ))}
         </div>
 
-        {/* CTA band */}
-        <Reveal className="mt-14 overflow-hidden rounded-3xl bg-card p-8 text-center shadow-card md:mt-20 md:p-16">
-          <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl">
-            {t("pricing.ctaTitle")}
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl text-lg font-light leading-relaxed text-on-surface/70">
-            {t("pricing.ctaDesc")}
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <CtaButton href="/kontakt#kontakt-main">{t("pricing.ctaWrite")}</CtaButton>
-            <CtaButton href="tel:+48509123434" variant="secondary">{t("pricing.cta")}</CtaButton>
+        {/* Lead form instead of a phone-only band: the visitor who just read
+            the price table is the warmest one on the site, and a form takes a
+            number from the half who will not call during office hours. */}
+        <Reveal className="mt-14 md:mt-20">
+          <div className="rounded-3xl bg-card p-7 shadow-card md:p-12">
+            <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">
+              <div>
+                <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
+                  {t("pricing.ctaTitle")}
+                </h2>
+                <p className="mt-4 max-w-md text-lg font-light leading-relaxed text-on-surface/70">
+                  {t("pricing.ctaDesc")}
+                </p>
+              </div>
+              <CompactLeadForm formOnly formId="cennik" projectType="Wycena z cennika" />
+            </div>
           </div>
         </Reveal>
       </div>

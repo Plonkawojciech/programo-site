@@ -104,6 +104,28 @@ export default function CookieBanner() {
     };
   }, [settingsOpen, closeSettings]);
 
+  // Publish the bar's height so the mobile sticky CTA can sit above it instead
+  // of underneath it (the bar is z-100, the CTA z-40, and both pin to the
+  // bottom edge). Reset when the bar goes away.
+  const barRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!showBanner) {
+      root.style.removeProperty("--consent-bar-h");
+      return;
+    }
+    const el = barRef.current;
+    if (!el) return;
+    const apply = () => root.style.setProperty("--consent-bar-h", `${el.offsetHeight}px`);
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty("--consent-bar-h");
+    };
+  }, [showBanner]);
+
   if (!mounted) return null;
 
   return (
@@ -118,6 +140,7 @@ export default function CookieBanner() {
             animate={{ y: 0 }}
             exit={shouldReduceMotion ? undefined : { y: "115%" }}
             transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
+            ref={barRef}
             role="dialog"
             aria-label={t("cookie.title")}
             style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.5rem)" }}

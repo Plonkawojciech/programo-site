@@ -165,15 +165,14 @@ export default function ClientWork({ projectNames }: { projectNames: Record<stri
                 />
                 </picture>
 
-                {/* Scrim. The caption sits inside the bottom band where this is
-                    at least 75% black, so white text clears 4.5:1 against ANY
-                    screenshot underneath — even a blown-out white one, which
-                    composites to #404040 at worst. Contrast here cannot be
-                    audited from the DOM, so it is guaranteed by the alpha
-                    instead of measured. */}
+                {/* Scrim. The caption sits inside the bottom quarter, which is
+                    solid black: a screenshot's own footer text used to show
+                    through a translucent band and smudge the label. Contrast
+                    here cannot be audited from the DOM, so it is guaranteed by
+                    the alpha instead of measured. */}
                 <div
                   aria-hidden="true"
-                  className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/75 to-transparent"
+                  className="absolute inset-x-0 bottom-0 h-3/5 bg-[linear-gradient(to_top,#000_0%,#000_24%,rgba(0,0,0,0.82)_50%,transparent_100%)]"
                 />
 
                 <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-5 md:flex-row md:items-center md:gap-5 md:p-7">

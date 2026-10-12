@@ -8,6 +8,7 @@ import BrowserFrame from "@/components/ui/browser-frame";
 import DeviceDuo from "@/components/ui/device-duo";
 import { getProjectBySlug } from "@/lib/projects";
 import { trackPortfolioClick } from "@/lib/tracking";
+import CompactLeadForm from "@/components/compact-lead-form";
 
 type TKey = Parameters<ReturnType<typeof useI18n>["t"]>[0];
 
@@ -236,16 +237,20 @@ export default function Offer() {
           ))}
         </ol>
 
-        <Reveal className="mt-14 flex flex-col items-start gap-6 rounded-3xl bg-primary p-8 md:mt-20 md:flex-row md:items-center md:justify-between md:p-12">
-          <h2 className="font-headline text-2xl font-bold tracking-tight text-on-primary md:text-4xl">
-            {t("main.cta.primary")}
-          </h2>
-          <Link
-            href="/kontakt#kontakt-main"
-            className="inline-flex shrink-0 items-center gap-3 border-b border-on-primary/40 pb-1 text-sm font-medium uppercase tracking-widest text-on-primary transition-all hover:gap-5"
-          >
-            {t("nav.cta")} <span aria-hidden="true">→</span>
-          </Link>
+        <Reveal className="mt-14 md:mt-20">
+          <div className="rounded-3xl bg-card p-7 shadow-card md:p-12">
+            <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">
+              <div>
+                <h2 className="font-headline text-3xl font-bold tracking-tight text-on-surface md:text-4xl">
+                  {t("main.cta.primary")}
+                </h2>
+                <p className="mt-4 max-w-md text-lg font-light leading-relaxed text-on-surface/70">
+                  {t("compact.sub")}
+                </p>
+              </div>
+              <CompactLeadForm formOnly formId="oferta" projectType="Oferta" />
+            </div>
+          </div>
         </Reveal>
       </div>
     </section>

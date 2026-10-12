@@ -51,6 +51,7 @@ export default function CompactLeadForm({
   anchorId,
   projectType,
   bare = false,
+  formOnly = false,
   heading,
   sub,
 }: {
@@ -62,6 +63,8 @@ export default function CompactLeadForm({
   projectType?: string;
   /** Render only the form card (no <section>/container) — for embedding in a hero. */
   bare?: boolean;
+  /** Render the bare form (no card, no heading) — the parent draws the card and the copy. */
+  formOnly?: boolean;
   /** Overrides the default (i18n) heading / sub - used by Ads landings. */
   heading?: string;
   sub?: string;
@@ -372,6 +375,10 @@ export default function CompactLeadForm({
       </div>
     </form>
   );
+
+  if (formOnly) {
+    return <div id={anchorId ?? formId} className="scroll-mt-28">{state === "success" ? success : form}</div>;
+  }
 
   // --- bare: just the form card, for embedding in a hero column ---------------
   if (bare) {

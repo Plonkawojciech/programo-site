@@ -23,10 +23,13 @@ for (const s of SIZES) {
     try {
       await page.goto(base + r, { waitUntil: "networkidle", timeout: 60000 });
       await page.evaluate(async () => {
-        for (let y = 0; y < document.documentElement.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 120)); }
+        for (let y = 0; y < document.documentElement.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 160)); }
+        await new Promise((r) => setTimeout(r, 1200));
+        // Force every pending in-view reveal to its final state so the capture shows the page, not the animation.
+        document.querySelectorAll('[style*="opacity"]').forEach((e) => { e.style.opacity = "1"; e.style.transform = "none"; });
         window.scrollTo(0, 0);
       });
-      await page.waitForTimeout(600);
+      await page.waitForTimeout(400);
       const info = await page.evaluate(() => {
         const vw = document.documentElement.clientWidth;
         const inRail = (e) => { for (let p = e.parentElement; p; p = p.parentElement) { const o = getComputedStyle(p).overflowX; if (o === "auto" || o === "scroll" || o === "hidden" || o === "clip") return true; } return false; };
