@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import PhoneFrame from "@/components/ui/phone-frame";
 import { useI18n } from "@/lib/i18n";
-import { projects } from "@/lib/projects";
+import { portfolioProjects as projects } from "@/lib/projects";
 import type { Project, ProjectStatus } from "@/lib/projects";
 import type { Lang } from "@/lib/i18n";
 import { trackPortfolioClick } from "@/lib/tracking";
@@ -238,7 +238,7 @@ export default function FeaturedWork({ demoCount, hideCta = false }: { demoCount
 
           {/* Filters */}
           <div className="flex flex-wrap gap-2">
-            {FILTERS.map(({ key, label }) => (
+            {FILTERS.filter(({ key }) => key === null || projects.some((p) => p.category === key)).map(({ key, label }) => (
               <button
                 key={key ?? "all"}
                 type="button"

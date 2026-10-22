@@ -18,8 +18,6 @@ interface ProductEntry {
 const ORDER: ProductEntry[] = [
   { slug: "estalo", name: "Estalo", descKey: "home.products.estalo.desc" },
   { slug: "rejestr-pro", name: "Rejestr Pro", descKey: "home.products.rejestr.desc" },
-  { slug: "solvio", name: "Solvio", descKey: "home.products.solvio.desc" },
-  { slug: "pooltimer", name: "PoolTimer", descKey: "home.products.pooltimer.desc" },
   { slug: "eportal-prawny", name: "ePortal Prawny", descKey: "home.products.eportal.desc" },
 ];
 

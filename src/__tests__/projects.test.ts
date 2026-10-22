@@ -2,6 +2,9 @@ import { describe, it, expect } from "vitest";
 import { projects, getProjectBySlug, getAdjacentProjects } from "@/lib/projects";
 
 const EXPECTED_SLUGS = [
+  "ogrody-wielkopolska",
+  "innochem",
+  "underwater",
   "jedmar",
   "estalo",
   "eportal-prawny",

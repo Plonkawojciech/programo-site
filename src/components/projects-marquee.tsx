@@ -10,11 +10,12 @@ import Reveal from "@/components/ui/reveal";
 // Curated, ordered subset. Order matters visually, and it is the pitch order:
 // the two we most want to be judged on lead, W. Safe Finance closes.
 const MARQUEE_SLUGS = [
+  "ogrody-wielkopolska",
+  "innochem",
+  "underwater",
   "jedmar",
   "estalo",
-  "solvio",
   "rejestr-pro",
-  "pooltimer",
   "wks-poznan",
   "wsafefinanse",
 ];

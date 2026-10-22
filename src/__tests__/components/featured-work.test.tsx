@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import FeaturedWork from "@/components/featured-work";
 import { I18nProvider } from "@/lib/i18n";
-import { projects } from "@/lib/projects";
+import { portfolioProjects as projects } from "@/lib/projects";
 
 function renderWithI18n() {
   return render(
@@ -28,16 +28,17 @@ describe("FeaturedWork component", () => {
     renderWithI18n();
     expect(screen.getByText("Jedmar")).toBeInTheDocument();
     expect(screen.getByText("Estalo")).toBeInTheDocument();
-    expect(screen.getByText("Solvio")).toBeInTheDocument();
+    expect(screen.getByText("INNOCHEM")).toBeInTheDocument();
+    expect(screen.queryByText("Solvio")).not.toBeInTheDocument();
     expect(screen.getByText("ePortal Prawny")).toBeInTheDocument();
   });
 
-  it("renders the four category filters", () => {
+  it("renders filters only for categories that have projects", () => {
     renderWithI18n();
     expect(screen.getByRole("button", { name: "Wszystkie" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Produkty Programo" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Dla klientów" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Tracking i reklamy" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Tracking i reklamy" })).not.toBeInTheDocument();
   });
 
   it("each project card links to its detail page", () => {

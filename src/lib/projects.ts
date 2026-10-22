@@ -59,6 +59,9 @@ export interface Project {
   // (see src/lib/schema/route-dates.ts for the same method on static routes).
   // Re-derive when a project's copy actually changes; don't hand-edit to "today".
   updatedAt?: string;
+  // Hidden from the portfolio listings (/projekty, homepage). The detail page
+  // stays reachable for pages that still link to it.
+  unlisted?: boolean;
 }
 
 // All 10 entries currently share one `updatedAt`: the last commit to touch
@@ -67,6 +70,209 @@ export interface Project {
 // not assumed from the whole-file date. They will drift apart individually
 // as projects get updated one at a time going forward.
 export const projects: Project[] = [
+  {
+    slug: "ogrody-wielkopolska",
+    title: "Ogrody Wielkopolska",
+    subtitle: {
+      pl: "Strona firmy ogrodniczej z cennikiem, mapą dojazdu i poradnikiem pod SEO",
+      en: "A gardening company website with pricing, a service-area map, and an SEO guide",
+    },
+    description: {
+      pl: "Strona dla firmy, która kosi trawę, przycina żywopłoty i zakłada trawniki w Poznaniu i 17 gminach powiatu poznańskiego. Klient wysyła zdjęcie działki i dostaje cenę, zwykle tego samego dnia. Interaktywna mapa gmin pokazuje, gdzie firma dojeżdża.",
+      en: "A website for a company that mows lawns, trims hedges, and lays new lawns in Poznan and 17 municipalities of the Poznan county. Customers send a photo of their plot and get a price, usually the same day. An interactive municipality map shows where the company travels.",
+    },
+    longDescription: {
+      pl: "Firma ogrodnicza z okolic Poznania potrzebowała strony, która odpowiada na trzy pytania klienta: ile to kosztuje, czy dojedziecie do mnie i jak szybko. Pod te pytania ułożyliśmy stronę.\n\nNa stronie głównej stoi mapa Poznania i 17 gmin powiatu zbudowana na danych OpenStreetMap, więc klient od razu widzi, czy jest w zasięgu. Cennik jest jawny, a wycena działa ze zdjęcia działki: klient nie musi umawiać wizyty, żeby poznać cenę. Osobne podstrony opisują usługi i obszar działania.\n\nDo strony dołączyliśmy poradnik ogrodniczy pod frazy, które ludzie wpisują w Google przed zamówieniem koszenia. Nowe wpisy przygotowuje automat z kolejki tematów dopasowanej do sezonu, a na stronę trafiają dopiero po akceptacji człowieka. Strona jest statyczna (Astro), więc ładuje się szybko także na słabym zasięgu w terenie.",
+      en: "A gardening company near Poznan needed a website that answers three customer questions: how much does it cost, do you come to my area, and how fast. We built the site around those questions.\n\nThe homepage carries a map of Poznan and the 17 county municipalities built on OpenStreetMap data, so visitors see right away whether they are in range. Pricing is public, and quotes work from a photo of the plot: nobody has to book a visit to learn the price. Separate pages describe the services and the service area.\n\nThe site also has a gardening guide aimed at the phrases people type into Google before ordering lawn mowing. New articles are drafted by an automation from a seasonal topic queue and go live only after a human approves them. The site is static (Astro), so it loads fast even on a weak signal in the field.",
+    },
+    status: "development",
+    statusLabel: {
+      pl: "Wersja podglądowa pod ogrodywielkopolska.programo.pl",
+      en: "Preview version at ogrodywielkopolska.programo.pl",
+    },
+    presentation: "light",
+    category: "dla-klientow",
+    client: {
+      pl: "Firma ogrodnicza z okolic Poznania",
+      en: "A gardening company near Poznan",
+    },
+    scope: {
+      pl: "Projekt, treść i budowa strony, mapa obszaru działania, poradnik SEO z automatem szkiców",
+      en: "Design, copy, and build of the website, service-area map, SEO guide with a draft automation",
+    },
+    liveUrl: "https://ogrodywielkopolska.programo.pl",
+    metric: {
+      pl: "Poznań + 17 gmin · wycena ze zdjęcia",
+      en: "Poznan + 17 municipalities · quotes from a photo",
+    },
+    metrics: [
+      { value: "17", label: { pl: "gmin powiatu na interaktywnej mapie", en: "county municipalities on the interactive map" } },
+      { value: "20", label: { pl: "tematów w kolejce poradnika", en: "topics in the guide queue" } },
+    ],
+    tech: ["Astro", "TypeScript", "OpenStreetMap", "Node.js"],
+    features: {
+      pl: [
+        "Interaktywna mapa Poznania i 17 gmin powiatu na danych OpenStreetMap",
+        "Jawny cennik i wycena ze zdjęcia działki",
+        "Podstrony usług: koszenie, wykaszanie działek, żywopłoty, nowe trawniki",
+        "Poradnik pod frazy sezonowe, szkice z automatu publikowane po akceptacji człowieka",
+        "Statyczna strona, szybka na telefonie",
+      ],
+      en: [
+        "Interactive map of Poznan and 17 county municipalities on OpenStreetMap data",
+        "Public pricing and quotes from a photo of the plot",
+        "Service pages: lawn mowing, plot clearing, hedges, new lawns",
+        "Guide aimed at seasonal phrases, automated drafts published after human approval",
+        "Static site, fast on mobile",
+      ],
+    },
+    tags: ["Web", "SEO", "Usługi lokalne"],
+    accentColor: "#4f7a3a",
+    bgColor: "#0f1f12",
+    year: "2026",
+    updatedAt: "2026-10-22T14:30:00+02:00",
+    role: {
+      pl: "Programo - projekt, treść i budowa strony",
+      en: "Programo - design, copy, and build",
+    },
+    screenshots: ["/screenshots/v2/ogrody-wielkopolska-desktop.webp", "/screenshots/v2/ogrody-wielkopolska-mobile.webp"],
+  },
+  {
+    slug: "innochem",
+    title: "INNOCHEM",
+    subtitle: {
+      pl: "Sklep internetowy wyłącznego dystrybutora olejów Royal Purple w Polsce",
+      en: "An online store for the exclusive Polish distributor of Royal Purple oils",
+    },
+    description: {
+      pl: "Nowy sklep dla INNOCHEM, wyłącznego dystrybutora syntetycznych olejów Royal Purple w Polsce. Katalog olejów samochodowych, motocyklowych, wyścigowych i przemysłowych, koszyk i zamówienia bez zakładania konta, panel administracyjny dla klientki oraz pomiar sprzedaży zgodny z systemem zgód.",
+      en: "A new store for INNOCHEM, the exclusive Polish distributor of Royal Purple synthetic oils. A catalog of automotive, motorcycle, racing, and industrial oils, a cart and guest checkout, an admin panel for the client, and sales measurement that respects consent.",
+    },
+    longDescription: {
+      pl: "INNOCHEM sprowadza do Polski oleje Royal Purple od 2009 roku. Poprzedni sklep był przestarzały, a kupujący olej do konkretnego silnika musiał przekopać się przez długie listy produktów. Zbudowaliśmy sklep od nowa.\n\nKatalog dzieli oleje na samochodowe, motocyklowe, wyścigowe, do pojazdów śnieżnych i przemysłowe. Wyszukiwarka rozumie zapis lepkości w różnych formach, karta produktu ma galerię i dane techniczne, a serie produktów są pogrupowane tak, żeby łatwo porównać warianty. Zamówienie da się złożyć bez zakładania konta.\n\nKlientka prowadzi sklep sama w panelu administracyjnym: produkty, zamówienia, treści stron i ustawienia dostawy. Pod spodem działają kolejka wiadomości e-mail, kopie zapasowe bazy, GA4 z Consent Mode oraz feed produktów dla Google Merchant Center. Sklep stoi na naszym serwerze w UE.",
+      en: "INNOCHEM has been importing Royal Purple oils into Poland since 2009. The previous store was outdated, and a buyer looking for oil for a specific engine had to dig through long product lists. We rebuilt the store from scratch.\n\nThe catalog splits oils into automotive, motorcycle, racing, snowmobile, and industrial. Search understands viscosity written in different forms, the product page has a gallery and technical data, and product series are grouped so variants are easy to compare. Orders can be placed without creating an account.\n\nThe client runs the store herself in the admin panel: products, orders, page content, and shipping settings. Underneath run an email queue, database backups, GA4 with Consent Mode, and a product feed for Google Merchant Center. The store runs on our own EU server.",
+    },
+    status: "development",
+    statusLabel: {
+      pl: "Wersja demonstracyjna pod innochem.programo.pl",
+      en: "Demo version at innochem.programo.pl",
+    },
+    presentation: "dark",
+    category: "dla-klientow",
+    client: {
+      pl: "INNOCHEM, dystrybutor Royal Purple",
+      en: "INNOCHEM, Royal Purple distributor",
+    },
+    scope: {
+      pl: "Projekt i budowa sklepu, panel administracyjny, tracking i feed produktowy, hosting",
+      en: "Store design and build, admin panel, tracking and product feed, hosting",
+    },
+    liveUrl: "https://innochem.programo.pl",
+    metric: {
+      pl: "Sklep + panel klienta · Royal Purple",
+      en: "Store + client panel · Royal Purple",
+    },
+    tech: ["Next.js", "TypeScript", "PostgreSQL", "Better Auth", "Stripe", "GA4", "Consent Mode v2"],
+    features: {
+      pl: [
+        "Katalog w pięciu grupach: samochodowe, motocyklowe, wyścigowe, pojazdy śnieżne, przemysłowe",
+        "Wyszukiwarka rozumiejąca zapis lepkości (np. 5W-30 i 5W30)",
+        "Karta produktu z galerią, danymi technicznymi i wariantami serii",
+        "Zamówienie bez zakładania konta",
+        "Panel administracyjny: produkty, zamówienia, treści, dostawa",
+        "GA4 z Consent Mode i feed dla Google Merchant Center",
+        "Kolejka e-maili i codzienne kopie zapasowe na serwerze w UE",
+      ],
+      en: [
+        "Catalog in five groups: automotive, motorcycle, racing, snowmobile, industrial",
+        "Search that understands viscosity notation (e.g. 5W-30 and 5W30)",
+        "Product page with gallery, technical data, and series variants",
+        "Guest checkout",
+        "Admin panel: products, orders, content, shipping",
+        "GA4 with Consent Mode and a Google Merchant Center feed",
+        "Email queue and daily backups on an EU server",
+      ],
+    },
+    tags: ["E-commerce", "Web", "Panel"],
+    accentColor: "#e0b75a",
+    bgColor: "#120c1c",
+    year: "2026",
+    updatedAt: "2026-10-22T14:30:00+02:00",
+    role: {
+      pl: "Programo - projekt, budowa i utrzymanie sklepu",
+      en: "Programo - store design, build, and maintenance",
+    },
+    screenshots: ["/screenshots/v2/innochem-desktop.webp", "/screenshots/v2/innochem-mobile.webp"],
+  },
+  {
+    slug: "underwater",
+    title: "Underwater.pl",
+    subtitle: {
+      pl: "Nowa strona i sklep centrum nurkowego z kursami, kalendarzem i wyprawami",
+      en: "A new website and store for a diving center, with courses, a calendar, and trips",
+    },
+    description: {
+      pl: "Przebudowa strony i sklepu warszawskiego centrum nurkowego Underwater.pl: kursy z terminami, kalendarz, wyprawy, galerie i sklep nurkowy w jednej aplikacji z panelem redakcyjnym. Adresy podstron zostały 1:1 jak na starej stronie, żeby nie stracić ruchu z Google.",
+      en: "A rebuild of the website and store of Underwater.pl, a diving center in Warsaw: courses with dates, a calendar, trips, galleries, and a diving shop in one application with an editorial panel. Page URLs stay 1:1 with the old site so search traffic is not lost.",
+    },
+    longDescription: {
+      pl: "Underwater.pl to centrum nurkowe w Warszawie, które prowadzi kursy, organizuje wyprawy i sprzedaje sprzęt. Stara strona na Joomli łączyła to wszystko z trudem, a każda zmiana terminu kursu wymagała grzebania w treści.\n\nZbudowaliśmy jedną aplikację na Next.js z Payload CMS: front i panel redakcyjny pod tym samym adresem. Kursy mają terminy i trafiają do kalendarza, wyprawy i galerie mają własne sekcje, a sklep nurkowy działa obok treści, z koszykiem i zamówieniami. Model danych obejmuje 21 kolekcji, a role w panelu rozdzielają redakcję, obsługę zamówień i administrację.\n\nAdresy podstron i produktów zachowaliśmy dokładnie takie jak na Joomli, bo to ogranicza ryzyko spadków w Google po przeniesieniu. Nowy wygląd opiera się na ciemnej, podwodnej kolorystyce i czytelnej typografii, a strona respektuje zgody cookies przed załadowaniem filmów i map.",
+      en: "Underwater.pl is a diving center in Warsaw that runs courses, organizes trips, and sells equipment. The old Joomla site handled all of that with difficulty, and every change to a course date meant digging through content.\n\nWe built one Next.js application with Payload CMS: the front end and the editorial panel under the same address. Courses have dates and feed the calendar, trips and galleries have their own sections, and the diving shop runs alongside the content, with a cart and orders. The data model spans 21 collections, and panel roles separate editing, order handling, and administration.\n\nWe kept page and product URLs exactly as they were on Joomla, because that limits the risk of losing Google rankings after the move. The new look is built on a dark, underwater palette and clear typography, and the site respects cookie consent before loading videos and maps.",
+    },
+    status: "development",
+    statusLabel: {
+      pl: "Wersja podglądowa pod underwater.programo.pl",
+      en: "Preview version at underwater.programo.pl",
+    },
+    presentation: "dark",
+    category: "dla-klientow",
+    client: {
+      pl: "Underwater.pl, centrum nurkowe w Warszawie",
+      en: "Underwater.pl, a diving center in Warsaw",
+    },
+    scope: {
+      pl: "Projekt i budowa strony ze sklepem, panel redakcyjny, przeniesienie adresów ze starej strony",
+      en: "Design and build of the website and store, editorial panel, URL migration from the old site",
+    },
+    liveUrl: "https://underwater.programo.pl",
+    metric: {
+      pl: "Strona + sklep + panel · 21 kolekcji danych",
+      en: "Website + store + panel · 21 data collections",
+    },
+    metrics: [
+      { value: "21", label: { pl: "kolekcji w modelu danych", en: "collections in the data model" } },
+      { value: "1:1", label: { pl: "adresy podstron jak na starej stronie", en: "page URLs kept from the old site" } },
+    ],
+    tech: ["Next.js", "TypeScript", "Payload CMS", "SQLite"],
+    features: {
+      pl: [
+        "Kursy nurkowania z terminami i kalendarzem",
+        "Wyprawy, aktualności i galerie zarządzane w panelu",
+        "Sklep nurkowy z koszykiem i zamówieniami",
+        "Panel z rolami: redakcja, zamówienia, administracja",
+        "Adresy podstron i produktów zachowane 1:1 ze starej strony",
+        "Filmy i mapy ładowane dopiero po zgodzie cookies",
+      ],
+      en: [
+        "Diving courses with dates and a calendar",
+        "Trips, news, and galleries managed in the panel",
+        "Diving shop with a cart and orders",
+        "Panel with roles: editing, orders, administration",
+        "Page and product URLs kept 1:1 from the old site",
+        "Videos and maps load only after cookie consent",
+      ],
+    },
+    tags: ["Web", "E-commerce", "CMS"],
+    accentColor: "#c8894a",
+    bgColor: "#0a1820",
+    year: "2026",
+    updatedAt: "2026-10-22T14:30:00+02:00",
+    role: {
+      pl: "Programo - projekt, budowa i wdrożenie",
+      en: "Programo - design, build, and deployment",
+    },
+    screenshots: ["/screenshots/v2/underwater-desktop.webp", "/screenshots/v2/underwater-mobile.webp"],
+  },
   {
     slug: "jedmar",
     title: "Jedmar",
@@ -536,6 +742,7 @@ export const projects: Project[] = [
   },
   {
     slug: "solvio",
+    unlisted: true,
     title: "Solvio",
     subtitle: {
       pl: "Finanse osobiste i firmowe - od zdjęcia paragonu do raportu",
@@ -603,6 +810,7 @@ export const projects: Project[] = [
   },
   {
     slug: "domki-poznaniak",
+    unlisted: true,
     title: "Domki Poznaniak",
     subtitle: {
       pl: "Tracking i Google Ads: kampania na istniejącej stronie klienta",
@@ -672,6 +880,7 @@ export const projects: Project[] = [
   },
   {
     slug: "pooltimer",
+    unlisted: true,
     title: "PoolTimer",
     subtitle: {
       pl: "System pomiaru czasu dla klubów pływackich - od sprzętu po aplikacje",
@@ -809,6 +1018,8 @@ export const projects: Project[] = [
     screenshots: ["/screenshots/v2/wsafefinanse-desktop.webp", "/screenshots/v2/wsafefinanse-mobile.webp"],
   },
 ];
+
+export const portfolioProjects = projects.filter((p) => !p.unlisted);
 
 export function getProjectBySlug(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);

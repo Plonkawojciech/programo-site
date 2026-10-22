@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import FeaturedWork from "@/components/featured-work";
 import DemosSection from "@/components/demos/demos-section";
 import { demoViews } from "@/lib/demos";
-import { projects } from "@/lib/projects";
+import { portfolioProjects as projects } from "@/lib/projects";
 import { OG_IMAGE } from "@/lib/og-image";
 import {
   buildBreadcrumbs,
