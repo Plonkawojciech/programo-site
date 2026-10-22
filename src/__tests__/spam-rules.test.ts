@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { contactFingerprint, mergeVerdicts, nationalDigits, scoreContent } from "@/lib/spam-rules";
+import { contactFingerprint, mergeVerdicts, nationalDigits, scoreContent, scoreEntry } from "@/lib/spam-rules";
 
 describe("spam content rules", () => {
   it("passes an ordinary Polish enquiry", () => {
@@ -54,5 +54,27 @@ describe("spam content rules", () => {
     expect(contactFingerprint({ phone: "+48 512 345 678", email: "A@B.pl" })).toBe("p:512345678");
     expect(contactFingerprint({ email: " A@B.pl " })).toBe("e:a@b.pl");
     expect(contactFingerprint({})).toBe("");
+  });
+});
+
+describe("entry profile (zostaw numer oddzwonimy)", () => {
+  const google = { referrer: "https://www.google.com/", landing_page: "/kontakt" };
+
+  it("flags a name-and-phone lead from search straight onto /kontakt, never drops it", () => {
+    const v = scoreEntry(google);
+    expect(v.level).toBe("suspicious");
+    expect(v.reasons[0]).toContain("/kontakt");
+    expect(scoreEntry({ referrer_class: "search", landing_page: "/kontakt" }).level).toBe("suspicious");
+  });
+
+  it("leaves real enquiries clean", () => {
+    // Paid click, a message, an e-mail, another landing page, a direct visit.
+    expect(scoreEntry({ ...google, gclid: "abc" }).level).toBe("clean");
+    expect(scoreEntry({ ...google, utm_source: "facebook" }).level).toBe("clean");
+    expect(scoreEntry({ ...google, message: "Potrzebuję sklepu na 200 produktów." }).level).toBe("clean");
+    expect(scoreEntry({ ...google, email: "jan@firma.pl" }).level).toBe("clean");
+    expect(scoreEntry({ ...google, landing_page: "/sklepy-internetowe" }).level).toBe("clean");
+    expect(scoreEntry({ landing_page: "/kontakt" }).level).toBe("clean");
+    expect(scoreEntry({ referrer: "https://programo.pl/oferta", landing_page: "/kontakt" }).level).toBe("clean");
   });
 });

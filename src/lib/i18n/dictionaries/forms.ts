@@ -13,6 +13,18 @@ export const forms = {
     pl: "Numeru użyjemy tylko po to, żeby oddzwonić, i do niczego więcej.",
     en: "We'll use your number to call you back, and for nothing else.",
   },
+  // /kontakt only (2026-10-22). The default heading above matched the Google
+  // query "zostaw numer oddzwonimy" word for word, and /kontakt ranked for it:
+  // people looking for any instant-callback form left 3-7 numbers a day that
+  // had nothing to do with a project. This copy names what we quote instead.
+  "compact.kontaktHeading": {
+    pl: "Wycena strony, sklepu albo aplikacji.",
+    en: "A quote for a website, online shop or app.",
+  },
+  "compact.kontaktSub": {
+    pl: "Podaj imię i telefon. Zadzwonimy w ciągu 24 h, żeby dopytać o projekt. Numeru nie użyjemy do niczego innego.",
+    en: "Leave your first name and phone number. We'll call within 24 hours to ask about the project, and use the number for nothing else.",
+  },
   "compact.bareSub": {
     pl: "Odpowiadamy w 24 h, bez zobowiązań.",
     en: "We reply within 24 hours, no obligation.",

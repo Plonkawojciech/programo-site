@@ -52,7 +52,12 @@ export default function KontaktPage() {
       <div className="pt-20 md:pt-24">
         <ContactHero />
         {/* Low-friction 2-field catcher first; full brief below for those who want it. */}
-        <CompactLeadForm formId="kontakt-compact" projectType="Zapytanie z /kontakt" />
+        <CompactLeadForm
+          formId="kontakt-compact"
+          projectType="Zapytanie z /kontakt"
+          headingKey="compact.kontaktHeading"
+          subKey="compact.kontaktSub"
+        />
         <ContactPeople />
         <QuickContact formId="kontakt-full" />
       </div>

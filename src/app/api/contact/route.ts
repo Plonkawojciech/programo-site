@@ -6,7 +6,7 @@ import { buildCrmPayload, forwardToCrm, type CrmSignals, type CrmVerdict } from 
 import { isHoneypotTripped, verifyChallenge } from "@/lib/form-challenge";
 import { isForeignOrigin, isOverAttemptLimit, isToolUserAgent } from "@/lib/request-guard";
 import { describeSignals, scoreBotSignals } from "@/lib/bot-score";
-import { contactFingerprint, mergeVerdicts, scoreContent } from "@/lib/spam-rules";
+import { contactFingerprint, mergeVerdicts, scoreContent, scoreEntry } from "@/lib/spam-rules";
 import { dispatchLeadConversions } from "@/lib/analytics/server/lead-conversions";
 import { CONSENT_COOKIE } from "@/lib/analytics/consent-cookie";
 import { buildLeadMessage } from "@/lib/telegram-message";
@@ -137,8 +137,11 @@ export async function POST(request: NextRequest) {
   // may carry the details the first one lacked) but flagged, so it is one
   // conversion and nobody is called twice.
   const repeat = await isRepeatSubmission(contactFingerprint(result.data));
+  // Where the visitor came from (lib/spam-rules.ts, scoreEntry): flags the
+  // "zostaw numer oddzwonimy" search traffic, never drops it.
+  const entry = scoreEntry(result.data);
   const bot = mergeVerdicts(
-    mergeVerdicts(behaviour, content),
+    mergeVerdicts(mergeVerdicts(behaviour, content), entry),
     repeat ? { level: "suspicious", reasons: ["ten sam telefon lub e-mail już był w ciągu 24 h"] } : { level: "clean", reasons: [] },
   );
   const suspicious = bot.level === "suspicious";

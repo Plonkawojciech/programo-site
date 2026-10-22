@@ -104,6 +104,17 @@ describe("/api/contact → CRM review inbox", () => {
     expect(crmBody()).toMatchObject({ verdict: "suspicious", verdictReasons: ["link w treści"] });
   });
 
+  it("flags a name-and-phone lead from Google straight onto /kontakt, uncounted (2026-10-22)", async () => {
+    const res = await send({
+      name: "Jakub", phone: "512 345 678", subject: "Wycena projektu", projectType: "Zapytanie z /kontakt",
+      consent: true, form_id: "kontakt-compact", page_url: "https://programo.pl/kontakt",
+      referrer: "https://www.google.com/", landing_page: "/kontakt",
+    });
+    expect(await res.json()).toEqual({ success: true, counted: false });
+    expect(crmBody().verdict).toBe("suspicious");
+    expect(crmBody().verdictReasons[0]).toMatch(/prosto na \/kontakt/);
+  });
+
   it("forwards a content rejection as rejected with the stage", async () => {
     const res = await send({ ...lead, phone: "+48 600 100 200" });
     expect(await res.json()).toEqual({ success: true, counted: false });

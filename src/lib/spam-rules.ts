@@ -113,6 +113,47 @@ export function scoreContent(input: SpamInput): SpamVerdict {
   return { level: flag.length ? "suspicious" : "clean", reasons: flag };
 }
 
+export type EntryInput = {
+  message?: string;
+  email?: string;
+  landing_page?: string;
+  referrer?: string;
+  referrer_class?: string;
+  gclid?: string;
+  gbraid?: string;
+  wbraid?: string;
+  utm_source?: string;
+};
+
+const SEARCH_REFERRER_RE = /^https?:\/\/(?:www\.)?(?:google|bing|duckduckgo|yahoo|ecosia)\.[a-z.]+/i;
+
+/**
+ * How the visitor got to the form (2026-10-22). From 3 to 21 October the CRM
+ * got 66 name-plus-phone submissions that passed every bot check because they
+ * were people: Polish home and mobile IPs, real keystrokes, 8 s to 12 min on
+ * the page. Search Console explained them. /kontakt ranked for "zostaw numer
+ * oddzwonimy" (also "... natychmiast", "... w 30 sekund"), the compact form's
+ * heading word for word, and 61 of the 66 came from Google straight onto
+ * /kontakt. They want any form that calls back, not a website.
+ *
+ * Same profile = search engine -> /kontakt as the first page, no campaign, and
+ * nothing but a name and a number. A client who searched for us by name
+ * looks the same, so this only flags: the lead is still delivered, labelled,
+ * without a phone push and without counting as an Ads conversion.
+ */
+export function scoreEntry(input: EntryInput): SpamVerdict {
+  const fromSearch = input.referrer_class === "search" || SEARCH_REFERRER_RE.test(input.referrer ?? "");
+  const campaign = Boolean(input.gclid || input.gbraid || input.wbraid || input.utm_source);
+  const onlyPhone = !(input.message ?? "").trim() && !(input.email ?? "").trim();
+  if (fromSearch && !campaign && onlyPhone && input.landing_page === "/kontakt") {
+    return {
+      level: "suspicious",
+      reasons: ["z wyszukiwarki prosto na /kontakt, tylko imię i telefon (profil zapytań „zostaw numer oddzwonimy”)"],
+    };
+  }
+  return { level: "clean", reasons: [] };
+}
+
 /** The harsher of two verdicts, with both sets of reasons. */
 export function mergeVerdicts(a: SpamVerdict, b: SpamVerdict): SpamVerdict {
   const rank = { clean: 0, suspicious: 1, drop: 2 } as const;

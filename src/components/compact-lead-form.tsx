@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { getAttribution, prepareLeadConversion, trackLead } from "@/lib/tracking";
 import { useFormAnalytics } from "@/lib/analytics/use-form-analytics";
 import { track } from "@/lib/analytics/client";
@@ -54,6 +54,8 @@ export default function CompactLeadForm({
   bare = false,
   heading,
   sub,
+  headingKey = "compact.heading",
+  subKey = "compact.sub",
 }: {
   /** Unique label for conversion attribution + field ids, e.g. "strony-compact". */
   formId: string;
@@ -66,6 +68,9 @@ export default function CompactLeadForm({
   /** Overrides the default (i18n) heading / sub - used by Ads landings. */
   heading?: string;
   sub?: string;
+  /** Translated defaults for heading / sub, for pages that need their own wording in both languages. */
+  headingKey?: TranslationKey;
+  subKey?: TranslationKey;
 }) {
   const { t } = useI18n();
   const [state, setState] = useState<FormState>("idle");
@@ -83,8 +88,8 @@ export default function CompactLeadForm({
   // viewed → started → per-field completion → error → submit / abandoned.
   const fa = useFormAnalytics(formId);
 
-  const resolvedHeading = heading ?? t("compact.heading");
-  const resolvedSub = sub ?? t("compact.sub");
+  const resolvedHeading = heading ?? t(headingKey);
+  const resolvedSub = sub ?? t(subKey);
 
   // Move focus to the success message so keyboard/screen-reader users (and anyone
   // who scrolled) are told the submission worked, since the form button vanishes.

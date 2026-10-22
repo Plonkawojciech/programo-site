@@ -37,6 +37,7 @@ Dwie hipotezy do sprawdzenia na danych (w tej kolejności):
 | 7 | **Filtr treści**: numery-wypełniacze i wzorce, numery spoza polskiej numeracji, linki, HTML, inny alfabet, domeny tymczasowe | `lib/spam-rules.ts` | 1.10 |
 | 8 | **Powtórka**: ten sam telefon lub e-mail w ciągu 24 h dochodzi oznaczony, nie liczy się jako konwersja | `lib/leads.ts` | 1.10 |
 | 9 | Cloudflare Turnstile | `lib/turnstile.ts`, `ui/turnstile.tsx` | kod gotowy od 21.09, **czeka na klucze** |
+| 10 | **Profil wejścia**: z wyszukiwarki prosto na `/kontakt`, bez kampanii, tylko imię i telefon → podejrzane (nigdy odrzucone) | `spam-rules.ts` (`scoreEntry`) | 22.10 |
 
 Co się dzieje ze zgłoszeniem (od 3.10 każde trafia do skrzynki CRM „Leady z formularzy”, `/formularze`,
 przez `POST /api/forms/intake`, `lib/crm-forward.ts`):
@@ -55,6 +56,21 @@ Pola wysyłane do CRM: `source`, `formId`, `pageUrl`, dane kontaktowe i treść,
 
 Podgląd odrzuconych: `programo.pl/crm/odrzucone` (to samo logowanie co `/crm`). Jeśli pojawi się tam
 prawdziwa osoba, reguła jest za ostra i trzeba ją poluzować.
+
+## „Zostaw numer oddzwonimy” (22.10.2026)
+
+Od 3.10 do 21.10 CRM dostał 66 czystych zgłoszeń „imię + telefon” z formularza `kontakt-compact`.
+To nie był bot: 65 różnych polskich IP (sieci domowe i komórkowe), głównie telefony, prawdziwe klawisze,
+od 8 s do 12 min na stronie. 61 z 66 przyszło z Google prosto na `/kontakt`. Search Console (28 dni do 20.10)
+pokazał zapytania: „zostaw numer oddzwonimy” (49 kliknięć), „... natychmiast” (13), „zostaw telefon
+oddzwonimy” (7), „... w 30 sekund” (5), „... 24 7” (4). Nagłówek formularza na `/kontakt` brzmiał
+„Zostaw numer, a oddzwonimy w 24 h.”, czyli słowo w słowo jak zapytanie. Ludzie szukali dowolnego
+formularza z oddzwonieniem, nie strony ani aplikacji.
+
+Zmiany: nagłówek formularza na `/kontakt` nazywa teraz to, co wyceniamy (`compact.kontaktHeading`),
+a warstwa 10 oznacza ten profil jako podejrzany: zgłoszenie dochodzi, ale bez pusha i bez konwersji w Ads.
+Turnstile i kolejny honeypot nic tu nie dadzą, bo to ludzie. Meta description `/kontakt` dalej zawiera
+„zostaw numer w formularzu”; zmiana wymaga decyzji, bo to treść strony poza formularzem.
 
 ## Co ma zrobić Wojtek: klucze Turnstile (ok. 5 minut)
 
