@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyCreds, setSessionCookie } from "@/lib/crm-auth";
+import { isForeignOrigin, isOverAttemptLimit } from "@/lib/request-guard";
 
 // In-memory rate limiter: IP -> timestamps[] of FAILED attempts.
 // Per-process only; resets on cold start. Good enough to blunt brute force on a
@@ -60,6 +61,20 @@ function sleep(ms: number): Promise<void> {
 export async function POST(request: NextRequest) {
   const ip = clientIp(request);
   const now = Date.now();
+
+  // A login form posts from our own page; anything else is a script.
+  if (isForeignOrigin(request.headers.get("origin"))) {
+    return NextResponse.json({ error: "Nieprawidłowe żądanie." }, { status: 403 });
+  }
+  // Shared across every Vercel instance via Redis (the in-memory map below
+  // only sees one warm function). 10 attempts per 15 min per IP, failed or not.
+  if (await isOverAttemptLimit("crm-login", ip, 10, 900)) {
+    await sleep(FAILED_ATTEMPT_DELAY_MS);
+    return NextResponse.json(
+      { error: "Zbyt wiele prób. Spróbuj ponownie za chwilę." },
+      { status: 429 }
+    );
+  }
 
   if (isRateLimited(ip, now)) {
     // Apply the same artificial delay as a failed attempt so a throttled

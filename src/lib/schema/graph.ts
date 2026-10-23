@@ -8,7 +8,9 @@ import type { SchemaNode, SchemaRef } from "./types";
  * `ORGANIZATION_ID` rather than embedding the Organization again.
  */
 export function renderGraph(nodes: SchemaNode[]): string {
-  return JSON.stringify({ "@context": "https://schema.org", "@graph": nodes });
+  // `<` escaped so no string in the graph can ever close the surrounding
+  // <script> tag (`</script>` in a title or FAQ answer would otherwise do it).
+  return JSON.stringify({ "@context": "https://schema.org", "@graph": nodes }).replace(/</g, "\\u003c");
 }
 
 /**

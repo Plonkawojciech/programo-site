@@ -225,6 +225,7 @@ export default function CompactLeadForm({
   );
 
   const form = (
+    // eslint-disable-next-line react-hooks/refs -- RefObject passed, not read (same as hero.tsx)
     <form ref={fa.ref} onSubmit={handleSubmit} noValidate className="relative flex flex-col gap-4">
       <Honeypot />
       <div className="grid gap-4 sm:grid-cols-2">

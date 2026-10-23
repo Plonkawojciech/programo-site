@@ -308,6 +308,7 @@ export default function QuickContact({ formId = "quick-contact" }: { formId?: st
               </motion.div>
             ) : (
               <motion.form
+                // eslint-disable-next-line react-hooks/refs -- RefObject passed, not read (same as hero.tsx)
                 ref={fa.ref}
                 onSubmit={handleSubmit}
                 noValidate

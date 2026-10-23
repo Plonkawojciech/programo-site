@@ -217,6 +217,7 @@ export default function DevEditor() {
   const resolveColor = useRef<((v: string) => string) | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- dev-only editor, one render on mount/mode change
     setMounted(true);
     resolveColor.current = makeColorResolver();
     const attr = document.documentElement.getAttribute("data-theme");
@@ -248,6 +249,7 @@ export default function DevEditor() {
   /* Picking mode: highlight on hover, open the editor on click. */
   useEffect(() => {
     if (mode !== "pick") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- dev-only editor, one render on mount/mode change
       setHover(null);
       return;
     }
