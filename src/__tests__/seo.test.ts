@@ -3,7 +3,8 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
-import { projects } from "@/lib/projects";
+import { projects, portfolioProjects } from "@/lib/projects";
+import { GET as getLlms } from "@/app/llms.txt/route";
 import {
   buildBreadcrumbs,
   buildCreativeWorkItemList,
@@ -54,10 +55,10 @@ describe("SEO", () => {
       expect(home?.priority).toBe(1.0);
     });
 
-    it("includes all project URLs", () => {
+    it("includes all listed project URLs", () => {
       const entries = sitemap();
       const urls = entries.map((e) => e.url);
-      for (const p of projects) {
+      for (const p of portfolioProjects) {
         expect(urls).toContain(`https://programo.pl/projects/${p.slug}`);
       }
     });
@@ -66,6 +67,23 @@ describe("SEO", () => {
       const entries = sitemap();
       for (const entry of entries) {
         expect(entry.changeFrequency).toBe("monthly");
+      }
+    });
+  });
+
+  describe("unlisted projects", () => {
+    it("omits unlisted projects from sitemap and llms while preserving listed projects", async () => {
+      const urls = sitemap().map((entry) => entry.url);
+      const llms = await getLlms().text();
+      for (const project of projects) {
+        const url = `https://programo.pl/projects/${project.slug}`;
+        if (project.unlisted) {
+          expect(urls).not.toContain(url);
+          expect(llms).not.toContain(url);
+        } else {
+          expect(urls).toContain(url);
+          expect(llms).toContain(url);
+        }
       }
     });
   });
@@ -276,9 +294,9 @@ describe("SEO", () => {
       expect(cennik?.lastModified).toBe(STATIC_ROUTE_UPDATED_AT["/cennik"]);
     });
 
-    it("project routes come from each project's own updatedAt field", () => {
+    it("listed project routes come from each project's own updatedAt field", () => {
       const entries = sitemap();
-      for (const p of projects) {
+      for (const p of portfolioProjects) {
         const entry = entries.find((e) => e.url === `https://programo.pl/projects/${p.slug}`);
         if (p.updatedAt) {
           expect(entry?.lastModified).toBe(p.updatedAt);
