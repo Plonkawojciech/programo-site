@@ -69,8 +69,26 @@ formularza z oddzwonieniem, nie strony ani aplikacji.
 
 Zmiany: nagłówek formularza na `/kontakt` nazywa teraz to, co wyceniamy (`compact.kontaktHeading`),
 a warstwa 10 oznacza ten profil jako podejrzany: zgłoszenie dochodzi, ale bez pusha i bez konwersji w Ads.
-Turnstile i kolejny honeypot nic tu nie dadzą, bo to ludzie. Meta description `/kontakt` dalej zawiera
-„zostaw numer w formularzu”; zmiana wymaga decyzji, bo to treść strony poza formularzem.
+Turnstile i kolejny honeypot nic tu nie dadzą, bo to ludzie.
+
+**28.10: to były cudze numery.** Bartek dzwonił pod te numery, a odbierający mówili, że niczego nie
+wypełniali. Dane z CRM to potwierdzają: jeden Android (ten sam ekran 432×960) wysłał ten sam numer
+9, 13 i 16.10 jako „Lucyna”, „Katarzyna” i „Władysława”, z trzech różnych IP; inny numer przyszedł jako
+„Daria kraść”, a 9 minut później „Daria łajza”; w 61 z 89 takich zgłoszeń coś wklejono, a formularz ma
+tylko imię i telefon. Ktoś szuka „zostaw numer oddzwonimy natychmiast” i wpisuje numer znajomego, żeby
+firmy do niego dzwoniły. Botów ani wycieku numerów w danych nie widać (prawdziwe telefony, klawisze,
+polskie sieci domowe).
+
+Zmiany 28.10:
+- bez „zostaw numer … oddzwonimy” w H1 i opisie `/kontakt`, w domyślnym nagłówku `CompactLeadForm`,
+  w nagłówku formularza na stronie głównej, `/strony-internetowe`, `/strony-internetowe-poznan` i `/projekty` (demo);
+- sygnał `sig.pp`: liczba wklejeń do pola `type="tel"`. Wklejony numer bez maila i treści = podejrzane
+  (`scoreEntry`), w CRM widać „telefon wklejony” w linii zachowania;
+- CRM: ten sam numer w ciągu 30 dni pod innym imieniem = odrzucone, status Spam, bez pusha
+  (`crm_programo/src/lib/forms-spam.ts`, `countOtherNames`).
+
+Zasada dla dzwoniących: zgłoszenie oznaczone „podejrzane” z powodem „wklejony” albo „prosto na /kontakt”
+to nie jest lead do oddzwonienia w minutę.
 
 ## Co ma zrobić Wojtek: klucze Turnstile (ok. 5 minut)
 

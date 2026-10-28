@@ -67,8 +67,8 @@ export const demos = {
   "demos.form.projectType": { pl: "Demo nowej strony", en: "New website demo" },
   "demos.cta.eyebrow": { pl: "Twoja firma następna?", en: "Is your company next?" },
   "demos.cta.title": {
-    pl: "Zostaw numer. Oddzwonimy w 24 h i umówimy demo.",
-    en: "Leave your number. We will call back within 24 hours and arrange a demo.",
+    pl: "Podaj telefon. W 24 h zadzwonimy i umówimy demo.",
+    en: "Give us your number. We will call within 24 hours and arrange a demo.",
   },
   "demos.cta.lead": {
     pl: "Bez umowy, bez zaliczki. Demo jest nasze, decyzja Twoja.",

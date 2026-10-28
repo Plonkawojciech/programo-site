@@ -103,7 +103,7 @@ const data: ServiceLandingData = {
     { href: "/software-house-poznan", label: "Software house Poznań" },
     { href: "/cennik", label: "Cennik" },
   ],
-  form: { formId: "strony-poznan", projectType: "Strona internetowa (Poznań)", heading: "Zostaw numer, oddzwonimy w 24 h" },
+  form: { formId: "strony-poznan", projectType: "Strona internetowa (Poznań)", heading: "Wycena strony w 24 h" },
 };
 
 export default function Page() {

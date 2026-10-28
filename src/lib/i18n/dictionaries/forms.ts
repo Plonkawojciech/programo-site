@@ -5,9 +5,12 @@
 export const forms = {
   // --- CompactLeadForm (imię + telefon + zgoda) --------------------------------
   "compact.eyebrow": { pl: "Szybki kontakt", en: "Quick contact" },
+  // 2026-10-28: the old "Zostaw numer, a oddzwonimy w 24 h." is gone from every
+  // page, not only /kontakt: that query brings people who enter someone else's
+  // number to get them called (see lib/spam-rules.ts).
   "compact.heading": {
-    pl: "Zostaw numer, a oddzwonimy w 24 h.",
-    en: "Leave your number and we'll call back within 24 hours with specifics.",
+    pl: "Wycena w 24 h. Zadzwonimy i dopytamy o projekt.",
+    en: "A quote within 24 hours. We'll call and ask about your project.",
   },
   "compact.sub": {
     pl: "Numeru użyjemy tylko po to, żeby oddzwonić, i do niczego więcej.",

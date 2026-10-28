@@ -19,7 +19,7 @@ const pageGraph = renderGraph([
     path: PATH,
     name: "Kontakt - odpowiadamy w 24 h | Programo",
     description:
-      "Zadzwoń: 509 123 434 albo zostaw numer w formularzu. Porozmawiajmy o Twojej aplikacji, sklepie lub stronie.",
+      "Zadzwoń: 509 123 434 albo wyślij zapytanie przez formularz. Porozmawiajmy o Twojej aplikacji, sklepie lub stronie.",
     dateModified: STATIC_ROUTE_UPDATED_AT[PATH],
     about: { "@id": ORGANIZATION_ID },
   }),
@@ -32,12 +32,12 @@ const pageGraph = renderGraph([
 export const metadata: Metadata = {
   title: "Kontakt - odpowiadamy w 24 h | Programo",
   description:
-    "Zadzwoń: 509 123 434 albo zostaw numer w formularzu. Porozmawiajmy o Twojej aplikacji, sklepie lub stronie. Programo, Poznań.",
+    "Zadzwoń: 509 123 434 albo wyślij zapytanie przez formularz. Porozmawiajmy o Twojej aplikacji, sklepie lub stronie. Programo, Poznań.",
   alternates: { canonical: "https://programo.pl/kontakt" },
   openGraph: {
     images: [OG_IMAGE],
     title: "Kontakt - odpowiadamy w 24 h | Programo",
-    description: "Zadzwoń: 509 123 434 albo zostaw numer w formularzu. Porozmawiajmy o Twojej aplikacji, sklepie lub stronie.",
+    description: "Zadzwoń: 509 123 434 albo wyślij zapytanie przez formularz. Porozmawiajmy o Twojej aplikacji, sklepie lub stronie.",
     url: "https://programo.pl/kontakt",
     siteName: "Programo",
     locale: "pl_PL",

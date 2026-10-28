@@ -91,8 +91,8 @@ export const home = {
   "home.hero.ctaCall": { pl: "Zadzwoń: 509 123 434", en: "Call us: +48 509 123 434" },
   "home.hero.ctaConsult": { pl: "Bezpłatna konsultacja", en: "Free consultation" },
   "home.hero.formHeading": {
-    pl: "Zostaw numer - oddzwonimy w 24 h z konkretami.",
-    en: "Leave your number - we'll call back within 24 hours with specifics.",
+    pl: "Wycena w 24 h: zadzwonimy i dopytamy o szczegóły.",
+    en: "A quote within 24 hours: we'll call and ask about the details.",
   },
 
   // 1.2 Trust bar — logos only. The three proof numbers (2 natywne aplikacje /

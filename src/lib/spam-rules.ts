@@ -123,6 +123,7 @@ export type EntryInput = {
   gbraid?: string;
   wbraid?: string;
   utm_source?: string;
+  sig?: { pp?: number };
 };
 
 const SEARCH_REFERRER_RE = /^https?:\/\/(?:www\.)?(?:google|bing|duckduckgo|yahoo|ecosia)\.[a-z.]+/i;
@@ -145,13 +146,15 @@ export function scoreEntry(input: EntryInput): SpamVerdict {
   const fromSearch = input.referrer_class === "search" || SEARCH_REFERRER_RE.test(input.referrer ?? "");
   const campaign = Boolean(input.gclid || input.gbraid || input.wbraid || input.utm_source);
   const onlyPhone = !(input.message ?? "").trim() && !(input.email ?? "").trim();
+  const reasons: string[] = [];
   if (fromSearch && !campaign && onlyPhone && input.landing_page === "/kontakt") {
-    return {
-      level: "suspicious",
-      reasons: ["z wyszukiwarki prosto na /kontakt, tylko imię i telefon (profil zapytań „zostaw numer oddzwonimy”)"],
-    };
+    reasons.push("z wyszukiwarki prosto na /kontakt, tylko imię i telefon (profil zapytań „zostaw numer oddzwonimy”)");
   }
-  return { level: "clean", reasons: [] };
+  // 2026-10-28: Bartek called people who said they had filled nothing in.
+  // In 61 of 89 such submissions something was pasted, and the form only has
+  // a name and a phone. Someone pastes another person's number.
+  if (onlyPhone && (input.sig?.pp ?? 0) > 0) reasons.push("numer telefonu wklejony, nie wpisany (często cudzy numer)");
+  return { level: reasons.length ? "suspicious" : "clean", reasons };
 }
 
 /** The harsher of two verdicts, with both sets of reasons. */

@@ -115,6 +115,17 @@ describe("/api/contact → CRM review inbox", () => {
     expect(crmBody().verdictReasons[0]).toMatch(/prosto na \/kontakt/);
   });
 
+  it("flags a pasted phone number on a name-and-phone lead, uncounted (2026-10-28)", async () => {
+    const res = await send({
+      name: "Lucyna", phone: "512 345 678", subject: "Wycena projektu", consent: true,
+      form_id: "hero-phone", page_url: "https://programo.pl/", landing_page: "/",
+      sig: { ...HUMAN, paste: 1, pp: 1 },
+    });
+    expect(await res.json()).toEqual({ success: true, counted: false });
+    expect(crmBody()).toMatchObject({ verdict: "suspicious", verdictReasons: ["numer telefonu wklejony, nie wpisany (często cudzy numer)"] });
+    expect(crmBody().signals.behaviour).toContain("telefon wklejony");
+  });
+
   it("forwards a content rejection as rejected with the stage", async () => {
     const res = await send({ ...lead, phone: "+48 600 100 200" });
     expect(await res.json()).toEqual({ success: true, counted: false });

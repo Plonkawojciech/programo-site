@@ -10,9 +10,11 @@ export const contact = {
 
   // /kontakt — short page hero (above the forms)
   "contactPage.eyebrow": { pl: "Kontakt", en: "Contact" },
+  // 2026-10-28: without "zostaw numer". /kontakt ranked for "zostaw numer
+  // oddzwonimy", and people used the form to make us call someone else.
   "contactPage.title": {
-    pl: "Zadzwoń albo zostaw numer. Odpowiadamy w 24h",
-    en: "Call us or leave your number. We reply within 24 hours",
+    pl: "Porozmawiajmy o Twoim projekcie. Odpowiadamy w 24h",
+    en: "Let's talk about your project. We reply within 24 hours",
   },
   "contactPage.subtitle": {
     pl: "Rozmawiasz bezpośrednio z osobami, które będą budować Twój projekt, bez handlowców po drodze.",

@@ -26,6 +26,7 @@ export const botSignalsSchema = z
     ts: z.number().int().min(0),
     sc: z.number().int().min(0),
     paste: z.number().int().min(0),
+    pp: z.number().int().min(0),
     ms: z.number().min(0),
     tz: z.string().max(64),
     lang: z.string().max(35),
@@ -67,5 +68,5 @@ export function scoreBotSignals(sig: BotSignalsPayload | undefined): BotVerdict 
 export function describeSignals(sig: BotSignalsPayload | undefined): string {
   if (!sig) return "brak";
   const s = (n: number | undefined) => String(n ?? "-");
-  return `klawisze ${s(sig.kd)}, ruch myszy ${s(sig.pm)}, klik ${s(sig.pd)}, dotyk ${s(sig.ts)}, wklejenia ${s(sig.paste)}, na stronie ${sig.ms != null ? Math.round(sig.ms / 1000) + " s" : "-"}, ${sig.tz || "-"}, ${sig.lang || "-"}, ekran ${s(sig.sw)}x${s(sig.sh)}`;
+  return `klawisze ${s(sig.kd)}, ruch myszy ${s(sig.pm)}, klik ${s(sig.pd)}, dotyk ${s(sig.ts)}, wklejenia ${s(sig.paste)}${sig.pp ? ` (telefon wklejony)` : ""}, na stronie ${sig.ms != null ? Math.round(sig.ms / 1000) + " s" : "-"}, ${sig.tz || "-"}, ${sig.lang || "-"}, ekran ${s(sig.sw)}x${s(sig.sh)}`;
 }

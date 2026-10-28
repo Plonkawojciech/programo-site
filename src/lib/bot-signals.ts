@@ -11,8 +11,8 @@
  * pointer that moved, time spent on the page.
  */
 
-type Counts = { kd: number; pm: number; pd: number; ts: number; sc: number; paste: number };
-const counts: Counts = { kd: 0, pm: 0, pd: 0, ts: 0, sc: 0, paste: 0 };
+type Counts = { kd: number; pm: number; pd: number; ts: number; sc: number; paste: number; pp: number };
+const counts: Counts = { kd: 0, pm: 0, pd: 0, ts: 0, sc: 0, paste: 0, pp: 0 };
 const startedAt = typeof performance !== "undefined" ? performance.now() : 0;
 let installed = false;
 
@@ -30,6 +30,15 @@ function install() {
   window.addEventListener("touchstart", bump("ts"), opts);
   window.addEventListener("scroll", bump("sc"), opts);
   window.addEventListener("paste", bump("paste"), opts);
+  // 2026-10-28: a pasted phone number is usually someone else's. People who
+  // never filled the form were getting our calls; autofill is not a paste.
+  window.addEventListener(
+    "paste",
+    (e) => {
+      if (e.isTrusted && e.target instanceof HTMLInputElement && e.target.type === "tel") counts.pp++;
+    },
+    opts,
+  );
 }
 install();
 
@@ -41,6 +50,7 @@ export type BotSignals = {
   ts: number;
   sc: number;
   paste: number;
+  pp: number;
   ms: number;
   tz: string;
   lang: string;

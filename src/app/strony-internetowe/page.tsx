@@ -195,7 +195,7 @@ export default function StronyInternetowePage() {
                 formId="strony-hero"
                 anchorId="szybki-kontakt"
                 projectType="Strona / landing"
-                heading="Zostaw numer, oddzwonimy z wyceną"
+                heading="Zamów wycenę strony"
               />
             </div>
           </div>

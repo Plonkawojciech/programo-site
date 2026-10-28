@@ -77,4 +77,13 @@ describe("entry profile (zostaw numer oddzwonimy)", () => {
     expect(scoreEntry({ landing_page: "/kontakt" }).level).toBe("clean");
     expect(scoreEntry({ referrer: "https://programo.pl/oferta", landing_page: "/kontakt" }).level).toBe("clean");
   });
+
+  it("flags a pasted phone number on a name-and-phone lead from any page (2026-10-28)", () => {
+    const v = scoreEntry({ landing_page: "/", sig: { pp: 1 } });
+    expect(v).toEqual({ level: "suspicious", reasons: ["numer telefonu wklejony, nie wpisany (często cudzy numer)"] });
+    expect(scoreEntry({ ...google, sig: { pp: 1 } }).reasons).toHaveLength(2);
+    // A pasted number next to a message or an e-mail is an ordinary enquiry.
+    expect(scoreEntry({ landing_page: "/", sig: { pp: 1 }, message: "Potrzebuję sklepu." }).level).toBe("clean");
+    expect(scoreEntry({ landing_page: "/", sig: { pp: 0 } }).level).toBe("clean");
+  });
 });
