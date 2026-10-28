@@ -145,17 +145,17 @@ export const projects: Project[] = [
       en: "An online store for the exclusive Polish distributor of Royal Purple oils",
     },
     description: {
-      pl: "Nowy sklep dla INNOCHEM, wyłącznego dystrybutora syntetycznych olejów Royal Purple w Polsce. Katalog olejów samochodowych, motocyklowych, wyścigowych i przemysłowych, koszyk i zamówienia bez zakładania konta, panel administracyjny dla klientki oraz pomiar sprzedaży zgodny z systemem zgód.",
-      en: "A new store for INNOCHEM, the exclusive Polish distributor of Royal Purple synthetic oils. A catalog of automotive, motorcycle, racing, and industrial oils, a cart and guest checkout, an admin panel for the client, and sales measurement that respects consent.",
+      pl: "Przebudowa sklepu INNOCHEM, dystrybutora olejów Royal Purple, jest gotowa na podglądzie. Start na domenie klienta wkrótce. Katalog olejów samochodowych, motocyklowych, wyścigowych i przemysłowych, koszyk i zamówienia bez zakładania konta, panel administracyjny dla klientki oraz pomiar sprzedaży zgodny z systemem zgód.",
+      en: "The rebuilt INNOCHEM store for the Polish Royal Purple distributor is ready in preview. Launch on the client’s domain is coming soon. A catalog of automotive, motorcycle, racing, and industrial oils, a cart and guest checkout, an admin panel for the client, and sales measurement that respects consent.",
     },
     longDescription: {
-      pl: "INNOCHEM sprowadza do Polski oleje Royal Purple od 2009 roku. Poprzedni sklep był przestarzały, a kupujący olej do konkretnego silnika musiał przekopać się przez długie listy produktów. Zbudowaliśmy sklep od nowa.\n\nKatalog dzieli oleje na samochodowe, motocyklowe, wyścigowe, do pojazdów śnieżnych i przemysłowe. Wyszukiwarka rozumie zapis lepkości w różnych formach, karta produktu ma galerię i dane techniczne, a serie produktów są pogrupowane tak, żeby łatwo porównać warianty. Zamówienie da się złożyć bez zakładania konta.\n\nKlientka prowadzi sklep sama w panelu administracyjnym: produkty, zamówienia, treści stron i ustawienia dostawy. Pod spodem działają kolejka wiadomości e-mail, kopie zapasowe bazy, GA4 z Consent Mode oraz feed produktów dla Google Merchant Center. Sklep stoi na naszym serwerze w UE.",
-      en: "INNOCHEM has been importing Royal Purple oils into Poland since 2009. The previous store was outdated, and a buyer looking for oil for a specific engine had to dig through long product lists. We rebuilt the store from scratch.\n\nThe catalog splits oils into automotive, motorcycle, racing, snowmobile, and industrial. Search understands viscosity written in different forms, the product page has a gallery and technical data, and product series are grouped so variants are easy to compare. Orders can be placed without creating an account.\n\nThe client runs the store herself in the admin panel: products, orders, page content, and shipping settings. Underneath run an email queue, database backups, GA4 with Consent Mode, and a product feed for Google Merchant Center. The store runs on our own EU server.",
+      pl: "INNOCHEM sprowadza do Polski oleje Royal Purple od 2009 roku. Dotychczasowy sklep jest przestarzały, a kupujący olej do konkretnego silnika musiał przekopać się przez długie listy produktów. Zbudowaliśmy sklep od nowa. Przebudowa jest gotowa na podglądzie; start na domenie klienta wkrótce.\n\nKatalog dzieli oleje na samochodowe, motocyklowe, wyścigowe, do pojazdów śnieżnych i przemysłowe. Wyszukiwarka rozumie zapis lepkości w różnych formach, karta produktu ma galerię i dane techniczne, a serie produktów są pogrupowane tak, żeby łatwo porównać warianty. Przygotowaliśmy składanie zamówień bez zakładania konta.\n\nPanel administracyjny pozwoli klientce samodzielnie obsługiwać sklep: produkty, zamówienia, treści stron i ustawienia dostawy. Przygotowaliśmy kolejkę wiadomości e-mail, kopie zapasowe bazy i feed produktów dla Google Merchant Center. Konfigurację GA4 z Consent Mode zaplanowaliśmy przy starcie. Podgląd działa na naszym serwerze w UE.",
+      en: "INNOCHEM has been importing Royal Purple oils into Poland since 2009. The existing store is outdated, and a buyer looking for oil for a specific engine had to dig through long product lists. We rebuilt the store from scratch. The rebuild is ready in preview; launch on the client’s domain is coming soon.\n\nThe catalog splits oils into automotive, motorcycle, racing, snowmobile, and industrial. Search understands viscosity written in different forms, the product page has a gallery and technical data, and product series are grouped so variants are easy to compare. We prepared guest checkout.\n\nThe admin panel will let the client manage the store herself: products, orders, page content, and shipping settings. We prepared an email queue, database backups, and a product feed for Google Merchant Center. GA4 with Consent Mode is planned for launch. The preview runs on our own EU server.",
     },
     status: "development",
     statusLabel: {
-      pl: "Wersja demonstracyjna pod innochem.programo.pl",
-      en: "Demo version at innochem.programo.pl",
+      pl: "Przebudowa gotowa na podglądzie; start na domenie klienta wkrótce",
+      en: "Rebuild ready in preview; launch on the client’s domain coming soon",
     },
     presentation: "dark",
     category: "dla-klientow",
@@ -167,7 +167,8 @@ export const projects: Project[] = [
       pl: "Projekt i budowa sklepu, panel administracyjny, tracking i feed produktowy, hosting",
       en: "Store design and build, admin panel, tracking and product feed, hosting",
     },
-    liveUrl: "https://innochem.programo.pl",
+    // TODO(T887): switch to https://innochem.pl only after the client-domain cutover.
+    liveUrl: "https://sklep-innochem.programo.pl",
     metric: {
       pl: "Sklep + panel klienta · Royal Purple",
       en: "Store + client panel · Royal Purple",
@@ -180,7 +181,7 @@ export const projects: Project[] = [
         "Karta produktu z galerią, danymi technicznymi i wariantami serii",
         "Zamówienie bez zakładania konta",
         "Panel administracyjny: produkty, zamówienia, treści, dostawa",
-        "GA4 z Consent Mode i feed dla Google Merchant Center",
+        "Feed dla Google Merchant Center; GA4 z Consent Mode przy starcie",
         "Kolejka e-maili i codzienne kopie zapasowe na serwerze w UE",
       ],
       en: [
@@ -189,7 +190,7 @@ export const projects: Project[] = [
         "Product page with gallery, technical data, and series variants",
         "Guest checkout",
         "Admin panel: products, orders, content, shipping",
-        "GA4 with Consent Mode and a Google Merchant Center feed",
+        "Google Merchant Center feed; GA4 with Consent Mode at launch",
         "Email queue and daily backups on an EU server",
       ],
     },
