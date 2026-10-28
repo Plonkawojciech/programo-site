@@ -1,4 +1,4 @@
-import { projects } from "@/lib/projects";
+import { portfolioProjects as projects } from "@/lib/projects";
 import { getAllPosts } from "@/lib/blog";
 import { SITE_PAGES, SITE_URL } from "@/lib/site-urls";
 import { COMPANY } from "@/lib/company";

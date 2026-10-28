@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { projects } from "@/lib/projects";
+import { portfolioProjects as projects } from "@/lib/projects";
 import { getAllClusters, getAllPosts, getPostsByCluster } from "@/lib/blog";
 import { STATIC_ROUTE_UPDATED_AT } from "@/lib/schema";
 
